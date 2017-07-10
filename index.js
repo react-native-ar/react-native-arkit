@@ -5,6 +5,20 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
+import PropTypes from 'prop-types';
+import React from 'react';
 import { requireNativeComponent } from 'react-native';
 
-export default requireNativeComponent('RCTARKit', null);
+class ARKit extends React.Component {
+  render() {
+    return <RCTARKit {...this.props} />;
+  }
+}
+
+ARKit.propTypes = {
+  debug: PropTypes.bool,
+};
+
+const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
+
+module.exports = ARKit;

@@ -10,5 +10,7 @@
 
 @interface RCTARKit : UIView
 
+@property (nonatomic, assign) BOOL debug;
+
 @end
 

@@ -18,7 +18,9 @@
 RCT_EXPORT_MODULE()
 
 - (UIView *)view {
-    return [[RCTARKit alloc] init];
+    return [RCTARKit new];
 }
+
+RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
 
 @end

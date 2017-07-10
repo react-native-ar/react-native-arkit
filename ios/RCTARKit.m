@@ -12,8 +12,8 @@
 
 @interface RCTARKit () <ARSCNViewDelegate>
 
-@property(nonatomic,strong)ARSCNView *sceneView;
-@property(nonatomic,strong)ARWorldTrackingSessionConfiguration *configuration;
+@property (nonatomic, strong) ARSCNView *sceneView;
+@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
 @end
 
@@ -36,6 +36,19 @@
 }
 
 
+#pragma mark - Properties
+
+- (void)setDebug:(BOOL)debug {
+    if (debug) {
+        self.sceneView.showsStatistics = YES;
+        self.sceneView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints;
+    } else {
+        self.sceneView.showsStatistics = NO;
+        self.sceneView.debugOptions = SCNDebugOptionNone;
+    }
+}
+
+
 #pragma mark - Lazy loads
 
 -(ARSCNView *)sceneView {
@@ -45,9 +58,8 @@
     
     _sceneView = [[ARSCNView alloc] initWithFrame:self.bounds];
     _sceneView.delegate = self;
-    _sceneView.showsStatistics = YES;
+    
     _sceneView.autoenablesDefaultLighting = YES;
-    _sceneView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints;
     _sceneView.scene = [SCNScene new];
     
     return _sceneView;
