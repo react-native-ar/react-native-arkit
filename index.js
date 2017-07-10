@@ -7,11 +7,17 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import { requireNativeComponent } from 'react-native';
+import { NativeModules, requireNativeComponent } from 'react-native';
+
+const ARKitManager = NativeModules.ARKitManager;
 
 class ARKit extends React.Component {
   render() {
     return <RCTARKit {...this.props} />;
+  }
+
+  getCameraPosition() {
+    return ARKitManager.getCameraPosition();
   }
 }
 

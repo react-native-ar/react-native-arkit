@@ -6,11 +6,10 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
-#import <React/RCTViewManager.h>
-
+#import "RCTARKitManager.h"
 #import "RCTARKit.h"
 
-@interface RCTARKitManager : RCTViewManager
+@interface RCTARKitManager ()
 @end
 
 @implementation RCTARKitManager
@@ -18,9 +17,13 @@
 RCT_EXPORT_MODULE()
 
 - (UIView *)view {
-    return [RCTARKit new];
+    return [RCTARKit sharedInstance];
 }
 
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
+
+RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[RCTARKit sharedInstance] cameraPosition]);
+}
 
 @end

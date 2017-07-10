@@ -7,12 +7,9 @@
 //
 
 #import "RCTARKit.h"
-#import <SceneKit/SceneKit.h>
-#import <ARKit/ARKit.h>
 
 @interface RCTARKit () <ARSCNViewDelegate>
 
-@property (nonatomic, strong) ARSCNView *sceneView;
 @property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
 @end
@@ -20,60 +17,69 @@
 
 @implementation RCTARKit
 
++ (instancetype)sharedInstance {
+    static RCTARKit *arView = nil;
+    static dispatch_once_t onceToken;
+
+    dispatch_once(&onceToken, ^{
+        if (arView == nil) {
+            arView = [[self alloc] init];
+        }
+    });
+
+    return arView;
+}
+
 - (instancetype)init {
     if ((self = [super init])) {
-        [self addSubview:self.sceneView];
-        [self.sceneView.session runWithConfiguration:self.configuration];
+        self.delegate = self;
+        [self.session runWithConfiguration:self.configuration];
+        self.autoenablesDefaultLighting = YES;
+        self.scene = [SCNScene new];
     }
     return self;
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    // refresh sceneView frame size
-    self.sceneView.frame = self.bounds;
+
+#pragma mark - setter-getter
+
+- (BOOL)debug {
+    return self.showsStatistics;
 }
-
-
-#pragma mark - Properties
 
 - (void)setDebug:(BOOL)debug {
     if (debug) {
-        self.sceneView.showsStatistics = YES;
-        self.sceneView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints;
+        self.showsStatistics = YES;
+        self.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints;
     } else {
-        self.sceneView.showsStatistics = NO;
-        self.sceneView.debugOptions = SCNDebugOptionNone;
+        self.showsStatistics = NO;
+        self.debugOptions = SCNDebugOptionNone;
     }
+}
+
+- (NSDictionary *)cameraPosition {
+    simd_float4 position = self.session.currentFrame.camera.transform.columns[3];
+    return @{
+             @"x": [NSNumber numberWithFloat:position.x],
+             @"y": [NSNumber numberWithFloat:position.y],
+             @"z": [NSNumber numberWithFloat:position.z]
+             };
 }
 
 
 #pragma mark - Lazy loads
 
--(ARSCNView *)sceneView {
-    if (_sceneView) {
-        return _sceneView;
-    }
-    
-    _sceneView = [[ARSCNView alloc] initWithFrame:self.bounds];
-    _sceneView.delegate = self;
-    
-    _sceneView.autoenablesDefaultLighting = YES;
-    _sceneView.scene = [SCNScene new];
-    
-    return _sceneView;
-}
-
 -(ARWorldTrackingSessionConfiguration *)configuration {
     if (_configuration) {
         return _configuration;
     }
-    
+
     _configuration = [ARWorldTrackingSessionConfiguration new];
     return _configuration;
 }
 
+
+#pragma mark - methods
 
 #pragma mark - ARSCNViewDelegate
 
@@ -113,4 +119,3 @@
 }
 
 @end
-

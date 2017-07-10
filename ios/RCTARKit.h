@@ -7,10 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <SceneKit/SceneKit.h>
+#import <ARKit/ARKit.h>
 
-@interface RCTARKit : UIView
+@interface RCTARKit : ARSCNView
 
 @property (nonatomic, assign) BOOL debug;
+@property (nonatomic, readonly) NSDictionary *cameraPosition;
+
++ (instancetype)sharedInstance;
 
 @end
-

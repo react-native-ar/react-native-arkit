@@ -7,3 +7,11 @@
 //
 
 /* RCTARKitManager_h */
+
+#import <React/RCTViewManager.h>
+
+@interface RCTARKitManager : RCTViewManager
+
+- (void)getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+
+@end
