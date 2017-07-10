@@ -14,6 +14,8 @@
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, readonly) NSDictionary *cameraPosition;
+@property NSMutableDictionary *planes;
+@property NSMutableArray *boxes;
 
 + (instancetype)sharedInstance;
 
