@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		10062C831F127572009AE974 /* RCTARKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10062C821F127572009AE974 /* RCTARKitManager.m */; };
-		10DB39491F127CF50023748A /* ARKitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10DB39481F127CF50023748A /* ARKitViewController.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTARKit.m */; };
 /* End PBXBuildFile section */
 
@@ -27,8 +26,6 @@
 /* Begin PBXFileReference section */
 		10062C811F127566009AE974 /* RCTARKitManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitManager.h; sourceTree = "<group>"; };
 		10062C821F127572009AE974 /* RCTARKitManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitManager.m; sourceTree = "<group>"; };
-		10DB39471F127CCD0023748A /* ARKitViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARKitViewController.h; sourceTree = "<group>"; };
-		10DB39481F127CF50023748A /* ARKitViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARKitViewController.m; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRCTARKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTARKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RCTARKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTARKit.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RCTARKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTARKit.m; sourceTree = "<group>"; };
@@ -56,8 +53,6 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				10DB39471F127CCD0023748A /* ARKitViewController.h */,
-				10DB39481F127CF50023748A /* ARKitViewController.m */,
 				10062C811F127566009AE974 /* RCTARKitManager.h */,
 				10062C821F127572009AE974 /* RCTARKitManager.m */,
 				B3E7B5881CC2AC0600A0062D /* RCTARKit.h */,
@@ -122,7 +117,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				10DB39491F127CF50023748A /* ARKitViewController.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */,
 				10062C831F127572009AE974 /* RCTARKitManager.m in Sources */,
 			);
