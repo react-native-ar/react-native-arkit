@@ -23,6 +23,8 @@ class ARKit extends React.Component {
 
 ARKit.propTypes = {
   debug: PropTypes.bool,
+  planeDetection: PropTypes.bool,
+  lightEstimation: PropTypes.bool,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);

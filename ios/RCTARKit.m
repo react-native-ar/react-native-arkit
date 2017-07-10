@@ -35,6 +35,7 @@
     if ((self = [super init])) {
         self.delegate = self;
         [self.session runWithConfiguration:self.configuration];
+
         self.autoenablesDefaultLighting = YES;
         self.scene = [SCNScene new];
 
@@ -60,6 +61,31 @@
     }
 }
 
+- (BOOL)planeDetection {
+    return self.configuration.planeDetection == ARPlaneDetectionHorizontal;
+}
+
+- (void)setPlaneDetection:(BOOL)planeDetection {
+    if (planeDetection) {
+        NSLog(@"detect plane");
+        self.configuration.planeDetection = ARPlaneDetectionHorizontal;
+    } else {
+        NSLog(@"do not detect plane");
+        self.configuration.planeDetection = ARPlaneDetectionNone;
+    }
+
+    [self.session runWithConfiguration:self.configuration];
+}
+
+- (BOOL)lightEstimation {
+    return self.configuration.lightEstimationEnabled;
+}
+
+- (void)setLightEstimation:(BOOL)lightEstimation {
+    self.configuration.lightEstimationEnabled = lightEstimation;
+    [self.session runWithConfiguration:self.configuration];
+}
+
 - (NSDictionary *)cameraPosition {
     simd_float4 position = self.session.currentFrame.camera.transform.columns[3];
     return @{
@@ -76,6 +102,9 @@
     if (_configuration) {
         return _configuration;
     }
+
+//    if (!ARWorldTrackingSessionConfiguration.isSupported) {
+//    }
 
     _configuration = [ARWorldTrackingSessionConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
@@ -94,6 +123,8 @@
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     }
+
+    NSLog(@"plane detected");
 
     Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
     [self.planes setObject:plane forKey:anchor.identifier];

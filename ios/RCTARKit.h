@@ -13,6 +13,8 @@
 @interface RCTARKit : ARSCNView
 
 @property (nonatomic, assign) BOOL debug;
+@property (nonatomic, assign) BOOL planeDetection;
+@property (nonatomic, assign) BOOL lightEstimation;
 @property (nonatomic, readonly) NSDictionary *cameraPosition;
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;

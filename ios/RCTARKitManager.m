@@ -21,6 +21,8 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(planeDetection, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(lightEstimation, BOOL)
 
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[RCTARKit sharedInstance] cameraPosition]);

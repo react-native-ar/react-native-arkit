@@ -21,11 +21,28 @@ React Native binding for iOS ARKit
 
 
 ## Usage
+
+Sample React Native ARKit App
 ```javascript
+import React, { Component } from 'react';
+import { AppRegistry, View } from 'react-native';
 import ARKit from 'react-native-arkit';
 
-// Use ARKit in one line
-<ARKit style={{ flex: 1 }}/>;
-```
-  
+export default class ReactNativeARKit extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <ARKit
+          style={{ flex: 1 }}
+          debug
+          planeDetection
+          lightEstimation
+        />
+      </View>
+    );
+  }
+}
 
+AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
+
+```
