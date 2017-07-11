@@ -37,6 +37,8 @@ export default class ReactNativeARKit extends Component {
           debug
           planeDetection
           lightEstimation
+          onPlaneDetected={console.log}
+          onPlaneUpdate={console.log}
         />
       </View>
     );

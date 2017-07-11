@@ -124,7 +124,16 @@
         return;
     }
 
-    NSLog(@"plane detected");
+    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+
+    if (self.onPlaneDetected) {
+        self.onPlaneDetected(@{
+                               @"id": planeAnchor.identifier.UUIDString,
+                               @"alignment": @(planeAnchor.alignment),
+                               @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
+                               @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
+                               });
+    }
 
     Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
     [self.planes setObject:plane forKey:anchor.identifier];
@@ -141,6 +150,17 @@
  Called when a node has been updated.
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+
+    if (self.onPlaneUpdate) {
+        self.onPlaneUpdate(@{
+                             @"id": planeAnchor.identifier.UUIDString,
+                             @"alignment": @(planeAnchor.alignment),
+                             @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
+                             @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
+                             });
+    }
+
     Plane *plane = [self.planes objectForKey:anchor.identifier];
     if (plane == nil) {
         return;
@@ -157,6 +177,10 @@
 }
 
 #pragma mark - session
+
+- (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
+    //    simd_float4 position = frame.camera.transform.columns[3];
+}
 
 - (void)session:(ARSession *)session didFailWithError:(NSError *)error {
 }

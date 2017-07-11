@@ -13,11 +13,24 @@ const ARKitManager = NativeModules.ARKitManager;
 
 class ARKit extends React.Component {
   render() {
-    return <RCTARKit {...this.props} />;
+    return <RCTARKit
+      {...this.props}
+      onPlaneDetected={this.callback('onPlaneDetected')}
+      onPlaneUpdate={this.callback('onPlaneUpdate')}
+    />;
   }
 
   getCameraPosition() {
     return ARKitManager.getCameraPosition();
+  }
+
+  callback(name) {
+    return event => {
+      if (!this.props[name]) {
+        return;
+      }
+      this.props[name](event.nativeEvent);
+    };
   }
 }
 
@@ -25,6 +38,8 @@ ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
   lightEstimation: PropTypes.bool,
+  onPlaneDetected: PropTypes.func,
+  onPlaneUpdate: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
