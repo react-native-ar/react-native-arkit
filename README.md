@@ -3,7 +3,9 @@
 [![npm version](https://img.shields.io/npm/v/react-native-arkit.svg?style=flat)](https://www.npmjs.com/package/react-native-arkit)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-arkit.svg?style=flat)](https://www.npmjs.com/package/react-native-arkit)
 
-React Native binding for iOS ARKit
+React Native binding for iOS ARKit.
+
+**Note**: ARKit is only supported by devices with A9+ processor (iPhone 6s/7/SE, iPad 2017/Pro) on [iOS 11 beta](https://developer.apple.com/download/). You also need [Xcode 9 beta](https://developer.apple.com/download/) to build the project.
 
 ## Getting started
 
@@ -52,3 +54,7 @@ export default class ReactNativeARKit extends Component {
 AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 ```
+
+## Contributing
+
+If you find a bug or would like to request a new feature, just [open an issue](https://github.com/HippoAR/react-native-arkit/issues/new). Your contributions are always welcome! Submit a pull request and see `contribution.md` for guidelines.
