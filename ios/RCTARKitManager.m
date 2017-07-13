@@ -31,4 +31,15 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[RCTARKit sharedInstance] cameraPosition]);
 }
 
+RCT_EXPORT_METHOD(addCube:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    BoxProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.width = [object[@"width"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    property.length = [object[@"length"] floatValue];
+    [[RCTARKit sharedInstance] addObject:property];
+}
+
 @end

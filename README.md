@@ -35,16 +35,22 @@ import { AppRegistry, View } from 'react-native';
 import ARKit from 'react-native-arkit';
 
 export default class ReactNativeARKit extends Component {
+  componentDidMount() {
+    // Add a cube in the scene. Only support cube geometry at the moment
+    this.arkit.addCube({ x: 0, y: 0, z: 0, width: 0.2, height: 0.2, length: 0.2 });
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
         <ARKit
+          ref={arkit => this.arkit = arkit}
           style={{ flex: 1 }}
           debug
           planeDetection
           lightEstimation
-          onPlaneDetected={console.log}
-          onPlaneUpdate={console.log}
+          onPlaneDetected={console.log} // event listener for plane detection
+          onPlaneUpdate={console.log} // event listener for plane update
         />
       </View>
     );

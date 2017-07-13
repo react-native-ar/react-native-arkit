@@ -12,7 +12,20 @@
 
 #import <React/RCTComponent.h>
 
+typedef struct {
+    float x;
+    float y;
+    float z;
+    float width;
+    float height;
+    float length;
+} BoxProperty;
+
+//typedef struct BoxProperty BoxProperty;
+
 @interface RCTARKit : ARSCNView
+
++ (instancetype)sharedInstance;
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
@@ -25,6 +38,6 @@
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;
 
-+ (instancetype)sharedInstance;
+- (void)addObject:(BoxProperty)property;
 
 @end

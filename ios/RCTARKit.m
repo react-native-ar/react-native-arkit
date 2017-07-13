@@ -32,7 +32,7 @@
 }
 
 - (instancetype)init {
-    if ((self = [super initWithFrame:self.frame options:@{@"SCNPreferredRenderingAPIKey": @(SCNRenderingAPIMetal)}])) {
+    if ((self = [super init])) {
         self.delegate = self;
         [self.session runWithConfiguration:self.configuration];
 
@@ -66,10 +66,8 @@
 
 - (void)setPlaneDetection:(BOOL)planeDetection {
     if (planeDetection) {
-        NSLog(@"detect plane");
         self.configuration.planeDetection = ARPlaneDetectionHorizontal;
     } else {
-        NSLog(@"do not detect plane");
         self.configuration.planeDetection = ARPlaneDetectionNone;
     }
 
@@ -112,6 +110,17 @@
 
 
 #pragma mark - methods
+
+- (void)addObject:(BoxProperty)property {
+    SCNBox *boxGeometry = [SCNBox
+                           boxWithWidth:property.width
+                           height:property.height
+                           length:property.length
+                           chamferRadius:0.0];
+    SCNNode *boxNode = [SCNNode nodeWithGeometry:boxGeometry];
+    boxNode.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:boxNode];
+}
 
 #pragma mark - ARSCNViewDelegate
 
