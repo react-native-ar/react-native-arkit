@@ -32,13 +32,12 @@
 }
 
 - (instancetype)init {
-    if ((self = [super init])) {
+    if ((self = [super initWithFrame:self.frame options:@{@"SCNPreferredRenderingAPIKey": @(SCNRenderingAPIMetal)}])) {
         self.delegate = self;
         [self.session runWithConfiguration:self.configuration];
 
         self.autoenablesDefaultLighting = YES;
-        self.scene = [SCNScene new];
-
+        self.scene = [[SCNScene alloc] init];
         self.planes = [NSMutableDictionary new];
     }
     return self;
