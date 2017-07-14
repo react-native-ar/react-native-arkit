@@ -69,6 +69,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 ```
 
+![geometries](./screenshots/geometries.png =250x)
+
 ## Contributing
 
 If you find a bug or would like to request a new feature, just [open an issue](https://github.com/HippoAR/react-native-arkit/issues/new). Your contributions are always welcome! Submit a pull request and see [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines.
