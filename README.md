@@ -69,7 +69,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 ```
 
-![geometries](./screenshots/geometries.png =250x)
+<img src="screenshots/geometries.png" width="250">
 
 ## Contributing
 
