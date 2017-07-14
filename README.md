@@ -37,7 +37,9 @@ import ARKit from 'react-native-arkit';
 export default class ReactNativeARKit extends Component {
   componentDidMount() {
     // Add a cube in the scene. Only support cube geometry at the moment
-    this.arkit.addCube({ x: 0, y: 0, z: 0, width: 0.2, height: 0.2, length: 0.2 });
+    this.arkit.addBox({ x: 0, y: 0, z: 0, width: 0.1, height: 0.1, length: 0.1, chamfer: 0.01 });
+    this.arkit.addSphere({ x: 0.2, y: 0, z: 0, radius: 0.05 });
+    this.arkit.addCylinder({ x: 0.4, y: 0, z: 0, radius: 0.05, height: 0.1 });
   }
 
   render() {

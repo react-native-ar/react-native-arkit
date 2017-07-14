@@ -19,9 +19,23 @@ typedef struct {
     float width;
     float height;
     float length;
+    float chamfer;
 } BoxProperty;
 
-//typedef struct BoxProperty BoxProperty;
+typedef struct {
+    float x;
+    float y;
+    float z;
+    float radius;
+} SphereProperty;
+
+typedef struct {
+    float x;
+    float y;
+    float z;
+    float radius;
+    float height;
+} CylinderProperty;
 
 @interface RCTARKit : ARSCNView
 
@@ -38,6 +52,9 @@ typedef struct {
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;
 
-- (void)addObject:(BoxProperty)property;
+- (void)addBox:(BoxProperty)property;
+- (void)addSphere:(SphereProperty)property;
+- (void)addCylinder:(CylinderProperty)property;
 
 @end
+

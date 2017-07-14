@@ -24,9 +24,9 @@ class ARKit extends React.Component {
     return ARKitManager.getCameraPosition();
   }
 
-  addCube(object) {
-    return ARKitManager.addCube(object);
-  }
+  addBox(object) { return ARKitManager.addBox(object); }
+  addSphere(object) { return ARKitManager.addSphere(object); }
+  addCylinder(object) { return ARKitManager.addCylinder(object); }
 
   callback(name) {
     return event => {

@@ -31,7 +31,8 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[RCTARKit sharedInstance] cameraPosition]);
 }
 
-RCT_EXPORT_METHOD(addCube:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+
+RCT_EXPORT_METHOD(addBox:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     BoxProperty property;
     property.x = [object[@"x"] floatValue];
     property.y = [object[@"y"] floatValue];
@@ -39,7 +40,22 @@ RCT_EXPORT_METHOD(addCube:(NSDictionary *)object resolve:(RCTPromiseResolveBlock
     property.width = [object[@"width"] floatValue];
     property.height = [object[@"height"] floatValue];
     property.length = [object[@"length"] floatValue];
-    [[RCTARKit sharedInstance] addObject:property];
+    property.chamfer = [object[@"chamfer"] floatValue];
+    [[RCTARKit sharedInstance] addBox:property];
+}
+
+RCT_EXPORT_METHOD(addSphere:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    SphereProperty property;
+    property.radius = [object[@"radius"] floatValue];
+    [[RCTARKit sharedInstance] addSphere:property];
+}
+
+RCT_EXPORT_METHOD(addCylinder:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    CylinderProperty property;
+    property.radius = [object[@"radius"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    [[RCTARKit sharedInstance] addCylinder:property];
 }
 
 @end
+
