@@ -112,28 +112,63 @@
 #pragma mark - methods
 
 - (void)addBox:(BoxProperty)property {
-    SCNBox *geometry = [SCNBox
-                        boxWithWidth:property.width
-                        height:property.height
-                        length:property.length
-                        chamferRadius:property.chamfer];
+    SCNBox *geometry = [SCNBox boxWithWidth:property.width height:property.height length:property.length chamferRadius:property.chamfer];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     node.position = SCNVector3Make(property.x, property.y, property.z);
     [self.scene.rootNode addChildNode:node];
 }
 
 - (void)addSphere:(SphereProperty)property {
-    SCNSphere *geometry = [SCNSphere
-                           sphereWithRadius:property.radius];
+    SCNSphere *geometry = [SCNSphere sphereWithRadius:property.radius];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     node.position = SCNVector3Make(property.x, property.y, property.z);
     [self.scene.rootNode addChildNode:node];
 }
 
 - (void)addCylinder:(CylinderProperty)property {
-    SCNCylinder *geometry = [SCNCylinder
-                             cylinderWithRadius:property.radius
-                             height: property.height];
+    SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:property.radius height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addCone:(ConeProperty)property {
+    SCNCone *geometry = [SCNCone coneWithTopRadius:property.topR bottomRadius:property.bottomR height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addPyramid:(PyramidProperty)property {
+    SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:property.width height:property.height length:property.length];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addTube:(TubeProperty)property {
+    SCNTube *geometry = [SCNTube tubeWithInnerRadius:property.innerR outerRadius:property.outerR height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addTorus:(TorusProperty)property {
+    SCNTorus *geometry = [SCNTorus torusWithRingRadius:property.ringR pipeRadius:property.pipeR];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addCapsule:(CapsuleProperty)property {
+    SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:property.capR height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addPlane:(PlaneProperty)property {
+    SCNPlane *geometry = [SCNPlane planeWithWidth:property.width height:property.height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     node.position = SCNVector3Make(property.x, property.y, property.z);
     [self.scene.rootNode addChildNode:node];

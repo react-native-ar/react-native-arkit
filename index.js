@@ -27,6 +27,12 @@ class ARKit extends React.Component {
   addBox(object) { return ARKitManager.addBox(object); }
   addSphere(object) { return ARKitManager.addSphere(object); }
   addCylinder(object) { return ARKitManager.addCylinder(object); }
+  addCone(object) { return ARKitManager.addCone(object); }
+  addPyramid(object) { return ARKitManager.addPyramid(object); }
+  addTube(object) { return ARKitManager.addTube(object); }
+  addTorus(object) { return ARKitManager.addTorus(object); }
+  addCapsule(object) { return ARKitManager.addCapsule(object); }
+  addPlane(object) { return ARKitManager.addPlane(object); }
 
   callback(name) {
     return event => {
