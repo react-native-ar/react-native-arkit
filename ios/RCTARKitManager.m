@@ -31,7 +31,8 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[RCTARKit sharedInstance] cameraPosition]);
 }
 
-RCT_EXPORT_METHOD(addCube:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+
+RCT_EXPORT_METHOD(addBox:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     BoxProperty property;
     property.x = [object[@"x"] floatValue];
     property.y = [object[@"y"] floatValue];
@@ -39,7 +40,91 @@ RCT_EXPORT_METHOD(addCube:(NSDictionary *)object resolve:(RCTPromiseResolveBlock
     property.width = [object[@"width"] floatValue];
     property.height = [object[@"height"] floatValue];
     property.length = [object[@"length"] floatValue];
-    [[RCTARKit sharedInstance] addObject:property];
+    property.chamfer = [object[@"chamfer"] floatValue];
+    [[RCTARKit sharedInstance] addBox:property];
+}
+
+RCT_EXPORT_METHOD(addSphere:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    SphereProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.radius = [object[@"radius"] floatValue];
+    [[RCTARKit sharedInstance] addSphere:property];
+}
+
+RCT_EXPORT_METHOD(addCylinder:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    CylinderProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.radius = [object[@"radius"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    [[RCTARKit sharedInstance] addCylinder:property];
+}
+
+RCT_EXPORT_METHOD(addCone:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    ConeProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.topR = [object[@"topR"] floatValue];
+    property.bottomR = [object[@"bottomR"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    [[RCTARKit sharedInstance] addCone:property];
+}
+
+RCT_EXPORT_METHOD(addPyramid:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    PyramidProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.width = [object[@"width"] floatValue];
+    property.length = [object[@"length"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    [[RCTARKit sharedInstance] addPyramid:property];
+}
+
+RCT_EXPORT_METHOD(addTube:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    TubeProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.innerR = [object[@"innerR"] floatValue];
+    property.outerR = [object[@"outerR"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    [[RCTARKit sharedInstance] addTube:property];
+}
+
+RCT_EXPORT_METHOD(addTorus:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    TorusProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.ringR = [object[@"ringR"] floatValue];
+    property.pipeR = [object[@"pipeR"] floatValue];
+    [[RCTARKit sharedInstance] addTorus:property];
+}
+
+RCT_EXPORT_METHOD(addCapsule:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    CapsuleProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.capR = [object[@"capR"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    [[RCTARKit sharedInstance] addCapsule:property];
+}
+
+RCT_EXPORT_METHOD(addPlane:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    PlaneProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.width = [object[@"width"] floatValue];
+    property.height = [object[@"height"] floatValue];
+    [[RCTARKit sharedInstance] addPlane:property];
 }
 
 @end
+

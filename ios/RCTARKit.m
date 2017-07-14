@@ -21,13 +21,13 @@
 + (instancetype)sharedInstance {
     static RCTARKit *arView = nil;
     static dispatch_once_t onceToken;
-
+    
     dispatch_once(&onceToken, ^{
         if (arView == nil) {
             arView = [[self alloc] init];
         }
     });
-
+    
     return arView;
 }
 
@@ -35,7 +35,7 @@
     if ((self = [super init])) {
         self.delegate = self;
         [self.session runWithConfiguration:self.configuration];
-
+        
         self.autoenablesDefaultLighting = YES;
         self.scene = [[SCNScene alloc] init];
         self.planes = [NSMutableDictionary new];
@@ -70,7 +70,7 @@
     } else {
         self.configuration.planeDetection = ARPlaneDetectionNone;
     }
-
+    
     [self.session runWithConfiguration:self.configuration];
 }
 
@@ -99,10 +99,10 @@
     if (_configuration) {
         return _configuration;
     }
-
-//    if (!ARWorldTrackingSessionConfiguration.isSupported) {
-//    }
-
+    
+    //    if (!ARWorldTrackingSessionConfiguration.isSupported) {
+    //    }
+    
     _configuration = [ARWorldTrackingSessionConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
     return _configuration;
@@ -111,15 +111,67 @@
 
 #pragma mark - methods
 
-- (void)addObject:(BoxProperty)property {
-    SCNBox *boxGeometry = [SCNBox
-                           boxWithWidth:property.width
-                           height:property.height
-                           length:property.length
-                           chamferRadius:0.0];
-    SCNNode *boxNode = [SCNNode nodeWithGeometry:boxGeometry];
-    boxNode.position = SCNVector3Make(property.x, property.y, property.z);
-    [self.scene.rootNode addChildNode:boxNode];
+- (void)addBox:(BoxProperty)property {
+    SCNBox *geometry = [SCNBox boxWithWidth:property.width height:property.height length:property.length chamferRadius:property.chamfer];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addSphere:(SphereProperty)property {
+    SCNSphere *geometry = [SCNSphere sphereWithRadius:property.radius];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addCylinder:(CylinderProperty)property {
+    SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:property.radius height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addCone:(ConeProperty)property {
+    SCNCone *geometry = [SCNCone coneWithTopRadius:property.topR bottomRadius:property.bottomR height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addPyramid:(PyramidProperty)property {
+    SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:property.width height:property.height length:property.length];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addTube:(TubeProperty)property {
+    SCNTube *geometry = [SCNTube tubeWithInnerRadius:property.innerR outerRadius:property.outerR height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addTorus:(TorusProperty)property {
+    SCNTorus *geometry = [SCNTorus torusWithRingRadius:property.ringR pipeRadius:property.pipeR];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addCapsule:(CapsuleProperty)property {
+    SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:property.capR height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addPlane:(PlaneProperty)property {
+    SCNPlane *geometry = [SCNPlane planeWithWidth:property.width height:property.height];
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    node.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:node];
 }
 
 #pragma mark - ARSCNViewDelegate
@@ -131,9 +183,9 @@
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     }
-
+    
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-
+    
     if (self.onPlaneDetected) {
         self.onPlaneDetected(@{
                                @"id": planeAnchor.identifier.UUIDString,
@@ -142,7 +194,7 @@
                                @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                                });
     }
-
+    
     Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
     [self.planes setObject:plane forKey:anchor.identifier];
     [node addChildNode:plane];
@@ -159,7 +211,7 @@
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-
+    
     if (self.onPlaneUpdate) {
         self.onPlaneUpdate(@{
                              @"id": planeAnchor.identifier.UUIDString,
@@ -168,12 +220,12 @@
                              @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                              });
     }
-
+    
     Plane *plane = [self.planes objectForKey:anchor.identifier];
     if (plane == nil) {
         return;
     }
-
+    
     [plane update:(ARPlaneAnchor *)anchor];
 }
 
@@ -200,3 +252,4 @@
 }
 
 @end
+
