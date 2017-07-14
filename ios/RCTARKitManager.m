@@ -46,12 +46,18 @@ RCT_EXPORT_METHOD(addBox:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)
 
 RCT_EXPORT_METHOD(addSphere:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     SphereProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
     property.radius = [object[@"radius"] floatValue];
     [[RCTARKit sharedInstance] addSphere:property];
 }
 
 RCT_EXPORT_METHOD(addCylinder:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     CylinderProperty property;
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
     property.radius = [object[@"radius"] floatValue];
     property.height = [object[@"height"] floatValue];
     [[RCTARKit sharedInstance] addCylinder:property];
