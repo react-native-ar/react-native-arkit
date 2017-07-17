@@ -5,6 +5,8 @@
 
 React Native binding for iOS ARKit.
 
+**Tutorial**: [How to make your own ARKit app in 5 minutes using React Native](https://medium.com/@HippoAR/how-to-make-your-own-arkit-app-in-5-minutes-using-react-native-9d7ce109a4c2)
+
 **Note**: ARKit is only supported by devices with A9 or later processors (iPhone 6s/7/SE, iPad 2017/Pro) on [iOS 11 beta](https://developer.apple.com/download/). You also need [Xcode 9 beta](https://developer.apple.com/download/) to build the project.
 
 ## Getting started
@@ -28,7 +30,7 @@ React Native binding for iOS ARKit.
 
 ## Usage
 
-You can refer to this [tutorial](https://medium.com/@HippoAR/how-to-make-your-own-arkit-app-in-5-minutes-using-react-native-9d7ce109a4c2) for how to use `react-native-arkit`. A simple sample React Native ARKit App is as follows
+A simple sample React Native ARKit App
 
 ```javascript
 // index.ios.js
