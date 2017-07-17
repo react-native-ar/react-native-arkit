@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/HippoAR/react-native-arkit.git"
   },
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "React Native binding for iOS ARKit",
   "author": "Zehao Li <qft.gtr@gmail.com>",
   "license": "MIT",
@@ -24,6 +24,6 @@
     "prop-types": "^15.5.7"
   },
   "peerDependencies": {
-    "react": "^15.5.0"
+    "react": "16.0.0-alpha.12"
   }
 }
