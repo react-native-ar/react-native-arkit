@@ -32,8 +32,7 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
 }
 
 RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[RCTARKit sharedInstance] snapshot];
-    resolve(@{});
+    [[RCTARKit sharedInstance] snapshot:resolve reject:reject];
 }
 
 RCT_EXPORT_METHOD(addBox:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

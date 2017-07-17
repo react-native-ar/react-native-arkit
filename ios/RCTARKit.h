@@ -11,6 +11,7 @@
 #import <ARKit/ARKit.h>
 
 #import <React/RCTComponent.h>
+#import <React/RCTBridgeModule.h>
 
 typedef struct {
     float x;
@@ -103,7 +104,7 @@ typedef struct {
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;
 
-- (void)snapshot;
+- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)addBox:(BoxProperty)property;
 - (void)addSphere:(SphereProperty)property;
 - (void)addCylinder:(CylinderProperty)property;
@@ -115,4 +116,3 @@ typedef struct {
 - (void)addPlane:(PlaneProperty)property;
 
 @end
-

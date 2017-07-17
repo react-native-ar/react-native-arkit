@@ -25,4 +25,3 @@
 - (void)addPlane:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 
 @end
-

@@ -9,7 +9,9 @@
 #import "RCTARKit.h"
 #import "Plane.h"
 
-@interface RCTARKit () <ARSCNViewDelegate>
+@interface RCTARKit () <ARSCNViewDelegate> {
+    RCTPromiseResolveBlock _resolve;
+}
 
 @property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
@@ -21,13 +23,13 @@
 + (instancetype)sharedInstance {
     static RCTARKit *arView = nil;
     static dispatch_once_t onceToken;
-    
+
     dispatch_once(&onceToken, ^{
         if (arView == nil) {
             arView = [[self alloc] init];
         }
     });
-    
+
     return arView;
 }
 
@@ -35,7 +37,7 @@
     if ((self = [super init])) {
         self.delegate = self;
         [self.session runWithConfiguration:self.configuration];
-        
+
         self.autoenablesDefaultLighting = YES;
         self.scene = [[SCNScene alloc] init];
         self.planes = [NSMutableDictionary new];
@@ -70,7 +72,7 @@
     } else {
         self.configuration.planeDetection = ARPlaneDetectionNone;
     }
-    
+
     [self.session runWithConfiguration:self.configuration];
 }
 
@@ -99,10 +101,10 @@
     if (_configuration) {
         return _configuration;
     }
-    
+
     //    if (!ARWorldTrackingSessionConfiguration.isSupported) {
     //    }
-    
+
     _configuration = [ARWorldTrackingSessionConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
     return _configuration;
@@ -111,9 +113,17 @@
 
 #pragma mark - methods
 
-- (void)snapshot {
+- (void)thisImage:(UIImage *)image savedInAlbumWithError:(NSError *)error ctx:(void *)ctx {
+    if (error) {
+    } else {
+        _resolve(@{ @"success": @(YES) });
+    }
+}
+
+- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
     UIImage *image = [super snapshot];
-    UIImageWriteToSavedPhotosAlbum(image, self, NULL, NULL);
+    _resolve = resolve;
+    UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
 }
 
 - (void)addBox:(BoxProperty)property {
@@ -188,9 +198,9 @@
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     }
-    
+
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    
+
     if (self.onPlaneDetected) {
         self.onPlaneDetected(@{
                                @"id": planeAnchor.identifier.UUIDString,
@@ -199,7 +209,7 @@
                                @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                                });
     }
-    
+
     Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
     [self.planes setObject:plane forKey:anchor.identifier];
     [node addChildNode:plane];
@@ -216,7 +226,7 @@
  */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    
+
     if (self.onPlaneUpdate) {
         self.onPlaneUpdate(@{
                              @"id": planeAnchor.identifier.UUIDString,
@@ -225,12 +235,12 @@
                              @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                              });
     }
-    
+
     Plane *plane = [self.planes objectForKey:anchor.identifier];
     if (plane == nil) {
         return;
     }
-    
+
     [plane update:(ARPlaneAnchor *)anchor];
 }
 
@@ -257,4 +267,3 @@
 }
 
 @end
-
