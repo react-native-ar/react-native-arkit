@@ -103,6 +103,7 @@ typedef struct {
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;
 
+- (void)snapshot;
 - (void)addBox:(BoxProperty)property;
 - (void)addSphere:(SphereProperty)property;
 - (void)addCylinder:(CylinderProperty)property;
