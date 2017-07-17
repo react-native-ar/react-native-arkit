@@ -111,6 +111,11 @@
 
 #pragma mark - methods
 
+- (void)snapshot {
+    UIImage *image = [super snapshot];
+    UIImageWriteToSavedPhotosAlbum(image, self, NULL, NULL);
+}
+
 - (void)addBox:(BoxProperty)property {
     SCNBox *geometry = [SCNBox boxWithWidth:property.width height:property.height length:property.length chamferRadius:property.chamfer];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];

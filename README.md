@@ -28,8 +28,11 @@ React Native binding for iOS ARKit.
 
 ## Usage
 
-Sample React Native ARKit App
+You can refer to this [tutorial](https://medium.com/@HippoAR/how-to-make-your-own-arkit-app-in-5-minutes-using-react-native-9d7ce109a4c2) for how to use `react-native-arkit`. A simple sample React Native ARKit App is as follows
+
 ```javascript
+// index.ios.js
+
 import React, { Component } from 'react';
 import { AppRegistry, View } from 'react-native';
 import ARKit from 'react-native-arkit';
@@ -68,6 +71,8 @@ export default class ReactNativeARKit extends Component {
 AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 ```
+
+<img src="screenshots/geometries.jpg" width="250">
 
 ## Contributing
 
