@@ -102,7 +102,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `addCylinder` | `{ x, y, z, radius, height }` | Add a [`SCNCylinder`](https://developer.apple.com/documentation/scenekit/scncylinder)
 | `addCone` | `{ x, y, z, topR, bottomR, height }` | Add a [`SCNCone`](https://developer.apple.com/documentation/scenekit/scncone)
 | `addPyramid` | `{ x, y, z, width, length, height }` | Add a [`SCNPyramid`](https://developer.apple.com/documentation/scenekit/scnpyramid)
-| `addTube` | `{ x, y, z, innerR, outerR, height }` | [`SCNTube`](https://developer.apple.com/documentation/scenekit/scntube)
+| `addTube` | `{ x, y, z, innerR, outerR, height }` | Add a [`SCNTube`](https://developer.apple.com/documentation/scenekit/scntube)
 | `addTorus` | `{ x, y, z, ringR, pipeR }` | Add a [`SCNTorus`](https://developer.apple.com/documentation/scenekit/scntorus)
 | `addCapsule` | `{ x, y, z, capR, height }` | Add a [`SCNCapsule`](https://developer.apple.com/documentation/scenekit/scncapsule)
 | `addPlane` | `{ x, y, z, width, length }` | Add a [`SCNPlane`](https://developer.apple.com/documentation/scenekit/scnplane)
