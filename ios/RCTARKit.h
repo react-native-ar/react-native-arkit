@@ -105,6 +105,9 @@ typedef struct {
 @property NSMutableArray *boxes;
 
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (void)pause;
+- (void)resume;
+
 - (void)addBox:(BoxProperty)property;
 - (void)addSphere:(SphereProperty)property;
 - (void)addCylinder:(CylinderProperty)property;

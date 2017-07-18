@@ -27,6 +27,16 @@ RCT_EXPORT_VIEW_PROPERTY(lightEstimation, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
 
+RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[RCTARKit sharedInstance] pause];
+    resolve(@{});
+}
+
+RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[RCTARKit sharedInstance] resume];
+    resolve(@{});
+}
+
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[RCTARKit sharedInstance] cameraPosition]);
 }

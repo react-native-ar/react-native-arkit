@@ -22,6 +22,8 @@ class ARKit extends React.Component {
 
   getCameraPosition = ARKitManager.getCameraPosition;
   snapshot = ARKitManager.snapshot;
+  pause = ARKitManager.pause;
+  resume = ARKitManager.resume;
 
   addBox = ARKitManager.addBox;
   addSphere = ARKitManager.addSphere;

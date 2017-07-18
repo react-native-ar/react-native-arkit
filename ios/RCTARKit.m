@@ -45,6 +45,13 @@
     return self;
 }
 
+- (void)pause {
+    [self.session pause];
+}
+
+- (void)resume {
+    [self.session runWithConfiguration:self.configuration];
+}
 
 #pragma mark - setter-getter
 
