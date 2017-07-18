@@ -76,6 +76,39 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 <img src="screenshots/geometries.jpg" width="250">
 
+### Props
+
+| Prop | Type | Default | Note |
+|---|---|---|---|
+| `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
+| `planeDetection` | `Boolean` | `false` | ARKit plane detection.
+| `lightEstimation` | `Boolean` | `false` | ARKit light estimation.
+
+### Events
+
+| Event Name | Returns | Notes
+|---|---|---|
+| `onPlaneDetected` | `{ id, center, extent }` | When a plane is first detected.
+| `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
+
+### Instance methods
+
+| Method Name | Arguments | Notes
+|---|---|---|
+| `snapshot` |  | Take a screenshot (will save to Photo Library)
+| `getCameraPosition` |  | Get the current position of the `ARCamera`
+| `addBox` | `{ x, y, z, width, height, length, chamfer }` | Add a [`SCNCube`](https://developer.apple.com/documentation/scenekit/scnbox)
+| `addSphere` | `{ x, y, z, radius }` | Add a [`SCNSphere`](https://developer.apple.com/documentation/scenekit/scnsphere)
+| `addCylinder` | `{ x, y, z, radius, height }` | Add a [`SCNCylinder`](https://developer.apple.com/documentation/scenekit/scncylinder)
+| `addCone` | `{ x, y, z, topR, bottomR, height }` | Add a [`SCNCone`](https://developer.apple.com/documentation/scenekit/scncone)
+| `addPyramid` | `{ x, y, z, width, length, height }` | Add a [`SCNPyramid`](https://developer.apple.com/documentation/scenekit/scnpyramid)
+| `addTube` | `{ x, y, z, innerR, outerR, height }` | [`SCNTube`](https://developer.apple.com/documentation/scenekit/scntube)
+| `addTorus` | `{ x, y, z, ringR, pipeR }` | Add a [`SCNTorus`](https://developer.apple.com/documentation/scenekit/scntorus)
+| `addCapsule` | `{ x, y, z, capR, height }` | Add a [`SCNCapsule`](https://developer.apple.com/documentation/scenekit/scncapsule)
+| `addPlane` | `{ x, y, z, width, length }` | Add a [`SCNPlane`](https://developer.apple.com/documentation/scenekit/scnplane)
+
+
+
 ## Contributing
 
 If you find a bug or would like to request a new feature, just [open an issue](https://github.com/HippoAR/react-native-arkit/issues/new). Your contributions are always welcome! Submit a pull request and see [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines.
