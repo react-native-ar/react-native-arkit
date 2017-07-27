@@ -213,6 +213,7 @@
         self.onPlaneDetected(@{
                                @"id": planeAnchor.identifier.UUIDString,
                                @"alignment": @(planeAnchor.alignment),
+                               @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                                @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                                @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                                });
@@ -239,6 +240,7 @@
         self.onPlaneUpdate(@{
                              @"id": planeAnchor.identifier.UUIDString,
                              @"alignment": @(planeAnchor.alignment),
+                             @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                              @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                              @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                              });
@@ -264,9 +266,9 @@
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
     if (self.onTrackingState) {
         self.onTrackingState(@{
-                             @"state": @(camera.trackingState),
-                             @"reason": @(camera.trackingStateReason)
-                             });
+                               @"state": @(camera.trackingState),
+                               @"reason": @(camera.trackingStateReason)
+                               });
     }
 }
 
