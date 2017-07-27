@@ -80,7 +80,7 @@ class ARKit extends Component {
   _onTrackingState = ({ state, reason }) => {
     this.props.onTrackingState({
       state: TRACKING_STATES[state],
-      reason: TRACKING_REASONS[reason],
+      reason: TRACKING_REASONS[reason] || reason,
     });
     if (this.props.debug) {
       this.setState({ state, reason });
