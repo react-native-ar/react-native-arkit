@@ -93,6 +93,8 @@ typedef struct {
 
 + (instancetype)sharedInstance;
 
+@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
+
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
 @property (nonatomic, assign) BOOL lightEstimation;

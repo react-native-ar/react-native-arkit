@@ -13,8 +13,6 @@
     RCTPromiseResolveBlock _resolve;
 }
 
-@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
-
 @end
 
 
@@ -265,10 +263,12 @@
 
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
     if (self.onTrackingState) {
-        self.onTrackingState(@{
-                               @"state": @(camera.trackingState),
-                               @"reason": @(camera.trackingStateReason)
-                               });
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.onTrackingState(@{
+                                   @"state": @(camera.trackingState),
+                                   @"reason": @(camera.trackingStateReason)
+                                   });
+        });
     }
 }
 

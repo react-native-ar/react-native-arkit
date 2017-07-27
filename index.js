@@ -32,7 +32,7 @@ class ARKit extends Component {
     reason: 0,
   };
 
-  render() {
+  render(AR = RCTARKit) {
     let state = null;
     if (this.props.debug) {
       state = (
@@ -44,14 +44,14 @@ class ARKit extends Component {
             ]}
           />
           <Text style={styles.stateText}>
-            {TRACKING_REASONS[this.state.reason]}
+            {TRACKING_REASONS[this.state.reason] || this.state.reason}
           </Text>
         </View>
       );
     }
     return (
       <View style={this.props.style}>
-        <RCTARKit
+        <AR
           {...this.props}
           onPlaneDetected={this.callback('onPlaneDetected')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
