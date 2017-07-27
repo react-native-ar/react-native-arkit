@@ -6,18 +6,60 @@
 //
 
 import PropTypes from 'prop-types';
-import React from 'react';
-import { NativeModules, requireNativeComponent } from 'react-native';
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  NativeModules,
+  requireNativeComponent,
+} from 'react-native';
 
 const ARKitManager = NativeModules.ARKitManager;
 
-class ARKit extends React.Component {
+const TRACKING_STATES = ['NOT_AVAILABLE', 'LIMITED', 'NORMAL'];
+const TRACKING_REASONS = [
+  'NONE',
+  'INITIALIZING',
+  'EXCESSIVE_MOTION',
+  'INSUFFICIENT_FEATURES',
+];
+const TRACKING_STATES_COLOR = ['red', 'orange', 'green'];
+
+class ARKit extends Component {
+  state = {
+    state: 0,
+    reason: 0,
+  };
+
   render() {
-    return <RCTARKit
-      {...this.props}
-      onPlaneDetected={this.callback('onPlaneDetected')}
-      onPlaneUpdate={this.callback('onPlaneUpdate')}
-    />;
+    let state = null;
+    if (this.props.debug) {
+      state = (
+        <View style={styles.statePanel}>
+          <View
+            style={[
+              styles.stateIcon,
+              { backgroundColor: TRACKING_STATES_COLOR[this.state.state] },
+            ]}
+          />
+          <Text style={styles.stateText}>
+            {TRACKING_REASONS[this.state.reason]}
+          </Text>
+        </View>
+      );
+    }
+    return (
+      <View style={this.props.style}>
+        <RCTARKit
+          {...this.props}
+          onPlaneDetected={this.callback('onPlaneDetected')}
+          onPlaneUpdate={this.callback('onPlaneUpdate')}
+          onTrackingState={this.callback('onTrackingState')}
+        />
+        {state}
+      </View>
+    );
   }
 
   getCameraPosition = ARKitManager.getCameraPosition;
@@ -35,9 +77,23 @@ class ARKit extends React.Component {
   addCapsule = ARKitManager.addCapsule;
   addPlane = ARKitManager.addPlane;
 
+  _onTrackingState = ({ state, reason }) => {
+    this.props.onTrackingState({
+      state: TRACKING_STATES[state],
+      reason: TRACKING_REASONS[reason],
+    });
+    if (this.props.debug) {
+      this.setState({ state, reason });
+    }
+  };
+
   callback(name) {
     return event => {
       if (!this.props[name]) {
+        return;
+      }
+      if (this[`_${name}`]) {
+        this[`_${name}`](event.nativeEvent);
         return;
       }
       this.props[name](event.nativeEvent);
@@ -45,12 +101,37 @@ class ARKit extends React.Component {
   }
 }
 
+const styles = StyleSheet.create({
+  statePanel: {
+    position: 'absolute',
+    top: 30,
+    left: 10,
+    height: 20,
+    borderRadius: 10,
+    padding: 4,
+    backgroundColor: 'black',
+    flexDirection: 'row',
+  },
+  stateIcon: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 4,
+  },
+  stateText: {
+    color: 'white',
+    fontSize: 10,
+    height: 12,
+  },
+});
+
 ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
   lightEstimation: PropTypes.bool,
   onPlaneDetected: PropTypes.func,
   onPlaneUpdate: PropTypes.func,
+  onTrackingState: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
