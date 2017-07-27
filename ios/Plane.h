@@ -3,7 +3,7 @@
 //  RCTARKit
 //
 //  Created by Zehao Li on 7/10/17.
-//  Copyright © 2017 Facebook. All rights reserved.
+//  Copyright © 2017 HippoAR. All rights reserved.
 //
 
 #import <SceneKit/SceneKit.h>

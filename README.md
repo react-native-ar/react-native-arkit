@@ -5,6 +5,8 @@
 
 React Native binding for iOS ARKit.
 
+**Tutorial**: [How to make an ARKit app in 5 minutes using React Native](https://medium.com/@HippoAR/how-to-make-your-own-arkit-app-in-5-minutes-using-react-native-9d7ce109a4c2)
+
 **Note**: ARKit is only supported by devices with A9 or later processors (iPhone 6s/7/SE, iPad 2017/Pro) on [iOS 11 beta](https://developer.apple.com/download/). You also need [Xcode 9 beta](https://developer.apple.com/download/) to build the project.
 
 ## Getting started
@@ -28,7 +30,7 @@ React Native binding for iOS ARKit.
 
 ## Usage
 
-You can refer to this [tutorial](https://medium.com/@HippoAR/how-to-make-your-own-arkit-app-in-5-minutes-using-react-native-9d7ce109a4c2) for how to use `react-native-arkit`. A simple sample React Native ARKit App is as follows
+A simple sample React Native ARKit App
 
 ```javascript
 // index.ios.js
@@ -73,6 +75,39 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ```
 
 <img src="screenshots/geometries.jpg" width="250">
+
+### Props
+
+| Prop | Type | Default | Note |
+|---|---|---|---|
+| `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
+| `planeDetection` | `Boolean` | `false` | ARKit plane detection.
+| `lightEstimation` | `Boolean` | `false` | ARKit light estimation.
+
+### Events
+
+| Event Name | Returns | Notes
+|---|---|---|
+| `onPlaneDetected` | `{ id, center, extent }` | When a plane is first detected.
+| `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
+
+### Instance methods
+
+| Method Name | Arguments | Notes
+|---|---|---|
+| `snapshot` |  | Take a screenshot (will save to Photo Library)
+| `getCameraPosition` |  | Get the current position of the `ARCamera`
+| `addBox` | `{ x, y, z, width, height, length, chamfer }` | Add a [`SCNCube`](https://developer.apple.com/documentation/scenekit/scnbox)
+| `addSphere` | `{ x, y, z, radius }` | Add a [`SCNSphere`](https://developer.apple.com/documentation/scenekit/scnsphere)
+| `addCylinder` | `{ x, y, z, radius, height }` | Add a [`SCNCylinder`](https://developer.apple.com/documentation/scenekit/scncylinder)
+| `addCone` | `{ x, y, z, topR, bottomR, height }` | Add a [`SCNCone`](https://developer.apple.com/documentation/scenekit/scncone)
+| `addPyramid` | `{ x, y, z, width, length, height }` | Add a [`SCNPyramid`](https://developer.apple.com/documentation/scenekit/scnpyramid)
+| `addTube` | `{ x, y, z, innerR, outerR, height }` | Add a [`SCNTube`](https://developer.apple.com/documentation/scenekit/scntube)
+| `addTorus` | `{ x, y, z, ringR, pipeR }` | Add a [`SCNTorus`](https://developer.apple.com/documentation/scenekit/scntorus)
+| `addCapsule` | `{ x, y, z, capR, height }` | Add a [`SCNCapsule`](https://developer.apple.com/documentation/scenekit/scncapsule)
+| `addPlane` | `{ x, y, z, width, length }` | Add a [`SCNPlane`](https://developer.apple.com/documentation/scenekit/scnplane)
+
+
 
 ## Contributing
 
