@@ -9,7 +9,7 @@
 #import "RCTARKit.h"
 #import "Plane.h"
 
-@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate> {
     RCTPromiseResolveBlock _resolve;
 }
 
@@ -34,7 +34,6 @@
 - (instancetype)init {
     if ((self = [super init])) {
         self.delegate = self;
-        self.session.delegate = self;
         [self.session runWithConfiguration:self.configuration];
 
         self.autoenablesDefaultLighting = YES;

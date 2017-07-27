@@ -78,10 +78,13 @@ class ARKit extends Component {
   addPlane = ARKitManager.addPlane;
 
   _onTrackingState = ({ state, reason }) => {
-    this.props.onTrackingState({
-      state: TRACKING_STATES[state],
-      reason: TRACKING_REASONS[reason] || reason,
-    });
+    if (this.props.onTrackingState) {
+      this.props.onTrackingState({
+        state: TRACKING_STATES[state],
+        reason: TRACKING_REASONS[reason] || reason,
+      });
+    }
+
     if (this.props.debug) {
       this.setState({ state, reason });
     }
@@ -89,11 +92,11 @@ class ARKit extends Component {
 
   callback(name) {
     return event => {
-      if (!this.props[name]) {
-        return;
-      }
       if (this[`_${name}`]) {
         this[`_${name}`](event.nativeEvent);
+        return;
+      }
+      if (!this.props[name]) {
         return;
       }
       this.props[name](event.nativeEvent);
