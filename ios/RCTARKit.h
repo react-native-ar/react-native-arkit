@@ -100,6 +100,7 @@ typedef struct {
 
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
+@property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;

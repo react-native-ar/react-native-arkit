@@ -9,7 +9,7 @@
 #import "RCTARKit.h"
 #import "Plane.h"
 
-@interface RCTARKit () <ARSCNViewDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate> {
     RCTPromiseResolveBlock _resolve;
 }
 
@@ -36,6 +36,7 @@
 - (instancetype)init {
     if ((self = [super init])) {
         self.delegate = self;
+        self.session.delegate = self;
         [self.session runWithConfiguration:self.configuration];
 
         self.autoenablesDefaultLighting = YES;
@@ -259,6 +260,15 @@
 }
 
 #pragma mark - session
+
+- (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
+    if (self.onTrackingState) {
+        self.onTrackingState(@{
+                             @"state": @(camera.trackingState),
+                             @"reason": @(camera.trackingStateReason)
+                             });
+    }
+}
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
     //    simd_float4 position = frame.camera.transform.columns[3];
