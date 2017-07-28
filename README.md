@@ -51,6 +51,7 @@ export default class ReactNativeARKit extends Component {
     this.arkit.addTorus({ x: 0, y: 0.4, z: 0, ringR: 0.06, pipeR: 0.02 });
     this.arkit.addCapsule({ x: 0.2, y: 0.4, z: 0, capR: 0.02, height: 0.06 });
     this.arkit.addPlane({ x: 0.4, y: 0.4, z: 0, width: 0.1, height: 0.1 });
+    this.arkit.addText({ x: 0.2, y: 0.6, z: 0, fontSize: 0.1, depth: 0.05, text: 'ARKit is Cool!' });
   }
 
   render() {
@@ -106,7 +107,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `addTorus` | `{ x, y, z, ringR, pipeR }` | Add a [`SCNTorus`](https://developer.apple.com/documentation/scenekit/scntorus)
 | `addCapsule` | `{ x, y, z, capR, height }` | Add a [`SCNCapsule`](https://developer.apple.com/documentation/scenekit/scncapsule)
 | `addPlane` | `{ x, y, z, width, length }` | Add a [`SCNPlane`](https://developer.apple.com/documentation/scenekit/scnplane)
-
+| `addText` | `{ x, y, z, fontSize, depth, text }` | Add a [`SCNText`](https://developer.apple.com/documentation/scenekit/scntext)
 
 
 ## Contributing

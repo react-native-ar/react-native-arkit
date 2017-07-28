@@ -89,9 +89,20 @@ typedef struct {
     float height;
 } PlaneProperty;
 
+@interface TextProperty : NSObject
+@property (nonatomic, assign) float x;
+@property (nonatomic, assign) float y;
+@property (nonatomic, assign) float z;
+@property (nonatomic, assign) CGFloat fontSize;
+@property (nonatomic, assign) float depth;
+@property (nonatomic, strong) NSString *text;
+@end
+
 @interface RCTARKit : ARSCNView
 
 + (instancetype)sharedInstance;
+
+@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
@@ -100,6 +111,7 @@ typedef struct {
 
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
+@property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;
@@ -117,5 +129,9 @@ typedef struct {
 - (void)addTorus:(TorusProperty)property;
 - (void)addCapsule:(CapsuleProperty)property;
 - (void)addPlane:(PlaneProperty)property;
+- (void)addText:(TextProperty*)property;
+
+- (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
+- (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 
 @end

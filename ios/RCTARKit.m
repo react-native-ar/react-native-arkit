@@ -9,11 +9,12 @@
 #import "RCTARKit.h"
 #import "Plane.h"
 
+@implementation TextProperty
+@end
+
 @interface RCTARKit () <ARSCNViewDelegate> {
     RCTPromiseResolveBlock _resolve;
 }
-
-@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
 @end
 
@@ -196,6 +197,23 @@
     [self.scene.rootNode addChildNode:node];
 }
 
+- (void)addText:(TextProperty*)property {
+    float size = property.fontSize / 10;
+    SCNText *text = [SCNText textWithString:property.text extrusionDepth:property.depth / size];
+    text.font = [UIFont systemFontOfSize:10];
+    SCNNode *textNode = [SCNNode nodeWithGeometry:text];
+    SCNVector3 min;
+    SCNVector3 max;
+    [textNode getBoundingBoxMin:&min max:&max];
+    textNode.position = SCNVector3Make(-(min.x+max.x)/2, -(min.y+max.y)/2, -(min.z+max.z)/2);
+
+    SCNNode *textOrigin = [[SCNNode alloc] init];
+    [textOrigin addChildNode:textNode];
+    textOrigin.scale = SCNVector3Make(size, size, size);
+    textOrigin.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:textOrigin];
+}
+
 #pragma mark - ARSCNViewDelegate
 
 /**
@@ -212,6 +230,7 @@
         self.onPlaneDetected(@{
                                @"id": planeAnchor.identifier.UUIDString,
                                @"alignment": @(planeAnchor.alignment),
+                               @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                                @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                                @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                                });
@@ -238,6 +257,7 @@
         self.onPlaneUpdate(@{
                              @"id": planeAnchor.identifier.UUIDString,
                              @"alignment": @(planeAnchor.alignment),
+                             @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                              @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                              @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) }
                              });
@@ -259,6 +279,17 @@
 }
 
 #pragma mark - session
+
+- (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
+    if (self.onTrackingState) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.onTrackingState(@{
+                                   @"state": @(camera.trackingState),
+                                   @"reason": @(camera.trackingStateReason)
+                                   });
+        });
+    }
+}
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
     //    simd_float4 position = frame.camera.transform.columns[3];

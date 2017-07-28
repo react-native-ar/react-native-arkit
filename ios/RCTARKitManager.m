@@ -26,6 +26,7 @@ RCT_EXPORT_VIEW_PROPERTY(lightEstimation, BOOL)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 
 RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[RCTARKit sharedInstance] pause];
@@ -137,6 +138,17 @@ RCT_EXPORT_METHOD(addPlane:(NSDictionary *)object resolve:(RCTPromiseResolveBloc
     property.width = [object[@"width"] floatValue];
     property.height = [object[@"height"] floatValue];
     [[RCTARKit sharedInstance] addPlane:property];
+}
+
+RCT_EXPORT_METHOD(addText:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    TextProperty *property = [[TextProperty alloc] init];
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.fontSize = [object[@"fontSize"] floatValue];
+    property.depth= [object[@"depth"] floatValue];
+    property.text = object[@"text"];
+    [[RCTARKit sharedInstance] addText:property];
 }
 
 @end
