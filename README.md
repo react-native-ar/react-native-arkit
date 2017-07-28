@@ -107,7 +107,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `addTorus` | `{ x, y, z, ringR, pipeR }` | Add a [`SCNTorus`](https://developer.apple.com/documentation/scenekit/scntorus)
 | `addCapsule` | `{ x, y, z, capR, height }` | Add a [`SCNCapsule`](https://developer.apple.com/documentation/scenekit/scncapsule)
 | `addPlane` | `{ x, y, z, width, length }` | Add a [`SCNPlane`](https://developer.apple.com/documentation/scenekit/scnplane)
-
+| `addText` | `{ x, y, z, fontSize, depth, text }` | Add a [`SCNText`](https://developer.apple.com/documentation/scenekit/scntext)
 
 
 ## Contributing
