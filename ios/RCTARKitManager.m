@@ -140,4 +140,15 @@ RCT_EXPORT_METHOD(addPlane:(NSDictionary *)object resolve:(RCTPromiseResolveBloc
     [[RCTARKit sharedInstance] addPlane:property];
 }
 
+RCT_EXPORT_METHOD(addText:(NSDictionary *)object resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    TextProperty *property = [[TextProperty alloc] init];
+    property.x = [object[@"x"] floatValue];
+    property.y = [object[@"y"] floatValue];
+    property.z = [object[@"z"] floatValue];
+    property.fontSize = [object[@"fontSize"] floatValue];
+    property.depth= [object[@"depth"] floatValue];
+    property.text = object[@"text"];
+    [[RCTARKit sharedInstance] addText:property];
+}
+
 @end

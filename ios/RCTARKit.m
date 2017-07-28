@@ -9,6 +9,9 @@
 #import "RCTARKit.h"
 #import "Plane.h"
 
+@implementation TextProperty
+@end
+
 @interface RCTARKit () <ARSCNViewDelegate> {
     RCTPromiseResolveBlock _resolve;
 }
@@ -192,6 +195,23 @@
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     node.position = SCNVector3Make(property.x, property.y, property.z);
     [self.scene.rootNode addChildNode:node];
+}
+
+- (void)addText:(TextProperty*)property {
+    float size = property.fontSize / 10;
+    SCNText *text = [SCNText textWithString:property.text extrusionDepth:property.depth / size];
+    text.font = [UIFont systemFontOfSize:10];
+    SCNNode *textNode = [SCNNode nodeWithGeometry:text];
+    SCNVector3 min;
+    SCNVector3 max;
+    [textNode getBoundingBoxMin:&min max:&max];
+    textNode.position = SCNVector3Make(-(min.x+max.x)/2, -(min.y+max.y)/2, -(min.z+max.z)/2);
+
+    SCNNode *textOrigin = [[SCNNode alloc] init];
+    [textOrigin addChildNode:textNode];
+    textOrigin.scale = SCNVector3Make(size, size, size);
+    textOrigin.position = SCNVector3Make(property.x, property.y, property.z);
+    [self.scene.rootNode addChildNode:textOrigin];
 }
 
 #pragma mark - ARSCNViewDelegate

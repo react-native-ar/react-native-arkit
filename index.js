@@ -76,6 +76,7 @@ class ARKit extends Component {
   addTorus = ARKitManager.addTorus;
   addCapsule = ARKitManager.addCapsule;
   addPlane = ARKitManager.addPlane;
+  addText = ARKitManager.addText;
 
   _onTrackingState = ({ state, reason }) => {
     if (this.props.onTrackingState) {
