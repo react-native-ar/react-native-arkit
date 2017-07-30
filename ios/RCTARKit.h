@@ -51,5 +51,6 @@
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
+- (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame;
 
 @end
