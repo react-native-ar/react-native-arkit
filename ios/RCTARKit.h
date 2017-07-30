@@ -13,91 +13,6 @@
 #import <React/RCTComponent.h>
 #import <React/RCTBridgeModule.h>
 
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float width;
-    float height;
-    float length;
-    float chamfer;
-} BoxProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float radius;
-} SphereProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float radius;
-    float height;
-} CylinderProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float topR;
-    float bottomR;
-    float height;
-} ConeProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float width;
-    float height;
-    float length;
-} PyramidProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float innerR;
-    float outerR;
-    float height;
-} TubeProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float ringR;
-    float pipeR;
-} TorusProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float capR;
-    float height;
-} CapsuleProperty;
-
-typedef struct {
-    float x;
-    float y;
-    float z;
-    float width;
-    float height;
-} PlaneProperty;
-
-@interface TextProperty : NSObject
-@property (nonatomic, assign) float x;
-@property (nonatomic, assign) float y;
-@property (nonatomic, assign) float z;
-@property (nonatomic, assign) CGFloat fontSize;
-@property (nonatomic, assign) float depth;
-@property (nonatomic, strong) NSString *text;
-@end
-
 @interface RCTARKit : ARSCNView
 
 + (instancetype)sharedInstance;
@@ -113,6 +28,8 @@ typedef struct {
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
 @property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 
+@property (nonatomic, copy) SCNNode *origin;
+
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;
 
@@ -120,18 +37,20 @@ typedef struct {
 - (void)pause;
 - (void)resume;
 
-- (void)addBox:(BoxProperty)property;
-- (void)addSphere:(SphereProperty)property;
-- (void)addCylinder:(CylinderProperty)property;
-- (void)addCone:(ConeProperty)property;
-- (void)addPyramid:(PyramidProperty)property;
-- (void)addTube:(TubeProperty)property;
-- (void)addTorus:(TorusProperty)property;
-- (void)addCapsule:(CapsuleProperty)property;
-- (void)addPlane:(PlaneProperty)property;
-- (void)addText:(TextProperty*)property;
+- (void)addBox:(NSDictionary *)property;
+- (void)addSphere:(NSDictionary *)property;
+- (void)addCylinder:(NSDictionary *)property;
+- (void)addCone:(NSDictionary *)property;
+- (void)addPyramid:(NSDictionary *)property;
+- (void)addTube:(NSDictionary *)property;
+- (void)addTorus:(NSDictionary *)property;
+- (void)addCapsule:(NSDictionary *)property;
+- (void)addPlane:(NSDictionary *)property;
+- (void)addText:(NSDictionary *)property;
+- (void)addModel:(NSDictionary *)property;
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
+- (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame;
 
 @end
