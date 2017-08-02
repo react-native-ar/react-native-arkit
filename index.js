@@ -14,6 +14,7 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
+import { parseColorWrapper } from './parseColor';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -30,6 +31,7 @@ class ARKit extends Component {
   state = {
     state: 0,
     reason: 0,
+    floor: null,
   };
 
   render(AR = RCTARKit) {
@@ -45,6 +47,7 @@ class ARKit extends Component {
           />
           <Text style={styles.stateText}>
             {TRACKING_REASONS[this.state.reason] || this.state.reason}
+            {this.state.floor && ` (${this.state.floor})`}
           </Text>
         </View>
       );
@@ -67,27 +70,38 @@ class ARKit extends Component {
   pause = ARKitManager.pause;
   resume = ARKitManager.resume;
 
-  addBox = ARKitManager.addBox;
-  addSphere = ARKitManager.addSphere;
-  addCylinder = ARKitManager.addCylinder;
-  addCone = ARKitManager.addCone;
-  addPyramid = ARKitManager.addPyramid;
-  addTube = ARKitManager.addTube;
-  addTorus = ARKitManager.addTorus;
-  addCapsule = ARKitManager.addCapsule;
-  addPlane = ARKitManager.addPlane;
-  addText = ARKitManager.addText;
+  addBox = parseColorWrapper(ARKitManager.addBox);
+  addSphere = parseColorWrapper(ARKitManager.addSphere);
+  addCylinder = parseColorWrapper(ARKitManager.addCylinder);
+  addCone = parseColorWrapper(ARKitManager.addCone);
+  addPyramid = parseColorWrapper(ARKitManager.addPyramid);
+  addTube = parseColorWrapper(ARKitManager.addTube);
+  addTorus = parseColorWrapper(ARKitManager.addTorus);
+  addCapsule = parseColorWrapper(ARKitManager.addCapsule);
+  addPlane = parseColorWrapper(ARKitManager.addPlane);
+  addText = parseColorWrapper(ARKitManager.addText);
+  addModel = ARKitManager.addModel;
+  addImage = ARKitManager.addImage;
 
-  _onTrackingState = ({ state, reason }) => {
+  _onTrackingState = ({
+    state = this.state.state,
+    reason = this.state.reason,
+    floor,
+  }) => {
     if (this.props.onTrackingState) {
       this.props.onTrackingState({
-        state: TRACKING_STATES[state],
+        state: TRACKING_STATES[state] || state,
         reason: TRACKING_REASONS[reason] || reason,
+        floor,
       });
     }
 
     if (this.props.debug) {
-      this.setState({ state, reason });
+      this.setState({
+        state,
+        reason,
+        floor: floor ? floor.toFixed(2) : this.state.floor,
+      });
     }
   };
 

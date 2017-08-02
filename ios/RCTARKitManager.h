@@ -27,5 +27,6 @@
 - (void)addPlane:(NSDictionary *)property;
 - (void)addText:(NSDictionary *)property;
 - (void)addModel:(NSDictionary *)property;
+- (void)addImage:(NSDictionary *)property;
 
 @end

@@ -13,26 +13,40 @@
 #import <React/RCTComponent.h>
 #import <React/RCTBridgeModule.h>
 
-@interface RCTARKit : ARSCNView
+#if __has_include("ARCL/ARCL-Swift.h")
+#import <ARCL/ARCL-Swift.h>
+@class SceneLocationView;
+#endif
+
+@interface RCTARKit : UIView
 
 + (instancetype)sharedInstance;
 
 @property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
+#if __has_include("ARCL/ARCL-Swift.h")
+@property (nonatomic, strong) SceneLocationView* arView;
+#else
+@property (nonatomic, strong) ARSCNView* arView;
+#endif
+
+@property (nonatomic, strong) ARSession* session;
+
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
 @property (nonatomic, assign) BOOL lightEstimation;
-@property (nonatomic, readonly) NSDictionary *cameraPosition;
+@property (nonatomic, assign) SCNVector3 cameraPosition;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
 @property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 
-@property (nonatomic, copy) SCNNode *origin;
+@property (nonatomic, strong) SCNNode *origin;
 
 @property NSMutableDictionary *planes;
 @property NSMutableArray *boxes;
 
+- (NSDictionary *)readCameraPosition;
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)pause;
 - (void)resume;
@@ -48,8 +62,10 @@
 - (void)addPlane:(NSDictionary *)property;
 - (void)addText:(NSDictionary *)property;
 - (void)addModel:(NSDictionary *)property;
+- (void)addImage:(NSDictionary *)property;
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
+- (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame;
 
 @end

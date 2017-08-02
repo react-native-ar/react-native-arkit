@@ -39,7 +39,7 @@ RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejec
 }
 
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    resolve([[RCTARKit sharedInstance] cameraPosition]);
+    resolve([[RCTARKit sharedInstance] readCameraPosition]);
 }
 
 RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
@@ -88,6 +88,10 @@ RCT_EXPORT_METHOD(addText:(NSDictionary *)property) {
 
 RCT_EXPORT_METHOD(addModel:(NSDictionary *)property) {
     [[RCTARKit sharedInstance] addModel:property];
+}
+
+RCT_EXPORT_METHOD(addImage:(NSDictionary *)property) {
+    [[RCTARKit sharedInstance] addImage:property];
 }
 
 @end
