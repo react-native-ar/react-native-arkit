@@ -90,4 +90,8 @@ RCT_EXPORT_METHOD(addModel:(NSDictionary *)property) {
     [[RCTARKit sharedInstance] addModel:property];
 }
 
+RCT_EXPORT_METHOD(addImage:(NSDictionary *)property) {
+    [[RCTARKit sharedInstance] addImage:property];
+}
+
 @end

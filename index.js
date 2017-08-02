@@ -80,9 +80,14 @@ class ARKit extends Component {
   addCapsule = parseColorWrapper(ARKitManager.addCapsule);
   addPlane = parseColorWrapper(ARKitManager.addPlane);
   addText = parseColorWrapper(ARKitManager.addText);
-  addModel = parseColorWrapper(ARKitManager.addModel);
+  addModel = ARKitManager.addModel;
+  addImage = ARKitManager.addImage;
 
-  _onTrackingState = ({ state, reason, floor }) => {
+  _onTrackingState = ({
+    state = this.state.state,
+    reason = this.state.reason,
+    floor,
+  }) => {
     if (this.props.onTrackingState) {
       this.props.onTrackingState({
         state: TRACKING_STATES[state] || state,
@@ -93,8 +98,8 @@ class ARKit extends Component {
 
     if (this.props.debug) {
       this.setState({
-        state: state || this.state.state,
-        reason: reason || this.state.reason,
+        state,
+        reason,
         floor: floor ? floor.toFixed(2) : this.state.floor,
       });
     }
