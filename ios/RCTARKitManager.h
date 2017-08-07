@@ -16,6 +16,7 @@
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+
 - (void)addBox:(NSDictionary *)property;
 - (void)addSphere:(NSDictionary *)property;
 - (void)addCylinder:(NSDictionary *)property;
@@ -28,5 +29,7 @@
 - (void)addText:(NSDictionary *)property;
 - (void)addModel:(NSDictionary *)property;
 - (void)addImage:(NSDictionary *)property;
+
+- (void)moveNodeToReferenceFrame:(NSDictionary *)property;
 
 @end

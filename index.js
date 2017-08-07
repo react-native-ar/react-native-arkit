@@ -82,6 +82,7 @@ class ARKit extends Component {
   addText = parseColorWrapper(ARKitManager.addText);
   addModel = ARKitManager.addModel;
   addImage = ARKitManager.addImage;
+  moveNodeToReferenceFrame = ARKitManager.moveNodeToReferenceFrame;
 
   _onTrackingState = ({
     state = this.state.state,

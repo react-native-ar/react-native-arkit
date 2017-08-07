@@ -10,11 +10,13 @@
 #import "Plane.h"
 @import CoreLocation;
 
-#if __has_include("ARCL/ARCL-Swift.h")
+#if __has_include("RCTARKitARCL.h")
+#define MODE_ARCL 1
+//#import "RCTARKit+ARCL.h"
 #import <ARCL/ARCL-Swift.h>
 @class SceneLocationView;
-@class AnnotationNode;
-@class LocationAnnotationNode;
+//@class LocationNode;
+//@class LocationAnnotationNode;
 #endif
 
 @interface RCTARKit () <ARSCNViewDelegate> {
@@ -27,42 +29,47 @@
 @implementation RCTARKit
 
 + (instancetype)sharedInstance {
-    static RCTARKit *arView = nil;
+    static RCTARKit *instance = nil;
     static dispatch_once_t onceToken;
 
     dispatch_once(&onceToken, ^{
-        if (arView == nil) {
-            arView = [[self alloc] init];
+        if (instance == nil) {
+            ARSCNView *arView = [[ARSCNView alloc] init];
+            instance = [[self alloc] initWithARView:arView];
         }
     });
 
-    return arView;
+    return instance;
 }
 
-- (instancetype)init {
+- (instancetype)initWithARView:(ARSCNView *)arView {
     if ((self = [super init])) {
+        self.arView = arView;
 
-#if __has_include("ARCL/ARCL-Swift.h")
-        NSLog(@"Running in ARCL mode");
-        self.arView = [[SceneLocationView alloc] init];
-#else
-        NSLog(@"Running in regular ARKit mode");
-        self.arView = [[ARSCNView alloc] init];
-#endif
-
+        // delegates
         self.arView.delegate = self;
         self.arView.session.delegate = self;
 
+        // configuration(s)
         self.arView.autoenablesDefaultLighting = YES;
-
-        self.origin = [[SCNNode alloc] init];
-        self.origin.name = @"origin";
-        [self.arView.scene.rootNode addChildNode:self.origin];
         self.arView.scene.rootNode.name = @"root";
+
+        // local reference frame origin
+        self.localOrigin = [[SCNNode alloc] init];
+        self.localOrigin.name = @"localOrigin";
+        [self.arView.scene.rootNode addChildNode:self.localOrigin];
+
+        // camera reference frame origin
+        self.cameraOrigin = [[SCNNode alloc] init];
+        self.cameraOrigin.name = @"cameraOrigin";
+        [self.arView.scene.rootNode addChildNode:self.cameraOrigin];
+
+        // init cahces
+        self.nodes = [NSMutableDictionary new];
         self.planes = [NSMutableDictionary new];
 
+        // start ARKit
         [self addSubview:self.arView];
-
         [self resume];
     }
     return self;
@@ -74,20 +81,21 @@
 }
 
 - (void)pause {
-#if __has_include("ARCL/ARCL-Swift.h")
-    [self.arView pause];
+#ifdef MODE_ARCL
+    [(SceneLocationView*)self.arView pause];
 #else
     [self.session pause];
 #endif
 }
 
 - (void)resume {
-#if __has_include("ARCL/ARCL-Swift.h")
-    [self.arView run];
+#ifdef MODE_ARCL
+    [(SceneLocationView*)self.arView run];
 #else
     [self.session runWithConfiguration:self.configuration];
 #endif
 }
+
 
 #pragma mark - setter-getter
 
@@ -139,9 +147,9 @@
 
 - (NSDictionary *)readCameraPosition {
     return @{
-             @"x": @(self.cameraPosition.x),
-             @"y": @(self.cameraPosition.y),
-             @"z": @(self.cameraPosition.z)
+             @"x": @(self.cameraOrigin.position.x),
+             @"y": @(self.cameraOrigin.position.y),
+             @"z": @(self.cameraOrigin.position.z)
              };
 }
 
@@ -260,44 +268,36 @@
 }
 
 - (void)addText:(NSDictionary *)property {
-    NSString *font = property[@"font"];
+    // init SCNText
     NSString *text = property[@"text"];
-    float fontSize = [property[@"fontSize"] floatValue];
     CGFloat depth = [property[@"depth"] floatValue];
-    float chamfer = [property[@"chamfer"] floatValue];
-    if (!depth) {
-        depth = 0.0f;
-    }
-    if (!chamfer) {
-        chamfer = 0.0f;
-    }
     if (!text) {
         text = @"(null)";
     }
-
+    if (!depth) {
+        depth = 0.0f;
+    }
+    float fontSize = [property[@"fontSize"] floatValue];
     float size = fontSize / 12;
     SCNText *scnText = [SCNText textWithString:text extrusionDepth:depth / size];
-    NSArray<NSString *> *xx = [UIFont fontNamesForFamilyName:@"Source Sans Pro"];
+    scnText.flatness = 0.1;
 
-    for (NSString *x in xx){
-        NSLog(@"%@", x);
-    }
-
-
+    // font
+    NSString *font = property[@"font"];
     if (font) {
         scnText.font = [UIFont fontWithName:font size:12];
     } else {
         scnText.font = [UIFont systemFontOfSize:12];
     }
-    scnText.flatness = 0.1;
+
+    // chamfer
+    float chamfer = [property[@"chamfer"] floatValue];
+    if (!chamfer) {
+        chamfer = 0.0f;
+    }
     scnText.chamferRadius = chamfer / size;
-    SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
-    SCNVector3 min;
-    SCNVector3 max;
-    [textNode getBoundingBoxMin:&min max:&max];
-    textNode.position = SCNVector3Make(-(min.x+max.x)/2, -(min.y+max.y)/2, -(min.z+max.z)/2);
 
-
+    // color
     CGFloat r = [property[@"r"] floatValue];
     CGFloat g = [property[@"g"] floatValue];
     CGFloat b = [property[@"b"] floatValue];
@@ -310,12 +310,19 @@
     if (!b) {
         b = 0.0f;
     }
-
     SCNMaterial *face = [SCNMaterial new];
     face.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
     SCNMaterial *border = [SCNMaterial new];
     border.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
     scnText.materials = @[face, face, border, border, border];
+
+    // init SCNNode
+    SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
+
+    // position textNode
+    SCNVector3 min, max;
+    [textNode getBoundingBoxMin:&min max:&max];
+    textNode.position = SCNVector3Make(-(min.x + max.x) / 2, -(min.y + max.y) / 2, -(min.z + max.z) / 2);
 
     SCNNode *textOrigin = [[SCNNode alloc] init];
     [textOrigin addChildNode:textNode];
@@ -326,25 +333,22 @@
 - (void)addModel:(NSDictionary *)property {
     float scale = [property[@"scale"] floatValue];
 
-    SCNScene *scene = [SCNScene sceneNamed:property[@"file"]];
-    SCNNode *node = [scene.rootNode childNodeWithName:property[@"nodeName"] recursively:YES];
+    SCNNode *node = [self loadModel:property[@"file"] nodeName:property[@"nodeName"] withAnimation:YES];
     node.scale = SCNVector3Make(scale, scale, scale);
     [self addNodeToScene:node property:property];
 }
 
-- (void)addImage:(NSDictionary *)property {
-#if __has_include("ARCL/ARCL-Swift.h")
-    CLLocation *current = [self.arView currentLocation];
-    CLLocationCoordinate2D coord;
-    coord.longitude = [property[@"longitude"] floatValue];
-    coord.latitude = [property[@"latitude"] floatValue];
-    CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord altitude:current.altitude horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
 
-    UIImage *img = [UIImage imageNamed:property[@"image"]];
-    LocationAnnotationNode *locNode = [[LocationAnnotationNode alloc] initWithLocation:loc image:img];
-    locNode.scaleRelativeToDistance = YES;
-    [self.arView addLocationNodeWithConfirmedLocationWithLocationNode:locNode];
-#endif
+#pragma mark - Executors of adding node to scene
+
+- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
+    node.position = [self getPositionFromProperty:property];
+
+    NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
+    if (key) {
+        [self registerNode:node forKey:key];
+    }
+    [self.localOrigin addChildNode:node];
 }
 
 - (SCNVector3)getPositionFromProperty:(NSDictionary *)property {
@@ -353,45 +357,79 @@
     float z = [property[@"z"] floatValue];
 
     if (property[@"x"] == NULL) {
-        x = self.cameraPosition.x - self.origin.position.x;
+        x = self.cameraOrigin.position.x - self.localOrigin.position.x;
     }
     if (property[@"y"] == NULL) {
-        y = self.cameraPosition.y - self.origin.position.y;
+        y = self.cameraOrigin.position.y - self.localOrigin.position.y;
     }
     if (property[@"z"] == NULL) {
-        z = self.cameraPosition.z - self.origin.position.z;
+        z = self.cameraOrigin.position.z - self.localOrigin.position.z;
     }
+
     return SCNVector3Make(x, y, z);
 }
 
-- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
-#if __has_include("ARCL/ARCL-Swift.h")
-    if (property[@"longitude"] && property[@"longitude"]) {
-        CLLocation *current = [self.arView currentLocation];
-        CLLocationCoordinate2D coord;
-        coord.longitude = [property[@"longitude"] floatValue];
-        coord.latitude = [property[@"latitude"] floatValue];
-        CLLocation *loc = [[CLLocation alloc] initWithCoordinate:coord altitude:current.altitude horizontalAccuracy:0 verticalAccuracy:0 timestamp:nil];
+- (void)moveNodeToReferenceFrame:(NSDictionary *)property {}
 
-        LocationNode *locNode = [[LocationNode alloc] initWithLocation:loc];
-        [locNode addChildNode:node];
-        [self.arView addLocationNodeWithConfirmedLocationWithLocationNode:locNode];
-    } else {
-        LocationNode *locNode = [[LocationNode alloc] initWithLocation:nil];
-        [locNode addChildNode:node];
-        [self.arView addLocationNodeForCurrentPositionWithLocationNode:locNode];
+#pragma mark - Node register
+
+- (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
+    [self removeNodeForKey:key];
+    [self.nodes setObject:node forKey:key];
+}
+
+- (SCNNode *)nodeForKey:(NSString *)key {
+    return [self.nodes objectForKey:key];
+}
+
+- (void)removeNodeForKey:(NSString *)key {
+    SCNNode *node = [self.nodes objectForKey:key];
+    if (node == nil) {
+        return;
     }
-#else
-    node.position = [self getPositionFromProperty:property];
-    [self.origin addChildNode:node];
-#endif
+    [node removeFromParentNode];
+    [self.nodes removeObjectForKey:key];
+}
+
+#pragma mark - Model loader
+
+- (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation {
+    SCNScene *scene = [SCNScene sceneNamed:path];
+    SCNNode *node;
+    if (nodeName) {
+        node = [scene.rootNode childNodeWithName:nodeName recursively:YES];
+    } else {
+        NSArray *nodeArray = [scene.rootNode childNodes];
+        for (SCNNode *eachChild in nodeArray) {
+            [node addChildNode:eachChild];
+        }
+    }
+
+    if (withAnimation) {
+        NSMutableArray *animationMutableArray = [NSMutableArray array];
+        NSURL *url = [[NSBundle mainBundle] URLForResource:path withExtension:@"dae"];
+        SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:url options:@{SCNSceneSourceAnimationImportPolicyKey:SCNSceneSourceAnimationImportPolicyPlayRepeatedly} ];
+
+        NSArray *animationIds = [sceneSource identifiersOfEntriesWithClass:[CAAnimation class]];
+        for (NSString *eachId in animationIds){
+            CAAnimation *animation = [sceneSource entryWithIdentifier:eachId withClass:[CAAnimation class]];
+            [animationMutableArray addObject:animation];
+        }
+        NSArray *animationArray = [NSArray arrayWithArray:animationMutableArray];
+
+        int i = 1;
+        for (CAAnimation *animation in animationArray){
+            NSString *key = [NSString stringWithFormat:@"ANIM_%d", i];
+            [node addAnimation:animation forKey:key];
+            i++;
+        }
+    }
+
+    return node;
 }
 
 #pragma mark - ARSCNViewDelegate
 
-/**
- Called when a new node has been added.
- */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
@@ -409,7 +447,7 @@
     //            @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
     //            @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
     //            @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-    //            @"camera": @{ @"x": @(self.cameraPosition.x), @"y": @(self.cameraPosition.y), @"z": @(self.cameraPosition.z) }
+    //            @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
     //            });
 
     if (self.onPlaneDetected) {
@@ -419,7 +457,7 @@
                                @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                                @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                                @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-                               @"camera": @{ @"x": @(self.cameraPosition.x), @"y": @(self.cameraPosition.y), @"z": @(self.cameraPosition.z) }
+                               @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                                });
     }
 
@@ -428,15 +466,9 @@
     [node addChildNode:plane];
 }
 
-/**
- Called when a node will be updated.
- */
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
 }
 
-/**
- Called when a node has been updated.
- */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
 
@@ -452,7 +484,7 @@
     //                   @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
     //                   @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
     //                   @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-    //                   @"camera": @{ @"x": @(self.cameraPosition.x), @"y": @(self.cameraPosition.y), @"z": @(self.cameraPosition.z) }
+    //                   @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
     //                   });
 
     if (self.onPlaneUpdate) {
@@ -462,7 +494,7 @@
                              @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                              @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                              @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-                             @"camera": @{ @"x": @(self.cameraPosition.x), @"y": @(self.cameraPosition.y), @"z": @(self.cameraPosition.z) }
+                             @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                              });
     }
 
@@ -474,32 +506,31 @@
     [plane update:(ARPlaneAnchor *)anchor];
 }
 
-/**
- Called when a mapped node has been removed.
- */
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     [self.planes removeObjectForKey:anchor.identifier];
 }
 
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time {
-#if __has_include("ARCL/ARCL-Swift.h")
-    [self.arView renderer:renderer didRenderScene:scene atTime:time];
+#ifdef MODE_ARCL
+    [(SceneLocationView*)self.arView renderer:renderer didRenderScene:scene atTime:time];
 #endif
 }
 
 
-#pragma mark - session
+#pragma mark - ARSessionDelegate
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
     simd_float4 pos = frame.camera.transform.columns[3];
-    //    NSLog(@"camera %f %f %f", pos.x, pos.y, pos.z);
-    self.cameraPosition = SCNVector3Make(pos.x, pos.y, pos.z);
+    self.cameraOrigin.position = SCNVector3Make(pos.x, pos.y, pos.z);
+    // TODO: read euler angles from camera transform
+//    CLLocation *loc = [self.arView currentLocation];
+//    NSLog(@"[RCTARKit] Current position (%.2f, %.2f, %.2f) at (%.6f, %.6f)", pos.x, pos.y, pos.z, loc.coordinate.longitude, loc.coordinate.latitude);
 }
 
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
-#if __has_include("ARCL/ARCL-Swift.h")
-    [self.arView session:session cameraDidChangeTrackingState:camera];
+#ifdef MODE_ARCL
+    [(SceneLocationView*)self.arView session:session cameraDidChangeTrackingState:camera];
 #endif
 
     if (self.onTrackingState) {
@@ -513,20 +544,20 @@
 }
 
 - (void)session:(ARSession *)session didFailWithError:(NSError *)error {
-#if __has_include("ARCL/ARCL-Swift.h")
-    [self.arView session:session didFailWithError:error];
+#ifdef MODE_ARCL
+    [(SceneLocationView*)self.arView session:session didFailWithError:error];
 #endif
 }
 
 - (void)sessionWasInterrupted:(ARSession *)session {
-#if __has_include("ARCL/ARCL-Swift.h")
-    [self.arView sessionWasInterrupted:session];
+#ifdef MODE_ARCL
+    [(SceneLocationView*)self.arView sessionWasInterrupted:session];
 #endif
 }
 
 - (void)sessionInterruptionEnded:(ARSession *)session {
-#if __has_include("ARCL/ARCL-Swift.h")
-    [self.arView sessionInterruptionEnded:session];
+#ifdef MODE_ARCL
+    [(SceneLocationView*)self.arView sessionInterruptionEnded:session];
 #endif
 }
 

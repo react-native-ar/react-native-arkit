@@ -13,38 +13,32 @@
 #import <React/RCTComponent.h>
 #import <React/RCTBridgeModule.h>
 
-#if __has_include("ARCL/ARCL-Swift.h")
-#import <ARCL/ARCL-Swift.h>
-@class SceneLocationView;
-#endif
-
 @interface RCTARKit : UIView
 
 + (instancetype)sharedInstance;
 
+- (instancetype)initWithARView:(ARSCNView *)arView;
+
 @property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
-#if __has_include("ARCL/ARCL-Swift.h")
-@property (nonatomic, strong) SceneLocationView* arView;
-#else
 @property (nonatomic, strong) ARSCNView* arView;
-#endif
 
 @property (nonatomic, strong) ARSession* session;
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
 @property (nonatomic, assign) BOOL lightEstimation;
-@property (nonatomic, assign) SCNVector3 cameraPosition;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
 @property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 
-@property (nonatomic, strong) SCNNode *origin;
+// origins for local frame and camera frame
+@property (nonatomic, strong) SCNNode *localOrigin;
+@property (nonatomic, strong) SCNNode *cameraOrigin;
 
-@property NSMutableDictionary *planes;
-@property NSMutableArray *boxes;
+@property NSMutableDictionary *nodes; // nodes added to the scene
+@property NSMutableDictionary *planes; // plane detected
 
 - (NSDictionary *)readCameraPosition;
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
@@ -63,6 +57,15 @@
 - (void)addText:(NSDictionary *)property;
 - (void)addModel:(NSDictionary *)property;
 - (void)addImage:(NSDictionary *)property;
+
+- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property;
+- (SCNVector3)getPositionFromProperty:(NSDictionary *)property;
+
+- (void)moveNodeToReferenceFrame:(NSDictionary *)property;
+
+- (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
+- (SCNNode *)nodeForKey:(NSString *)key;
+- (void)removeNodeForKey:(NSString *)key;
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
