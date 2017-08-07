@@ -15,6 +15,7 @@ import {
   requireNativeComponent,
 } from 'react-native';
 import { parseColorWrapper } from './parseColor';
+import DeviceMotion from './DeviceMotion';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -155,4 +156,4 @@ ARKit.propTypes = {
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
 
-module.exports = ARKit;
+module.exports = { ARKit, DeviceMotion };
