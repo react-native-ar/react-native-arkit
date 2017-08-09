@@ -10,15 +10,6 @@
 #import "Plane.h"
 @import CoreLocation;
 
-#if __has_include("RCTARKitARCL.h")
-#define MODE_ARCL 1
-//#import "RCTARKit+ARCL.h"
-#import <ARCL/ARCL-Swift.h>
-@class SceneLocationView;
-//@class LocationNode;
-//@class LocationAnnotationNode;
-#endif
-
 @interface RCTARKit () <ARSCNViewDelegate> {
     RCTPromiseResolveBlock _resolve;
 }
@@ -38,7 +29,6 @@
             instance = [[self alloc] initWithARView:arView];
         }
     });
-
     return instance;
 }
 
@@ -47,29 +37,30 @@
         self.arView = arView;
 
         // delegates
-        self.arView.delegate = self;
-        self.arView.session.delegate = self;
+        arView.delegate = self;
+        arView.session.delegate = self;
 
         // configuration(s)
-        self.arView.autoenablesDefaultLighting = YES;
-        self.arView.scene.rootNode.name = @"root";
+        arView.autoenablesDefaultLighting = YES;
+        arView.scene.rootNode.name = @"root";
 
         // local reference frame origin
         self.localOrigin = [[SCNNode alloc] init];
         self.localOrigin.name = @"localOrigin";
-        [self.arView.scene.rootNode addChildNode:self.localOrigin];
+        [arView.scene.rootNode addChildNode:self.localOrigin];
 
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-        [self.arView.scene.rootNode addChildNode:self.cameraOrigin];
+        self.cameraOrigin.opacity = 0.7;
+        [arView.scene.rootNode addChildNode:self.cameraOrigin];
 
         // init cahces
         self.nodes = [NSMutableDictionary new];
         self.planes = [NSMutableDictionary new];
 
         // start ARKit
-        [self addSubview:self.arView];
+        [self addSubview:arView];
         [self resume];
     }
     return self;
@@ -81,19 +72,12 @@
 }
 
 - (void)pause {
-#ifdef MODE_ARCL
-    [(SceneLocationView*)self.arView pause];
-#else
     [self.session pause];
-#endif
 }
 
 - (void)resume {
-#ifdef MODE_ARCL
-    [(SceneLocationView*)self.arView run];
-#else
-    [self.session runWithConfiguration:self.configuration];
-#endif
+    NSLog(@"test");
+//    [self.session runWithConfiguration:self.configuration];
 }
 
 
@@ -152,6 +136,7 @@
              @"z": @(self.cameraOrigin.position.z)
              };
 }
+
 
 #pragma mark - Lazy loads
 
@@ -339,6 +324,45 @@
 }
 
 
+#pragma mark - Model loader
+
+- (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation {
+    SCNScene *scene = [SCNScene sceneNamed:path];
+    SCNNode *node;
+    if (nodeName) {
+        node = [scene.rootNode childNodeWithName:nodeName recursively:YES];
+    } else {
+        node = [[SCNNode alloc] init];
+        NSArray *nodeArray = [scene.rootNode childNodes];
+        for (SCNNode *eachChild in nodeArray) {
+            [node addChildNode:eachChild];
+        }
+    }
+
+    if (withAnimation) {
+        NSMutableArray *animationMutableArray = [NSMutableArray array];
+        NSURL *url = [[NSBundle mainBundle] URLForResource:path withExtension:@"dae"];
+        SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:url options:@{SCNSceneSourceAnimationImportPolicyKey:SCNSceneSourceAnimationImportPolicyPlayRepeatedly} ];
+
+        NSArray *animationIds = [sceneSource identifiersOfEntriesWithClass:[CAAnimation class]];
+        for (NSString *eachId in animationIds){
+            CAAnimation *animation = [sceneSource entryWithIdentifier:eachId withClass:[CAAnimation class]];
+            [animationMutableArray addObject:animation];
+        }
+        NSArray *animationArray = [NSArray arrayWithArray:animationMutableArray];
+
+        int i = 1;
+        for (CAAnimation *animation in animationArray){
+            NSString *key = [NSString stringWithFormat:@"ANIM_%d", i];
+            [node addAnimation:animation forKey:key];
+            i++;
+        }
+    }
+
+    return node;
+}
+
+
 #pragma mark - Executors of adding node to scene
 
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
@@ -371,6 +395,7 @@
 
 - (void)moveNodeToReferenceFrame:(NSDictionary *)property {}
 
+
 #pragma mark - Node register
 
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
@@ -391,42 +416,6 @@
     [self.nodes removeObjectForKey:key];
 }
 
-#pragma mark - Model loader
-
-- (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation {
-    SCNScene *scene = [SCNScene sceneNamed:path];
-    SCNNode *node;
-    if (nodeName) {
-        node = [scene.rootNode childNodeWithName:nodeName recursively:YES];
-    } else {
-        NSArray *nodeArray = [scene.rootNode childNodes];
-        for (SCNNode *eachChild in nodeArray) {
-            [node addChildNode:eachChild];
-        }
-    }
-
-    if (withAnimation) {
-        NSMutableArray *animationMutableArray = [NSMutableArray array];
-        NSURL *url = [[NSBundle mainBundle] URLForResource:path withExtension:@"dae"];
-        SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:url options:@{SCNSceneSourceAnimationImportPolicyKey:SCNSceneSourceAnimationImportPolicyPlayRepeatedly} ];
-
-        NSArray *animationIds = [sceneSource identifiersOfEntriesWithClass:[CAAnimation class]];
-        for (NSString *eachId in animationIds){
-            CAAnimation *animation = [sceneSource entryWithIdentifier:eachId withClass:[CAAnimation class]];
-            [animationMutableArray addObject:animation];
-        }
-        NSArray *animationArray = [NSArray arrayWithArray:animationMutableArray];
-
-        int i = 1;
-        for (CAAnimation *animation in animationArray){
-            NSString *key = [NSString stringWithFormat:@"ANIM_%d", i];
-            [node addAnimation:animation forKey:key];
-            i++;
-        }
-    }
-
-    return node;
-}
 
 #pragma mark - ARSCNViewDelegate
 
@@ -511,28 +500,17 @@
 }
 
 
-- (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time {
-#ifdef MODE_ARCL
-    [(SceneLocationView*)self.arView renderer:renderer didRenderScene:scene atTime:time];
-#endif
-}
-
-
 #pragma mark - ARSessionDelegate
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
     simd_float4 pos = frame.camera.transform.columns[3];
     self.cameraOrigin.position = SCNVector3Make(pos.x, pos.y, pos.z);
-    // TODO: read euler angles from camera transform
-//    CLLocation *loc = [self.arView currentLocation];
-//    NSLog(@"[RCTARKit] Current position (%.2f, %.2f, %.2f) at (%.6f, %.6f)", pos.x, pos.y, pos.z, loc.coordinate.longitude, loc.coordinate.latitude);
+
+    simd_float4 z = frame.camera.transform.columns[2];
+    self.cameraOrigin.eulerAngles = SCNVector3Make(0, atan2f(z.x, z.z), 0);
 }
 
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
-#ifdef MODE_ARCL
-    [(SceneLocationView*)self.arView session:session cameraDidChangeTrackingState:camera];
-#endif
-
     if (self.onTrackingState) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.onTrackingState(@{
@@ -541,24 +519,6 @@
                                    });
         });
     }
-}
-
-- (void)session:(ARSession *)session didFailWithError:(NSError *)error {
-#ifdef MODE_ARCL
-    [(SceneLocationView*)self.arView session:session didFailWithError:error];
-#endif
-}
-
-- (void)sessionWasInterrupted:(ARSession *)session {
-#ifdef MODE_ARCL
-    [(SceneLocationView*)self.arView sessionWasInterrupted:session];
-#endif
-}
-
-- (void)sessionInterruptionEnded:(ARSession *)session {
-#ifdef MODE_ARCL
-    [(SceneLocationView*)self.arView sessionInterruptionEnded:session];
-#endif
 }
 
 @end

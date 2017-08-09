@@ -68,7 +68,11 @@
 - (void)removeNodeForKey:(NSString *)key;
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
+- (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
+- (void)renderer:(id <SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
+
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame;
+- (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera;
 
 @end
