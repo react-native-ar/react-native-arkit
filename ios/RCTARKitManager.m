@@ -41,7 +41,7 @@ RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 }
 
 RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[RCTARKit sharedInstance] resume];
+    [[ARKit sharedInstance] resume];
     resolve(@{});
 }
 
