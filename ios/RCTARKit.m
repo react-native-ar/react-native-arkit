@@ -76,8 +76,7 @@
 }
 
 - (void)resume {
-    NSLog(@"test");
-//    [self.session runWithConfiguration:self.configuration];
+    [self.session runWithConfiguration:self.configuration];
 }
 
 
