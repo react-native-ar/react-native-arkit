@@ -14,6 +14,9 @@
     RCTPromiseResolveBlock _resolve;
 }
 
+@property (nonatomic, strong) ARSession* session;
+@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
+
 @end
 
 
@@ -80,6 +83,7 @@
 }
 
 
+
 #pragma mark - setter-getter
 
 - (ARSession*)session {
@@ -137,6 +141,7 @@
 }
 
 
+
 #pragma mark - Lazy loads
 
 -(ARWorldTrackingSessionConfiguration *)configuration {
@@ -152,7 +157,14 @@
 }
 
 
-#pragma mark - methods
+
+#pragma mark - Methods
+
+- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    UIImage *image = [self.arView snapshot];
+    _resolve = resolve;
+    UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
+}
 
 - (void)thisImage:(UIImage *)image savedInAlbumWithError:(NSError *)error ctx:(void *)ctx {
     if (error) {
@@ -161,12 +173,8 @@
     }
 }
 
-- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-    UIImage *image = [self.arView snapshot];
-    _resolve = resolve;
-    UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
-}
 
+#pragma mark add models in the scene
 - (void)addBox:(NSDictionary *)property {
     float width = [property[@"width"] floatValue];
     float height = [property[@"height"] floatValue];
@@ -323,7 +331,7 @@
 }
 
 
-#pragma mark - Model loader
+#pragma mark model loader
 
 - (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation {
     SCNScene *scene = [SCNScene sceneNamed:path];
@@ -362,7 +370,7 @@
 }
 
 
-#pragma mark - Executors of adding node to scene
+#pragma mark executors of adding node to scene
 
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
     node.position = [self getPositionFromProperty:property];
@@ -392,10 +400,8 @@
     return SCNVector3Make(x, y, z);
 }
 
-- (void)moveNodeToReferenceFrame:(NSDictionary *)property {}
 
-
-#pragma mark - Node register
+#pragma mark node register
 
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
     [self removeNodeForKey:key];
@@ -414,6 +420,13 @@
     [node removeFromParentNode];
     [self.nodes removeObjectForKey:key];
 }
+
+
+#pragma mark empty
+- (void)moveNodeToReferenceFrame:(NSDictionary *)property {}
+- (void)turnOnARBrush {}
+- (void)turnOffARBrush {}
+
 
 
 #pragma mark - ARSCNViewDelegate
@@ -518,6 +531,11 @@
                                    });
         });
     }
+}
+
+
+#pragma mark - dealloc
+-(void) dealloc {
 }
 
 @end

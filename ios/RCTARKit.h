@@ -16,14 +16,12 @@
 @interface RCTARKit : UIView
 
 + (instancetype)sharedInstance;
-
 - (instancetype)initWithARView:(ARSCNView *)arView;
 
-@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 
+
+#pragma mark - Properties
 @property (nonatomic, strong) ARSCNView* arView;
-
-@property (nonatomic, strong) ARSession* session;
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
@@ -40,11 +38,16 @@
 @property NSMutableDictionary *nodes; // nodes added to the scene
 @property NSMutableDictionary *planes; // plane detected
 
-- (NSDictionary *)readCameraPosition;
-- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+
+
+#pragma mark - Public Method
 - (void)pause;
 - (void)resume;
+- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (NSDictionary *)readCameraPosition;
 
+
+#pragma mark add
 - (void)addBox:(NSDictionary *)property;
 - (void)addSphere:(NSDictionary *)property;
 - (void)addCylinder:(NSDictionary *)property;
@@ -58,15 +61,23 @@
 - (void)addModel:(NSDictionary *)property;
 - (void)addImage:(NSDictionary *)property;
 
+- (void)moveNodeToReferenceFrame:(NSDictionary *)property;
+- (void)turnOnARBrush;
+- (void)turnOffARBrush;
+
+
+
+#pragma mark - Private
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property;
 - (SCNVector3)getPositionFromProperty:(NSDictionary *)property;
-
-- (void)moveNodeToReferenceFrame:(NSDictionary *)property;
 
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
 - (SCNNode *)nodeForKey:(NSString *)key;
 - (void)removeNodeForKey:(NSString *)key;
 
+
+
+#pragma mark - Delegates
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;

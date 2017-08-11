@@ -41,17 +41,18 @@ RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 }
 
 RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[ARKit sharedInstance] resume];
+    [[RCTARKit sharedInstance] resume];
     resolve(@{});
+}
+
+RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance] snapshot:resolve reject:reject];
 }
 
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
 
-RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[ARKit sharedInstance] snapshot:resolve reject:reject];
-}
 
 RCT_EXPORT_METHOD(addBox:(NSDictionary *)property) {
     [[ARKit sharedInstance] addBox:property];
@@ -103,6 +104,14 @@ RCT_EXPORT_METHOD(addImage:(NSDictionary *)property) {
 
 RCT_EXPORT_METHOD(moveNodeToReferenceFrame:(NSDictionary *)property) {
     [[ARKit sharedInstance] moveNodeToReferenceFrame:property];
+}
+
+RCT_EXPORT_METHOD(turnOnARBrush) {
+    [[ARKit sharedInstance] turnOnARBrush];
+}
+
+RCT_EXPORT_METHOD(turnOffARBrush) {
+    [[ARKit sharedInstance] turnOffARBrush];
 }
 
 @end
