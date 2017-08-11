@@ -84,7 +84,7 @@ class ARKit extends Component {
   addModel = ARKitManager.addModel;
   addImage = ARKitManager.addImage;
   moveNodeToReferenceFrame = ARKitManager.moveNodeToReferenceFrame;
-  turnOnARBrush = ARKitManager.turnOnARBrush;
+  turnOnARBrush = parseColorWrapper(ARKitManager.turnOnARBrush);
   turnOffARBrush = ARKitManager.turnOffARBrush;
 
   _onTrackingState = ({

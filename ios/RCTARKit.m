@@ -424,7 +424,7 @@
 
 #pragma mark empty
 - (void)moveNodeToReferenceFrame:(NSDictionary *)property {}
-- (void)turnOnARBrush {}
+- (void)turnOnARBrush:(nullable NSDictionary *)property {};
 - (void)turnOffARBrush {}
 
 

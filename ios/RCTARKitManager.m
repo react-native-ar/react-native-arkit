@@ -106,8 +106,8 @@ RCT_EXPORT_METHOD(moveNodeToReferenceFrame:(NSDictionary *)property) {
     [[ARKit sharedInstance] moveNodeToReferenceFrame:property];
 }
 
-RCT_EXPORT_METHOD(turnOnARBrush) {
-    [[ARKit sharedInstance] turnOnARBrush];
+RCT_EXPORT_METHOD(turnOnARBrush:(nullable NSDictionary *)property) {
+    [[ARKit sharedInstance] turnOnARBrush:property];
 }
 
 RCT_EXPORT_METHOD(turnOffARBrush) {
