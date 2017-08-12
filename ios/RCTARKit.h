@@ -65,6 +65,8 @@
 - (void)turnOnARBrush:(nullable NSDictionary *)property;
 - (void)turnOffARBrush;
 
+- (void)removeNodeForKey:(NSString *)key;
+
 
 
 #pragma mark - Private
@@ -87,3 +89,12 @@
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera;
 
 @end
+
+
+
+#if __has_include("RCTARKitARCL.h")
+#import "RCTARKitARCL.h"
+@compatibility_alias ARKit RCTARKitARCL;
+#else
+@compatibility_alias ARKit RCTARKit;
+#endif

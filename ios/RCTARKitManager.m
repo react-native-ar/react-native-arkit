@@ -9,15 +9,6 @@
 #import "RCTARKitManager.h"
 #import "RCTARKit.h"
 
-#if __has_include("RCTARKitARCL.h")
-#import "RCTARKitARCL.h"
-@compatibility_alias ARKit RCTARKitARCL;
-#else
-@compatibility_alias ARKit RCTARKit;
-#endif
-
-@interface RCTARKitManager ()
-@end
 
 @implementation RCTARKitManager
 

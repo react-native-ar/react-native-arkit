@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		10062C831F127572009AE974 /* RCTARKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10062C821F127572009AE974 /* RCTARKitManager.m */; };
+		106999E51F3EC30100032829 /* ARBoxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106999E41F3EC2FB00032829 /* ARBoxManager.m */; };
 		10E553291F1391350059B7EC /* Plane.m in Sources */ = {isa = PBXBuildFile; fileRef = 10E553281F1391350059B7EC /* Plane.m */; };
 		10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 10ED47A61F38BC00004DF043 /* DeviceMotion.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTARKit.m */; };
@@ -28,6 +29,8 @@
 /* Begin PBXFileReference section */
 		10062C811F127566009AE974 /* RCTARKitManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitManager.h; sourceTree = "<group>"; };
 		10062C821F127572009AE974 /* RCTARKitManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitManager.m; sourceTree = "<group>"; };
+		106999E31F3EC2FB00032829 /* ARBoxManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARBoxManager.h; sourceTree = "<group>"; };
+		106999E41F3EC2FB00032829 /* ARBoxManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARBoxManager.m; sourceTree = "<group>"; };
 		10E553271F1391350059B7EC /* Plane.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plane.h; sourceTree = "<group>"; };
 		10E553281F1391350059B7EC /* Plane.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Plane.m; sourceTree = "<group>"; };
 		10ED47A51F38BC00004DF043 /* DeviceMotion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceMotion.h; sourceTree = "<group>"; };
@@ -48,6 +51,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		106999E21F3EC2FB00032829 /* components */ = {
+			isa = PBXGroup;
+			children = (
+				106999E31F3EC2FB00032829 /* ARBoxManager.h */,
+				106999E41F3EC2FB00032829 /* ARBoxManager.m */,
+			);
+			path = components;
+			sourceTree = "<group>";
+		};
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -59,6 +71,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				106999E21F3EC2FB00032829 /* components */,
 				10ED47A51F38BC00004DF043 /* DeviceMotion.h */,
 				10ED47A61F38BC00004DF043 /* DeviceMotion.m */,
 				10E553271F1391350059B7EC /* Plane.h */,
@@ -127,6 +140,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				106999E51F3EC30100032829 /* ARBoxManager.m in Sources */,
 				10E553291F1391350059B7EC /* Plane.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */,
 				10062C831F127572009AE974 /* RCTARKitManager.m in Sources */,

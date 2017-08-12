@@ -176,10 +176,10 @@
 
 #pragma mark add models in the scene
 - (void)addBox:(NSDictionary *)property {
-    float width = [property[@"width"] floatValue];
-    float height = [property[@"height"] floatValue];
-    float length = [property[@"length"] floatValue];
-    float chamfer = [property[@"chamfer"] floatValue];
+    CGFloat width = [property[@"width"] floatValue];
+    CGFloat height = [property[@"height"] floatValue];
+    CGFloat length = [property[@"length"] floatValue];
+    CGFloat chamfer = [property[@"chamfer"] floatValue];
 
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -187,7 +187,7 @@
 }
 
 - (void)addSphere:(NSDictionary *)property {
-    float radius = [property[@"radius"] floatValue];
+    CGFloat radius = [property[@"radius"] floatValue];
 
     SCNSphere *geometry = [SCNSphere sphereWithRadius:radius];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -195,8 +195,8 @@
 }
 
 - (void)addCylinder:(NSDictionary *)property {
-    float radius = [property[@"radius"] floatValue];
-    float height = [property[@"height"] floatValue];
+    CGFloat radius = [property[@"radius"] floatValue];
+    CGFloat height = [property[@"height"] floatValue];
 
     SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:radius height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -204,9 +204,9 @@
 }
 
 - (void)addCone:(NSDictionary *)property {
-    float topR = [property[@"topR"] floatValue];
-    float bottomR = [property[@"bottomR"] floatValue];
-    float height = [property[@"height"] floatValue];
+    CGFloat topR = [property[@"topR"] floatValue];
+    CGFloat bottomR = [property[@"bottomR"] floatValue];
+    CGFloat height = [property[@"height"] floatValue];
 
     SCNCone *geometry = [SCNCone coneWithTopRadius:topR bottomRadius:bottomR height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -214,9 +214,9 @@
 }
 
 - (void)addPyramid:(NSDictionary *)property {
-    float width = [property[@"width"] floatValue];
-    float length = [property[@"length"] floatValue];
-    float height = [property[@"height"] floatValue];
+    CGFloat width = [property[@"width"] floatValue];
+    CGFloat length = [property[@"length"] floatValue];
+    CGFloat height = [property[@"height"] floatValue];
 
     SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:width height:height length:length];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -224,17 +224,17 @@
 }
 
 - (void)addTube:(NSDictionary *)property {
-    float innerR = [property[@"innerR"] floatValue];
-    float outerR = [property[@"outerR"] floatValue];
-    float height = [property[@"height"] floatValue];
+    CGFloat innerR = [property[@"innerR"] floatValue];
+    CGFloat outerR = [property[@"outerR"] floatValue];
+    CGFloat height = [property[@"height"] floatValue];
     SCNTube *geometry = [SCNTube tubeWithInnerRadius:innerR outerRadius:outerR height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
 
 - (void)addTorus:(NSDictionary *)property {
-    float ringR = [property[@"ringR"] floatValue];
-    float pipeR = [property[@"pipeR"] floatValue];
+    CGFloat ringR = [property[@"ringR"] floatValue];
+    CGFloat pipeR = [property[@"pipeR"] floatValue];
 
     SCNTorus *geometry = [SCNTorus torusWithRingRadius:ringR pipeRadius:pipeR];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -242,8 +242,8 @@
 }
 
 - (void)addCapsule:(NSDictionary *)property {
-    float capR = [property[@"capR"] floatValue];
-    float height = [property[@"height"] floatValue];
+    CGFloat capR = [property[@"capR"] floatValue];
+    CGFloat height = [property[@"height"] floatValue];
 
     SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:capR height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -251,8 +251,8 @@
 }
 
 - (void)addPlane:(NSDictionary *)property {
-    float width = [property[@"width"] floatValue];
-    float height = [property[@"height"] floatValue];
+    CGFloat width = [property[@"width"] floatValue];
+    CGFloat height = [property[@"height"] floatValue];
 
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
@@ -269,8 +269,8 @@
     if (!depth) {
         depth = 0.0f;
     }
-    float fontSize = [property[@"fontSize"] floatValue];
-    float size = fontSize / 12;
+    CGFloat fontSize = [property[@"fontSize"] floatValue];
+    CGFloat size = fontSize / 12;
     SCNText *scnText = [SCNText textWithString:text extrusionDepth:depth / size];
     scnText.flatness = 0.1;
 
@@ -283,7 +283,7 @@
     }
 
     // chamfer
-    float chamfer = [property[@"chamfer"] floatValue];
+    CGFloat chamfer = [property[@"chamfer"] floatValue];
     if (!chamfer) {
         chamfer = 0.0f;
     }
@@ -323,7 +323,7 @@
 }
 
 - (void)addModel:(NSDictionary *)property {
-    float scale = [property[@"scale"] floatValue];
+    CGFloat scale = [property[@"scale"] floatValue];
 
     SCNNode *node = [self loadModel:property[@"file"] nodeName:property[@"nodeName"] withAnimation:YES];
     node.scale = SCNVector3Make(scale, scale, scale);
@@ -383,9 +383,9 @@
 }
 
 - (SCNVector3)getPositionFromProperty:(NSDictionary *)property {
-    float x = [property[@"x"] floatValue];
-    float y = [property[@"y"] floatValue];
-    float z = [property[@"z"] floatValue];
+    CGFloat x = [property[@"x"] floatValue];
+    CGFloat y = [property[@"y"] floatValue];
+    CGFloat z = [property[@"z"] floatValue];
 
     if (property[@"x"] == NULL) {
         x = self.cameraOrigin.position.x - self.localOrigin.position.x;
