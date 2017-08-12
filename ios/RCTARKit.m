@@ -269,13 +269,13 @@
     if (!depth) {
         depth = 0.0f;
     }
-    CGFloat fontSize = [property[@"fontSize"] floatValue];
+    CGFloat fontSize = [property[@"size"] floatValue];
     CGFloat size = fontSize / 12;
     SCNText *scnText = [SCNText textWithString:text extrusionDepth:depth / size];
     scnText.flatness = 0.1;
 
     // font
-    NSString *font = property[@"font"];
+    NSString *font = property[@"name"];
     if (font) {
         scnText.font = [UIFont fontWithName:font size:12];
     } else {
@@ -325,7 +325,7 @@
 - (void)addModel:(NSDictionary *)property {
     CGFloat scale = [property[@"scale"] floatValue];
 
-    SCNNode *node = [self loadModel:property[@"file"] nodeName:property[@"nodeName"] withAnimation:YES];
+    SCNNode *node = [self loadModel:property[@"file"] nodeName:property[@"node"] withAnimation:YES];
     node.scale = SCNVector3Make(scale, scale, scale);
     [self addNodeToScene:node property:property];
 }

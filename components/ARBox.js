@@ -12,11 +12,11 @@ import id from './lib/id';
 
 const ARBoxManager = NativeModules.ARBoxManager;
 
-class Box extends Component {
+class ARBox extends Component {
   identifier = null;
 
   componentWillMount() {
-    this.identifier = id();
+    this.identifier = this.props.id || id();
     ARBoxManager.mount({
       id: this.identifier,
       ...this.props.pos,
@@ -33,11 +33,12 @@ class Box extends Component {
   }
 }
 
-Box.propTypes = {
+ARBox.propTypes = {
   pos: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number,
     z: PropTypes.number,
+    frame: PropTypes.string,
   }),
   shape: PropTypes.shape({
     width: PropTypes.number,
@@ -47,4 +48,4 @@ Box.propTypes = {
   }),
 };
 
-module.exports = Box;
+module.exports = ARBox;

@@ -9,5 +9,7 @@ import ARKit from './ARKit';
 import DeviceMotion from './DeviceMotion';
 
 import ARBox from './components/ARBox';
+import ARText from './components/ARText';
+import ARModel from './components/ARModel';
 
-module.exports = { ARKit, DeviceMotion, ARBox };
+module.exports = { ARKit, DeviceMotion, ARBox, ARText, ARModel };

@@ -1,5 +1,5 @@
 //
-//  ARBoxManager.h
+//  ARModelManager.h
 //  RCTARKit
 //
 //  Created by Zehao Li on 8/12/17.
@@ -8,6 +8,6 @@
 
 #import <React/RCTBridgeModule.h>
 
-@interface ARBoxManager : NSObject <RCTBridgeModule>
+@interface ARModelManager : NSObject <RCTBridgeModule>
 
 @end

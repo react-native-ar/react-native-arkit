@@ -9,7 +9,6 @@
 #import "RCTARKitManager.h"
 #import "RCTARKit.h"
 
-
 @implementation RCTARKitManager
 
 RCT_EXPORT_MODULE()
