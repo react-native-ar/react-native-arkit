@@ -65,27 +65,6 @@ class ARKit extends Component {
     );
   }
 
-  getCameraPosition = ARKitManager.getCameraPosition;
-  snapshot = ARKitManager.snapshot;
-  pause = ARKitManager.pause;
-  resume = ARKitManager.resume;
-
-  addBox = parseColorWrapper(ARKitManager.addBox);
-  addSphere = parseColorWrapper(ARKitManager.addSphere);
-  addCylinder = parseColorWrapper(ARKitManager.addCylinder);
-  addCone = parseColorWrapper(ARKitManager.addCone);
-  addPyramid = parseColorWrapper(ARKitManager.addPyramid);
-  addTube = parseColorWrapper(ARKitManager.addTube);
-  addTorus = parseColorWrapper(ARKitManager.addTorus);
-  addCapsule = parseColorWrapper(ARKitManager.addCapsule);
-  addPlane = parseColorWrapper(ARKitManager.addPlane);
-  addText = parseColorWrapper(ARKitManager.addText);
-  addModel = ARKitManager.addModel;
-  addImage = ARKitManager.addImage;
-  moveNodeToReferenceFrame = ARKitManager.moveNodeToReferenceFrame;
-  turnOnARBrush = parseColorWrapper(ARKitManager.turnOnARBrush);
-  turnOffARBrush = ARKitManager.turnOffARBrush;
-
   _onTrackingState = ({
     state = this.state.state,
     reason = this.state.reason,
@@ -145,6 +124,23 @@ const styles = StyleSheet.create({
     height: 12,
   },
 });
+
+ARKit.getCameraPosition = ARKitManager.getCameraPosition;
+ARKit.snapshot = ARKitManager.snapshot;
+ARKit.pause = ARKitManager.pause;
+ARKit.resume = ARKitManager.resume;
+ARKit.addBox = parseColorWrapper(ARKitManager.addBox);
+ARKit.addSphere = parseColorWrapper(ARKitManager.addSphere);
+ARKit.addCylinder = parseColorWrapper(ARKitManager.addCylinder);
+ARKit.addCone = parseColorWrapper(ARKitManager.addCone);
+ARKit.addPyramid = parseColorWrapper(ARKitManager.addPyramid);
+ARKit.addTube = parseColorWrapper(ARKitManager.addTube);
+ARKit.addTorus = parseColorWrapper(ARKitManager.addTorus);
+ARKit.addCapsule = parseColorWrapper(ARKitManager.addCapsule);
+ARKit.addPlane = parseColorWrapper(ARKitManager.addPlane);
+ARKit.addText = parseColorWrapper(ARKitManager.addText);
+ARKit.addModel = ARKitManager.addModel;
+ARKit.addImage = ARKitManager.addImage;
 
 ARKit.propTypes = {
   debug: PropTypes.bool,

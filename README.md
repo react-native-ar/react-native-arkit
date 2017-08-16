@@ -37,35 +37,62 @@ A simple sample React Native ARKit App
 
 import React, { Component } from 'react';
 import { AppRegistry, View } from 'react-native';
-import ARKit from 'react-native-arkit';
+import { ARKit } from 'react-native-arkit';
 
 export default class ReactNativeARKit extends Component {
-  componentDidMount() {
-    // Add a cube in the scene. Only support cube geometry at the moment
-    this.arkit.addBox({ x: 0, y: 0, z: 0, width: 0.1, height: 0.1, length: 0.1, chamfer: 0.01 });
-    this.arkit.addSphere({ x: 0.2, y: 0, z: 0, radius: 0.05 });
-    this.arkit.addCylinder({ x: 0.4, y: 0, z: 0, radius: 0.05, height: 0.1 });
-    this.arkit.addCone({ x: 0, y: 0.2, z: 0, topR: 0, bottomR: 0.05, height: 0.1 });
-    this.arkit.addPyramid({ x: 0.2, y: 0.15, z: 0, width: 0.1, height: 0.1, length: 0.1 });
-    this.arkit.addTube({ x: 0.4, y: 0.2, z: 0, innerR: 0.03, outerR: 0.05, height: 0.1 });
-    this.arkit.addTorus({ x: 0, y: 0.4, z: 0, ringR: 0.06, pipeR: 0.02 });
-    this.arkit.addCapsule({ x: 0.2, y: 0.4, z: 0, capR: 0.02, height: 0.06 });
-    this.arkit.addPlane({ x: 0.4, y: 0.4, z: 0, width: 0.1, height: 0.1 });
-    this.arkit.addText({ x: 0.2, y: 0.6, z: 0, fontSize: 0.1, depth: 0.05, text: 'ARKit is Cool!' });
-  }
-
   render() {
     return (
       <View style={{ flex: 1 }}>
         <ARKit
-          ref={arkit => this.arkit = arkit}
           style={{ flex: 1 }}
           debug
           planeDetection
           lightEstimation
           onPlaneDetected={console.log} // event listener for plane detection
           onPlaneUpdate={console.log} // event listener for plane update
-        />
+        >
+          <ARKit.Box
+            pos={{ x: 0, y: 0, z: 0 }}
+            shape={{ width: 0.1, height: 0.1, length: 0.1, chamfer: 0.01 }}
+          />
+          <ARKit.Sphere
+            pos={{ x: 0.2, y: 0, z: 0 }}
+            shape={{ radius: 0.05 }}
+          />
+          <ARKit.Cylinder
+            pos={{ x: 0.4, y: 0, z: 0 }}
+            shape={{ radius: 0.05, height: 0.1 }}
+          />
+          <ARKit.Cone
+            pos={{ x: 0, y: 0.2, z: 0 }}
+            shape={{ topR: 0, bottomR: 0.05, height: 0.1 }}
+          />
+          <ARKit.Pyramid
+            pos={{ x: 0.2, y: 0.15, z: 0 }}
+            shape={{ width: 0.1, height: 0.1, length: 0.1 }}
+          />
+          <ARKit.Tube
+            pos={{ x: 0.4, y: 0.2, z: 0 }}
+            shape={{ innerR: 0.03, outerR: 0.05, height: 0.1 }}
+          />
+          <ARKit.Torus
+            pos={{ x: 0, y: 0.4, z: 0 }}
+            shape={{ ringR: 0.06, pipeR: 0.02 }}
+          />
+          <ARKit.Capsule
+            pos={{ x: 0.2, y: 0.4, z: 0 }}
+            shape={{ capR: 0.02, height: 0.06 }}
+          />
+          <ARKit.Plane
+            pos={{ x: 0.4, y: 0.4, z: 0 }}
+            shape={{ width: 0.1, height: 0.1 }}
+          />
+          <ARKit.Text
+            text="ARKit is Cool!"
+            pos={{ x: 0.2, y: 0.6, z: 0 }}
+            font={{ size: 0.15, depth: 0.05 }}
+          />
+        </ARKit>
       </View>
     );
   }
@@ -77,7 +104,11 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 <img src="screenshots/geometries.jpg" width="250">
 
-### Props
+### Components
+
+#### `<ARKit />`
+
+##### Props
 
 | Prop | Type | Default | Note |
 |---|---|---|---|
@@ -85,29 +116,111 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `planeDetection` | `Boolean` | `false` | ARKit plane detection.
 | `lightEstimation` | `Boolean` | `false` | ARKit light estimation.
 
-### Events
+##### Events
 
 | Event Name | Returns | Notes
 |---|---|---|
 | `onPlaneDetected` | `{ id, center, extent }` | When a plane is first detected.
 | `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
 
-### Instance methods
+##### Static methods
 
 | Method Name | Arguments | Notes
 |---|---|---|
 | `snapshot` |  | Take a screenshot (will save to Photo Library)
 | `getCameraPosition` |  | Get the current position of the `ARCamera`
-| `addBox` | `{ x, y, z, width, height, length, chamfer }` | Add a [`SCNCube`](https://developer.apple.com/documentation/scenekit/scnbox)
-| `addSphere` | `{ x, y, z, radius }` | Add a [`SCNSphere`](https://developer.apple.com/documentation/scenekit/scnsphere)
-| `addCylinder` | `{ x, y, z, radius, height }` | Add a [`SCNCylinder`](https://developer.apple.com/documentation/scenekit/scncylinder)
-| `addCone` | `{ x, y, z, topR, bottomR, height }` | Add a [`SCNCone`](https://developer.apple.com/documentation/scenekit/scncone)
-| `addPyramid` | `{ x, y, z, width, length, height }` | Add a [`SCNPyramid`](https://developer.apple.com/documentation/scenekit/scnpyramid)
-| `addTube` | `{ x, y, z, innerR, outerR, height }` | Add a [`SCNTube`](https://developer.apple.com/documentation/scenekit/scntube)
-| `addTorus` | `{ x, y, z, ringR, pipeR }` | Add a [`SCNTorus`](https://developer.apple.com/documentation/scenekit/scntorus)
-| `addCapsule` | `{ x, y, z, capR, height }` | Add a [`SCNCapsule`](https://developer.apple.com/documentation/scenekit/scncapsule)
-| `addPlane` | `{ x, y, z, width, length }` | Add a [`SCNPlane`](https://developer.apple.com/documentation/scenekit/scnplane)
-| `addText` | `{ x, y, z, fontSize, depth, text }` | Add a [`SCNText`](https://developer.apple.com/documentation/scenekit/scntext)
+
+
+#### [`<ARKit.Box />`](https://developer.apple.com/documentation/scenekit/scnbox)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ width, height, length, chamfer }` |
+
+#### [`<ARKit.Sphere />`](https://developer.apple.com/documentation/scenekit/scnsphere)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ radius }` |
+
+#### [`<ARKit.Cylinder />`](https://developer.apple.com/documentation/scenekit/scncylinder)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ radius, height }` |
+
+#### [`<ARKit.Cone />`](https://developer.apple.com/documentation/scenekit/scncone)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ topR, bottomR, height }` |
+
+#### [`<ARKit.Pyramid />`](https://developer.apple.com/documentation/scenekit/scnpyramid)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ width, height, length }` |
+
+#### [`<ARKit.Tube />`](https://developer.apple.com/documentation/scenekit/scntube)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ innerR, outerR, height }` |
+
+#### [`<ARKit.Torus />`](https://developer.apple.com/documentation/scenekit/scntorus)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ ringR, pipeR }` |
+
+#### [`<ARKit.Capsule />`](https://developer.apple.com/documentation/scenekit/scncapsule)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ capR, height }` |
+
+#### [`<ARKit.Plane />`](https://developer.apple.com/documentation/scenekit/scnplane)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `pos` | `{ x, y, z }` |
+| `shape` | `{ width, length }` |
+
+#### [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
+
+##### Props
+
+| Prop | Type |
+|---|---|---|---|
+| `text` | `String` |
+| `pos` | `{ x, y, z }` |
+| `font` | `{ name, size, depth }` |
 
 
 ## Contributing

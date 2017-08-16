@@ -55,7 +55,7 @@
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-        self.cameraOrigin.opacity = 0.7;
+//        self.cameraOrigin.opacity = 0.7;
         [arView.scene.rootNode addChildNode:self.cameraOrigin];
 
         // init cahces
@@ -290,23 +290,16 @@
     scnText.chamferRadius = chamfer / size;
 
     // color
-    CGFloat r = [property[@"r"] floatValue];
-    CGFloat g = [property[@"g"] floatValue];
-    CGFloat b = [property[@"b"] floatValue];
-    if (!r) {
-        r = 0.0f;
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        SCNMaterial *face = [SCNMaterial new];
+        face.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *border = [SCNMaterial new];
+        border.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        scnText.materials = @[face, face, border, border, border];
     }
-    if (!g) {
-        g = 0.0f;
-    }
-    if (!b) {
-        b = 0.0f;
-    }
-    SCNMaterial *face = [SCNMaterial new];
-    face.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
-    SCNMaterial *border = [SCNMaterial new];
-    border.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
-    scnText.materials = @[face, face, border, border, border];
 
     // init SCNNode
     SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
@@ -334,7 +327,9 @@
 #pragma mark model loader
 
 - (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation {
-    SCNScene *scene = [SCNScene sceneNamed:path];
+    NSURL *url = [NSURL URLWithString:[path stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
+    SCNScene *scene = [SCNScene sceneWithURL:url options:nil error:nil];
+    
     SCNNode *node;
     if (nodeName) {
         node = [scene.rootNode childNodeWithName:nodeName recursively:YES];
@@ -345,11 +340,10 @@
             [node addChildNode:eachChild];
         }
     }
-
+    
     if (withAnimation) {
         NSMutableArray *animationMutableArray = [NSMutableArray array];
-        NSURL *url = [[NSBundle mainBundle] URLForResource:path withExtension:@"dae"];
-        SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:url options:@{SCNSceneSourceAnimationImportPolicyKey:SCNSceneSourceAnimationImportPolicyPlayRepeatedly} ];
+        SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:url options:@{SCNSceneSourceAnimationImportPolicyKey:SCNSceneSourceAnimationImportPolicyPlayRepeatedly}];
 
         NSArray *animationIds = [sceneSource identifiersOfEntriesWithClass:[CAAnimation class]];
         for (NSString *eachId in animationIds){
@@ -359,7 +353,7 @@
         NSArray *animationArray = [NSArray arrayWithArray:animationMutableArray];
 
         int i = 1;
-        for (CAAnimation *animation in animationArray){
+        for (CAAnimation *animation in animationArray) {
             NSString *key = [NSString stringWithFormat:@"ANIM_%d", i];
             [node addAnimation:animation forKey:key];
             i++;
@@ -420,12 +414,6 @@
     [node removeFromParentNode];
     [self.nodes removeObjectForKey:key];
 }
-
-
-#pragma mark empty
-- (void)moveNodeToReferenceFrame:(NSDictionary *)property {}
-- (void)turnOnARBrush:(nullable NSDictionary *)property {};
-- (void)turnOffARBrush {}
 
 
 
@@ -515,9 +503,10 @@
 #pragma mark - ARSessionDelegate
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
+//    self.cameraOrigin.transform = self.arView.pointOfView.transform;
+
     simd_float4 pos = frame.camera.transform.columns[3];
     self.cameraOrigin.position = SCNVector3Make(pos.x, pos.y, pos.z);
-
     simd_float4 z = frame.camera.transform.columns[2];
     self.cameraOrigin.eulerAngles = SCNVector3Make(0, atan2f(z.x, z.z), 0);
 }

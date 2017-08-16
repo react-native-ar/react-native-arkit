@@ -44,6 +44,7 @@
 - (void)pause;
 - (void)resume;
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+
 - (NSDictionary *)readCameraPosition;
 
 
@@ -61,10 +62,6 @@
 - (void)addModel:(NSDictionary *)property;
 - (void)addImage:(NSDictionary *)property;
 
-- (void)moveNodeToReferenceFrame:(NSDictionary *)property;
-- (void)turnOnARBrush:(nullable NSDictionary *)property;
-- (void)turnOffARBrush;
-
 - (void)removeNodeForKey:(NSString *)key;
 
 
@@ -76,7 +73,7 @@
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
 - (SCNNode *)nodeForKey:(NSString *)key;
 - (void)removeNodeForKey:(NSString *)key;
-
+- (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
 
 
 #pragma mark - Delegates

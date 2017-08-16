@@ -43,7 +43,7 @@ ARModel.propTypes = {
   model: PropTypes.shape({
     file: PropTypes.string,
     node: PropTypes.string,
-    scale: PropTypes.string,
+    scale: PropTypes.number,
   }),
 };
 
