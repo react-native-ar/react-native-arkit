@@ -62,8 +62,6 @@
 - (void)addModel:(NSDictionary *)property;
 - (void)addImage:(NSDictionary *)property;
 
-- (void)removeNodeForKey:(NSString *)key;
-
 
 
 #pragma mark - Private
@@ -73,7 +71,8 @@
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
 - (SCNNode *)nodeForKey:(NSString *)key;
 - (void)removeNodeForKey:(NSString *)key;
-- (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
+- (SCNNode *)loadModel:(NSURL *)url nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
+
 
 
 #pragma mark - Delegates
@@ -95,3 +94,4 @@
 #else
 @compatibility_alias ARKit RCTARKit;
 #endif
+
