@@ -136,7 +136,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ width, height, length, chamfer }` |
 
@@ -145,7 +145,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ radius }` |
 
@@ -154,7 +154,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ radius, height }` |
 
@@ -163,7 +163,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ topR, bottomR, height }` |
 
@@ -172,7 +172,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ width, height, length }` |
 
@@ -181,7 +181,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ innerR, outerR, height }` |
 
@@ -190,7 +190,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ ringR, pipeR }` |
 
@@ -199,7 +199,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ capR, height }` |
 
@@ -208,7 +208,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ width, length }` |
 
@@ -217,7 +217,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 ##### Props
 
 | Prop | Type |
-|---|---|---|---|
+|---|---|
 | `text` | `String` |
 | `pos` | `{ x, y, z }` |
 | `font` | `{ name, size, depth }` |
