@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/HippoAR/react-native-arkit.git"
   },
-  "version": "0.0.15",
+  "version": "0.1.0",
   "description": "React Native binding for iOS ARKit",
   "author": "Zehao Li <qft.gtr@gmail.com>",
   "license": "MIT",
@@ -21,22 +21,20 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "prop-types": "^15.5.7"
-  },
-  "peerDependencies": {
+    "prop-types": "^15.5.7",
     "react": "16.0.0-alpha.12"
   },
   "devDependencies": {
-		"babel-eslint": "^7.2.3",
-		"babel-preset-react-native": "^2.1.0",
-		"eslint": "^4.2.0",
-		"eslint-config-airbnb": "^15.0.1",
-		"eslint-config-prettier": "^2.1.1",
-		"eslint-plugin-flowtype": "^2.33.0",
-		"eslint-plugin-import": "^2.3.0",
-		"eslint-plugin-jsx-a11y": "^5.0.3",
-		"eslint-plugin-prettier": "^2.1.1",
-		"eslint-plugin-react": "^7.0.1",
-		"prettier": "^1.3.1"
-	}
+    "babel-eslint": "^7.2.3",
+    "babel-preset-react-native": "^2.1.0",
+    "eslint": "^4.2.0",
+    "eslint-config-airbnb": "^15.0.1",
+    "eslint-config-prettier": "^2.1.1",
+    "eslint-plugin-flowtype": "^2.33.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jsx-a11y": "^5.0.3",
+    "eslint-plugin-prettier": "^2.1.1",
+    "eslint-plugin-react": "^7.0.1",
+    "prettier": "^1.3.1"
+  }
 }

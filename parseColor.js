@@ -7,8 +7,8 @@ export function parseColor(rgbaString) {
 }
 
 export function parseColorWrapper(method) {
-  return params => {
-    const color = parseColor(params.color);
+  return (params = {}) => {
+    const color = params.color && parseColor(params.color);
     return method({ ...params, ...color });
   };
 }

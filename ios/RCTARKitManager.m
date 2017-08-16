@@ -9,15 +9,12 @@
 #import "RCTARKitManager.h"
 #import "RCTARKit.h"
 
-@interface RCTARKitManager ()
-@end
-
 @implementation RCTARKitManager
 
 RCT_EXPORT_MODULE()
 
 - (UIView *)view {
-    return [RCTARKit sharedInstance];
+    return [ARKit sharedInstance];
 }
 
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
@@ -29,7 +26,7 @@ RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 
 RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[RCTARKit sharedInstance] pause];
+    [[ARKit sharedInstance] pause];
     resolve(@{});
 }
 
@@ -38,60 +35,61 @@ RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejec
     resolve(@{});
 }
 
-RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    resolve([[RCTARKit sharedInstance] readCameraPosition]);
+RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance] snapshot:resolve reject:reject];
 }
 
-RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[RCTARKit sharedInstance] snapshot:resolve reject:reject];
+RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[ARKit sharedInstance] readCameraPosition]);
 }
+
 
 RCT_EXPORT_METHOD(addBox:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addBox:property];
+    [[ARKit sharedInstance] addBox:property];
 }
 
 RCT_EXPORT_METHOD(addSphere:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addSphere:property];
+    [[ARKit sharedInstance] addSphere:property];
 }
 
 RCT_EXPORT_METHOD(addCylinder:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addCylinder:property];
+    [[ARKit sharedInstance] addCylinder:property];
 }
 
 RCT_EXPORT_METHOD(addCone:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addCone:property];
+    [[ARKit sharedInstance] addCone:property];
 }
 
 RCT_EXPORT_METHOD(addPyramid:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addPyramid:property];
+    [[ARKit sharedInstance] addPyramid:property];
 }
 
 RCT_EXPORT_METHOD(addTube:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addTube:property];
+    [[ARKit sharedInstance] addTube:property];
 }
 
 RCT_EXPORT_METHOD(addTorus:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addTorus:property];
+    [[ARKit sharedInstance] addTorus:property];
 }
 
 RCT_EXPORT_METHOD(addCapsule:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addCapsule:property];
+    [[ARKit sharedInstance] addCapsule:property];
 }
 
 RCT_EXPORT_METHOD(addPlane:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addPlane:property];
+    [[ARKit sharedInstance] addPlane:property];
 }
 
 RCT_EXPORT_METHOD(addText:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addText:property];
+    [[ARKit sharedInstance] addText:property];
 }
 
 RCT_EXPORT_METHOD(addModel:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addModel:property];
+    [[ARKit sharedInstance] addModel:property];
 }
 
 RCT_EXPORT_METHOD(addImage:(NSDictionary *)property) {
-    [[RCTARKit sharedInstance] addImage:property];
+    [[ARKit sharedInstance] addImage:property];
 }
 
 @end
