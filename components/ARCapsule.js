@@ -43,6 +43,7 @@ ARCapsule.propTypes = {
   shape: PropTypes.shape({
     capR: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

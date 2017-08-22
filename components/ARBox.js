@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { NativeModules } from 'react-native';
 import id from './lib/id';
+import { parseColorWrapper } from '../parseColor';
 
 const ARBoxManager = NativeModules.ARBoxManager;
 
@@ -17,9 +18,10 @@ class ARBox extends Component {
 
   componentWillMount() {
     this.identifier = this.props.id || id();
-    ARBoxManager.mount({
+    parseColorWrapper(ARBoxManager.mount)({
       id: this.identifier,
       ...this.props.pos,
+      ...this.props.shader,
       ...this.props.shape,
     });
   }
@@ -40,11 +42,16 @@ ARBox.propTypes = {
     z: PropTypes.number,
     frame: PropTypes.string,
   }),
+  shader: PropTypes.shape({
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
+  }),
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
     length: PropTypes.number,
     chamfer: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

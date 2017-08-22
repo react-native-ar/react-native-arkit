@@ -12,6 +12,7 @@
 
 @interface RCTARKit () <ARSCNViewDelegate> {
     RCTPromiseResolveBlock _resolve;
+    BOOL _metal;
 }
 
 @property (nonatomic, strong) ARSession* session;
@@ -55,7 +56,7 @@
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-        //        self.cameraOrigin.opacity = 0.7;
+        self.cameraOrigin.opacity = 0.7;
         [arView.scene.rootNode addChildNode:self.cameraOrigin];
         
         // init cahces
@@ -65,6 +66,8 @@
         // start ARKit
         [self addSubview:arView];
         [self resume];
+        
+        _metal = YES;
     }
     return self;
 }
@@ -120,17 +123,17 @@
     [self resume];
 }
 
-- (BOOL)lightEstimation {
-    ARSessionConfiguration *configuration = self.session.configuration;
-    return configuration.lightEstimationEnabled;
-}
-
-- (void)setLightEstimation:(BOOL)lightEstimation {
-    // light estimation is on by default for ARCL and cannot be configured for now
-    ARSessionConfiguration *configuration = self.session.configuration;
-    configuration.lightEstimationEnabled = lightEstimation;
-    [self resume];
-}
+//- (BOOL)lightEstimation {
+//    ARSessionConfiguration *configuration = self.session.configuration;
+//    return configuration.lightEstimationEnabled;
+//}
+//
+//- (void)setLightEstimation:(BOOL)lightEstimation {
+//    // light estimation is on by default for ARCL and cannot be configured for now
+//    ARSessionConfiguration *configuration = self.session.configuration;
+//    configuration.lightEstimationEnabled = lightEstimation;
+//    [self resume];
+//}
 
 - (NSDictionary *)readCameraPosition {
     return @{
@@ -153,6 +156,8 @@
     
     _configuration = [ARWorldTrackingSessionConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
+    _configuration.lightEstimationEnabled = YES;
+
     return _configuration;
 }
 
@@ -182,6 +187,21 @@
     CGFloat chamfer = [property[@"chamfer"] floatValue];
     
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        if (property[@"metalness"]) {
+            material.metalness.contents = @([property[@"metalness"] floatValue]);
+        }
+        if (property[@"roughness"]) {
+            material.roughness.contents = @([property[@"roughness"] floatValue]);
+        }
+        geometry.materials = @[material, material, material, material, material, material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -190,6 +210,21 @@
     CGFloat radius = [property[@"radius"] floatValue];
     
     SCNSphere *geometry = [SCNSphere sphereWithRadius:radius];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        if (property[@"metalness"]) {
+            material.metalness.contents = @([property[@"metalness"] floatValue]);
+        }
+        if (property[@"roughness"]) {
+            material.roughness.contents = @([property[@"roughness"] floatValue]);
+        }
+        geometry.materials = @[material];
+    }
+
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -199,6 +234,15 @@
     CGFloat height = [property[@"height"] floatValue];
     
     SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:radius height:height];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        geometry.materials = @[material, material, material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -209,6 +253,15 @@
     CGFloat height = [property[@"height"] floatValue];
     
     SCNCone *geometry = [SCNCone coneWithTopRadius:topR bottomRadius:bottomR height:height];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        geometry.materials = @[material, material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -219,6 +272,15 @@
     CGFloat height = [property[@"height"] floatValue];
     
     SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:width height:height length:length];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        geometry.materials = @[material, material, material, material, material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -228,6 +290,15 @@
     CGFloat outerR = [property[@"outerR"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
     SCNTube *geometry = [SCNTube tubeWithInnerRadius:innerR outerRadius:outerR height:height];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        geometry.materials = @[material, material, material, material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -237,6 +308,15 @@
     CGFloat pipeR = [property[@"pipeR"] floatValue];
     
     SCNTorus *geometry = [SCNTorus torusWithRingRadius:ringR pipeRadius:pipeR];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        geometry.materials = @[material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -246,6 +326,15 @@
     CGFloat height = [property[@"height"] floatValue];
     
     SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:capR height:height];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        geometry.materials = @[material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -255,6 +344,15 @@
     CGFloat height = [property[@"height"] floatValue];
     
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        geometry.materials = @[material];
+    }
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
@@ -294,10 +392,9 @@
         CGFloat r = [property[@"r"] floatValue];
         CGFloat g = [property[@"g"] floatValue];
         CGFloat b = [property[@"b"] floatValue];
-        SCNMaterial *face = [SCNMaterial new];
-        face.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
-        SCNMaterial *border = [SCNMaterial new];
-        border.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *face = [self materialFromDiffuseColor:color];
+        SCNMaterial *border = [self materialFromDiffuseColor:color];
         scnText.materials = @[face, face, border, border, border];
     }
     
@@ -305,7 +402,8 @@
     SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
     
     // position textNode
-    SCNVector3 min, max;
+    SCNVector3 min;
+    SCNVector3 max;
     [textNode getBoundingBoxMin:&min max:&max];
     textNode.position = SCNVector3Make(-(min.x + max.x) / 2, -(min.y + max.y) / 2, -(min.z + max.z) / 2);
     
@@ -324,6 +422,17 @@
     [self addNodeToScene:node property:property];
 }
 
+- (SCNMaterial *)materialFromDiffuseColor:(UIColor *)color {
+    SCNMaterial *material = [SCNMaterial new];
+    if (color) {
+        material.diffuse.contents = color;
+    }
+    material.lightingModelName = SCNLightingModelPhysicallyBased;
+    material.metalness.contents = @(0.08);
+    material.roughness.contents = @(0.1);
+    return material;
+}
+
 
 #pragma mark model loader
 
@@ -335,6 +444,7 @@
         node = [scene.rootNode childNodeWithName:nodeName recursively:YES];
     } else {
         node = [[SCNNode alloc] init];
+        
         NSArray *nodeArray = [scene.rootNode childNodes];
         for (SCNNode *eachChild in nodeArray) {
             [node addChildNode:eachChild];
@@ -348,7 +458,8 @@
         NSArray *animationIds = [sceneSource identifiersOfEntriesWithClass:[CAAnimation class]];
         for (NSString *eachId in animationIds){
             CAAnimation *animation = [sceneSource entryWithIdentifier:eachId withClass:[CAAnimation class]];
-            [animationMutableArray addObject:animation];
+            [animationMutableArray addObject:animation]; 
+            
         }
         NSArray *animationArray = [NSArray arrayWithArray:animationMutableArray];
         
@@ -368,6 +479,7 @@
 
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
     node.position = [self getPositionFromProperty:property];
+    node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
     
     NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
     if (key) {
@@ -450,9 +562,9 @@
                                });
     }
     
-    Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
-    [self.planes setObject:plane forKey:anchor.identifier];
-    [node addChildNode:plane];
+//    Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
+//    [self.planes setObject:plane forKey:anchor.identifier];
+//    [node addChildNode:plane];
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
@@ -487,24 +599,22 @@
                              });
     }
     
-    Plane *plane = [self.planes objectForKey:anchor.identifier];
-    if (plane == nil) {
-        return;
-    }
-    
-    [plane update:(ARPlaneAnchor *)anchor];
+//    Plane *plane = [self.planes objectForKey:anchor.identifier];
+//    if (plane == nil) {
+//        return;
+//    }
+//
+//    [plane update:(ARPlaneAnchor *)anchor];
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    [self.planes removeObjectForKey:anchor.identifier];
+//    [self.planes removeObjectForKey:anchor.identifier];
 }
 
 
 #pragma mark - ARSessionDelegate
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
-    //    self.cameraOrigin.transform = self.arView.pointOfView.transform;
-    
     simd_float4 pos = frame.camera.transform.columns[3];
     self.cameraOrigin.position = SCNVector3Make(pos.x, pos.y, pos.z);
     simd_float4 z = frame.camera.transform.columns[2];

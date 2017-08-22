@@ -65,6 +65,7 @@
 
 
 #pragma mark - Private
+- (SCNMaterial *)materialFromDiffuseColor:(UIColor *)color;
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property;
 - (SCNVector3)getPositionFromProperty:(NSDictionary *)property;
 

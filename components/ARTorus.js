@@ -43,6 +43,7 @@ ARTorus.propTypes = {
   shape: PropTypes.shape({
     ringR: PropTypes.number,
     pipeR: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

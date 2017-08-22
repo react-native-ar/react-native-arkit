@@ -44,6 +44,7 @@ ARPyramid.propTypes = {
     width: PropTypes.number,
     length: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

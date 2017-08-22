@@ -43,6 +43,7 @@ ARPlane.propTypes = {
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

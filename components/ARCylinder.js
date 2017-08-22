@@ -43,6 +43,7 @@ ARCylinder.propTypes = {
   shape: PropTypes.shape({
     radius: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

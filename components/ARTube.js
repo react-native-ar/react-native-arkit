@@ -44,6 +44,7 @@ ARTube.propTypes = {
     innerR: PropTypes.number,
     outerR: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

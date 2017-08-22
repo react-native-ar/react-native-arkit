@@ -50,6 +50,7 @@ ARText.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
     z: PropTypes.number,
+    angle: PropTypes.number,
     frame: PropTypes.string,
   }),
   font: PropTypes.shape({

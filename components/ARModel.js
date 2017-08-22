@@ -8,6 +8,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { NativeModules } from 'react-native';
+import isEqual from 'lodash/isEqual';
 import id from './lib/id';
 
 const ARModelManager = NativeModules.ARModelManager;
@@ -20,8 +21,20 @@ class ARModel extends Component {
     ARModelManager.mount({
       id: this.identifier,
       ...this.props.pos,
+      ...this.props.shader,
       ...this.props.model,
     });
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps, this.props)) {
+      ARModelManager.mount({
+        id: this.identifier,
+        ...newProps.pos,
+        ...newProps.shader,
+        ...newProps.model,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -38,7 +51,12 @@ ARModel.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
     z: PropTypes.number,
+    angle: PropTypes.number,
     frame: PropTypes.string,
+  }),
+  shader: PropTypes.shape({
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
   model: PropTypes.shape({
     file: PropTypes.string,

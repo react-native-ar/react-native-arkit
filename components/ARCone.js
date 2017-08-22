@@ -44,6 +44,7 @@ ARCone.propTypes = {
     topR: PropTypes.number,
     bottomR: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

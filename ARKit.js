@@ -59,6 +59,7 @@ class ARKit extends Component {
           onPlaneDetected={this.callback('onPlaneDetected')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
+          onBrushStrokeAdded={this.callback('onBrushStrokeAdded')}
         />
         {state}
       </View>
@@ -149,6 +150,7 @@ ARKit.propTypes = {
   onPlaneDetected: PropTypes.func,
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
+  onBrushStrokeAdded: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
