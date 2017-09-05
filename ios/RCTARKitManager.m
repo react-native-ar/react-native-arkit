@@ -43,6 +43,11 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
 
+RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[RCTARKit sharedInstance] focusScene];
+    resolve(@{});
+}
+
 
 RCT_EXPORT_METHOD(addBox:(NSDictionary *)property) {
     [[ARKit sharedInstance] addBox:property];

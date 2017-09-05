@@ -82,8 +82,6 @@
     [self.session runWithConfiguration:self.configuration];
 }
 
-
-
 #pragma mark - setter-getter
 
 - (ARSession*)session {
@@ -171,6 +169,11 @@
     } else {
         _resolve(@{ @"success": @(YES) });
     }
+}
+
+- (void)focusScene {
+    [self.localOrigin setPosition:self.cameraOrigin.position];
+    [self.localOrigin setRotation:self.cameraOrigin.rotation];
 }
 
 
