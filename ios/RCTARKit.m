@@ -10,7 +10,7 @@
 #import "Plane.h"
 @import CoreLocation;
 
-@interface RCTARKit () <ARSCNViewDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, UIGestureRecognizerDelegate> {
     RCTPromiseResolveBlock _resolve;
 }
 
@@ -42,6 +42,10 @@
         // delegates
         arView.delegate = self;
         arView.session.delegate = self;
+        
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
+        tapGestureRecognizer.numberOfTapsRequired = 1;
+        [self.arView addGestureRecognizer:tapGestureRecognizer];
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
@@ -80,6 +84,34 @@
 
 - (void)resume {
     [self.session runWithConfiguration:self.configuration];
+}
+
+- (void)handleTapFrom: (UITapGestureRecognizer *)recognizer {
+    // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+    CGPoint tapPoint = [recognizer locationInView:self.arView];
+    //
+    if(self.onTapOnPlane) {
+        self.onTapOnPlane(@{
+                     @"x": @(tapPoint.x),
+                     @"y": @(tapPoint.y)
+                     });
+     
+            // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+            NSArray<ARHitTestResult *> *result = [self.sceneView hitTest:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
+            
+            // If the intersection ray passes through any plane geometry they will be returned, with the planes
+            // ordered by distance from the camera
+            if (result.count == 0) {
+                return;
+            }
+            
+            // If there are multiple hits, just pick the closest plane
+            ARHitTestResult * hitResult = [result firstObject];
+            [self insertGeometry:hitResult];
+        }
+    }
+    
+    
 }
 
 
