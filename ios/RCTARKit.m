@@ -10,7 +10,7 @@
 #import "Plane.h"
 @import CoreLocation;
 
-@interface RCTARKit () <ARSCNViewDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, UIGestureRecognizerDelegate> {
     RCTPromiseResolveBlock _resolve;
     BOOL _metal;
 }
@@ -43,6 +43,10 @@
         // delegates
         arView.delegate = self;
         arView.session.delegate = self;
+        
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
+        tapGestureRecognizer.numberOfTapsRequired = 1;
+        [self.arView addGestureRecognizer:tapGestureRecognizer];
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
@@ -84,6 +88,7 @@
 - (void)resume {
     [self.session runWithConfiguration:self.configuration];
 }
+
 
 
 
@@ -527,6 +532,61 @@
     [self.nodes removeObjectForKey:key];
 }
 
+#pragma mark - plane hit detection
+
+static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
+    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+        ARHitTestResult *result = (ARHitTestResult *) obj;
+        [resultsMapped addObject:(@{
+                                    @"distance": @(result.distance),
+                                    @"point": @{
+                                            @"x": @(result.worldTransform.columns[3].x),
+                                            @"y": @(result.worldTransform.columns[3].y),
+                                            @"z": @(result.worldTransform.columns[3].z)
+                                            }
+                                    
+                                    } )];
+    }];
+    return resultsMapped;
+}
+
+static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
+    return @{
+             @"results": resultsMapped,
+             @"tapPoint": @{
+                     @"x": @(tapPoint.x),
+                     @"y": @(tapPoint.y)
+                     }
+             };
+}
+
+- (NSDictionary *)getPlaneHitResult:(const CGPoint)tapPoint  types:(ARHitTestResultType)types; {
+    NSArray<ARHitTestResult *> *results = [self.arView hitTest:tapPoint types:types];
+    NSMutableArray * resultsMapped = mapHitResults(results);
+    
+    NSDictionary *planeHitResult = getPlaneHitResult(resultsMapped, tapPoint);
+    return planeHitResult;
+}
+
+- (void)handleTapFrom: (UITapGestureRecognizer *)recognizer {
+    // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+    CGPoint tapPoint = [recognizer locationInView:self.arView];
+    //
+    if(self.onTapOnPlaneUsingExtent) {
+        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
+        self.onTapOnPlaneUsingExtent(planeHitResult);
+    }
+    
+    if(self.onTapOnPlaneNoExtent) {
+        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
+        self.onTapOnPlaneNoExtent(planeHitResult);
+    }
+    
+    
+}
 
 
 #pragma mark - ARSCNViewDelegate

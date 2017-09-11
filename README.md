@@ -92,6 +92,13 @@ export default class ReactNativeARKit extends Component {
             pos={{ x: 0.2, y: 0.6, z: 0 }}
             font={{ size: 0.15, depth: 0.05 }}
           />
+          <ARKit.Model
+            pos={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
+            model={{
+              file: 'art.scnassets/ship.scn', // make sure you have the model file in the ios project
+              scale: 0.01,
+            }}
+          />
         </ARKit>
       </View>
     );
@@ -221,6 +228,18 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `text` | `String` |
 | `pos` | `{ x, y, z }` |
 | `font` | `{ name, size, depth }` |
+
+
+#### `<ARKit.Model />`
+
+SceneKit only supports `.scn` and `.dae` formats.
+
+##### Props
+
+| Prop | Type |
+|---|---|
+| `pos` | `{ x, y, z }` |
+| `model` | `{ file, scale }` |
 
 
 ## Contributing
