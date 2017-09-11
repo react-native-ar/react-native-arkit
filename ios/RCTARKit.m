@@ -91,6 +91,8 @@ static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         ARHitTestResult *result = (ARHitTestResult *) obj;
         [resultsMapped addObject:(@{
+                                    
+                                    @"distance": @(result.distance),
                                     @"point": @{
                                             @"x": @(result.worldTransform.columns[3].x),
                                             @"y": @(result.worldTransform.columns[3].y),
@@ -102,18 +104,18 @@ static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
     return resultsMapped;
 }
 
-static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint *tapPoint) {
+static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
     return @{
              @"results": resultsMapped,
              @"tapPoint": @{
-                     @"x": @(tapPoint->x),
-                     @"y": @(tapPoint->y)
+                     @"x": @(tapPoint.x),
+                     @"y": @(tapPoint.y)
                      }
              };
 }
 
-- (NSDictionary *)getPlaneHitResult:(const CGPoint *)tapPoint  types:(ARHitTestResultType)types; {
-    NSArray<ARHitTestResult *> *results = [self.arView hitTest:*tapPoint types:types];
+- (NSDictionary *)getPlaneHitResult:(const CGPoint)tapPoint  types:(ARHitTestResultType)types; {
+    NSArray<ARHitTestResult *> *results = [self.arView hitTest:tapPoint types:types];
     NSMutableArray * resultsMapped = mapHitResults(results);
     
     NSDictionary *planeHitResult = getPlaneHitResult(resultsMapped, tapPoint);
@@ -126,13 +128,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     //
     if(self.onTapOnPlaneUsingExtent) {
         // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
-        NSDictionary * planeHitResult = [self getPlaneHitResult:&tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
+        NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
         self.onTapOnPlaneUsingExtent(planeHitResult);
     }
     
     if(self.onTapOnPlaneNoExtent) {
         // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
-        NSDictionary * planeHitResult = [self getPlaneHitResult:&tapPoint types:ARHitTestResultTypeExistingPlane];
+        NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
         self.onTapOnPlaneNoExtent(planeHitResult);
     }
     
