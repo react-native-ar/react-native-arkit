@@ -292,8 +292,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					../../../ios/Pods/Headers/Public/,
-					../../../ios/Pods/Headers/Public/React,
+					"$(SRCROOT)/../../../React/**\" $(SRCROOT)/../../react-native/React/** $(SRCROOT)/../../react-native-arcl/ios ../../../ios/Pods/Headers/Public/ ../../../ios/Pods/Headers/Public/React",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -310,8 +309,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					../../../ios/Pods/Headers/Public/,
-					../../../ios/Pods/Headers/Public/React,
+					"$(SRCROOT)/../../../React/**\" $(SRCROOT)/../../react-native/React/** $(SRCROOT)/../../react-native-arcl/ios ../../../ios/Pods/Headers/Public/ ../../../ios/Pods/Headers/Public/React",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
