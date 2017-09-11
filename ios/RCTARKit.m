@@ -86,29 +86,54 @@
     [self.session runWithConfiguration:self.configuration];
 }
 
+static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
+    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+        ARHitTestResult *result = (ARHitTestResult *) obj;
+        [resultsMapped addObject:(@{
+                                    @"point": @{
+                                            @"x": @(result.worldTransform.columns[3].x),
+                                            @"y": @(result.worldTransform.columns[3].y),
+                                            @"z": @(result.worldTransform.columns[3].z)
+                                            }
+                                    
+                                    } )];
+    }];
+    return resultsMapped;
+}
+
+static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint *tapPoint) {
+    return @{
+             @"results": resultsMapped,
+             @"tapPoint": @{
+                     @"x": @(tapPoint->x),
+                     @"y": @(tapPoint->y)
+                     }
+             };
+}
+
+- (NSDictionary *)getPlaneHitResult:(const CGPoint *)tapPoint  types:(ARHitTestResultType)types; {
+    NSArray<ARHitTestResult *> *results = [self.arView hitTest:*tapPoint types:types];
+    NSMutableArray * resultsMapped = mapHitResults(results);
+    
+    NSDictionary *planeHitResult = getPlaneHitResult(resultsMapped, tapPoint);
+    return planeHitResult;
+}
+
 - (void)handleTapFrom: (UITapGestureRecognizer *)recognizer {
     // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
     CGPoint tapPoint = [recognizer locationInView:self.arView];
     //
-    if(self.onTapOnPlane) {
-        self.onTapOnPlane(@{
-                     @"x": @(tapPoint.x),
-                     @"y": @(tapPoint.y)
-                     });
-     
-            // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
-            NSArray<ARHitTestResult *> *result = [self.sceneView hitTest:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
-            
-            // If the intersection ray passes through any plane geometry they will be returned, with the planes
-            // ordered by distance from the camera
-            if (result.count == 0) {
-                return;
-            }
-            
-            // If there are multiple hits, just pick the closest plane
-            ARHitTestResult * hitResult = [result firstObject];
-            [self insertGeometry:hitResult];
-        }
+    if(self.onTapOnPlaneUsingExtent) {
+        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        NSDictionary * planeHitResult = [self getPlaneHitResult:&tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
+        self.onTapOnPlaneUsingExtent(planeHitResult);
+    }
+    
+    if(self.onTapOnPlaneNoExtent) {
+        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        NSDictionary * planeHitResult = [self getPlaneHitResult:&tapPoint types:ARHitTestResultTypeExistingPlane];
+        self.onTapOnPlaneNoExtent(planeHitResult);
     }
     
     
