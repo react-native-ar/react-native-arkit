@@ -420,8 +420,13 @@
 
 - (void)addModel:(NSDictionary *)property {
     CGFloat scale = [property[@"scale"] floatValue];
-    
-    NSURL *url = [[NSBundle mainBundle] URLForResource:property[@"file"] withExtension:nil];
+    NSString * filePath = property[@"file"];
+    NSURL *url;
+    if([filePath hasPrefix: @"/"]) {
+        url = [NSURL fileURLWithPath: filePath];
+    } else {
+        url = [[NSBundle mainBundle] URLForResource:filePath withExtension:nil];
+    }
     SCNNode *node = [self loadModel:url nodeName:property[@"node"] withAnimation:YES];
     node.scale = SCNVector3Make(scale, scale, scale);
     [self addNodeToScene:node property:property];
