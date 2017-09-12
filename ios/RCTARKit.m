@@ -160,6 +160,12 @@
 
 #pragma mark - Methods
 
+- (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    
+    resolve([self getPlaneHitResult:tapPoint types:types]);
+}
+
+
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
     UIImage *image = [self.arView snapshot];
     _resolve = resolve;
