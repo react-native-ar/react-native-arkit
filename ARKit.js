@@ -129,6 +129,8 @@ const styles = StyleSheet.create({
 });
 
 ARKit.getCameraPosition = ARKitManager.getCameraPosition;
+ARKit.ARHitTestResultType = ARKitManager.ARHitTestResultType;
+ARKit.hitTestPlanes = ARKitManager.hitTestPlanes;
 ARKit.snapshot = ARKitManager.snapshot;
 ARKit.snapshotCamera = ARKitManager.snapshotCamera;
 ARKit.pause = ARKitManager.pause;
