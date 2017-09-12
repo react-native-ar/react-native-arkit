@@ -79,6 +79,11 @@
 }
 
 - (void)resume {
+    // clear scene
+    for(id key in self.nodes) {
+        id node = [self.nodes objectForKey:key];
+        [node removeFromParentNode];
+    }
     [self.session runWithConfiguration:self.configuration];
 }
 
