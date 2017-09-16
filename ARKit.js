@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
 ARKit.getCameraPosition = ARKitManager.getCameraPosition;
 ARKit.ARHitTestResultType = ARKitManager.ARHitTestResultType;
 ARKit.hitTestPlanes = ARKitManager.hitTestPlanes;
+ARKit.hitTestSceneObjects = ARKitManager.hitTestSceneObjects;
 ARKit.snapshot = ARKitManager.snapshot;
 ARKit.snapshotCamera = ARKitManager.snapshotCamera;
 ARKit.pause = ARKitManager.pause;
 ARKit.resume = ARKitManager.resume;
-ARKit.focusScene = ARKitManager.focusScene;
 ARKit.addBox = parseColorWrapper(ARKitManager.addBox);
 ARKit.addSphere = parseColorWrapper(ARKitManager.addSphere);
 ARKit.addCylinder = parseColorWrapper(ARKitManager.addCylinder);
@@ -158,7 +158,7 @@ ARKit.propTypes = {
   onTrackingState: PropTypes.func,
   onBrushStrokeAdded: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
-  onTapOnPlaneNoExtent: PropTypes.func
+  onTapOnPlaneNoExtent: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
