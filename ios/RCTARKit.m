@@ -138,17 +138,17 @@
 }
 
 
-- (BOOL)lightEstimation {
-    ARWorldTrackingConfiguration *configuration = self.session.configuration;
-    return configuration.lightEstimationEnabled;
-}
-
-- (void)setLightEstimation:(BOOL)lightEstimation {
-    // light estimation is on by default for ARCL and cannot be configured for now
-    ARWorldTrackingConfiguration *configuration = self.session.configuration;
-    configuration.lightEstimationEnabled = lightEstimation;
-    [self resume];
-}
+//- (BOOL)lightEstimation {
+//    ARSessionConfiguration *configuration = self.session.configuration;
+//    return configuration.lightEstimationEnabled;
+//}
+//
+//- (void)setLightEstimation:(BOOL)lightEstimation {
+//    // light estimation is on by default for ARCL and cannot be configured for now
+//    ARSessionConfiguration *configuration = self.session.configuration;
+//    configuration.lightEstimationEnabled = lightEstimation;
+//    [self resume];
+//}
 
 - (NSDictionary *)readCameraPosition {
     return @{
