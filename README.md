@@ -136,7 +136,6 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|---|
 | `snapshot` |  | Take a screenshot (will save to Photo Library)
 | `getCameraPosition` |  | Get the current position of the `ARCamera`
-| `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation)
 
 
 #### [`<ARKit.Box />`](https://developer.apple.com/documentation/scenekit/scnbox)

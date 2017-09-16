@@ -10,28 +10,7 @@ import React, { Component } from 'react';
 import { NativeModules } from 'react-native';
 import id from './lib/id';
 
-const ARCapsuleManager = NativeModules.ARCapsuleManager;
-
-class ARCapsule extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARCapsuleManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARCapsuleManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARCapsule = createArComponent(NativeModules.ARCapsuleManager);
 
 ARCapsule.propTypes = {
   pos: PropTypes.shape({

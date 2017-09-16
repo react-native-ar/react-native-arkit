@@ -60,6 +60,16 @@ RCT_EXPORT_METHOD(
     [[ARKit sharedInstance] hitTestPlane:point types:types resolve:resolve reject:reject];
 }
 
+RCT_EXPORT_METHOD(
+                  hitTestSceneObjects: (NSDictionary *)pointDict
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject
+                  ) {
+    CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
+    [[ARKit sharedInstance] hitTestSceneObjects:point resolve:resolve reject:reject];
+}
+
+
 
 
 RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
