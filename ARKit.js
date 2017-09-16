@@ -135,6 +135,7 @@ ARKit.snapshot = ARKitManager.snapshot;
 ARKit.snapshotCamera = ARKitManager.snapshotCamera;
 ARKit.pause = ARKitManager.pause;
 ARKit.resume = ARKitManager.resume;
+ARKit.focusScene = ARKitManager.focusScene;
 ARKit.addBox = parseColorWrapper(ARKitManager.addBox);
 ARKit.addSphere = parseColorWrapper(ARKitManager.addSphere);
 ARKit.addCylinder = parseColorWrapper(ARKitManager.addCylinder);
