@@ -1,21 +1,15 @@
 {
-  "name": "@panter/react-native-arkit",
+  "name": "react-native-arkit",
   "repository": {
     "type": "git",
     "url": "https://github.com/HippoAR/react-native-arkit.git"
   },
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "React Native binding for iOS ARKit",
   "author": "Zehao Li <qft.gtr@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/HippoAR/react-native-arkit",
-  "keywords": [
-    "react-native",
-    "react",
-    "native",
-    "ARKit",
-    "AR"
-  ],
+  "keywords": ["react-native", "react", "native", "ARKit", "AR"],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
