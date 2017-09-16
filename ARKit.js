@@ -56,9 +56,12 @@ class ARKit extends Component {
       <View style={this.props.style}>
         <AR
           {...this.props}
+          onTapOnPlaneUsingExtent={this.callback('onTapOnPlaneUsingExtent')}
+          onTapOnPlaneNoExtent={this.callback('onTapOnPlaneNoExtent')}
           onPlaneDetected={this.callback('onPlaneDetected')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
+          onBrushStrokeAdded={this.callback('onBrushStrokeAdded')}
         />
         {state}
       </View>
@@ -126,7 +129,11 @@ const styles = StyleSheet.create({
 });
 
 ARKit.getCameraPosition = ARKitManager.getCameraPosition;
+ARKit.ARHitTestResultType = ARKitManager.ARHitTestResultType;
+ARKit.hitTestPlanes = ARKitManager.hitTestPlanes;
+ARKit.hitTestSceneObjects = ARKitManager.hitTestSceneObjects;
 ARKit.snapshot = ARKitManager.snapshot;
+ARKit.snapshotCamera = ARKitManager.snapshotCamera;
 ARKit.pause = ARKitManager.pause;
 ARKit.resume = ARKitManager.resume;
 ARKit.addBox = parseColorWrapper(ARKitManager.addBox);
@@ -149,6 +156,9 @@ ARKit.propTypes = {
   onPlaneDetected: PropTypes.func,
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
+  onBrushStrokeAdded: PropTypes.func,
+  onTapOnPlaneUsingExtent: PropTypes.func,
+  onTapOnPlaneNoExtent: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);

@@ -10,28 +10,9 @@ import React, { Component } from 'react';
 import { NativeModules } from 'react-native';
 import id from './lib/id';
 
-const ARTorusManager = NativeModules.ARTorusManager;
+import createArComponent from './lib/createArComponent';
 
-class ARTorus extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARTorusManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARTorusManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARTorus = createArComponent(NativeModules.ARTorusManager);
 
 ARTorus.propTypes = {
   pos: PropTypes.shape({
@@ -43,6 +24,7 @@ ARTorus.propTypes = {
   shape: PropTypes.shape({
     ringR: PropTypes.number,
     pipeR: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

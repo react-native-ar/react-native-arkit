@@ -6,32 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
 
-const ARPyramidManager = NativeModules.ARPyramidManager;
+import createArComponent from './lib/createArComponent';
 
-class ARPyramid extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARPyramidManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARPyramidManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARPyramid = createArComponent(NativeModules.ARPyramidManager);
 
 ARPyramid.propTypes = {
   pos: PropTypes.shape({
@@ -44,6 +24,7 @@ ARPyramid.propTypes = {
     width: PropTypes.number,
     length: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

@@ -6,32 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
 
-const ARBoxManager = NativeModules.ARBoxManager;
+import createArComponent from './lib/createArComponent';
 
-class ARBox extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARBoxManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARBoxManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARBox = createArComponent(NativeModules.ARBoxManager);
 
 ARBox.propTypes = {
   pos: PropTypes.shape({
@@ -40,11 +20,16 @@ ARBox.propTypes = {
     z: PropTypes.number,
     frame: PropTypes.string,
   }),
+  shader: PropTypes.shape({
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
+  }),
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
     length: PropTypes.number,
     chamfer: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 
