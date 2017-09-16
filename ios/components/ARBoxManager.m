@@ -21,9 +21,5 @@ RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
     [[ARKit sharedInstance] removeNodeForKey:identifier];
 }
 
-RCT_EXPORT_METHOD(update:(NSString *)identifier property:(NSDictionary *)property) {
-    [property setValue:identifier forKey:@"id"];
-    [[ARKit sharedInstance] addBox:property];
-}
 
 @end
