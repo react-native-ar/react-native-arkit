@@ -132,13 +132,13 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 ##### Static methods
 
-| Method Name | Arguments | Returns (promise) | Notes
+| Method Name | Arguments |  Notes
 |---|---|---|
-| `snapshot` |  |  | Take a screenshot (will save to Photo Library)
-| `snapshotCamera` |  |  | Take a screenshot without 3d models (will save to Photo Library)
-| `getCameraPosition` |  |  | Get the current position of the `ARCamera`
-| `hitTestPlanes` | point, type |  `{results}` |  check if a plane has ben hit by point (`{x,y}`) with detection type (any of `ARKit.ARHitTestResultType`). See https://developer.apple.com/documentation/arkit/arhittestresulttype?language=objc for further information
-| `hitTestSceneObjects` | point | `{results}` |  check if a scene object has ben hit by point (`{x,y}`)
+| `snapshot` |  |  | Take a screenshot (will save to Photo Library) |
+| `snapshotCamera` |  | Take a screenshot without 3d models (will save to Photo Library) |
+| `getCameraPosition` |  | Get the current position of the `ARCamera` |
+| `hitTestPlanes` | point, type  |  check if a plane has ben hit by point (`{x,y}`) with detection type (any of `ARKit.ARHitTestResultType`). See https://developer.apple.com/documentation/arkit/arhittestresulttype?language=objc for further information |
+| `hitTestSceneObjects` | point |  check if a scene object has ben hit by point (`{x,y}`) |
 
 
 
