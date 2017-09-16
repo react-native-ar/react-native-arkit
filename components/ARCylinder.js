@@ -6,32 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
 
-const ARCylinderManager = NativeModules.ARCylinderManager;
+import createArComponent from './lib/createArComponent';
 
-class ARCylinder extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARCylinderManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARCylinderManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARCylinder = createArComponent(NativeModules.ARCylinderManager);
 
 ARCylinder.propTypes = {
   pos: PropTypes.shape({

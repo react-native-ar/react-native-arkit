@@ -6,45 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import isEqual from 'lodash/isEqual';
-import id from './lib/id';
 
-const ARModelManager = NativeModules.ARModelManager;
+import createArComponent from './lib/createArComponent';
 
-class ARModel extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARModelManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shader,
-      ...this.props.model,
-    });
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (!isEqual(newProps, this.props)) {
-      ARModelManager.mount({
-        id: this.identifier,
-        ...newProps.pos,
-        ...newProps.shader,
-        ...newProps.model,
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    ARModelManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARModel = createArComponent(NativeModules.ARModelManager);
 
 ARModel.propTypes = {
   pos: PropTypes.shape({
