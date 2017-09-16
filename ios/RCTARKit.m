@@ -10,12 +10,14 @@
 #import "Plane.h"
 @import CoreLocation;
 
-@interface RCTARKit () <ARSCNViewDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, UIGestureRecognizerDelegate> {
     RCTPromiseResolveBlock _resolve;
+    BOOL _metal;
 }
 
 @property (nonatomic, strong) ARSession* session;
-@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
+//@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
+@property (nonatomic, strong) ARWorldTrackingConfiguration *configuration;
 
 @end
 
@@ -43,6 +45,10 @@
         arView.delegate = self;
         arView.session.delegate = self;
         
+        UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
+        tapGestureRecognizer.numberOfTapsRequired = 1;
+        [self.arView addGestureRecognizer:tapGestureRecognizer];
+        
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
         arView.scene.rootNode.name = @"root";
@@ -55,7 +61,7 @@
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-        //        self.cameraOrigin.opacity = 0.7;
+        self.cameraOrigin.opacity = 0.7;
         [arView.scene.rootNode addChildNode:self.cameraOrigin];
         
         // init cahces
@@ -65,6 +71,8 @@
         // start ARKit
         [self addSubview:arView];
         [self resume];
+        
+        _metal = YES;
     }
     return self;
 }
@@ -79,9 +87,18 @@
 }
 
 - (void)resume {
+    // clear scene
+    for(id key in self.nodes) {
+        id node = [self.nodes objectForKey:key];
+        [node removeFromParentNode];
+    }
     [self.session runWithConfiguration:self.configuration];
 }
 
+- (void)focusScene {
+    [self.localOrigin setPosition:self.cameraOrigin.position];
+    [self.localOrigin setRotation:self.cameraOrigin.rotation];
+}
 
 
 #pragma mark - setter-getter
@@ -105,13 +122,13 @@
 }
 
 - (BOOL)planeDetection {
-    ARWorldTrackingSessionConfiguration *configuration = self.session.configuration;
+    ARWorldTrackingConfiguration *configuration = self.session.configuration;
     return configuration.planeDetection == ARPlaneDetectionHorizontal;
 }
 
 - (void)setPlaneDetection:(BOOL)planeDetection {
     // plane detection is on by default for ARCL and cannot be configured for now
-    ARWorldTrackingSessionConfiguration *configuration = self.session.configuration;
+    ARWorldTrackingConfiguration *configuration = self.session.configuration;
     if (planeDetection) {
         configuration.planeDetection = ARPlaneDetectionHorizontal;
     } else {
@@ -120,17 +137,18 @@
     [self resume];
 }
 
-- (BOOL)lightEstimation {
-    ARSessionConfiguration *configuration = self.session.configuration;
-    return configuration.lightEstimationEnabled;
-}
 
-- (void)setLightEstimation:(BOOL)lightEstimation {
-    // light estimation is on by default for ARCL and cannot be configured for now
-    ARSessionConfiguration *configuration = self.session.configuration;
-    configuration.lightEstimationEnabled = lightEstimation;
-    [self resume];
-}
+//- (BOOL)lightEstimation {
+//    ARSessionConfiguration *configuration = self.session.configuration;
+//    return configuration.lightEstimationEnabled;
+//}
+//
+//- (void)setLightEstimation:(BOOL)lightEstimation {
+//    // light estimation is on by default for ARCL and cannot be configured for now
+//    ARSessionConfiguration *configuration = self.session.configuration;
+//    configuration.lightEstimationEnabled = lightEstimation;
+//    [self resume];
+//}
 
 - (NSDictionary *)readCameraPosition {
     return @{
@@ -144,15 +162,17 @@
 
 #pragma mark - Lazy loads
 
--(ARWorldTrackingSessionConfiguration *)configuration {
+-(ARWorldTrackingConfiguration *)configuration {
     if (_configuration) {
         return _configuration;
     }
     
-    if (!ARWorldTrackingSessionConfiguration.isSupported) {}
+    if (!ARWorldTrackingConfiguration.isSupported) {}
     
-    _configuration = [ARWorldTrackingSessionConfiguration new];
+    _configuration = [ARWorldTrackingConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
+    _configuration.lightEstimationEnabled = YES;
+    
     return _configuration;
 }
 
@@ -160,8 +180,38 @@
 
 #pragma mark - Methods
 
+- (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    resolve([self getPlaneHitResult:tapPoint types:types]);
+}
+
+- (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    
+    resolve([self getSceneObjectsHitResult:tapPoint]);
+}
+
+
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
     UIImage *image = [self.arView snapshot];
+    _resolve = resolve;
+    UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
+}
+
+
+- (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    
+    // thx https://stackoverflow.com/a/8094038/1463534
+    CVPixelBufferRef pixelBuffer = self.arView.session.currentFrame.capturedImage;
+    CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+    
+    CIContext *temporaryContext = [CIContext contextWithOptions:nil];
+    CGImageRef videoImage = [temporaryContext
+                             createCGImage:ciImage
+                             fromRect:CGRectMake(0, 0,
+                                                 CVPixelBufferGetWidth(pixelBuffer),
+                                                 CVPixelBufferGetHeight(pixelBuffer))];
+    
+    UIImage *image = [UIImage imageWithCGImage:videoImage scale: 1.0 orientation:UIImageOrientationRight];
+    CGImageRelease(videoImage);
     _resolve = resolve;
     UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
 }
@@ -175,88 +225,120 @@
 
 
 #pragma mark add models in the scene
+- (void)addMaterial:(SCNGeometry *)geometry property:(NSDictionary *)property {
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *material = [self materialFromDiffuseColor:color];
+        if (property[@"shader"]) {
+            NSDictionary* shader = property[@"shader"];
+            if (shader[@"metalness"]) {
+                material.metalness.contents = @([shader[@"metalness"] floatValue]);
+            }
+            if (shader[@"roughness"]) {
+                material.roughness.contents = @([shader[@"roughness"] floatValue]);
+            }
+        }
+        
+        geometry.materials = @[material, material, material, material, material, material];
+    }
+}
+
 - (void)addBox:(NSDictionary *)property {
-    CGFloat width = [property[@"width"] floatValue];
-    CGFloat height = [property[@"height"] floatValue];
-    CGFloat length = [property[@"length"] floatValue];
-    CGFloat chamfer = [property[@"chamfer"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    
+    CGFloat width = [shape[@"width"] floatValue];
+    CGFloat height = [shape[@"height"] floatValue];
+    CGFloat length = [shape[@"length"] floatValue];
+    CGFloat chamfer = [shape[@"chamfer"] floatValue];
     
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
+    [self addMaterial:geometry property:property];
+    
+    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
+    [self addNodeToScene:node property:property];
+}
+
+- (void)addNodeByGeometry:(SCNSphere *)geometry property:(NSDictionary *)property {
+    [self addMaterial:geometry property:property];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self addNodeToScene:node property:property];
 }
 
 - (void)addSphere:(NSDictionary *)property {
-    CGFloat radius = [property[@"radius"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat radius = [shape[@"radius"] floatValue];
     
     SCNSphere *geometry = [SCNSphere sphereWithRadius:radius];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addCylinder:(NSDictionary *)property {
-    CGFloat radius = [property[@"radius"] floatValue];
-    CGFloat height = [property[@"height"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat radius = [shape[@"radius"] floatValue];
+    CGFloat height = [shape[@"height"] floatValue];
     
     SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:radius height:height];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addCone:(NSDictionary *)property {
-    CGFloat topR = [property[@"topR"] floatValue];
-    CGFloat bottomR = [property[@"bottomR"] floatValue];
-    CGFloat height = [property[@"height"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat topR = [shape[@"topR"] floatValue];
+    CGFloat bottomR = [shape[@"bottomR"] floatValue];
+    CGFloat height = [shape[@"height"] floatValue];
     
     SCNCone *geometry = [SCNCone coneWithTopRadius:topR bottomRadius:bottomR height:height];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addPyramid:(NSDictionary *)property {
-    CGFloat width = [property[@"width"] floatValue];
-    CGFloat length = [property[@"length"] floatValue];
-    CGFloat height = [property[@"height"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat width = [shape[@"width"] floatValue];
+    CGFloat length = [shape[@"length"] floatValue];
+    CGFloat height = [shape[@"height"] floatValue];
     
     SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:width height:height length:length];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addTube:(NSDictionary *)property {
-    CGFloat innerR = [property[@"innerR"] floatValue];
-    CGFloat outerR = [property[@"outerR"] floatValue];
-    CGFloat height = [property[@"height"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat innerR = [shape[@"innerR"] floatValue];
+    CGFloat outerR = [shape[@"outerR"] floatValue];
+    CGFloat height = [shape[@"height"] floatValue];
     SCNTube *geometry = [SCNTube tubeWithInnerRadius:innerR outerRadius:outerR height:height];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addTorus:(NSDictionary *)property {
-    CGFloat ringR = [property[@"ringR"] floatValue];
-    CGFloat pipeR = [property[@"pipeR"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat ringR = [shape[@"ringR"] floatValue];
+    CGFloat pipeR = [shape[@"pipeR"] floatValue];
     
     SCNTorus *geometry = [SCNTorus torusWithRingRadius:ringR pipeRadius:pipeR];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addCapsule:(NSDictionary *)property {
-    CGFloat capR = [property[@"capR"] floatValue];
-    CGFloat height = [property[@"height"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat capR = [shape[@"capR"] floatValue];
+    CGFloat height = [shape[@"height"] floatValue];
     
     SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:capR height:height];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addPlane:(NSDictionary *)property {
-    CGFloat width = [property[@"width"] floatValue];
-    CGFloat height = [property[@"height"] floatValue];
+    NSDictionary* shape = property[@"shape"];
+    CGFloat width = [shape[@"width"] floatValue];
+    CGFloat height = [shape[@"height"] floatValue];
     
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
-    SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self addNodeByGeometry:geometry property:property];
 }
 
 - (void)addText:(NSDictionary *)property {
@@ -294,10 +376,9 @@
         CGFloat r = [property[@"r"] floatValue];
         CGFloat g = [property[@"g"] floatValue];
         CGFloat b = [property[@"b"] floatValue];
-        SCNMaterial *face = [SCNMaterial new];
-        face.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
-        SCNMaterial *border = [SCNMaterial new];
-        border.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        SCNMaterial *face = [self materialFromDiffuseColor:color];
+        SCNMaterial *border = [self materialFromDiffuseColor:color];
         scnText.materials = @[face, face, border, border, border];
     }
     
@@ -305,7 +386,8 @@
     SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
     
     // position textNode
-    SCNVector3 min, max;
+    SCNVector3 min;
+    SCNVector3 max;
     [textNode getBoundingBoxMin:&min max:&max];
     textNode.position = SCNVector3Make(-(min.x + max.x) / 2, -(min.y + max.y) / 2, -(min.z + max.z) / 2);
     
@@ -316,12 +398,29 @@
 }
 
 - (void)addModel:(NSDictionary *)property {
-    CGFloat scale = [property[@"scale"] floatValue];
-    
-    NSURL *url = [[NSBundle mainBundle] URLForResource:property[@"file"] withExtension:nil];
+    NSDictionary* model = property[@"model"];
+    CGFloat scale = [model[@"scale"] floatValue];
+    NSString * filePath = model[@"file"];
+    NSURL *url;
+    if([filePath hasPrefix: @"/"]) {
+        url = [NSURL fileURLWithPath: filePath];
+    } else {
+        url = [[NSBundle mainBundle] URLForResource:filePath withExtension:nil];
+    }
     SCNNode *node = [self loadModel:url nodeName:property[@"node"] withAnimation:YES];
     node.scale = SCNVector3Make(scale, scale, scale);
     [self addNodeToScene:node property:property];
+}
+
+- (SCNMaterial *)materialFromDiffuseColor:(UIColor *)color {
+    SCNMaterial *material = [SCNMaterial new];
+    if (color) {
+        material.diffuse.contents = color;
+    }
+    material.lightingModelName = SCNLightingModelPhysicallyBased;
+    material.metalness.contents = @(0.08);
+    material.roughness.contents = @(0.1);
+    return material;
 }
 
 
@@ -335,6 +434,7 @@
         node = [scene.rootNode childNodeWithName:nodeName recursively:YES];
     } else {
         node = [[SCNNode alloc] init];
+        
         NSArray *nodeArray = [scene.rootNode childNodes];
         for (SCNNode *eachChild in nodeArray) {
             [node addChildNode:eachChild];
@@ -349,6 +449,7 @@
         for (NSString *eachId in animationIds){
             CAAnimation *animation = [sceneSource entryWithIdentifier:eachId withClass:[CAAnimation class]];
             [animationMutableArray addObject:animation];
+            
         }
         NSArray *animationArray = [NSArray arrayWithArray:animationMutableArray];
         
@@ -368,6 +469,7 @@
 
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
     node.position = [self getPositionFromProperty:property];
+    node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
     
     NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
     if (key) {
@@ -377,17 +479,18 @@
 }
 
 - (SCNVector3)getPositionFromProperty:(NSDictionary *)property {
-    CGFloat x = [property[@"x"] floatValue];
-    CGFloat y = [property[@"y"] floatValue];
-    CGFloat z = [property[@"z"] floatValue];
+    NSDictionary* pos = property[@"pos"];
+    CGFloat x = [pos[@"x"] floatValue];
+    CGFloat y = [pos[@"y"] floatValue];
+    CGFloat z = [pos[@"z"] floatValue];
     
-    if (property[@"x"] == NULL) {
+    if (pos[@"x"] == NULL) {
         x = self.cameraOrigin.position.x - self.localOrigin.position.x;
     }
-    if (property[@"y"] == NULL) {
+    if (pos[@"y"] == NULL) {
         y = self.cameraOrigin.position.y - self.localOrigin.position.y;
     }
-    if (property[@"z"] == NULL) {
+    if (pos[@"z"] == NULL) {
         z = self.cameraOrigin.position.z - self.localOrigin.position.z;
     }
     
@@ -415,6 +518,119 @@
     [self.nodes removeObjectForKey:key];
 }
 
+
+#pragma mark - plane hit detection
+
+static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
+    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+        ARHitTestResult *result = (ARHitTestResult *) obj;
+        [resultsMapped addObject:(@{
+                                    @"distance": @(result.distance),
+                                    @"point": @{
+                                            @"x": @(result.worldTransform.columns[3].x),
+                                            @"y": @(result.worldTransform.columns[3].y),
+                                            @"z": @(result.worldTransform.columns[3].z)
+                                            }
+                                    
+                                    } )];
+    }];
+    return resultsMapped;
+}
+
+- (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
+    
+    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+        SCNHitTestResult *result = (SCNHitTestResult *) obj;
+        SCNNode * node = result.node;
+        NSArray *keys = [self.nodes allKeysForObject: node];
+        if([keys count]) {
+            
+            NSString * firstKey = [keys firstObject];
+            [resultsMapped addObject:(@{
+                                        
+                                        @"id": firstKey
+                                        
+                                        } )];
+        } else {
+            NSLog(@"no key found for node %@", node);
+            NSLog(@"for results %@", results);
+            NSLog(@"all nodes %@", self.nodes);
+            NSLog(@"origin %@", self.localOrigin);
+        }
+        
+    }];
+    return resultsMapped;
+    
+    
+    
+    
+    
+}
+
+
+static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
+    return @{
+             @"results": resultsMapped,
+             @"tapPoint": @{
+                     @"x": @(tapPoint.x),
+                     @"y": @(tapPoint.y)
+                     }
+             };
+}
+
+static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
+    return @{
+             @"results": resultsMapped,
+             @"tapPoint": @{
+                     @"x": @(tapPoint.x),
+                     @"y": @(tapPoint.y)
+                     }
+             };
+}
+
+- (NSDictionary *)getPlaneHitResult:(const CGPoint)tapPoint  types:(ARHitTestResultType)types; {
+    NSArray<ARHitTestResult *> *results = [self.arView hitTest:tapPoint types:types];
+    NSMutableArray * resultsMapped = mapHitResults(results);
+    
+    NSDictionary *planeHitResult = getPlaneHitResult(resultsMapped, tapPoint);
+    return planeHitResult;
+}
+
+- (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
+    
+    NSDictionary *options = @{
+                              SCNHitTestRootNodeKey: self.localOrigin
+                              };
+    NSArray<SCNHitTestResult *> *results = [self.arView hitTest:tapPoint  options:options];
+    
+    NSMutableArray * resultsMapped = [self mapHitResultsWithSceneResults:results];
+    
+    NSDictionary *planeHitResult = getSceneObjectHitResult(resultsMapped, tapPoint);
+    return planeHitResult;
+}
+
+
+
+- (void)handleTapFrom: (UITapGestureRecognizer *)recognizer {
+    // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+    CGPoint tapPoint = [recognizer locationInView:self.arView];
+    //
+    if(self.onTapOnPlaneUsingExtent) {
+        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
+        self.onTapOnPlaneUsingExtent(planeHitResult);
+    }
+    
+    if(self.onTapOnPlaneNoExtent) {
+        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
+        self.onTapOnPlaneNoExtent(planeHitResult);
+    }
+    
+    
+}
 
 
 #pragma mark - ARSCNViewDelegate
@@ -450,9 +666,9 @@
                                });
     }
     
-    Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
-    [self.planes setObject:plane forKey:anchor.identifier];
-    [node addChildNode:plane];
+    //    Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
+    //    [self.planes setObject:plane forKey:anchor.identifier];
+    //    [node addChildNode:plane];
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
@@ -487,24 +703,22 @@
                              });
     }
     
-    Plane *plane = [self.planes objectForKey:anchor.identifier];
-    if (plane == nil) {
-        return;
-    }
-    
-    [plane update:(ARPlaneAnchor *)anchor];
+    //    Plane *plane = [self.planes objectForKey:anchor.identifier];
+    //    if (plane == nil) {
+    //        return;
+    //    }
+    //
+    //    [plane update:(ARPlaneAnchor *)anchor];
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    [self.planes removeObjectForKey:anchor.identifier];
+    //    [self.planes removeObjectForKey:anchor.identifier];
 }
 
 
 #pragma mark - ARSessionDelegate
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
-    //    self.cameraOrigin.transform = self.arView.pointOfView.transform;
-    
     simd_float4 pos = frame.camera.transform.columns[3];
     self.cameraOrigin.position = SCNVector3Make(pos.x, pos.y, pos.z);
     simd_float4 z = frame.camera.transform.columns[2];

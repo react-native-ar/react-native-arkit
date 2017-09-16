@@ -6,32 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
 
-const ARSphereManager = NativeModules.ARSphereManager;
+import createArComponent from './lib/createArComponent';
 
-class ARSphere extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARSphereManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARSphereManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARSphere = createArComponent(NativeModules.ARSphereManager);
 
 ARSphere.propTypes = {
   pos: PropTypes.shape({
@@ -40,8 +20,13 @@ ARSphere.propTypes = {
     z: PropTypes.number,
     frame: PropTypes.string,
   }),
+  shader: PropTypes.shape({
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
+  }),
   shape: PropTypes.shape({
     radius: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

@@ -21,4 +21,5 @@ RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
     [[ARKit sharedInstance] removeNodeForKey:identifier];
 }
 
+
 @end

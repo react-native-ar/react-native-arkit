@@ -9,29 +9,9 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { NativeModules } from 'react-native';
 import id from './lib/id';
+import createArComponent from './lib/createArComponent';
 
-const ARTubeManager = NativeModules.ARTubeManager;
-
-class ARTube extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARTubeManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARTubeManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARTube = createArComponent(NativeModules.ARTubeManager);
 
 ARTube.propTypes = {
   pos: PropTypes.shape({
@@ -44,6 +24,7 @@ ARTube.propTypes = {
     innerR: PropTypes.number,
     outerR: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

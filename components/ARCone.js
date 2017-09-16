@@ -6,32 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
 
-const ARConeManager = NativeModules.ARConeManager;
+import createArComponent from './lib/createArComponent';
 
-class ARCone extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARConeManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARConeManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARCone = createArComponent(NativeModules.ARConeManager);
 
 ARCone.propTypes = {
   pos: PropTypes.shape({
@@ -44,6 +24,7 @@ ARCone.propTypes = {
     topR: PropTypes.number,
     bottomR: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

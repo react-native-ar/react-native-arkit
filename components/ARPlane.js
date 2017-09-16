@@ -6,32 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
 
-const ARPlaneManager = NativeModules.ARPlaneManager;
+import createArComponent from './lib/createArComponent';
 
-class ARPlane extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARPlaneManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-    });
-  }
-
-  componentWillUnmount() {
-    ARPlaneManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARPlane = createArComponent(NativeModules.ARPlaneManager);
 
 ARPlane.propTypes = {
   pos: PropTypes.shape({
@@ -43,6 +23,7 @@ ARPlane.propTypes = {
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
+    color: PropTypes.string,
   }),
 };
 

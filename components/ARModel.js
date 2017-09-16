@@ -6,39 +6,24 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
 
-const ARModelManager = NativeModules.ARModelManager;
+import createArComponent from './lib/createArComponent';
 
-class ARModel extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARModelManager.mount({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.model,
-    });
-  }
-
-  componentWillUnmount() {
-    ARModelManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARModel = createArComponent(NativeModules.ARModelManager);
 
 ARModel.propTypes = {
   pos: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number,
     z: PropTypes.number,
+    angle: PropTypes.number,
     frame: PropTypes.string,
+  }),
+  shader: PropTypes.shape({
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
   model: PropTypes.shape({
     file: PropTypes.string,
