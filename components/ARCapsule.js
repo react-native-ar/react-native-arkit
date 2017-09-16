@@ -6,9 +6,10 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import id from './lib/id';
+
+import createArComponent from './lib/createArComponent';
 
 const ARCapsule = createArComponent(NativeModules.ARCapsuleManager);
 
