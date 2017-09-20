@@ -10,12 +10,11 @@
 #import "Plane.h"
 @import CoreLocation;
 
-@interface RCTARKit () <ARSCNViewDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate> {
     RCTPromiseResolveBlock _resolve;
 }
 
 @property (nonatomic, strong) ARSession* session;
-//@property (nonatomic, strong) ARWorldTrackingSessionConfiguration *configuration;
 @property (nonatomic, strong) ARWorldTrackingConfiguration *configuration;
 
 @end
@@ -109,13 +108,13 @@
 }
 
 - (BOOL)planeDetection {
-    ARWorldTrackingConfiguration *configuration = self.session.configuration;
+    ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.session.configuration;
     return configuration.planeDetection == ARPlaneDetectionHorizontal;
 }
 
 - (void)setPlaneDetection:(BOOL)planeDetection {
     // plane detection is on by default for ARCL and cannot be configured for now
-    ARWorldTrackingConfiguration *configuration = self.session.configuration;
+    ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.session.configuration;
     if (planeDetection) {
         configuration.planeDetection = ARPlaneDetectionHorizontal;
     } else {
@@ -125,13 +124,13 @@
 }
 
 - (BOOL)lightEstimation {
-    ARWorldTrackingConfiguration *configuration = self.session.configuration;
+    ARConfiguration *configuration = self.session.configuration;
     return configuration.lightEstimationEnabled;
 }
 
 - (void)setLightEstimation:(BOOL)lightEstimation {
     // light estimation is on by default for ARCL and cannot be configured for now
-    ARWorldTrackingConfiguration *configuration = self.session.configuration;
+    ARConfiguration *configuration = self.session.configuration;
     configuration.lightEstimationEnabled = lightEstimation;
     [self resume];
 }
@@ -152,9 +151,9 @@
     if (_configuration) {
         return _configuration;
     }
-
+  
     if (!ARWorldTrackingConfiguration.isSupported) {}
-
+  
     _configuration = [ARWorldTrackingConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
     return _configuration;
