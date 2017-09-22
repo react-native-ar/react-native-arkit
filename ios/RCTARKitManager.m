@@ -17,6 +17,18 @@ RCT_EXPORT_MODULE()
     return [ARKit sharedInstance];
 }
 
+- (NSDictionary *)constantsToExport
+{
+    return @{
+             @"ARHitTestResultType": @{
+                     @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
+                     @"EstimatedHorizontalPlane": @(ARHitTestResultTypeEstimatedHorizontalPlane),
+                     @"ExistingPlane": @(ARHitTestResultTypeExistingPlane),
+                     @"ExistingPlaneUsingExtent": @(ARHitTestResultTypeExistingPlaneUsingExtent)
+                     },
+             };
+}
+
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(planeDetection, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(lightEstimation, BOOL)
@@ -36,6 +48,19 @@ RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejec
     [[RCTARKit sharedInstance] resume];
     resolve(@{});
 }
+
+
+RCT_EXPORT_METHOD(
+  hitTestPlanes: (NSDictionary *)pointDict
+  types:(NSUInteger)types
+  resolve:(RCTPromiseResolveBlock)resolve
+  reject:(RCTPromiseRejectBlock)reject
+  ) {
+    CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
+    [[ARKit sharedInstance] hitTestPlane:point types:types resolve:resolve reject:reject];
+}
+
+
 
 RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] snapshot:resolve reject:reject];
