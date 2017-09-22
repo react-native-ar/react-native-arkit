@@ -30,6 +30,8 @@
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
 @property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
+@property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneUsingExtent;
+@property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
 
 // origins for local frame and camera frame
 @property (nonatomic, strong) SCNNode *localOrigin;
@@ -45,7 +47,7 @@
 - (void)resume;
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
-
+- (void)focusScene;
 - (NSDictionary *)readCameraPosition;
 
 
