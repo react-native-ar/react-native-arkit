@@ -46,8 +46,8 @@
 - (void)pause;
 - (void)resume;
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)focusScene;
-
 - (NSDictionary *)readCameraPosition;
 
 

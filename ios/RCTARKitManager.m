@@ -41,6 +41,10 @@ RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRej
     [[ARKit sharedInstance] snapshot:resolve reject:reject];
 }
 
+RCT_EXPORT_METHOD(snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance] snapshotCamera:resolve reject:reject];
+}
+
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }

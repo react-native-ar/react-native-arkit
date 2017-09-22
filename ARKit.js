@@ -129,6 +129,7 @@ const styles = StyleSheet.create({
 
 ARKit.getCameraPosition = ARKitManager.getCameraPosition;
 ARKit.snapshot = ARKitManager.snapshot;
+ARKit.snapshotCamera = ARKitManager.snapshotCamera;
 ARKit.pause = ARKitManager.pause;
 ARKit.resume = ARKitManager.resume;
 ARKit.focusScene = ARKitManager.focusScene;
