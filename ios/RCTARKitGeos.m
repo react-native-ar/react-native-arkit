@@ -140,6 +140,7 @@
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
     
     SCNMaterial *material = [self materialFromProperty:property];
+    material.doubleSided = YES;
     geometry.materials = @[material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
