@@ -149,14 +149,16 @@ const styles = StyleSheet.create({
   },
 });
 
-ARKit.getCameraPosition = ARKitManager.getCameraPosition;
-ARKit.ARHitTestResultType = ARKitManager.ARHitTestResultType;
-ARKit.hitTestPlanes = ARKitManager.hitTestPlanes;
-ARKit.snapshot = ARKitManager.snapshot;
-ARKit.snapshotCamera = ARKitManager.snapshotCamera;
-ARKit.pause = ARKitManager.pause;
-ARKit.resume = ARKitManager.resume;
-ARKit.focusScene = ARKitManager.focusScene;
+// copy all ARKitManager methods to ARKit
+Object.keys(ARKitManager).forEach(method => {
+  ARKit[method] = parseColorWrapper(ARKitManager[method]);
+});
+
+ARKit.exportModel = presetId => {
+  const id = presetId || generateId();
+  const property = { id };
+  return ARKitManager.exportModel(property).then(result => ({ ...result, id }));
+};
 
 ARKit.propTypes = {
   debug: PropTypes.bool,
@@ -166,7 +168,7 @@ ARKit.propTypes = {
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
-  onTapOnPlaneNoExtent: PropTypes.func
+  onTapOnPlaneNoExtent: PropTypes.func,
   onEvent: PropTypes.func,
 };
 
