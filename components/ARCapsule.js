@@ -6,8 +6,9 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { NativeModules } from 'react-native';
+import isEqual from 'lodash/isEqual';
 import generateId from './lib/generateId';
 import { parseColorWrapper } from '../parseColor';
 

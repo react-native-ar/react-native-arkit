@@ -14,7 +14,6 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
-import { parseColorWrapper } from './parseColor';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -152,7 +151,7 @@ ARKit.propTypes = {
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
-  onTapOnPlaneNoExtent: PropTypes.func
+  onTapOnPlaneNoExtent: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);

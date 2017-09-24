@@ -6,7 +6,7 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { NativeModules } from 'react-native';
 import isEqual from 'lodash/isEqual';
 import generateId from './lib/generateId';
@@ -24,17 +24,6 @@ class ARModel extends Component {
       ...this.props.model,
       ...this.props.shader,
     });
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (!isEqual(newProps, this.props)) {
-      parseColorWrapper(ARModelManager.mount)({
-        id: this.identifier,
-        ...newProps.pos,
-        ...newProps.model,
-        ...newProps.shader,
-      });
-    }
   }
 
   componentWillReceiveProps(newProps) {
