@@ -373,7 +373,8 @@
     SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
 
     // position textNode
-    SCNVector3 min, max;
+    SCNVector3 min = SCNVector3Zero;
+    SCNVector3 max = SCNVector3Zero;
     [textNode getBoundingBoxMin:&min max:&max];
     textNode.position = SCNVector3Make(-(min.x + max.x) / 2, -(min.y + max.y) / 2, -(min.z + max.z) / 2);
 
