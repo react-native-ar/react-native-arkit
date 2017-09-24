@@ -406,22 +406,7 @@
 }
 
 
-#pragma mark executors of adding node to scene
 
-- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
-    node.position = [self getPositionFromProperty:property];
-
-    NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
-    if (key) {
-        [self registerNode:node forKey:key];
-    }
-    [self.localOrigin addChildNode:node];
-}
-
-- (SCNVector3)getPositionFromProperty:(NSDictionary *)property {
-    CGFloat x = [property[@"x"] floatValue];
-    CGFloat y = [property[@"y"] floatValue];
-    CGFloat z = [property[@"z"] floatValue];
 
     if (property[@"x"] == NULL) {
         x = self.cameraOrigin.position.x - self.localOrigin.position.x;
@@ -437,25 +422,8 @@
 }
 
 
-#pragma mark node register
-
-- (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
-    [self removeNodeForKey:key];
-    [self.nodes setObject:node forKey:key];
 }
 
-- (SCNNode *)nodeForKey:(NSString *)key {
-    return [self.nodes objectForKey:key];
-}
-
-- (void)removeNodeForKey:(NSString *)key {
-    SCNNode *node = [self.nodes objectForKey:key];
-    if (node == nil) {
-        return;
-    }
-    [node removeFromParentNode];
-    [self.nodes removeObjectForKey:key];
-}
 
 #pragma mark - plane hit detection
 

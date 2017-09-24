@@ -71,12 +71,7 @@
 
 
 #pragma mark - Private
-- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property;
-- (SCNVector3)getPositionFromProperty:(NSDictionary *)property;
 
-- (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
-- (SCNNode *)nodeForKey:(NSString *)key;
-- (void)removeNodeForKey:(NSString *)key;
 - (SCNNode *)loadModel:(NSURL *)url nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
 
 
