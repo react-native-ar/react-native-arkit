@@ -71,6 +71,7 @@
 		10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitIO.m; sourceTree = "<group>"; };
 		10FEF6111F774C8F00EC21AE /* RCTARKitIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitIO.h; sourceTree = "<group>"; };
 		10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitNodes.m; sourceTree = "<group>"; };
+		10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitDelegate.h; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRCTARKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTARKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RCTARKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTARKit.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RCTARKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTARKit.m; sourceTree = "<group>"; };
@@ -134,6 +135,7 @@
 				10E553281F1391350059B7EC /* Plane.m */,
 				B3E7B5881CC2AC0600A0062D /* RCTARKit.h */,
 				B3E7B5891CC2AC0600A0062D /* RCTARKit.m */,
+				10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */,
 				10FEF6111F774C8F00EC21AE /* RCTARKitIO.h */,
 				10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */,
 				10FEF60F1F774C8F00EC21AE /* RCTARKitNodes.h */,

@@ -12,6 +12,7 @@
 
 #import <React/RCTComponent.h>
 #import <React/RCTBridgeModule.h>
+#import "RCTARKitDelegate.h"
 #import "RCTARKitNodes.h"
 #import "RCTARKitIO.h"
 
@@ -20,6 +21,10 @@
 + (instancetype)sharedInstance;
 - (instancetype)initWithARView:(ARSCNView *)arView;
 
+
+@property (nonatomic, strong) NSMutableArray<id<RCTARKitTouchDelegate>> *touchDelegates;
+@property (nonatomic, strong) NSMutableArray<id<RCTARKitRendererDelegate>> *rendererDelegates;
+@property (nonatomic, strong) NSMutableArray<id<RCTARKitSessionDelegate>> *sessionDelegates;
 
 
 #pragma mark - Properties
@@ -75,6 +80,7 @@
 
 
 #pragma mark - Delegates
+- (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;

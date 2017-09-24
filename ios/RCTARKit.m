@@ -49,10 +49,14 @@
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
+        self.touchDelegates = [NSMutableArray array];
+        self.rendererDelegates = [NSMutableArray array];
+        self.sessionDelegates = [NSMutableArray array];
         
         // nodeManager
         self.nodeManager = [RCTARKitNodes sharedInstance];
         self.nodeManager.arView = arView;
+        [self.sessionDelegates addObject:self.nodeManager];
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
@@ -150,17 +154,53 @@
     if (_configuration) {
         return _configuration;
     }
-  
+    
     if (!ARWorldTrackingConfiguration.isSupported) {}
-  
+    
     _configuration = [ARWorldTrackingConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
+    
     return _configuration;
 }
 
 
 
-#pragma mark - Methods
+#pragma mark - RCTARKitTouchDelegate
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:beganWithEvent:)]) {
+            [touchDelegate touches:touches beganWithEvent:event];
+        }
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:movedWithEvent:)]) {
+            [touchDelegate touches:touches movedWithEvent:event];
+        }
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:endedWithEvent:)]) {
+            [touchDelegate touches:touches endedWithEvent:event];
+        }
+    }
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:cancelledWithEvent:)]) {
+            [touchDelegate touches:touches cancelledWithEvent:event];
+        }
+    }
+}
 
 - (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
     
@@ -409,12 +449,26 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
         self.onTapOnPlaneNoExtent(planeHitResult);
     }
-    
-    
 }
 
 
 #pragma mark - ARSCNViewDelegate
+
+- (void)renderer:(id<SCNSceneRenderer>)renderer updateAtTime:(NSTimeInterval)time {
+    for (id<RCTARKitRendererDelegate> rendererDelegate in self.rendererDelegates) {
+        if ([rendererDelegate respondsToSelector:@selector(renderer:updateAtTime:)]) {
+            [rendererDelegate renderer:renderer updateAtTime:time];
+        }
+    }
+}
+
+- (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time {
+    for (id<RCTARKitRendererDelegate> rendererDelegate in self.rendererDelegates) {
+        if ([rendererDelegate respondsToSelector:@selector(renderer:didRenderScene:atTime:)]) {
+            [rendererDelegate renderer:renderer didRenderScene:scene atTime:time];
+        }
+    }
+}
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
@@ -498,14 +552,12 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 
 #pragma mark - ARSessionDelegate
-
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
-    //    self.cameraOrigin.transform = self.arView.pointOfView.transform;
-
-    simd_float4 pos = frame.camera.transform.columns[3];
-    self.cameraOrigin.position = SCNVector3Make(pos.x, pos.y, pos.z);
-    simd_float4 z = frame.camera.transform.columns[2];
-    self.cameraOrigin.eulerAngles = SCNVector3Make(0, atan2f(z.x, z.z), 0);
+    for (id<RCTARKitSessionDelegate> sessionDelegate in self.sessionDelegates) {
+        if ([sessionDelegate respondsToSelector:@selector(session:didUpdateFrame:)]) {
+            [sessionDelegate session:session didUpdateFrame:frame];
+        }
+    }
 }
 
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
