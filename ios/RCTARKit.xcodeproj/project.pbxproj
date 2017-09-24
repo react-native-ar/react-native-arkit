@@ -21,6 +21,7 @@
 		106DA32B1F443DB500B93D36 /* ARPlaneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA32A1F443DB500B93D36 /* ARPlaneManager.m */; };
 		10E553291F1391350059B7EC /* Plane.m in Sources */ = {isa = PBXBuildFile; fileRef = 10E553281F1391350059B7EC /* Plane.m */; };
 		10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 10ED47A61F38BC00004DF043 /* DeviceMotion.m */; };
+		10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */; };
 		10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTARKit.m */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,8 @@
 		10ED47A51F38BC00004DF043 /* DeviceMotion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceMotion.h; sourceTree = "<group>"; };
 		10ED47A61F38BC00004DF043 /* DeviceMotion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceMotion.m; sourceTree = "<group>"; };
 		10FEF60F1F774C8F00EC21AE /* RCTARKitNodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitNodes.h; sourceTree = "<group>"; };
+		10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitIO.m; sourceTree = "<group>"; };
+		10FEF6111F774C8F00EC21AE /* RCTARKitIO.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitIO.h; sourceTree = "<group>"; };
 		10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitNodes.m; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRCTARKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTARKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RCTARKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTARKit.h; sourceTree = "<group>"; };
@@ -131,6 +134,8 @@
 				10E553281F1391350059B7EC /* Plane.m */,
 				B3E7B5881CC2AC0600A0062D /* RCTARKit.h */,
 				B3E7B5891CC2AC0600A0062D /* RCTARKit.m */,
+				10FEF6111F774C8F00EC21AE /* RCTARKitIO.h */,
+				10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */,
 				10FEF60F1F774C8F00EC21AE /* RCTARKitNodes.h */,
 				10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */,
 				10062C811F127566009AE974 /* RCTARKitManager.h */,
@@ -198,6 +203,7 @@
 				106DA3251F443D9000B93D36 /* ARTorusManager.m in Sources */,
 				106DA32B1F443DB500B93D36 /* ARPlaneManager.m in Sources */,
 				106DA3161F443CF300B93D36 /* ARPyramidManager.m in Sources */,
+				10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */,
 				106DA3191F443D1D00B93D36 /* ARSphereManager.m in Sources */,
 				106999E51F3EC30100032829 /* ARBoxManager.m in Sources */,
 				106DA3281F443DA200B93D36 /* ARCapsuleManager.m in Sources */,
