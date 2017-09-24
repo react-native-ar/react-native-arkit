@@ -47,6 +47,8 @@
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
+        self.nodeManager = [RCTARKitNodes sharedInstance];
+        self.nodeManager.arView = arView;
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
@@ -218,7 +220,7 @@
 
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addSphere:(NSDictionary *)property {
@@ -226,7 +228,7 @@
 
     SCNSphere *geometry = [SCNSphere sphereWithRadius:radius];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addCylinder:(NSDictionary *)property {
@@ -235,7 +237,7 @@
 
     SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:radius height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addCone:(NSDictionary *)property {
@@ -245,7 +247,7 @@
 
     SCNCone *geometry = [SCNCone coneWithTopRadius:topR bottomRadius:bottomR height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addPyramid:(NSDictionary *)property {
@@ -255,7 +257,7 @@
 
     SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:width height:height length:length];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addTube:(NSDictionary *)property {
@@ -264,7 +266,7 @@
     CGFloat height = [property[@"height"] floatValue];
     SCNTube *geometry = [SCNTube tubeWithInnerRadius:innerR outerRadius:outerR height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addTorus:(NSDictionary *)property {
@@ -273,7 +275,7 @@
 
     SCNTorus *geometry = [SCNTorus torusWithRingRadius:ringR pipeRadius:pipeR];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addCapsule:(NSDictionary *)property {
@@ -282,7 +284,7 @@
 
     SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:capR height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addPlane:(NSDictionary *)property {
@@ -291,7 +293,7 @@
 
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addText:(NSDictionary *)property {
@@ -347,7 +349,7 @@
     SCNNode *textOrigin = [[SCNNode alloc] init];
     [textOrigin addChildNode:textNode];
     textOrigin.scale = SCNVector3Make(size, size, size);
-    [self addNodeToScene:textOrigin property:property];
+    [self.nodeManager addNodeToScene:textOrigin property:property];
 }
 
 - (void)addModel:(NSDictionary *)property {
@@ -361,7 +363,7 @@
     }
     SCNNode *node = [self loadModel:url nodeName:property[@"node"] withAnimation:YES];
     node.scale = SCNVector3Make(scale, scale, scale);
-    [self addNodeToScene:node property:property];
+    [self.nodeManager addNodeToScene:node property:property];
 }
 
 

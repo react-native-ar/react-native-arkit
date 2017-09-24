@@ -8,6 +8,7 @@
 
 #import "ARTorusManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitNodes.h"
 
 @implementation ARTorusManager
 
@@ -18,7 +19,7 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
-    [[ARKit sharedInstance] removeNodeForKey:identifier];
+    [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
 
 @end
