@@ -34,6 +34,14 @@ class ARKit extends Component {
     floor: null,
   };
 
+  componentDidMount() {
+    ARKitManager.resume();
+  }
+
+  componentWillUnmount() {
+    ARKitManager.pause();
+  }
+
   render(AR = RCTARKit) {
     let state = null;
     if (this.props.debug) {
