@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		100543FC1F77F85D0090A051 /* RCTARKitGeos.m in Sources */ = {isa = PBXBuildFile; fileRef = 100543FB1F77F85D0090A051 /* RCTARKitGeos.m */; };
 		10062C831F127572009AE974 /* RCTARKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10062C821F127572009AE974 /* RCTARKitManager.m */; };
 		1021FE1C1F3EDB98000E7339 /* ARModelManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1021FE181F3EDB90000E7339 /* ARModelManager.m */; };
 		1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1021FE191F3EDB90000E7339 /* ARTextManager.m */; };
@@ -39,6 +40,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		100543FA1F77F85D0090A051 /* RCTARKitGeos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitGeos.h; sourceTree = "<group>"; };
+		100543FB1F77F85D0090A051 /* RCTARKitGeos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitGeos.m; sourceTree = "<group>"; };
 		10062C811F127566009AE974 /* RCTARKitManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitManager.h; sourceTree = "<group>"; };
 		10062C821F127572009AE974 /* RCTARKitManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitManager.m; sourceTree = "<group>"; };
 		1021FE181F3EDB90000E7339 /* ARModelManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARModelManager.m; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 				B3E7B5881CC2AC0600A0062D /* RCTARKit.h */,
 				B3E7B5891CC2AC0600A0062D /* RCTARKit.m */,
 				10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */,
+				100543FA1F77F85D0090A051 /* RCTARKitGeos.h */,
+				100543FB1F77F85D0090A051 /* RCTARKitGeos.m */,
 				10FEF6111F774C8F00EC21AE /* RCTARKitIO.h */,
 				10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */,
 				10FEF60F1F774C8F00EC21AE /* RCTARKitNodes.h */,
@@ -219,6 +224,7 @@
 				B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */,
 				10062C831F127572009AE974 /* RCTARKitManager.m in Sources */,
 				10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */,
+				100543FC1F77F85D0090A051 /* RCTARKitGeos.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,8 +315,8 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 					"$(SRCROOT)/../../react-native-arcl/ios",
-					"../../../ios/Pods/Headers/Public/",
-					"../../../ios/Pods/Headers/Public/React",
+					../../../ios/Pods/Headers/Public/,
+					../../../ios/Pods/Headers/Public/React,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -330,8 +336,8 @@
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
 					"$(SRCROOT)/../../react-native-arcl/ios",
-					"../../../ios/Pods/Headers/Public/",
-					"../../../ios/Pods/Headers/Public/React",
+					../../../ios/Pods/Headers/Public/,
+					../../../ios/Pods/Headers/Public/React,
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";

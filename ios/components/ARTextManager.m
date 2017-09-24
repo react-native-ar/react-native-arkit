@@ -8,6 +8,7 @@
 
 #import "ARTextManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
 
 @implementation ARTextManager
@@ -15,7 +16,7 @@
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addText:property];
+    [[RCTARKitGeos sharedInstance] addText:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {

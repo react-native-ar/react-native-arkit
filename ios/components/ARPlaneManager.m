@@ -8,6 +8,7 @@
 
 #import "ARPlaneManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
 
 @implementation ARPlaneManager
@@ -15,7 +16,7 @@
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addPlane:property];
+    [[RCTARKitGeos sharedInstance] addPlane:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {

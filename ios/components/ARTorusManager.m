@@ -8,6 +8,7 @@
 
 #import "ARTorusManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
 
 @implementation ARTorusManager
@@ -15,7 +16,7 @@
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addTorus:property];
+    [[RCTARKitGeos sharedInstance] addTorus:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {

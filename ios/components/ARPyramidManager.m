@@ -8,6 +8,7 @@
 
 #import "ARPyramidManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
 
 @implementation ARPyramidManager
@@ -15,7 +16,7 @@
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addPyramid:property];
+    [[RCTARKitGeos sharedInstance] addPyramid:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {

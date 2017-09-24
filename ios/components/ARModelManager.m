@@ -8,6 +8,7 @@
 
 #import "ARModelManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
 
 @implementation ARModelManager
@@ -15,7 +16,7 @@
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addModel:property];
+    [[RCTARKitGeos sharedInstance] addModel:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {

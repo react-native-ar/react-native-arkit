@@ -14,7 +14,6 @@
 #import <React/RCTBridgeModule.h>
 #import "RCTARKitDelegate.h"
 #import "RCTARKitNodes.h"
-#import "RCTARKitIO.h"
 
 @interface RCTARKit : UIView
 
@@ -30,7 +29,6 @@
 #pragma mark - Properties
 @property (nonatomic, strong) ARSCNView *arView;
 @property (nonatomic, strong) RCTARKitNodes *nodeManager;
-@property (nonatomic, strong) RCTARKitIO *arkitIO;
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
@@ -56,22 +54,6 @@
 - (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)focusScene;
 - (NSDictionary *)readCameraPosition;
-
-
-
-#pragma mark - Add a model or a geometry
-- (void)addBox:(NSDictionary *)property;
-- (void)addSphere:(NSDictionary *)property;
-- (void)addCylinder:(NSDictionary *)property;
-- (void)addCone:(NSDictionary *)property;
-- (void)addPyramid:(NSDictionary *)property;
-- (void)addTube:(NSDictionary *)property;
-- (void)addTorus:(NSDictionary *)property;
-- (void)addCapsule:(NSDictionary *)property;
-- (void)addPlane:(NSDictionary *)property;
-- (void)addText:(NSDictionary *)property;
-- (void)addModel:(NSDictionary *)property;
-- (void)addImage:(NSDictionary *)property;
 
 
 
