@@ -395,8 +395,6 @@
 }
 
 
-    if (property[@"y"] == NULL) {
-
 
 #pragma mark - plane hit detection
 
