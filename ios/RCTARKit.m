@@ -47,28 +47,17 @@
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
+        
+        // nodeManager
         self.nodeManager = [RCTARKitNodes sharedInstance];
         self.nodeManager.arView = arView;
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
         arView.scene.rootNode.name = @"root";
-
-        // local reference frame origin
-        self.localOrigin = [[SCNNode alloc] init];
-        self.localOrigin.name = @"localOrigin";
-        [arView.scene.rootNode addChildNode:self.localOrigin];
-
-        // camera reference frame origin
-        self.cameraOrigin = [[SCNNode alloc] init];
-        self.cameraOrigin.name = @"cameraOrigin";
-        //        self.cameraOrigin.opacity = 0.7;
-        [arView.scene.rootNode addChildNode:self.cameraOrigin];
-
-        // init cahces
-        self.nodes = [NSMutableDictionary new];
+        
         self.planes = [NSMutableDictionary new];
-
+        
         // start ARKit
         [self addSubview:arView];
         [self resume];

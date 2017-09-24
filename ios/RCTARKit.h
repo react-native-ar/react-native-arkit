@@ -35,11 +35,7 @@
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneUsingExtent;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
 
-// origins for local frame and camera frame
-@property (nonatomic, strong) SCNNode *localOrigin;
-@property (nonatomic, strong) SCNNode *cameraOrigin;
 
-@property NSMutableDictionary *nodes; // nodes added to the scene
 @property NSMutableDictionary *planes; // plane detected
 
 
