@@ -15,6 +15,7 @@ import {
   requireNativeComponent,
 } from 'react-native';
 import { parseColorWrapper } from './parseColor';
+import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -143,18 +144,6 @@ ARKit.snapshotCamera = ARKitManager.snapshotCamera;
 ARKit.pause = ARKitManager.pause;
 ARKit.resume = ARKitManager.resume;
 ARKit.focusScene = ARKitManager.focusScene;
-ARKit.addBox = parseColorWrapper(ARKitManager.addBox);
-ARKit.addSphere = parseColorWrapper(ARKitManager.addSphere);
-ARKit.addCylinder = parseColorWrapper(ARKitManager.addCylinder);
-ARKit.addCone = parseColorWrapper(ARKitManager.addCone);
-ARKit.addPyramid = parseColorWrapper(ARKitManager.addPyramid);
-ARKit.addTube = parseColorWrapper(ARKitManager.addTube);
-ARKit.addTorus = parseColorWrapper(ARKitManager.addTorus);
-ARKit.addCapsule = parseColorWrapper(ARKitManager.addCapsule);
-ARKit.addPlane = parseColorWrapper(ARKitManager.addPlane);
-ARKit.addText = parseColorWrapper(ARKitManager.addText);
-ARKit.addModel = ARKitManager.addModel;
-ARKit.addImage = ARKitManager.addImage;
 
 ARKit.propTypes = {
   debug: PropTypes.bool,

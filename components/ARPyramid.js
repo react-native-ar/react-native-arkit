@@ -8,7 +8,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { NativeModules } from 'react-native';
-import id from './lib/id';
+import generateId from './lib/generateId';
+import { parseColorWrapper } from '../parseColor';
 
 const ARPyramidManager = NativeModules.ARPyramidManager;
 
@@ -16,12 +17,24 @@ class ARPyramid extends Component {
   identifier = null;
 
   componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARPyramidManager.mount({
+    this.identifier = this.props.id || generateId();
+    parseColorWrapper(ARPyramidManager.mount)({
       id: this.identifier,
       ...this.props.pos,
       ...this.props.shape,
+      ...this.props.shader,
     });
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps, this.props)) {
+      parseColorWrapper(ARPyramidManager.mount)({
+        id: this.identifier,
+        ...newProps.pos,
+        ...newProps.shape,
+        ...newProps.shader,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -44,6 +57,11 @@ ARPyramid.propTypes = {
     width: PropTypes.number,
     length: PropTypes.number,
     height: PropTypes.number,
+  }),
+  shader: PropTypes.shape({
+    color: PropTypes.string,
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
 };
 

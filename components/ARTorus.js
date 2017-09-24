@@ -8,7 +8,8 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { NativeModules } from 'react-native';
-import id from './lib/id';
+import generateId from './lib/generateId';
+import { parseColorWrapper } from '../parseColor';
 
 const ARTorusManager = NativeModules.ARTorusManager;
 
@@ -16,12 +17,24 @@ class ARTorus extends Component {
   identifier = null;
 
   componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARTorusManager.mount({
+    this.identifier = this.props.id || generateId();
+    parseColorWrapper(ARTorusManager.mount)({
       id: this.identifier,
       ...this.props.pos,
       ...this.props.shape,
+      ...this.props.shader,
     });
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps, this.props)) {
+      parseColorWrapper(ARTorusManager.mount)({
+        id: this.identifier,
+        ...newProps.pos,
+        ...newProps.shape,
+        ...newProps.shader,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -43,6 +56,11 @@ ARTorus.propTypes = {
   shape: PropTypes.shape({
     ringR: PropTypes.number,
     pipeR: PropTypes.number,
+  }),
+  shader: PropTypes.shape({
+    color: PropTypes.string,
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
 };
 
