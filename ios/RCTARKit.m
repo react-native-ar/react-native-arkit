@@ -248,16 +248,22 @@
     CGFloat height = [property[@"height"] floatValue];
     CGFloat length = [property[@"length"] floatValue];
     CGFloat chamfer = [property[@"chamfer"] floatValue];
-    
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material, material, material, material, material, material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addSphere:(NSDictionary *)property {
     CGFloat radius = [property[@"radius"] floatValue];
-    
     SCNSphere *geometry = [SCNSphere sphereWithRadius:radius];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
@@ -265,8 +271,11 @@
 - (void)addCylinder:(NSDictionary *)property {
     CGFloat radius = [property[@"radius"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
-    
     SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:radius height:height];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material, material, material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
@@ -275,8 +284,11 @@
     CGFloat topR = [property[@"topR"] floatValue];
     CGFloat bottomR = [property[@"bottomR"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
-    
     SCNCone *geometry = [SCNCone coneWithTopRadius:topR bottomRadius:bottomR height:height];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material, material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
@@ -285,8 +297,11 @@
     CGFloat width = [property[@"width"] floatValue];
     CGFloat length = [property[@"length"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
-    
     SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:width height:height length:length];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material, material, material, material, material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
@@ -296,6 +311,10 @@
     CGFloat outerR = [property[@"outerR"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
     SCNTube *geometry = [SCNTube tubeWithInnerRadius:innerR outerRadius:outerR height:height];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material, material, material, material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
@@ -303,8 +322,11 @@
 - (void)addTorus:(NSDictionary *)property {
     CGFloat ringR = [property[@"ringR"] floatValue];
     CGFloat pipeR = [property[@"pipeR"] floatValue];
-    
     SCNTorus *geometry = [SCNTorus torusWithRingRadius:ringR pipeRadius:pipeR];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
@@ -312,8 +334,11 @@
 - (void)addCapsule:(NSDictionary *)property {
     CGFloat capR = [property[@"capR"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
-    
     SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:capR height:height];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
@@ -321,15 +346,18 @@
 - (void)addPlane:(NSDictionary *)property {
     CGFloat width = [property[@"width"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
-    
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
+    
+    SCNMaterial *material = [self materialFromProperty:property];
+    geometry.materials = @[material];
+    
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
 - (void)addText:(NSDictionary *)property {
     // init SCNText
-    NSString *text = property[@"text"];
+    NSString *text = [NSString stringWithFormat:@"%@", property[@"text"]];
     CGFloat depth = [property[@"depth"] floatValue];
     if (!text) {
         text = @"(null)";
@@ -357,17 +385,10 @@
     }
     scnText.chamferRadius = chamfer / size;
     
-    // color
-    if (property[@"color"]) {
-        CGFloat r = [property[@"r"] floatValue];
-        CGFloat g = [property[@"g"] floatValue];
-        CGFloat b = [property[@"b"] floatValue];
-        SCNMaterial *face = [SCNMaterial new];
-        face.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
-        SCNMaterial *border = [SCNMaterial new];
-        border.diffuse.contents = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
-        scnText.materials = @[face, face, border, border, border];
-    }
+    // material
+    SCNMaterial *face = [self materialFromProperty:property];
+    SCNMaterial *border = [self materialFromProperty:property];
+    scnText.materials = @[face, face, border, border, border];
     
     // init SCNNode
     SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
@@ -394,10 +415,35 @@
     [self.nodeManager addNodeToScene:node property:property];
 }
 
+- (void)addImage:(NSDictionary *)property {}
+
+- (SCNMaterial *)materialFromProperty:(NSDictionary *)property {
+    SCNMaterial *material = [SCNMaterial new];
+    
+    if (property[@"color"]) {
+        CGFloat r = [property[@"r"] floatValue];
+        CGFloat g = [property[@"g"] floatValue];
+        CGFloat b = [property[@"b"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        material.diffuse.contents = color;
+    } else {
+        material.diffuse.contents = [UIColor whiteColor];
+    }
+    
+    if (property[@"metalness"]) {
+        material.lightingModelName = SCNLightingModelPhysicallyBased;
+        material.metalness.contents = @([property[@"metalness"] floatValue]);
+    }
+    if (property[@"roughness"]) {
+        material.lightingModelName = SCNLightingModelPhysicallyBased;
+        material.roughness.contents = @([property[@"roughness"] floatValue]);
+    }
+    
+    return material;
+}
 
 
 #pragma mark - plane hit detection
-
 static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
