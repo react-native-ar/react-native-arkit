@@ -8,6 +8,7 @@
 
 #import "RCTARKitManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitNodes.h"
 
 @implementation RCTARKitManager
 
