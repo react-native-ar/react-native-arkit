@@ -14,6 +14,8 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
+import { parseColorWrapper } from './parseColor';
+import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -68,6 +70,7 @@ class ARKit extends Component {
           onPlaneDetected={this.callback('onPlaneDetected')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
+          onEvent={this._onEvent}
         />
         {state}
       </View>
@@ -93,6 +96,18 @@ class ARKit extends Component {
         reason,
         floor: floor ? floor.toFixed(2) : this.state.floor,
       });
+    }
+  };
+
+  _onEvent = event => {
+    let eventName = event.nativeEvent.event;
+    if (!eventName) {
+      return;
+    }
+    eventName = eventName.charAt(0).toUpperCase() + eventName.slice(1);
+    const eventListener = this.props[`on${eventName}`];
+    if (eventListener) {
+      eventListener(event.nativeEvent);
     }
   };
 
@@ -151,7 +166,8 @@ ARKit.propTypes = {
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
-  onTapOnPlaneNoExtent: PropTypes.func,
+  onTapOnPlaneNoExtent: PropTypes.func
+  onEvent: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
