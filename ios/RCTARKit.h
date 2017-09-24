@@ -13,6 +13,7 @@
 #import <React/RCTComponent.h>
 #import <React/RCTBridgeModule.h>
 #import "RCTARKitNodes.h"
+#import "RCTARKitIO.h"
 
 @interface RCTARKit : UIView
 
@@ -24,6 +25,7 @@
 #pragma mark - Properties
 @property (nonatomic, strong) ARSCNView *arView;
 @property (nonatomic, strong) RCTARKitNodes *nodeManager;
+@property (nonatomic, strong) RCTARKitIO *arkitIO;
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;

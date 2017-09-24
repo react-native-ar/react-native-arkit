@@ -39,7 +39,9 @@
 - (instancetype)initWithARView:(ARSCNView *)arView {
     if ((self = [super init])) {
         self.arView = arView;
-
+        
+        self.arkitIO = [RCTARKitIO sharedInstance];
+        
         // delegates
         arView.delegate = self;
         arView.session.delegate = self;
@@ -343,14 +345,10 @@
 
 - (void)addModel:(NSDictionary *)property {
     CGFloat scale = [property[@"scale"] floatValue];
-    NSString * filePath = property[@"file"];
-    NSURL *url;
-    if([filePath hasPrefix: @"/"]) {
-        url = [NSURL fileURLWithPath: filePath];
-    } else {
-        url = [[NSBundle mainBundle] URLForResource:filePath withExtension:nil];
-    }
-    SCNNode *node = [self loadModel:url nodeName:property[@"node"] withAnimation:YES];
+    
+    NSString *path = [NSString stringWithFormat:@"%@", property[@"file"]];
+    SCNNode *node = [self.arkitIO loadModel:path nodeName:property[@"node"] withAnimation:YES];
+    
     node.scale = SCNVector3Make(scale, scale, scale);
     [self.nodeManager addNodeToScene:node property:property];
 }
