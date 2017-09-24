@@ -354,62 +354,7 @@
 }
 
 
-#pragma mark model loader
-
-- (SCNNode *)loadModel:(NSURL *)url nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation {
-    SCNScene *scene = [SCNScene sceneWithURL:url options:nil error:nil];
-
-    SCNNode *node;
-    if (nodeName) {
-        node = [scene.rootNode childNodeWithName:nodeName recursively:YES];
-    } else {
-        node = [[SCNNode alloc] init];
-        NSArray *nodeArray = [scene.rootNode childNodes];
-        for (SCNNode *eachChild in nodeArray) {
-            [node addChildNode:eachChild];
-        }
-    }
-
-    if (withAnimation) {
-        NSMutableArray *animationMutableArray = [NSMutableArray array];
-        SCNSceneSource *sceneSource = [SCNSceneSource sceneSourceWithURL:url options:@{SCNSceneSourceAnimationImportPolicyKey:SCNSceneSourceAnimationImportPolicyPlayRepeatedly}];
-
-        NSArray *animationIds = [sceneSource identifiersOfEntriesWithClass:[CAAnimation class]];
-        for (NSString *eachId in animationIds){
-            CAAnimation *animation = [sceneSource entryWithIdentifier:eachId withClass:[CAAnimation class]];
-            [animationMutableArray addObject:animation];
-        }
-        NSArray *animationArray = [NSArray arrayWithArray:animationMutableArray];
-
-        int i = 1;
-        for (CAAnimation *animation in animationArray) {
-            NSString *key = [NSString stringWithFormat:@"ANIM_%d", i];
-            [node addAnimation:animation forKey:key];
-            i++;
-        }
-    }
-
-    return node;
-}
-
-
-
-
-    if (property[@"x"] == NULL) {
-        x = self.cameraOrigin.position.x - self.localOrigin.position.x;
-    }
     if (property[@"y"] == NULL) {
-        y = self.cameraOrigin.position.y - self.localOrigin.position.y;
-    }
-    if (property[@"z"] == NULL) {
-        z = self.cameraOrigin.position.z - self.localOrigin.position.z;
-    }
-
-    return SCNVector3Make(x, y, z);
-}
-
-
-}
 
 
 #pragma mark - plane hit detection
