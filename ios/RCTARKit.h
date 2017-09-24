@@ -57,7 +57,8 @@
 - (NSDictionary *)readCameraPosition;
 
 
-#pragma mark add
+
+#pragma mark - Add a model or a geometry
 - (void)addBox:(NSDictionary *)property;
 - (void)addSphere:(NSDictionary *)property;
 - (void)addCylinder:(NSDictionary *)property;
@@ -70,12 +71,6 @@
 - (void)addText:(NSDictionary *)property;
 - (void)addModel:(NSDictionary *)property;
 - (void)addImage:(NSDictionary *)property;
-
-
-
-#pragma mark - Private
-
-- (SCNNode *)loadModel:(NSURL *)url nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
 
 
 

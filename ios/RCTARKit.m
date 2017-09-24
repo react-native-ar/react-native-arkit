@@ -85,8 +85,8 @@
 }
 
 - (void)focusScene {
-    [self.localOrigin setPosition:self.cameraOrigin.position];
-    [self.localOrigin setRotation:self.cameraOrigin.rotation];
+    [self.nodeManager.localOrigin setPosition:self.nodeManager.cameraOrigin.position];
+    [self.nodeManager.localOrigin setRotation:self.nodeManager.cameraOrigin.rotation];
 }
 
 
@@ -137,11 +137,8 @@
 }
 
 - (NSDictionary *)readCameraPosition {
-    return @{
-             @"x": @(self.cameraOrigin.position.x),
-             @"y": @(self.cameraOrigin.position.y),
-             @"z": @(self.cameraOrigin.position.z)
-             };
+    SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
+    return @{ @"x": @(cameraPosition.x), @"y": @(cameraPosition.y), @"z": @(cameraPosition.z) };
 }
 
 
@@ -163,53 +160,12 @@
 
 
 
-#pragma mark - RCTARKitTouchDelegate
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
-        if ([touchDelegate respondsToSelector:@selector(touches:beganWithEvent:)]) {
-            [touchDelegate touches:touches beganWithEvent:event];
-        }
-    }
-}
+#pragma mark - snapshot methods
 
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesMoved:touches withEvent:event];
-    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
-        if ([touchDelegate respondsToSelector:@selector(touches:movedWithEvent:)]) {
-            [touchDelegate touches:touches movedWithEvent:event];
-        }
-    }
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
-        if ([touchDelegate respondsToSelector:@selector(touches:endedWithEvent:)]) {
-            [touchDelegate touches:touches endedWithEvent:event];
-        }
-    }
-}
-
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesCancelled:touches withEvent:event];
-    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
-        if ([touchDelegate respondsToSelector:@selector(touches:cancelledWithEvent:)]) {
-            [touchDelegate touches:touches cancelledWithEvent:event];
-        }
-    }
-}
-
-
-- (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-    
-    resolve([self getPlaneHitResult:tapPoint types:types]);
-}
-
-
-#pragma mark - Methods
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
     UIImage *image = [self.arView snapshot];
+    // FIXME: I belive this is not the right way. I don't know how to pass 'resolve' to the completionSelector
+    // If you know how to do it, please PR. Thanks!
     _resolve = resolve;
     UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
 }
@@ -242,7 +198,9 @@
 }
 
 
-#pragma mark add models in the scene
+
+#pragma mark - add a model or a geometry
+
 - (void)addBox:(NSDictionary *)property {
     CGFloat width = [property[@"width"] floatValue];
     CGFloat height = [property[@"height"] floatValue];
@@ -443,7 +401,14 @@
 }
 
 
+
 #pragma mark - plane hit detection
+
+- (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    
+    resolve([self getPlaneHitResult:tapPoint types:types]);
+}
+
 static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
@@ -495,6 +460,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         self.onTapOnPlaneNoExtent(planeHitResult);
     }
 }
+
 
 
 #pragma mark - ARSCNViewDelegate
@@ -596,7 +562,9 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
+
 #pragma mark - ARSessionDelegate
+
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
     for (id<RCTARKitSessionDelegate> sessionDelegate in self.sessionDelegates) {
         if ([sessionDelegate respondsToSelector:@selector(session:didUpdateFrame:)]) {
@@ -613,6 +581,46 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                                    @"reason": @(camera.trackingStateReason)
                                    });
         });
+    }
+}
+
+
+
+#pragma mark - RCTARKitTouchDelegate
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:beganWithEvent:)]) {
+            [touchDelegate touches:touches beganWithEvent:event];
+        }
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:movedWithEvent:)]) {
+            [touchDelegate touches:touches movedWithEvent:event];
+        }
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:endedWithEvent:)]) {
+            [touchDelegate touches:touches endedWithEvent:event];
+        }
+    }
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+    for (id<RCTARKitTouchDelegate> touchDelegate in self.touchDelegates) {
+        if ([touchDelegate respondsToSelector:@selector(touches:cancelledWithEvent:)]) {
+            [touchDelegate touches:touches cancelledWithEvent:event];
+        }
     }
 }
 
