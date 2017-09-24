@@ -46,12 +46,10 @@
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-        self.cameraOrigin.opacity = 0.5;
         
         // front-of-camera frame origin
         self.frontOfCamera = [[SCNNode alloc] init];
         self.frontOfCamera.name = @"frontOfCamera";
-        self.frontOfCamera.opacity = 0.7;
         
         // init cahces
         self.nodes = [NSMutableDictionary new];
@@ -59,7 +57,16 @@
     return self;
 }
 
+- (void)setArView:(ARSCNView *)arView {
+    NSLog(@"setArView");
+    _arView = arView;
+    self.rootNode = arView.scene.rootNode;
+    self.rootNode.name = @"root";
 
+    [self.rootNode addChildNode:self.localOrigin];
+    [self.rootNode addChildNode:self.cameraOrigin];
+    [self.rootNode addChildNode:self.frontOfCamera];
+}
 
 #pragma mark
 
@@ -67,7 +74,10 @@
  add a node to scene in a reference frame
  */
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
-    NSString *referenceFrame = [NSString stringWithFormat:@"%@", property[@"frame"]];
+    NSString *referenceFrame = property[@"frame"];
+    if (!referenceFrame) {
+        referenceFrame = @"Local"; // default to Local frame
+    }
     NSString *selectorString = [NSString stringWithFormat:@"addNodeTo%@Frame:property:", referenceFrame];
     SEL selector = NSSelectorFromString(selectorString);
     if ([self respondsToSelector:selector]) {

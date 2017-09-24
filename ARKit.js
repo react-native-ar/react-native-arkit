@@ -15,7 +15,6 @@ import {
   requireNativeComponent,
 } from 'react-native';
 import { parseColorWrapper } from './parseColor';
-import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
 

@@ -382,7 +382,8 @@
         CGFloat r = [property[@"r"] floatValue];
         CGFloat g = [property[@"g"] floatValue];
         CGFloat b = [property[@"b"] floatValue];
-        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        CGFloat a = [property[@"a"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:a];
         material.diffuse.contents = color;
     } else {
         material.diffuse.contents = [UIColor whiteColor];
@@ -508,7 +509,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                                @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                                @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                                @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-                               @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
+//                               @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                                });
     }
     
@@ -545,7 +546,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                              @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                              @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                              @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-                             @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
+//                             @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                              });
     }
     
