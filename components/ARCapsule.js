@@ -6,9 +6,11 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { NativeModules } from 'react-native';
-import id from './lib/id';
+import isEqual from 'lodash/isEqual';
+import generateId from './lib/generateId';
+import { parseColorWrapper } from '../parseColor';
 
 const ARCapsuleManager = NativeModules.ARCapsuleManager;
 
@@ -16,12 +18,24 @@ class ARCapsule extends Component {
   identifier = null;
 
   componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARCapsuleManager.mount({
+    this.identifier = this.props.id || generateId();
+    parseColorWrapper(ARCapsuleManager.mount)({
       id: this.identifier,
       ...this.props.pos,
       ...this.props.shape,
+      ...this.props.shader,
     });
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps, this.props)) {
+      parseColorWrapper(ARCapsuleManager.mount)({
+        id: this.identifier,
+        ...newProps.pos,
+        ...newProps.shape,
+        ...newProps.shader,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -43,6 +57,11 @@ ARCapsule.propTypes = {
   shape: PropTypes.shape({
     capR: PropTypes.number,
     height: PropTypes.number,
+  }),
+  shader: PropTypes.shape({
+    color: PropTypes.string,
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
 };
 

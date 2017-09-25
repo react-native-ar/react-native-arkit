@@ -15,6 +15,7 @@ import {
   requireNativeComponent,
 } from 'react-native';
 import { parseColorWrapper } from './parseColor';
+import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -33,6 +34,14 @@ class ARKit extends Component {
     reason: 0,
     floor: null,
   };
+
+  componentDidMount() {
+    ARKitManager.resume();
+  }
+
+  componentWillUnmount() {
+    ARKitManager.pause();
+  }
 
   render(AR = RCTARKit) {
     let state = null;
@@ -61,6 +70,7 @@ class ARKit extends Component {
           onPlaneDetected={this.callback('onPlaneDetected')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
+          onEvent={this._onEvent}
         />
         {state}
       </View>
@@ -86,6 +96,18 @@ class ARKit extends Component {
         reason,
         floor: floor ? floor.toFixed(2) : this.state.floor,
       });
+    }
+  };
+
+  _onEvent = event => {
+    let eventName = event.nativeEvent.event;
+    if (!eventName) {
+      return;
+    }
+    eventName = eventName.charAt(0).toUpperCase() + eventName.slice(1);
+    const eventListener = this.props[`on${eventName}`];
+    if (eventListener) {
+      eventListener(event.nativeEvent);
     }
   };
 
@@ -127,26 +149,16 @@ const styles = StyleSheet.create({
   },
 });
 
-ARKit.getCameraPosition = ARKitManager.getCameraPosition;
-ARKit.ARHitTestResultType = ARKitManager.ARHitTestResultType;
-ARKit.hitTestPlanes = ARKitManager.hitTestPlanes;
-ARKit.snapshot = ARKitManager.snapshot;
-ARKit.snapshotCamera = ARKitManager.snapshotCamera;
-ARKit.pause = ARKitManager.pause;
-ARKit.resume = ARKitManager.resume;
-ARKit.focusScene = ARKitManager.focusScene;
-ARKit.addBox = parseColorWrapper(ARKitManager.addBox);
-ARKit.addSphere = parseColorWrapper(ARKitManager.addSphere);
-ARKit.addCylinder = parseColorWrapper(ARKitManager.addCylinder);
-ARKit.addCone = parseColorWrapper(ARKitManager.addCone);
-ARKit.addPyramid = parseColorWrapper(ARKitManager.addPyramid);
-ARKit.addTube = parseColorWrapper(ARKitManager.addTube);
-ARKit.addTorus = parseColorWrapper(ARKitManager.addTorus);
-ARKit.addCapsule = parseColorWrapper(ARKitManager.addCapsule);
-ARKit.addPlane = parseColorWrapper(ARKitManager.addPlane);
-ARKit.addText = parseColorWrapper(ARKitManager.addText);
-ARKit.addModel = ARKitManager.addModel;
-ARKit.addImage = ARKitManager.addImage;
+// copy all ARKitManager methods to ARKit
+Object.keys(ARKitManager).forEach(method => {
+  ARKit[method] = parseColorWrapper(ARKitManager[method]);
+});
+
+ARKit.exportModel = presetId => {
+  const id = presetId || generateId();
+  const property = { id };
+  return ARKitManager.exportModel(property).then(result => ({ ...result, id }));
+};
 
 ARKit.propTypes = {
   debug: PropTypes.bool,
@@ -156,7 +168,8 @@ ARKit.propTypes = {
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
-  onTapOnPlaneNoExtent: PropTypes.func
+  onTapOnPlaneNoExtent: PropTypes.func,
+  onEvent: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);

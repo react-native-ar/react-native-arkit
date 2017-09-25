@@ -6,9 +6,11 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { NativeModules } from 'react-native';
-import id from './lib/id';
+import isEqual from 'lodash/isEqual';
+import generateId from './lib/generateId';
+import { parseColorWrapper } from '../parseColor';
 
 const ARConeManager = NativeModules.ARConeManager;
 
@@ -16,12 +18,24 @@ class ARCone extends Component {
   identifier = null;
 
   componentWillMount() {
-    this.identifier = this.props.id || id();
-    ARConeManager.mount({
+    this.identifier = this.props.id || generateId();
+    parseColorWrapper(ARConeManager.mount)({
       id: this.identifier,
       ...this.props.pos,
       ...this.props.shape,
+      ...this.props.shader,
     });
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (!isEqual(newProps, this.props)) {
+      parseColorWrapper(ARConeManager.mount)({
+        id: this.identifier,
+        ...newProps.pos,
+        ...newProps.shape,
+        ...newProps.shader,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -44,6 +58,11 @@ ARCone.propTypes = {
     topR: PropTypes.number,
     bottomR: PropTypes.number,
     height: PropTypes.number,
+  }),
+  shader: PropTypes.shape({
+    color: PropTypes.string,
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
 };
 

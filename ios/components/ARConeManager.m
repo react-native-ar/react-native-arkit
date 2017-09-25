@@ -8,17 +8,19 @@
 
 #import "ARConeManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
+#import "RCTARKitNodes.h"
 
 @implementation ARConeManager
 
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addCone:property];
+    [[RCTARKitGeos sharedInstance] addCone:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
-    [[ARKit sharedInstance] removeNodeForKey:identifier];
+    [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
 
 @end

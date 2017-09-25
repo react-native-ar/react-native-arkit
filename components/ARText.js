@@ -6,9 +6,10 @@
 //
 
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { NativeModules } from 'react-native';
-import id from './lib/id';
+import isEqual from 'lodash/isEqual';
+import generateId from './lib/generateId';
 import { parseColorWrapper } from '../parseColor';
 
 const ARTextManager = NativeModules.ARTextManager;
@@ -17,22 +18,26 @@ class ARText extends Component {
   identifier = null;
 
   componentWillMount() {
-    this.identifier = this.props.id || id();
+    this.identifier = this.props.id || generateId();
     parseColorWrapper(ARTextManager.mount)({
       id: this.identifier,
       text: this.props.text,
       ...this.props.pos,
       ...this.props.font,
+      ...this.props.shader,
     });
   }
 
   componentWillReceiveProps(newProps) {
-    parseColorWrapper(ARTextManager.mount)({
-      id: this.identifier,
-      text: newProps.text,
-      ...newProps.pos,
-      ...newProps.font,
-    });
+    if (!isEqual(newProps, this.props)) {
+      parseColorWrapper(ARTextManager.mount)({
+        id: this.identifier,
+        text: newProps.text,
+        ...newProps.pos,
+        ...newProps.font,
+        ...this.props.shader,
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -50,6 +55,7 @@ ARText.propTypes = {
     x: PropTypes.number,
     y: PropTypes.number,
     z: PropTypes.number,
+    angle: PropTypes.number,
     frame: PropTypes.string,
   }),
   font: PropTypes.shape({
@@ -58,7 +64,11 @@ ARText.propTypes = {
     size: PropTypes.number,
     depth: PropTypes.number,
     chamfer: PropTypes.number,
+  }),
+  shader: PropTypes.shape({
     color: PropTypes.string,
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
 };
 

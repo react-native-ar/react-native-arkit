@@ -8,17 +8,19 @@
 
 #import "ARBoxManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
+#import "RCTARKitNodes.h"
 
 @implementation ARBoxManager
 
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addBox:property];
+    [[RCTARKitGeos sharedInstance] addBox:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
-    [[ARKit sharedInstance] removeNodeForKey:identifier];
+    [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
 
 @end

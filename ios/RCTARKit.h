@@ -12,6 +12,8 @@
 
 #import <React/RCTComponent.h>
 #import <React/RCTBridgeModule.h>
+#import "RCTARKitDelegate.h"
+#import "RCTARKitNodes.h"
 
 @interface RCTARKit : UIView
 
@@ -19,9 +21,14 @@
 - (instancetype)initWithARView:(ARSCNView *)arView;
 
 
+@property (nonatomic, strong) NSMutableArray<id<RCTARKitTouchDelegate>> *touchDelegates;
+@property (nonatomic, strong) NSMutableArray<id<RCTARKitRendererDelegate>> *rendererDelegates;
+@property (nonatomic, strong) NSMutableArray<id<RCTARKitSessionDelegate>> *sessionDelegates;
+
 
 #pragma mark - Properties
-@property (nonatomic, strong) ARSCNView* arView;
+@property (nonatomic, strong) ARSCNView *arView;
+@property (nonatomic, strong) RCTARKitNodes *nodeManager;
 
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
@@ -32,12 +39,9 @@
 @property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneUsingExtent;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
+@property (nonatomic, copy) RCTBubblingEventBlock onEvent;
 
-// origins for local frame and camera frame
-@property (nonatomic, strong) SCNNode *localOrigin;
-@property (nonatomic, strong) SCNNode *cameraOrigin;
 
-@property NSMutableDictionary *nodes; // nodes added to the scene
 @property NSMutableDictionary *planes; // plane detected
 
 
@@ -52,34 +56,9 @@
 - (NSDictionary *)readCameraPosition;
 
 
-#pragma mark add
-- (void)addBox:(NSDictionary *)property;
-- (void)addSphere:(NSDictionary *)property;
-- (void)addCylinder:(NSDictionary *)property;
-- (void)addCone:(NSDictionary *)property;
-- (void)addPyramid:(NSDictionary *)property;
-- (void)addTube:(NSDictionary *)property;
-- (void)addTorus:(NSDictionary *)property;
-- (void)addCapsule:(NSDictionary *)property;
-- (void)addPlane:(NSDictionary *)property;
-- (void)addText:(NSDictionary *)property;
-- (void)addModel:(NSDictionary *)property;
-- (void)addImage:(NSDictionary *)property;
-
-
-
-#pragma mark - Private
-- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property;
-- (SCNVector3)getPositionFromProperty:(NSDictionary *)property;
-
-- (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
-- (SCNNode *)nodeForKey:(NSString *)key;
-- (void)removeNodeForKey:(NSString *)key;
-- (SCNNode *)loadModel:(NSURL *)url nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
-
-
 
 #pragma mark - Delegates
+- (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor;

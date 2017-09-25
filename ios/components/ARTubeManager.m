@@ -8,17 +8,19 @@
 
 #import "ARTubeManager.h"
 #import "RCTARKit.h"
+#import "RCTARKitGeos.h"
+#import "RCTARKitNodes.h"
 
 @implementation ARTubeManager
 
 RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[ARKit sharedInstance] addTube:property];
+    [[RCTARKitGeos sharedInstance] addTube:property];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
-    [[ARKit sharedInstance] removeNodeForKey:identifier];
+    [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
 
 @end

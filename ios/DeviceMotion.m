@@ -33,7 +33,7 @@ RCT_EXPORT_MODULE();
     }
 
     NSLog(@"DeviceMotion available");
-    if([_motionManager isDeviceMotionActive] == NO) {
+    if ([_motionManager isDeviceMotionActive] == NO) {
         NSLog(@"DeviceMotion active");
     } else {
         NSLog(@"DeviceMotion not active");
