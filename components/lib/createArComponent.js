@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import { parseColorWrapper } from './parseColor';
+import { parseColorInProps } from './parseColor';
 import generateId from './generateId';
 
 export default Manager =>
@@ -9,16 +9,16 @@ export default Manager =>
 
     componentWillMount() {
       this.identifier = this.props.id || generateId();
-      parseColorWrapper(Manager.mount)({
+      Manager.mount({
         id: this.identifier,
-        ...this.props,
+        ...parseColorInProps(this.props),
       });
     }
 
     componentWillUpdate() {
-      parseColorWrapper(Manager.mount)({
+      Manager.mount({
         id: this.identifier,
-        ...this.props,
+        ...parseColorInProps(this.props),
       });
     }
 

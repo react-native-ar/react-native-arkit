@@ -1,19 +1,22 @@
-export function parseColor(rgbaString) {
-  const r = parseInt(rgbaString.substr(1, 2), 16) / 255;
-  const g = parseInt(rgbaString.substr(3, 2), 16) / 255;
-  const b = parseInt(rgbaString.substr(5, 2), 16) / 255;
-  const a = parseInt(rgbaString.substr(7, 2), 16) / 255 || 1;
-  return { r, g, b, a };
-}
+import Color from 'color';
 
-export function parseColorWrapper(method) {
-  return (...params) => {
-    if (!params.length) {
-      return method();
-    }
-    if (typeof params[0] !== 'object' || !params[0].color) {
-      return method(params[0]);
-    }
-    return method({ ...params[0], ...parseColor(params[0].color) });
+export const normalizeColor = colorRaw => {
+  const color = new Color(colorRaw);
+  return {
+    alpha: 1,
+    ...color.unitObject(),
   };
+};
+
+export function parseColorInProps(props) {
+  if (props && props.shader && props.shader.color) {
+    return {
+      ...props,
+      shader: {
+        ...props.shader,
+        color: normalizeColor(props.shader.color),
+      },
+    };
+  }
+  return props;
 }
