@@ -12,7 +12,6 @@
 
 @interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate> {
     RCTPromiseResolveBlock _resolve;
-    BOOL _metal;
 }
 
 @property (nonatomic, strong) ARSession* session;
@@ -67,7 +66,6 @@
         [self addSubview:arView];
         [self resume];
         
-        _metal = YES;
     }
     return self;
 }

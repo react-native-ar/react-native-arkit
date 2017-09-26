@@ -20,16 +20,16 @@ ARBox.propTypes = {
     z: PropTypes.number,
     frame: PropTypes.string,
   }),
-  shader: PropTypes.shape({
-    color: PropTypes.string,
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
     length: PropTypes.number,
     chamfer: PropTypes.number,
+  }),
+  shader: PropTypes.shape({
+    color: PropTypes.string,
+    metalness: PropTypes.number,
+    roughness: PropTypes.number,
   }),
 };
 
