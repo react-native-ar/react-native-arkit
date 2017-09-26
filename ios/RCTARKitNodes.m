@@ -221,16 +221,7 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     }
 }
 
-- (void)clear {
-    // clear scene
-    
-    for(id key in self.nodes) {
-        id node = [self.nodes objectForKey:key];
-        [node removeFromParentNode];
-    }
-    [self.nodes removeAllObjects];
- 
-}
+
 
 
 

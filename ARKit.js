@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+
 import {
   StyleSheet,
   View,
@@ -14,7 +15,7 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
-import { parseColorWrapper } from './parseColor';
+
 import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -149,9 +150,9 @@ const styles = StyleSheet.create({
   },
 });
 
-// copy all ARKitManager methods to ARKit
-Object.keys(ARKitManager).forEach(method => {
-  ARKit[method] = parseColorWrapper(ARKitManager[method]);
+// copy all ARKitManager properties to ARKit
+Object.keys(ARKitManager).forEach(key => {
+  ARKit[key] = ARKitManager[key];
 });
 
 ARKit.exportModel = presetId => {

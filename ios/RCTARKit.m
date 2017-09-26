@@ -82,7 +82,6 @@
 }
 
 - (void)resume {
-    [self.nodeManager clear];
     [self.session runWithConfiguration:self.configuration];
 }
 

@@ -31,10 +31,6 @@ ARModel.propTypes = {
     scale: PropTypes.number,
     alpha: PropTypes.number,
   }),
-  shader: PropTypes.shape({
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
 };
 
 module.exports = ARModel;

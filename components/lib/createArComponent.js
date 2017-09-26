@@ -1,6 +1,6 @@
 import { Component } from 'react';
 
-import { parseColorWrapper } from '../../parseColor';
+import { parseColorWrapper } from './parseColor';
 import generateId from './generateId';
 
 export default Manager =>
