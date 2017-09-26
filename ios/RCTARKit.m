@@ -230,7 +230,8 @@
         CGFloat r = [property[@"r"] floatValue];
         CGFloat g = [property[@"g"] floatValue];
         CGFloat b = [property[@"b"] floatValue];
-        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:1.0f];
+        CGFloat alpha = [property[@"a"] floatValue];
+        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:alpha];
         SCNMaterial *material = [self materialFromDiffuseColor:color];
         if (property[@"shader"]) {
             NSDictionary* shader = property[@"shader"];
