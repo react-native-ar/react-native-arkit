@@ -132,11 +132,15 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 ##### Static methods
 
-| Method Name | Arguments | Notes
+| Method Name | Arguments |  Notes
 |---|---|---|
-| `snapshot` |  | Take a screenshot (will save to Photo Library)
-| `getCameraPosition` |  | Get the current position of the `ARCamera`
-| `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation)
+| `snapshot` |  |  | Take a screenshot (will save to Photo Library) |
+| `snapshotCamera` |  | Take a screenshot without 3d models (will save to Photo Library) |
+| `getCameraPosition` |  | Get the current position of the `ARCamera` |
+| `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation) |
+| `hitTestPlanes` | point, type  |  check if a plane has ben hit by point (`{x,y}`) with detection type (any of `ARKit.ARHitTestResultType`). See https://developer.apple.com/documentation/arkit/arhittestresulttype?language=objc for further information |
+| `hitTestSceneObjects` | point |  check if a scene object has ben hit by point (`{x,y}`) |
+
 
 
 #### [`<ARKit.Box />`](https://developer.apple.com/documentation/scenekit/scnbox)

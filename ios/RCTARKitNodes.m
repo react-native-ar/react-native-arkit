@@ -28,7 +28,7 @@
 + (instancetype)sharedInstance {
     static RCTARKitNodes *instance = nil;
     static dispatch_once_t onceToken;
-    
+
     dispatch_once(&onceToken, ^{
         if (instance == nil) {
             instance = [[self alloc] init];
@@ -42,15 +42,15 @@
         // local reference frame origin
         self.localOrigin = [[SCNNode alloc] init];
         self.localOrigin.name = @"localOrigin";
-        
+
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-        
+
         // front-of-camera frame origin
         self.frontOfCamera = [[SCNNode alloc] init];
         self.frontOfCamera.name = @"frontOfCamera";
-        
+
         // init cahces
         self.nodes = [NSMutableDictionary new];
     }
@@ -92,13 +92,13 @@
     node.position = [self getPositionFromProperty:property inReferenceFrame:RFReferenceFrameLocal];
     node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
     node.referenceFrame = RFReferenceFrameLocal;
-    
+
     NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
     NSLog(@"[RCTARKitNodes] Add model %@ to Local frame at (%.2f, %.2f, %.2f)", key, node.position.x, node.position.y, node.position.z);
     if (key) {
         [self registerNode:node forKey:key];
     }
-    
+
     [self.localOrigin addChildNode:node];
 }
 
@@ -106,7 +106,7 @@
     node.position = [self getPositionFromProperty:property inReferenceFrame:RFReferenceFrameCamera];
     node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
     node.referenceFrame = RFReferenceFrameCamera;
-    
+
     NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
     NSLog(@"[RCTARKitNodes] Add model %@ to Camera frame at (%.2f, %.2f, %.2f)", key, node.position.x, node.position.y, node.position.z);
     if (key) {
@@ -119,7 +119,7 @@
     node.position = [self getPositionFromProperty:property inReferenceFrame:RFReferenceFrameFrontOfCamera];
     node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
-    
+
     NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
     NSLog(@"[RCTARKitNodes] Add model %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", key, node.position.x, node.position.y, node.position.z);
     if (key) {
@@ -132,7 +132,7 @@
     CGFloat x = [property[@"x"] floatValue];
     CGFloat y = [property[@"y"] floatValue];
     CGFloat z = [property[@"z"] floatValue];
-    
+
     if (referenceFrame == RFReferenceFrameLocal) {
         if (property[@"x"] == NULL) {
             x = self.cameraOrigin.position.x - self.localOrigin.position.x;
@@ -144,8 +144,33 @@
             z = self.cameraOrigin.position.z - self.localOrigin.position.z;
         }
     }
-    
+
     return SCNVector3Make(x, y, z);
+}
+
+- (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
+
+    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+        SCNHitTestResult *result = (SCNHitTestResult *) obj;
+        SCNNode * node = result.node;
+        NSArray *keys = [self.nodes allKeysForObject: node];
+        if([keys count]) {
+
+            NSString * firstKey = [keys firstObject];
+            [resultsMapped addObject:(@{
+                                        @"id": firstKey
+                                        } )];
+        } else {
+            NSLog(@"no key found for node %@", node);
+            NSLog(@"for results %@", results);
+            NSLog(@"all nodes %@", self.nodes);
+            NSLog(@"origin %@", self.localOrigin);
+        }
+
+    }];
+    return resultsMapped;
+
 }
 
 
@@ -168,6 +193,13 @@
         [node removeFromParentNode];
         [self.nodes removeObjectForKey:key];
     }
+}
+
+- (void)clear {
+
+  for(id key in self.nodes) {
+      [self removeNodeForKey:key]
+  }
 }
 
 

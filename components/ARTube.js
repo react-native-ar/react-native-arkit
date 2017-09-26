@@ -6,46 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import isEqual from 'lodash/isEqual';
-import generateId from './lib/generateId';
-import { parseColorWrapper } from '../parseColor';
 
-const ARTubeManager = NativeModules.ARTubeManager;
+import createArComponent from './lib/createArComponent';
 
-class ARTube extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || generateId();
-    parseColorWrapper(ARTubeManager.mount)({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-      ...this.props.shader,
-    });
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (!isEqual(newProps, this.props)) {
-      parseColorWrapper(ARTubeManager.mount)({
-        id: this.identifier,
-        ...newProps.pos,
-        ...newProps.shape,
-        ...newProps.shader,
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    ARTubeManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARTube = createArComponent(NativeModules.ARTubeManager);
 
 ARTube.propTypes = {
   pos: PropTypes.shape({
