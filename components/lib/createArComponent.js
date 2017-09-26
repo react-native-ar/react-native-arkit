@@ -16,10 +16,10 @@ export default (Manager, propTypes = {}) => {
       });
     }
 
-    componentWillUpdate() {
+    componentWillUpdate(props) {
       Manager.mount({
         id: this.identifier,
-        ...parseColorInProps(this.props),
+        ...parseColorInProps(props),
       });
     }
 
