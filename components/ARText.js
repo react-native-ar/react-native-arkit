@@ -6,48 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import isEqual from 'lodash/isEqual';
-import generateId from './lib/generateId';
-import { parseColorWrapper } from '../parseColor';
 
-const ARTextManager = NativeModules.ARTextManager;
+import createArComponent from './lib/createArComponent';
 
-class ARText extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || generateId();
-    parseColorWrapper(ARTextManager.mount)({
-      id: this.identifier,
-      text: this.props.text,
-      ...this.props.pos,
-      ...this.props.font,
-      ...this.props.shader,
-    });
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (!isEqual(newProps, this.props)) {
-      parseColorWrapper(ARTextManager.mount)({
-        id: this.identifier,
-        text: newProps.text,
-        ...newProps.pos,
-        ...newProps.font,
-        ...this.props.shader,
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    ARTextManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARText = createArComponent(NativeModules.ARTextManager);
 
 ARText.propTypes = {
   text: PropTypes.string,

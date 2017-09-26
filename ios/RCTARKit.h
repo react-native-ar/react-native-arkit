@@ -50,6 +50,7 @@
 - (void)pause;
 - (void)resume;
 - (void)hitTestPlane:(CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (void)hitTestSceneObjects:(CGPoint)tapPoint resolve:(RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)focusScene;
@@ -77,4 +78,3 @@
 #else
 @compatibility_alias ARKit RCTARKit;
 #endif
-

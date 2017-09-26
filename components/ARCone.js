@@ -6,46 +6,12 @@
 //
 
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+
 import { NativeModules } from 'react-native';
-import isEqual from 'lodash/isEqual';
-import generateId from './lib/generateId';
-import { parseColorWrapper } from '../parseColor';
 
-const ARConeManager = NativeModules.ARConeManager;
+import createArComponent from './lib/createArComponent';
 
-class ARCone extends Component {
-  identifier = null;
-
-  componentWillMount() {
-    this.identifier = this.props.id || generateId();
-    parseColorWrapper(ARConeManager.mount)({
-      id: this.identifier,
-      ...this.props.pos,
-      ...this.props.shape,
-      ...this.props.shader,
-    });
-  }
-
-  componentWillReceiveProps(newProps) {
-    if (!isEqual(newProps, this.props)) {
-      parseColorWrapper(ARConeManager.mount)({
-        id: this.identifier,
-        ...newProps.pos,
-        ...newProps.shape,
-        ...newProps.shader,
-      });
-    }
-  }
-
-  componentWillUnmount() {
-    ARConeManager.unmount(this.identifier);
-  }
-
-  render() {
-    return null;
-  }
-}
+const ARCone = createArComponent(NativeModules.ARConeManager);
 
 ARCone.propTypes = {
   pos: PropTypes.shape({

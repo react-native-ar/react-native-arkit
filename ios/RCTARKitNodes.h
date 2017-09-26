@@ -38,10 +38,10 @@ typedef NS_OPTIONS(NSUInteger, RFReferenceFrame) {
 
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property;
 
-
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
 - (SCNNode *)nodeForKey:(NSString *)key;
 - (void)removeNodeForKey:(NSString *)key;
-//- (void)clearAllNodes;
+- (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint;
+
 
 @end

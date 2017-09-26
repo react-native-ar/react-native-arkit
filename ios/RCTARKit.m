@@ -65,6 +65,7 @@
         // start ARKit
         [self addSubview:arView];
         [self resume];
+        
     }
     return self;
 }
@@ -160,6 +161,12 @@
 
 #pragma mark - snapshot methods
 
+- (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+    
+    resolve([self.nodeManager getSceneObjectsHitResult:tapPoint]);
+}
+
+
 - (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
     UIImage *image = [self.arView snapshot];
     // FIXME: I belive this is not the right way. I don't know how to pass 'resolve' to the completionSelector
@@ -221,6 +228,10 @@ static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
     return resultsMapped;
 }
 
+
+
+
+
 static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
     return @{
              @"results": resultsMapped,
@@ -231,10 +242,10 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
              };
 }
 
+
 - (NSDictionary *)getPlaneHitResult:(const CGPoint)tapPoint  types:(ARHitTestResultType)types; {
     NSArray<ARHitTestResult *> *results = [self.arView hitTest:tapPoint types:types];
     NSMutableArray * resultsMapped = mapHitResults(results);
-    
     NSDictionary *planeHitResult = getPlaneHitResult(resultsMapped, tapPoint);
     return planeHitResult;
 }
@@ -280,7 +291,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     }
-
+    
     SCNNode *parent = [node parentNode];
     NSLog(@"plane detected");
     //    NSLog(@"%f %f %f", parent.position.x, parent.position.y, parent.position.z);
@@ -303,7 +314,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                                @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                                @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                                @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-//                               @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
+                               //                               @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                                });
     }
     
@@ -340,7 +351,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                              @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
                              @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
                              @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-//                             @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
+                             //                             @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                              });
     }
     
@@ -348,12 +359,12 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     if (plane == nil) {
         return;
     }
-
+    
     [plane update:(ARPlaneAnchor *)anchor];
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    [self.planes removeObjectForKey:anchor.identifier];
+    //    [self.planes removeObjectForKey:anchor.identifier];
 }
 
 
@@ -426,4 +437,3 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 @end
-
