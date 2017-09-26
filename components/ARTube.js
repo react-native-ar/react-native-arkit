@@ -11,25 +11,12 @@ import { NativeModules } from 'react-native';
 
 import createArComponent from './lib/createArComponent';
 
-const ARTube = createArComponent(NativeModules.ARTubeManager);
-
-ARTube.propTypes = {
-  pos: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    z: PropTypes.number,
-    frame: PropTypes.string,
-  }),
+const ARTube = createArComponent(NativeModules.ARTubeManager, {
   shape: PropTypes.shape({
     innerR: PropTypes.number,
     outerR: PropTypes.number,
     height: PropTypes.number,
   }),
-  shader: PropTypes.shape({
-    color: PropTypes.string,
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
-};
+});
 
 module.exports = ARTube;

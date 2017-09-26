@@ -11,24 +11,11 @@ import { NativeModules } from 'react-native';
 
 import createArComponent from './lib/createArComponent';
 
-const ARCapsule = createArComponent(NativeModules.ARCapsuleManager);
-
-ARCapsule.propTypes = {
-  pos: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    z: PropTypes.number,
-    frame: PropTypes.string,
-  }),
+const ARCapsule = createArComponent(NativeModules.ARCapsuleManager, {
   shape: PropTypes.shape({
     capR: PropTypes.number,
     height: PropTypes.number,
   }),
-  shader: PropTypes.shape({
-    color: PropTypes.string,
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
-};
+});
 
 module.exports = ARCapsule;
