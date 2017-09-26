@@ -11,25 +11,12 @@ import { NativeModules } from 'react-native';
 
 import createArComponent from './lib/createArComponent';
 
-const ARCone = createArComponent(NativeModules.ARConeManager);
-
-ARCone.propTypes = {
-  pos: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    z: PropTypes.number,
-    frame: PropTypes.string,
-  }),
+const ARCone = createArComponent(NativeModules.ARConeManager, {
   shape: PropTypes.shape({
     topR: PropTypes.number,
     bottomR: PropTypes.number,
     height: PropTypes.number,
   }),
-  shader: PropTypes.shape({
-    color: PropTypes.string,
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
-};
+});
 
 module.exports = ARCone;

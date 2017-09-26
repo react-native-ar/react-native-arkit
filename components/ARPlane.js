@@ -11,24 +11,11 @@ import { NativeModules } from 'react-native';
 
 import createArComponent from './lib/createArComponent';
 
-const ARPlane = createArComponent(NativeModules.ARPlaneManager);
-
-ARPlane.propTypes = {
-  pos: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    z: PropTypes.number,
-    frame: PropTypes.string,
-  }),
+const ARPlane = createArComponent(NativeModules.ARPlaneManager, {
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
   }),
-  shader: PropTypes.shape({
-    color: PropTypes.string,
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
-};
+});
 
 module.exports = ARPlane;

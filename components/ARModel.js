@@ -11,26 +11,13 @@ import { NativeModules } from 'react-native';
 
 import createArComponent from './lib/createArComponent';
 
-const ARModel = createArComponent(NativeModules.ARModelManager);
-
-ARModel.propTypes = {
-  pos: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    z: PropTypes.number,
-    angle: PropTypes.number,
-    frame: PropTypes.string,
-  }),
-  shader: PropTypes.shape({
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
+const ARModel = createArComponent(NativeModules.ARModelManager, {
   model: PropTypes.shape({
     file: PropTypes.string,
     node: PropTypes.string,
     scale: PropTypes.number,
     alpha: PropTypes.number,
   }),
-};
+});
 
 module.exports = ARModel;

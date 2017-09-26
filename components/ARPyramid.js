@@ -11,25 +11,12 @@ import { NativeModules } from 'react-native';
 
 import createArComponent from './lib/createArComponent';
 
-const ARPyramid = createArComponent(NativeModules.ARPyramidManager);
-
-ARPyramid.propTypes = {
-  pos: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    z: PropTypes.number,
-    frame: PropTypes.string,
-  }),
+const ARPyramid = createArComponent(NativeModules.ARPyramidManager, {
   shape: PropTypes.shape({
     width: PropTypes.number,
     length: PropTypes.number,
     height: PropTypes.number,
   }),
-  shader: PropTypes.shape({
-    color: PropTypes.string,
-    metalness: PropTypes.number,
-    roughness: PropTypes.number,
-  }),
-};
+});
 
 module.exports = ARPyramid;
