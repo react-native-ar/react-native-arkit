@@ -74,7 +74,8 @@
  add a node to scene in a reference frame
  */
 - (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
-    NSString *referenceFrame = property[@"frame"];
+    NSDictionary* pos = property[@"pos"];
+    NSString *referenceFrame = pos[@"frame"];
     if (!referenceFrame) {
         referenceFrame = @"Local"; // default to Local frame
     }
@@ -129,18 +130,19 @@
 }
 
 - (SCNVector3)getPositionFromProperty:(NSDictionary *)property inReferenceFrame:(RFReferenceFrame)referenceFrame {
-    CGFloat x = [property[@"x"] floatValue];
-    CGFloat y = [property[@"y"] floatValue];
-    CGFloat z = [property[@"z"] floatValue];
+    NSDictionary* pos = property[@"pos"];
+    CGFloat x = [pos[@"x"] floatValue];
+    CGFloat y = [pos[@"y"] floatValue];
+    CGFloat z = [pos[@"z"] floatValue];
 
     if (referenceFrame == RFReferenceFrameLocal) {
-        if (property[@"x"] == NULL) {
+        if (pos[@"x"] == NULL) {
             x = self.cameraOrigin.position.x - self.localOrigin.position.x;
         }
-        if (property[@"y"] == NULL) {
+        if (pos[@"y"] == NULL) {
             y = self.cameraOrigin.position.y - self.localOrigin.position.y;
         }
-        if (property[@"z"] == NULL) {
+        if (pos[@"z"] == NULL) {
             z = self.cameraOrigin.position.z - self.localOrigin.position.z;
         }
     }
@@ -220,9 +222,14 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 - (void)clear {
-  for(id key in self.nodes) {
-      [self removeNodeForKey:key];
-  }
+    // clear scene
+    
+    for(id key in self.nodes) {
+        id node = [self.nodes objectForKey:key];
+        [node removeFromParentNode];
+    }
+    [self.nodes removeAllObjects];
+ 
 }
 
 
