@@ -81,6 +81,7 @@
 
 - (void)resume {
     [self.session runWithConfiguration:self.configuration];
+    [self.nodeManager clear];
 }
 
 - (void)focusScene {

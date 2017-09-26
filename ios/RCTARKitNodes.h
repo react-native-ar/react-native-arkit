@@ -42,6 +42,6 @@ typedef NS_OPTIONS(NSUInteger, RFReferenceFrame) {
 - (SCNNode *)nodeForKey:(NSString *)key;
 - (void)removeNodeForKey:(NSString *)key;
 - (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint;
-
+- (void)clear;
 
 @end
