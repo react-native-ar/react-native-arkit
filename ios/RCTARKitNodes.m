@@ -148,6 +148,30 @@
     return SCNVector3Make(x, y, z);
 }
 
+- (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
+    NSDictionary *options = @{
+                              SCNHitTestRootNodeKey: self.localOrigin
+                              };
+    NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint  options:options];
+    NSMutableArray * resultsMapped = [self mapHitResultsWithSceneResults:results];
+    NSDictionary *planeHitResult = getSceneObjectHitResult(resultsMapped, tapPoint);
+    return planeHitResult;
+}
+
+
+static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
+    return @{
+             @"results": resultsMapped,
+             @"tapPoint": @{
+                     @"x": @(tapPoint.x),
+                     @"y": @(tapPoint.y)
+                     }
+             };
+}
+
+
+
+
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
 
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
@@ -196,9 +220,8 @@
 }
 
 - (void)clear {
-
   for(id key in self.nodes) {
-      [self removeNodeForKey:key]
+      [self removeNodeForKey:key];
   }
 }
 

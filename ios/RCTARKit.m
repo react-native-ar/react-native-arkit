@@ -82,7 +82,7 @@
 }
 
 - (void)resume {
-    [self.nodeManager clear]
+    [self.nodeManager clear];
     [self.session runWithConfiguration:self.configuration];
 }
 
@@ -164,13 +164,9 @@
 
 #pragma mark - snapshot methods
 
-- (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
-    resolve([self getPlaneHitResult:tapPoint types:types]);
-}
-
 - (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
     
-    resolve([self getSceneObjectsHitResult:tapPoint]);
+    resolve([self.nodeManager getSceneObjectsHitResult:tapPoint]);
 }
 
 
@@ -247,27 +243,6 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                      @"y": @(tapPoint.y)
                      }
              };
-}
-
-static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
-    return @{
-             @"results": resultsMapped,
-             @"tapPoint": @{
-                     @"x": @(tapPoint.x),
-                     @"y": @(tapPoint.y)
-                     }
-             };
-}
-
-
-- (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
-    NSDictionary *options = @{
-                              SCNHitTestRootNodeKey: self.localOrigin
-                              };
-    NSArray<SCNHitTestResult *> *results = [self.arView hitTest:tapPoint  options:options];
-    NSMutableArray * resultsMapped = [self.nodeManager mapHitResultsWithSceneResults:results];
-    NSDictionary *planeHitResult = getSceneObjectHitResult(resultsMapped, tapPoint);
-    return planeHitResult;
 }
 
 
