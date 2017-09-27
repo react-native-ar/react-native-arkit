@@ -10,10 +10,13 @@
 #import <SceneKit/SceneKit.h>
 #import <ARKit/ARKit.h>
 
-#import <React/RCTComponent.h>
-#import <React/RCTBridgeModule.h>
 #import "RCTARKitDelegate.h"
 #import "RCTARKitNodes.h"
+
+typedef void (^RCTBubblingEventBlock)(NSDictionary *body);
+typedef void (^RCTARKitResolve)(id result);
+typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error);
+
 
 @interface RCTARKit : UIView
 
@@ -49,10 +52,10 @@
 #pragma mark - Public Method
 - (void)pause;
 - (void)resume;
-- (void)hitTestPlane:(CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
-- (void)hitTestSceneObjects:(CGPoint)tapPoint resolve:(RCTPromiseResolveBlock) resolve reject:(RCTPromiseRejectBlock)reject;
-- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
-- (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
+- (void)hitTestPlane:(CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
+- (void)hitTestSceneObjects:(CGPoint)tapPoint resolve:(RCTARKitResolve) resolve reject:(RCTARKitReject)reject;
+- (void)snapshot:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
+- (void)snapshotCamera:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)focusScene;
 - (NSDictionary *)readCameraPosition;
 
