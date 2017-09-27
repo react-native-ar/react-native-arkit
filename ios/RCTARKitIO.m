@@ -34,7 +34,12 @@
 
 - (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation {
     NSURL *url = [self urlFromPath:path];
-    SCNScene *scene = [SCNScene sceneWithURL:url options:nil error:nil];
+    NSError* error;
+    
+    SCNScene *scene = [SCNScene sceneWithURL:url options:nil error:&error];
+    if(error) {
+        NSLog(@"%@",[error localizedDescription]);
+    }
     
     SCNNode *node;
     if (nodeName) {
@@ -113,9 +118,12 @@
 
 
 - (NSURL *)urlFromPath:(NSString *)path {
+    
     NSURL *url;
     
-    if ([path rangeOfString:@"scnassets"].location == NSNotFound) {
+    if([path hasPrefix: @"/"]) {
+        url = [NSURL fileURLWithPath: path];
+    } else if ([path rangeOfString:@"scnassets"].location == NSNotFound) {
         NSString *assetPath = [self getAppLibraryCachesPathWithSubDirectory:nil];
         NSString *modelPath = [NSString stringWithFormat:@"file://%@", [assetPath stringByAppendingPathComponent:path]];
         url = [NSURL URLWithString:[modelPath stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLQueryAllowedCharacterSet]]];
