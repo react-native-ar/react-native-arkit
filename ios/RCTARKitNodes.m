@@ -89,13 +89,13 @@
     }
 }
 
-- (void) clear {
+- (void)clear {
     // clear scene
-    NSArray*keys=[self.nodes allKeys];
+    NSArray *keys = [self.nodes allKeys];
     
-    for(id key in keys) {
+    for (id key in keys) {
         id node = [self.nodes objectForKey:key];
-        if(node) {
+        if (node) {
             [node removeFromParentNode];
         }
         

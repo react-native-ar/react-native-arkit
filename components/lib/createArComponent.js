@@ -1,8 +1,8 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 import { parseColorInProps } from './parseColor';
 import generateId from './generateId';
-import PropTypes from 'prop-types';
 
 export default (Manager, propTypes = {}) => {
   const ARComponent = class extends Component {
