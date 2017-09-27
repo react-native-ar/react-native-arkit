@@ -81,7 +81,7 @@
 
 - (void)resume {
     [self.session runWithConfiguration:self.configuration];
-//    [self.nodeManager clear];
+    //    [self.nodeManager clear];
 }
 
 - (void)focusScene {
@@ -139,6 +139,10 @@
 - (NSDictionary *)readCameraPosition {
     SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
     return @{ @"x": @(cameraPosition.x), @"y": @(cameraPosition.y), @"z": @(cameraPosition.z) };
+}
+
+- (SCNVector3)projectPoint:(SCNVector3)point {
+    return [self.arView projectPoint:point];
 }
 
 

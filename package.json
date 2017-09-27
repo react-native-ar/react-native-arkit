@@ -23,7 +23,8 @@
   "dependencies": {
     "color": "^2.0.0",
     "prop-types": "^15.5.7",
-    "react": "16.0.0-alpha.12"
+    "react": "16.0.0-alpha.12",
+    "react-animation-frame": "^0.3.4"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
