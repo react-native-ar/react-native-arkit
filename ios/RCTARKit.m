@@ -378,6 +378,11 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
             [sessionDelegate session:session didUpdateFrame:frame];
         }
     }
+    if (self.onFrameUpdate) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.onFrameUpdate(@{});
+        });
+    }
 }
 
 - (void)session:(ARSession *)session cameraDidChangeTrackingState:(ARCamera *)camera {
