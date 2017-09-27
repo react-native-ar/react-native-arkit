@@ -224,26 +224,26 @@
 
 - (SCNMaterial *)materialFromProperty:(NSDictionary *)property {
     SCNMaterial *material = [SCNMaterial new];
-    NSDictionary* shader = property[@"shader"];
+    NSDictionary* material = property[@"material"];
     
-    if (shader[@"color"]) {
-        CGFloat r = [shader[@"color"][@"r"] floatValue];
-        CGFloat g = [shader[@"color"][@"g"] floatValue];
-        CGFloat b = [shader[@"color"][@"b"] floatValue];
-        CGFloat alpha = [shader[@"color"][@"alpha"] floatValue];
+    if (material[@"color"]) {
+        CGFloat r = [material[@"color"][@"r"] floatValue];
+        CGFloat g = [material[@"color"][@"g"] floatValue];
+        CGFloat b = [material[@"color"][@"b"] floatValue];
+        CGFloat alpha = [material[@"color"][@"alpha"] floatValue];
         UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:alpha];
         material.diffuse.contents = color;
     } else {
         material.diffuse.contents = [UIColor whiteColor];
     }
     
-    if (shader[@"metalness"]) {
+    if (material[@"metalness"]) {
         material.lightingModelName = SCNLightingModelPhysicallyBased;
-        material.metalness.contents = @([shader[@"metalness"] floatValue]);
+        material.metalness.contents = @([material[@"metalness"] floatValue]);
     }
-    if (shader[@"roughness"]) {
+    if (material[@"roughness"]) {
         material.lightingModelName = SCNLightingModelPhysicallyBased;
-        material.roughness.contents = @([shader[@"roughness"] floatValue]);
+        material.roughness.contents = @([material[@"roughness"] floatValue]);
     }
     
     return material;

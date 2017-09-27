@@ -57,7 +57,7 @@ export default (Manager, propTypes = {}) => {
       w: PropTypes.number,
     }),
 
-    shader: PropTypes.shape({
+    material: PropTypes.shape({
       color: PropTypes.string,
       metalness: PropTypes.number,
       roughness: PropTypes.number,
