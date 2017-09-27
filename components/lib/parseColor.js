@@ -9,12 +9,12 @@ export const normalizeColor = colorRaw => {
 };
 
 export function parseColorInProps(props) {
-  if (props && props.shader && props.shader.color) {
+  if (props && props.material && props.material.color) {
     return {
       ...props,
-      shader: {
-        ...props.shader,
-        color: normalizeColor(props.shader.color),
+      material: {
+        ...props.material,
+        color: normalizeColor(props.material.color),
       },
     };
   }
