@@ -90,7 +90,13 @@ RCT_EXPORT_METHOD(projectPoint:
                   reject:(RCTPromiseRejectBlock)reject) {
     SCNVector3 point = SCNVector3Make(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue], [pointDict[@"z"] floatValue] );
     SCNVector3 pointProjected = [[ARKit sharedInstance] projectPoint:point];
-    resolve(@{ @"x": @(pointProjected.x), @"y": @(pointProjected.y), @"z": @(pointProjected.z) });
+    float distance = [[ARKit sharedInstance] getCameraDistanceToPoint:point];
+    resolve(@{
+              @"x": @(pointProjected.x),
+              @"y": @(pointProjected.y),
+              @"z": @(pointProjected.z),
+              @"distance": @(distance)
+              });
     
 }
 

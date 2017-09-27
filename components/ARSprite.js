@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 import withAnimationFrame from 'react-animation-frame';
 
-import { Animated } from 'react-native';
+import { NativeModules, Animated } from 'react-native';
 
-import {
-  StyleSheet,
-  View,
-  Text,
-  NativeModules,
-  requireNativeComponent,
-} from 'react-native';
+import { pos } from './lib/propTypes';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -19,29 +13,41 @@ const ARSprite = withAnimationFrame(
 
     constructor(props) {
       super(props);
+
       this.state = {
+        visible: true,
         pos2D: new Animated.ValueXY(), // inits to zero
       };
     }
     onAnimationFrame() {
-      ARKitManager.projectPoint({ x: 0, y: 0, z: 0 }).then(
-        Animated.event([
-          {
-            x: this.state.pos2D.x,
-            y: this.state.pos2D.y,
-          },
-        ]),
-      );
+      ARKitManager.projectPoint(
+        this.props.pos,
+      ).then(({ x, y, z, distance }) => {
+        this.setState({ visible: z < 1 });
+        this.state.pos2D.setValue({ x, y });
+      });
     }
 
     render() {
+      if (!this.state.visible) {
+        return null;
+      }
       return (
-        <Animated.View style={this.state.pos2D.getLayout()}>
+        <Animated.View
+          style={{
+            transform: this.state.pos2D.getTranslateTransform(),
+            ...this.props.style,
+          }}
+        >
           {this.props.children}
         </Animated.View>
       );
     }
   },
 );
+
+ARSprite.propTypes = {
+  pos,
+};
 
 module.exports = ARSprite;

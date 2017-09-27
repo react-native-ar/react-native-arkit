@@ -55,7 +55,7 @@
 - (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject;
 - (void)focusScene;
 - (SCNVector3)projectPoint:(SCNVector3)point;
-
+- (float)getCameraDistanceToPoint:(SCNVector3)point;
 - (NSDictionary *)readCameraPosition;
 
 

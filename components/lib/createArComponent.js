@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import PropTypes from 'prop-types';
 
 import { parseColorInProps } from './parseColor';
 import generateId from './generateId';
+import { pos, eulerAngles, rotation, orientation, material } from './propTypes';
 
 export default (Manager, propTypes = {}) => {
   const ARComponent = class extends Component {
@@ -33,35 +33,11 @@ export default (Manager, propTypes = {}) => {
   };
 
   ARComponent.propTypes = {
-    pos: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-      frame: PropTypes.string,
-    }),
-    eulerAngles: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-    }),
-    rotation: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-      w: PropTypes.number,
-    }),
-    orientation: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-      w: PropTypes.number,
-    }),
-
-    material: PropTypes.shape({
-      color: PropTypes.string,
-      metalness: PropTypes.number,
-      roughness: PropTypes.number,
-    }),
+    pos,
+    eulerAngles,
+    rotation,
+    orientation,
+    material,
     ...propTypes,
   };
 

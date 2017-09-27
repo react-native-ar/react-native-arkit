@@ -8,6 +8,8 @@
 
 #import "RCTARKit.h"
 #import "Plane.h"
+
+
 @import CoreLocation;
 
 @interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate> {
@@ -143,6 +145,24 @@
 
 - (SCNVector3)projectPoint:(SCNVector3)point {
     return [self.arView projectPoint:point];
+}
+
+static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
+    float xd = pointB.x - pointA.x;
+    float yd = pointB.y - pointA.y;
+    float zd = pointB.z - pointA.z;
+    float distance = sqrt(xd * xd + yd * yd + zd * zd);
+    
+    if (distance < 0){
+        return (distance * -1);
+    } else {
+        return (distance);
+    }
+}
+
+- (float)getCameraDistanceToPoint:(SCNVector3)point {
+    return getDistance(self.nodeManager.cameraOrigin.position, point);
+    
 }
 
 
