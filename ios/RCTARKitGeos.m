@@ -223,7 +223,8 @@
 - (void)addImage:(NSDictionary *)property {}
 
 - (SCNMaterial *)materialFromProperty:(NSDictionary *)property {
-    SCNMaterial *material = [SCNMaterial new];
+    SCNMaterial *scnMaterial = [SCNMaterial new];
+    
     NSDictionary* material = property[@"material"];
     
     if (material[@"color"]) {
@@ -232,21 +233,21 @@
         CGFloat b = [material[@"color"][@"b"] floatValue];
         CGFloat alpha = [material[@"color"][@"alpha"] floatValue];
         UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:alpha];
-        material.diffuse.contents = color;
+        scnMaterial.diffuse.contents = color;
     } else {
-        material.diffuse.contents = [UIColor whiteColor];
+        scnMaterial.diffuse.contents = [UIColor whiteColor];
     }
     
     if (material[@"metalness"]) {
-        material.lightingModelName = SCNLightingModelPhysicallyBased;
-        material.metalness.contents = @([material[@"metalness"] floatValue]);
+        scnMaterial.lightingModelName = SCNLightingModelPhysicallyBased;
+        scnMaterial.metalness.contents = @([material[@"metalness"] floatValue]);
     }
     if (material[@"roughness"]) {
-        material.lightingModelName = SCNLightingModelPhysicallyBased;
-        material.roughness.contents = @([material[@"roughness"] floatValue]);
+        scnMaterial.lightingModelName = SCNLightingModelPhysicallyBased;
+        scnMaterial.roughness.contents = @([material[@"roughness"] floatValue]);
     }
     
-    return material;
+    return scnMaterial;
 }
 
 @end
