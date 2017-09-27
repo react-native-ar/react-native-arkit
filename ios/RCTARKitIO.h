@@ -8,7 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
-#import <React/RCTBridgeModule.h>
+
+typedef void (^ARKitIOExportHandler)(NSString* filename, NSString* path);
+
 
 @interface RCTARKitIO : NSObject
 
@@ -17,6 +19,6 @@
 - (SCNNode *)loadModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
 - (SCNNode *)loadMDLModel:(NSString *)path nodeName:(NSString *)nodeName withAnimation:(BOOL)withAnimation;
     
-- (void)saveScene:(SCNScene *)scene as:(NSString *)filename resolve:(RCTPromiseResolveBlock)resolve;
+- (void)saveScene:(SCNScene *)scene as:(NSString *)filename finishHandler:(nullable ARKitIOExportHandler)finishHandler;
 
 @end
