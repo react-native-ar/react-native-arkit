@@ -89,7 +89,19 @@
     }
 }
 
-
+- (void) clear {
+    // clear scene
+    NSArray*keys=[self.nodes allKeys];
+    
+    for(id key in keys) {
+        id node = [self.nodes objectForKey:key];
+        if(node) {
+            [node removeFromParentNode];
+        }
+        
+    }
+    [self.nodes removeAllObjects];
+}
 
 - (void)addNodeToLocalFrame:(SCNNode *)node property:(NSDictionary *)property {
     node.position = [self getPositionFromProperty:property inReferenceFrame:RFReferenceFrameLocal];
@@ -105,7 +117,7 @@
     if(property[@"rotation"]) {
         node.orientation = makeQuaternionFromDict(property[@"rotation"]);
     }
-   
+    
     node.referenceFrame = RFReferenceFrameLocal;
     
     NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
