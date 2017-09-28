@@ -160,7 +160,7 @@
 }
 
 
-+ (SCNTextNode *)SCNTextNode:(id)json {    
++ (SCNTextNode *)SCNTextNode:(id)json {
     // init SCNText
     NSString *text = [NSString stringWithFormat:@"%@", json[@"text"]];
     if (!text) {
