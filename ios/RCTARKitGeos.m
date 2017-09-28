@@ -7,6 +7,7 @@
 //
 
 #import "RCTARKitGeos.h"
+#import "RCTConvert+ARKit.h"
 
 @implementation RCTARKitGeos
 
@@ -223,31 +224,7 @@
 - (void)addImage:(NSDictionary *)property {}
 
 - (SCNMaterial *)materialFromProperty:(NSDictionary *)property {
-    SCNMaterial *scnMaterial = [SCNMaterial new];
-    
-    NSDictionary* material = property[@"material"];
-    
-    if (material[@"color"]) {
-        CGFloat r = [material[@"color"][@"r"] floatValue];
-        CGFloat g = [material[@"color"][@"g"] floatValue];
-        CGFloat b = [material[@"color"][@"b"] floatValue];
-        CGFloat alpha = [material[@"color"][@"alpha"] floatValue];
-        UIColor *color = [[UIColor alloc] initWithRed:r green:g blue:b alpha:alpha];
-        scnMaterial.diffuse.contents = color;
-    } else {
-        scnMaterial.diffuse.contents = [UIColor whiteColor];
-    }
-    
-    if (material[@"metalness"]) {
-        scnMaterial.lightingModelName = SCNLightingModelPhysicallyBased;
-        scnMaterial.metalness.contents = @([material[@"metalness"] floatValue]);
-    }
-    if (material[@"roughness"]) {
-        scnMaterial.lightingModelName = SCNLightingModelPhysicallyBased;
-        scnMaterial.roughness.contents = @([material[@"roughness"] floatValue]);
-    }
-    
-    return scnMaterial;
+    return [RCTConvert SCNMaterial:property[@"material"]];
 }
 
 @end
