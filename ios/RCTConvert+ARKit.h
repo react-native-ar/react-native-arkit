@@ -10,6 +10,11 @@
 #import <SceneKit/SceneKit.h>
 #import <React/RCTConvert.h>
 
+@interface SCNTextNode : SCNNode
+
+@end
+
+
 @interface RCTConvert (ARKit)
 
 + (SCNMaterial *)SCNMaterial:(id)json;
@@ -25,6 +30,8 @@
 + (SCNTorus *)SCNTorus:(id)json;
 + (SCNCapsule *)SCNCapsule:(id)json;
 + (SCNPlane *)SCNPlane:(id)json;
+
++ (SCNTextNode *)SCNTextNode:(id)json;
 
 @end
 

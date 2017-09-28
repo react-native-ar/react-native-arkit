@@ -1,45 +1,47 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NativeModules } from 'react-native';
+import pick from 'lodash/pick';
 
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
 const ARGeosManager = NativeModules.ARGeosManager;
 
-export default (method, propTypes = {}) => {
+export default (mountConfig, propTypes = {}) => {
+  let mountMethod;
+  if (typeof mountConfig === 'string') {
+    mountMethod = (id, props) => {
+      ARGeosManager[mountConfig](
+        {
+          shape: props.shape,
+          material: processColorInMaterial(props.material),
+        },
+        { id, frame: props.frame, position: props.position },
+      );
+    };
+  } else {
+    mountMethod = (id, props) => {
+      mountConfig.mount(
+        {
+          ...pick(props, mountConfig.pick),
+          material: processColorInMaterial(props.material),
+        },
+        { id, frame: props.frame, position: props.position },
+      );
+    };
+  }
+
   const ARComponent = class extends Component {
     identifier = null;
 
     componentWillMount() {
       this.identifier = this.props.id || generateId();
-      ARGeosManager[method](
-        {
-          shape: this.props.shape,
-          text: this.props.text,
-          font: this.props.font,
-          material: processColorInMaterial(this.props.material),
-        },
-        {
-          id: this.identifier,
-          position: this.props.position,
-        },
-      );
+      mountMethod(this.identifier, this.props);
     }
 
     componentWillUpdate(props) {
-      ARGeosManager[method](
-        {
-          shape: props.shape,
-          text: this.props.text,
-          font: this.props.font,
-          material: processColorInMaterial(props.material),
-        },
-        {
-          id: this.identifier,
-          position: props.position,
-        },
-      );
+      mountMethod(this.identifier, props);
     }
 
     componentWillUnmount() {

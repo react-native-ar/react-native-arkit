@@ -159,4 +159,60 @@
     return geometry;
 }
 
+
++ (SCNTextNode *)SCNTextNode:(id)json {    
+    // init SCNText
+    NSString *text = [NSString stringWithFormat:@"%@", json[@"text"]];
+    if (!text) {
+        text = @"(null)";
+    }
+    
+    NSDictionary* font = json[@"font"];
+    CGFloat depth = [font[@"depth"] floatValue];
+    if (!depth) {
+        depth = 0.0f;
+    }
+    CGFloat fontSize = [font[@"size"] floatValue];
+    CGFloat size = fontSize / 12;
+    SCNText *scnText = [SCNText textWithString:text extrusionDepth:depth / size];
+
+    scnText.flatness = 0.1;
+    
+    // font
+    NSString *fontName = font[@"name"];
+    if (fontName) {
+        scnText.font = [UIFont fontWithName:fontName size:12];
+    } else {
+        scnText.font = [UIFont systemFontOfSize:12];
+    }
+    
+    // chamfer
+    CGFloat chamfer = [font[@"chamfer"] floatValue];
+    if (!chamfer) {
+        chamfer = 0.0f;
+    }
+    scnText.chamferRadius = chamfer / size;
+    
+    // material
+    //    scnText.materials = @[face, face, border, border, border];
+    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
+    scnText.materials = @[material, material, material, material, material];
+    
+    
+    // SCNTextNode
+    SCNTextNode *textNode = [SCNNode nodeWithGeometry:scnText];
+    textNode.scale = SCNVector3Make(size, size, size);
+    
+    // position textNode
+    SCNVector3 min = SCNVector3Zero;
+    SCNVector3 max = SCNVector3Zero;
+    [textNode getBoundingBoxMin:&min max:&max];
+
+    textNode.position = SCNVector3Make(-(min.x + max.x) / 2 * size,
+                                       -(min.y + max.y) / 2 * size,
+                                       -(min.z + max.z) / 2 * size);
+    
+    return textNode;
+}
+
 @end
