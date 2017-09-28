@@ -21,7 +21,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "color": "^2.0.0",
     "prop-types": "^15.5.7",
     "react": "16.0.0-alpha.12"
   },
