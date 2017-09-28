@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARTube = createArComponent(NativeModules.ARTubeManager, {
+const ARTube = createArComponent('addTube', {
   shape: PropTypes.shape({
     innerR: PropTypes.number,
     outerR: PropTypes.number,

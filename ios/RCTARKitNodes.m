@@ -91,6 +91,11 @@ CGFloat focDistance = 0.2f;
     }
 }
 
+- (void)addNodeToScene:(SCNNode *)node {
+    [self registerNode:node forKey:node.name];
+    [self.localOrigin addChildNode:node];
+}
+
 - (void)clear {
     // clear scene
     NSArray *keys = [self.nodes allKeys];

@@ -13,6 +13,18 @@
 @interface RCTConvert (ARKit)
 
 + (SCNMaterial *)SCNMaterial:(id)json;
++ (SCNVector3)SCNVector3:(id)json;
++ (SCNNode *)SCNNode:(id)json;
+
++ (SCNBox *)SCNBox:(id)json;
++ (SCNSphere *)SCNSphere:(id)json;
++ (SCNCylinder *)SCNCylinder:(id)json;
++ (SCNCone *)SCNCone:(id)json;
++ (SCNPyramid *)SCNPyramid:(id)json;
++ (SCNTube *)SCNTube:(id)json;
++ (SCNTorus *)SCNTorus:(id)json;
++ (SCNCapsule *)SCNCapsule:(id)json;
++ (SCNPlane *)SCNPlane:(id)json;
 
 @end
 

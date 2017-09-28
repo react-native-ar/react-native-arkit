@@ -1,36 +1,49 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { NativeModules } from 'react-native';
 
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
-export default (Manager, propTypes = {}) => {
+const ARGeosManager = NativeModules.ARGeosManager;
+
+export default (method, propTypes = {}) => {
   const ARComponent = class extends Component {
     identifier = null;
 
     componentWillMount() {
       this.identifier = this.props.id || generateId();
-      Manager.mount(
+      ARGeosManager[method](
+        {
+          shape: this.props.shape,
+          text: this.props.text,
+          font: this.props.font,
+          material: processColorInMaterial(this.props.material),
+        },
         {
           id: this.identifier,
-          ...this.props,
+          position: this.props.position,
         },
-        processColorInMaterial(this.props.material),
       );
     }
 
     componentWillUpdate(props) {
-      Manager.mount(
+      ARGeosManager[method](
+        {
+          shape: props.shape,
+          text: this.props.text,
+          font: this.props.font,
+          material: processColorInMaterial(props.material),
+        },
         {
           id: this.identifier,
-          ...props,
+          position: props.position,
         },
-        processColorInMaterial(props.material),
       );
     }
 
     componentWillUnmount() {
-      Manager.unmount(this.identifier);
+      ARGeosManager.unmount(this.identifier);
     }
 
     render() {
@@ -39,11 +52,11 @@ export default (Manager, propTypes = {}) => {
   };
 
   ARComponent.propTypes = {
-    pos: PropTypes.shape({
+    frame: PropTypes.string,
+    position: PropTypes.shape({
       x: PropTypes.number,
       y: PropTypes.number,
       z: PropTypes.number,
-      frame: PropTypes.string,
     }),
     eulerAngles: PropTypes.shape({
       x: PropTypes.number,

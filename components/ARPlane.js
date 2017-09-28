@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARPlane = createArComponent(NativeModules.ARPlaneManager, {
+const ARPlane = createArComponent('addPlane', {
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
