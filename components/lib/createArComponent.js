@@ -17,7 +17,16 @@ export default (mountConfig, propTypes = {}) => {
           shape: props.shape,
           material: processColorInMaterial(props.material),
         },
-        { id, frame: props.frame, position: props.position },
+        {
+          id,
+          ...pick(props, [
+            'position',
+            'eulerAngles',
+            'rotation',
+            'orientation',
+          ]),
+        },
+        props.frame,
       );
     };
   } else {
@@ -27,7 +36,16 @@ export default (mountConfig, propTypes = {}) => {
           ...pick(props, mountConfig.pick),
           material: processColorInMaterial(props.material),
         },
-        { id, frame: props.frame, position: props.position },
+        {
+          id,
+          ...pick(props, [
+            'position',
+            'eulerAngles',
+            'rotation',
+            'orientation',
+          ]),
+        },
+        props.frame,
       );
     };
   }

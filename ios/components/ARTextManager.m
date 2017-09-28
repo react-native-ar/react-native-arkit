@@ -14,13 +14,9 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(mount:(SCNTextNode *)textNode node:(SCNNode *)node) {
+RCT_EXPORT_METHOD(mount:(SCNTextNode *)textNode node:(SCNNode *)node frame:(NSString *)frame) {
     [node addChildNode:textNode];
-    [[RCTARKitNodes sharedInstance] addNodeToScene:node];
-}
-
-RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
-    [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
+    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
 }
 
 @end

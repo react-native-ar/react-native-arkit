@@ -14,7 +14,7 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node) {
+RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSString *)frame) {
     NSDictionary *model = property[@"model"];
     CGFloat scale = [model[@"scale"] floatValue];
     
@@ -23,7 +23,7 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node) {
     modelNode.scale = SCNVector3Make(scale, scale, scale);
     
     [node addChildNode:modelNode];
-    [[RCTARKitNodes sharedInstance] addNodeToScene:node];
+    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
 }
 
 @end

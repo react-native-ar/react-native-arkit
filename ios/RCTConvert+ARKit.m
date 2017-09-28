@@ -37,11 +37,28 @@
     return SCNVector3Make(x, y, z);
 }
 
++ (SCNVector4)SCNVector4:(id)json {
+    CGFloat x = [json[@"x"] floatValue];
+    CGFloat y = [json[@"y"] floatValue];
+    CGFloat z = [json[@"z"] floatValue];
+    CGFloat w = [json[@"w"] floatValue];
+    return SCNVector4Make(x, y, z, w);
+}
+
 + (SCNNode *)SCNNode:(id)json {
     SCNNode *node = [SCNNode new];
-    
+        
     node.name = [NSString stringWithFormat:@"%@", json[@"id"]];
     node.position = [self SCNVector3:json[@"position"]];
+    node.eulerAngles = [self SCNVector3:json[@"eulerAngles"]];
+    
+    if (json[@"orientation"]) {
+        node.orientation = [self SCNVector4:json[@"orientation"]];
+    }
+    
+    if (json[@"rotation"]) {
+        node.rotation = [self SCNVector4:json[@"rotation"]];
+    }
 
     return node;
 }

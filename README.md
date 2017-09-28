@@ -54,48 +54,48 @@ export default class ReactNativeARKit extends Component {
           onPlaneUpdate={console.log} // event listener for plane update
         >
           <ARKit.Box
-            pos={{ x: 0, y: 0, z: 0 }}
+            position={{ x: 0, y: 0, z: 0 }}
             shape={{ width: 0.1, height: 0.1, length: 0.1, chamfer: 0.01 }}
           />
           <ARKit.Sphere
-            pos={{ x: 0.2, y: 0, z: 0 }}
+            position={{ x: 0.2, y: 0, z: 0 }}
             shape={{ radius: 0.05 }}
           />
           <ARKit.Cylinder
-            pos={{ x: 0.4, y: 0, z: 0 }}
+            position={{ x: 0.4, y: 0, z: 0 }}
             shape={{ radius: 0.05, height: 0.1 }}
           />
           <ARKit.Cone
-            pos={{ x: 0, y: 0.2, z: 0 }}
+            position={{ x: 0, y: 0.2, z: 0 }}
             shape={{ topR: 0, bottomR: 0.05, height: 0.1 }}
           />
           <ARKit.Pyramid
-            pos={{ x: 0.2, y: 0.15, z: 0 }}
+            position={{ x: 0.2, y: 0.15, z: 0 }}
             shape={{ width: 0.1, height: 0.1, length: 0.1 }}
           />
           <ARKit.Tube
-            pos={{ x: 0.4, y: 0.2, z: 0 }}
+            position={{ x: 0.4, y: 0.2, z: 0 }}
             shape={{ innerR: 0.03, outerR: 0.05, height: 0.1 }}
           />
           <ARKit.Torus
-            pos={{ x: 0, y: 0.4, z: 0 }}
+            position={{ x: 0, y: 0.4, z: 0 }}
             shape={{ ringR: 0.06, pipeR: 0.02 }}
           />
           <ARKit.Capsule
-            pos={{ x: 0.2, y: 0.4, z: 0 }}
+            position={{ x: 0.2, y: 0.4, z: 0 }}
             shape={{ capR: 0.02, height: 0.06 }}
           />
           <ARKit.Plane
-            pos={{ x: 0.4, y: 0.4, z: 0 }}
+            position={{ x: 0.4, y: 0.4, z: 0 }}
             shape={{ width: 0.1, height: 0.1 }}
           />
           <ARKit.Text
             text="ARKit is Cool!"
-            pos={{ x: 0.2, y: 0.6, z: 0 }}
+            position={{ x: 0.2, y: 0.6, z: 0 }}
             font={{ size: 0.15, depth: 0.05 }}
           />
           <ARKit.Model
-            pos={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
+            position={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
             model={{
               file: 'art.scnassets/ship.scn', // make sure you have the model file in the ios project
               scale: 0.01,
@@ -151,7 +151,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length, chamfer }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -161,7 +162,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -171,7 +173,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius, height }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -181,7 +184,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ topR, bottomR, height }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -191,7 +195,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -201,7 +206,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ innerR, outerR, height }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -211,7 +217,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ ringR, pipeR }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -221,7 +228,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ capR, height }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -231,7 +239,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, length }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -242,7 +251,8 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | Prop | Type |
 |---|---|
 | `text` | `String` |
-| `pos` | `{ x, y, z, angle }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `font` | `{ name, size, depth, chamfer }` |
 | `material` | `{ diffuse, metalness, roughness }` |
 
@@ -255,7 +265,8 @@ SceneKit only supports `.scn` and `.dae` formats.
 
 | Prop | Type |
 |---|---|
-| `pos` | `{ x, y, z }` |
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
 | `model` | `{ file, node, scale, alpha }` |
 
 

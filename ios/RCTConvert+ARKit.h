@@ -11,7 +11,6 @@
 #import <React/RCTConvert.h>
 
 @interface SCNTextNode : SCNNode
-
 @end
 
 
@@ -19,6 +18,7 @@
 
 + (SCNMaterial *)SCNMaterial:(id)json;
 + (SCNVector3)SCNVector3:(id)json;
++ (SCNVector4)SCNVector4:(id)json;
 + (SCNNode *)SCNNode:(id)json;
 
 + (SCNBox *)SCNBox:(id)json;

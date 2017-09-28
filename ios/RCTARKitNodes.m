@@ -75,25 +75,18 @@ CGFloat focDistance = 0.2f;
 /**
  add a node to scene in a reference frame
  */
-- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property {
-    NSDictionary* pos = property[@"pos"];
-    NSString *referenceFrame = pos[@"frame"];
+- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame {
     if (!referenceFrame) {
         referenceFrame = @"Local"; // default to Local frame
     }
-    NSString *selectorString = [NSString stringWithFormat:@"addNodeTo%@Frame:property:", referenceFrame];
+    NSString *selectorString = [NSString stringWithFormat:@"addNodeTo%@Frame:", referenceFrame];
     SEL selector = NSSelectorFromString(selectorString);
     if ([self respondsToSelector:selector]) {
         // check https://stackoverflow.com/questions/7017281/performselector-may-cause-a-leak-because-its-selector-is-unknown
         IMP imp = [self methodForSelector:selector];
-        void (*func)(id, SEL, SCNNode*, NSDictionary*) = (void *)imp;
-        func(self, selector, node, property);
+        void (*func)(id, SEL, SCNNode*) = (void *)imp;
+        func(self, selector, node);
     }
-}
-
-- (void)addNodeToScene:(SCNNode *)node {
-    [self registerNode:node forKey:node.name];
-    [self.localOrigin addChildNode:node];
 }
 
 - (void)clear {
@@ -110,78 +103,31 @@ CGFloat focDistance = 0.2f;
     [self.nodes removeAllObjects];
 }
 
-- (void)addNodeToLocalFrame:(SCNNode *)node property:(NSDictionary *)property {
-    node.position = [self getPositionFromProperty:property inReferenceFrame:RFReferenceFrameLocal];
-    
-    if(property[@"eulerAngles"]) {
-        node.eulerAngles = makeVector3FromDict(property[@"eulerAngles"]);
-    } else {
-        node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
-    }
-    if(property[@"orientation"]) {
-        node.orientation = makeQuaternionFromDict(property[@"orientation"]);
-    }
-    if(property[@"rotation"]) {
-        node.orientation = makeQuaternionFromDict(property[@"rotation"]);
-    }
-    
+- (void)addNodeToLocalFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameLocal;
     
-    NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
-    NSLog(@"[RCTARKitNodes] Add model %@ to Local frame at (%.2f, %.2f, %.2f)", key, node.position.x, node.position.y, node.position.z);
-    if (key) {
-        [self registerNode:node forKey:key];
-    }
-    
+    NSLog(@"[RCTARKitNodes] Add model %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+
+    [self registerNode:node forKey:node.name];
     [self.localOrigin addChildNode:node];
 }
 
-- (void)addNodeToCameraFrame:(SCNNode *)node property:(NSDictionary *)property {
-    node.position = [self getPositionFromProperty:property inReferenceFrame:RFReferenceFrameCamera];
-    node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
+- (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
     
-    NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
-    NSLog(@"[RCTARKitNodes] Add model %@ to Camera frame at (%.2f, %.2f, %.2f)", key, node.position.x, node.position.y, node.position.z);
-    if (key) {
-        [self registerNode:node forKey:key];
-    }
+    NSLog(@"[RCTARKitNodes] Add model %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+    [self registerNode:node forKey:node.name];
     [self.cameraOrigin addChildNode:node];
 }
 
-- (void)addNodeToFrontOfCameraFrame:(SCNNode *)node property:(NSDictionary *)property {
-    node.position = [self getPositionFromProperty:property inReferenceFrame:RFReferenceFrameFrontOfCamera];
-    node.eulerAngles = SCNVector3Make(0, [property[@"angle"] floatValue], 0);
+- (void)addNodeToFrontOfCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
     
-    NSString *key = [NSString stringWithFormat:@"%@", property[@"id"]];
-    NSLog(@"[RCTARKitNodes] Add model %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", key, node.position.x, node.position.y, node.position.z);
-    if (key) {
-        [self registerNode:node forKey:key];
-    }
+    NSLog(@"[RCTARKitNodes] Add model %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+    [self registerNode:node forKey:node.name];
     [self.frontOfCamera addChildNode:node];
 }
 
-- (SCNVector3)getPositionFromProperty:(NSDictionary *)property inReferenceFrame:(RFReferenceFrame)referenceFrame {
-    NSDictionary* pos = property[@"pos"];
-    CGFloat x = [pos[@"x"] floatValue];
-    CGFloat y = [pos[@"y"] floatValue];
-    CGFloat z = [pos[@"z"] floatValue];
-    
-    if (referenceFrame == RFReferenceFrameLocal) {
-        if (pos[@"x"] == NULL) {
-            x = self.cameraOrigin.position.x - self.localOrigin.position.x;
-        }
-        if (pos[@"y"] == NULL) {
-            y = self.cameraOrigin.position.y - self.localOrigin.position.y;
-        }
-        if (pos[@"z"] == NULL) {
-            z = self.cameraOrigin.position.z - self.localOrigin.position.z;
-        }
-    }
-    
-    return SCNVector3Make(x, y, z);
-}
 
 - (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
     NSDictionary *options = @{
@@ -203,18 +149,6 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
                      }
              };
 }
-
-
-static SCNVector3 makeVector3FromDict(NSDictionary *dict) {
-    return SCNVector3Make([dict[@"x"] floatValue], [dict[@"y"] floatValue], [dict[@"z"] floatValue]);
-}
-
-static SCNQuaternion makeQuaternionFromDict(NSDictionary *dict) {
-    return SCNVector4Make([dict[@"x"] floatValue], [dict[@"y"] floatValue], [dict[@"z"] floatValue],  [dict[@"w"] floatValue]);
-}
-
-
-
 
 
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
@@ -263,8 +197,6 @@ static SCNQuaternion makeQuaternionFromDict(NSDictionary *dict) {
         [self.nodes removeObjectForKey:key];
     }
 }
-
-
 
 
 
