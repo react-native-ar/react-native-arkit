@@ -7,7 +7,6 @@
 //
 
 #import "ARConeManager.h"
-#import "RCTARKit.h"
 #import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
 
@@ -15,8 +14,8 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
-    [[RCTARKitGeos sharedInstance] addCone:property];
+RCT_EXPORT_METHOD(mount:(NSDictionary *)property material:(SCNMaterial *)material) {
+    [[RCTARKitGeos sharedInstance] addCone:property material:material];
 }
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {

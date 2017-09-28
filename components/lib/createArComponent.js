@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import { parseColorInProps } from './parseColor';
+import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
 export default (Manager, propTypes = {}) => {
@@ -10,17 +10,23 @@ export default (Manager, propTypes = {}) => {
 
     componentWillMount() {
       this.identifier = this.props.id || generateId();
-      Manager.mount({
-        id: this.identifier,
-        ...parseColorInProps(this.props),
-      });
+      Manager.mount(
+        {
+          id: this.identifier,
+          ...this.props,
+        },
+        processColorInMaterial(this.props.material),
+      );
     }
 
     componentWillUpdate(props) {
-      Manager.mount({
-        id: this.identifier,
-        ...parseColorInProps(props),
-      });
+      Manager.mount(
+        {
+          id: this.identifier,
+          ...props,
+        },
+        processColorInMaterial(this.props.material),
+      );
     }
 
     componentWillUnmount() {
@@ -58,7 +64,7 @@ export default (Manager, propTypes = {}) => {
     }),
 
     material: PropTypes.shape({
-      color: PropTypes.string,
+      diffuse: PropTypes.string,
       metalness: PropTypes.number,
       roughness: PropTypes.number,
     }),

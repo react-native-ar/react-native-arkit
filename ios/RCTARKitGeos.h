@@ -19,16 +19,16 @@
 + (instancetype)sharedInstance;
 
 #pragma mark - Add a model or a geometry
-- (void)addBox:(NSDictionary *)property;
-- (void)addSphere:(NSDictionary *)property;
-- (void)addCylinder:(NSDictionary *)property;
-- (void)addCone:(NSDictionary *)property;
-- (void)addPyramid:(NSDictionary *)property;
-- (void)addTube:(NSDictionary *)property;
-- (void)addTorus:(NSDictionary *)property;
-- (void)addCapsule:(NSDictionary *)property;
-- (void)addPlane:(NSDictionary *)property;
-- (void)addText:(NSDictionary *)property;
+- (void)addBox:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addSphere:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addCylinder:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addCone:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addPyramid:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addTube:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addTorus:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addCapsule:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addPlane:(NSDictionary *)property material:(SCNMaterial *)material;
+- (void)addText:(NSDictionary *)property material:(SCNMaterial *)material;
 - (void)addModel:(NSDictionary *)property;
 - (void)addImage:(NSDictionary *)property;
 

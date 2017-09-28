@@ -12,8 +12,8 @@
 
 + (SCNMaterial *)SCNMaterial:(id)json {
     SCNMaterial *material = [SCNMaterial new];
-    if (json[@"color"]) {
-        material.diffuse.contents = [self UIColor:json[@"color"]];
+    if (json[@"diffuse"]) {
+        material.diffuse.contents = [self UIColor:json[@"diffuse"]];
     } else {
         material.diffuse.contents = [UIColor blackColor];
     }
