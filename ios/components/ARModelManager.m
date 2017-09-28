@@ -7,7 +7,6 @@
 //
 
 #import "ARModelManager.h"
-#import "RCTARKit.h"
 #import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
 
@@ -15,7 +14,7 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(mount:(NSDictionary *)property) {
+RCT_EXPORT_METHOD(mount:(NSDictionary *)property material:(SCNMaterial *)material) {
     [[RCTARKitGeos sharedInstance] addModel:property];
 }
 

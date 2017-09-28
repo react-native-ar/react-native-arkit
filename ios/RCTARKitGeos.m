@@ -35,7 +35,7 @@
 
 #pragma mark - add a model or a geometry
 
-- (void)addBox:(NSDictionary *)property {
+- (void)addBox:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat width = [shape[@"width"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
@@ -43,113 +43,104 @@
     CGFloat chamfer = [shape[@"chamfer"] floatValue];
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material, material, material, material, material, material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addSphere:(NSDictionary *)property {
+- (void)addSphere:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat radius = [shape[@"radius"] floatValue];
     SCNSphere *geometry = [SCNSphere sphereWithRadius:radius];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addCylinder:(NSDictionary *)property {
+- (void)addCylinder:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat radius = [shape[@"radius"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:radius height:height];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material, material, material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addCone:(NSDictionary *)property {
+- (void)addCone:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat topR = [shape[@"topR"] floatValue];
     CGFloat bottomR = [shape[@"bottomR"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNCone *geometry = [SCNCone coneWithTopRadius:topR bottomRadius:bottomR height:height];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material, material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addPyramid:(NSDictionary *)property {
+- (void)addPyramid:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat width = [shape[@"width"] floatValue];
     CGFloat length = [shape[@"length"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:width height:height length:length];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material, material, material, material, material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addTube:(NSDictionary *)property {
+- (void)addTube:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat innerR = [shape[@"innerR"] floatValue];
     CGFloat outerR = [shape[@"outerR"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNTube *geometry = [SCNTube tubeWithInnerRadius:innerR outerRadius:outerR height:height];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material, material, material, material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addTorus:(NSDictionary *)property {
+- (void)addTorus:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat ringR = [shape[@"ringR"] floatValue];
     CGFloat pipeR = [shape[@"pipeR"] floatValue];
     SCNTorus *geometry = [SCNTorus torusWithRingRadius:ringR pipeRadius:pipeR];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addCapsule:(NSDictionary *)property {
+- (void)addCapsule:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat capR = [shape[@"capR"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:capR height:height];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     geometry.materials = @[material];
     
     SCNNode *node = [SCNNode nodeWithGeometry:geometry];
     [self.nodeManager addNodeToScene:node property:property];
 }
 
-- (void)addPlane:(NSDictionary *)property {
+- (void)addPlane:(NSDictionary *)property material:(SCNMaterial *)material {
     NSDictionary* shape = property[@"shape"];
     CGFloat width = [shape[@"width"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
     
-    SCNMaterial *material = [self materialFromProperty:property];
     material.doubleSided = YES;
     geometry.materials = @[material];
     
@@ -158,7 +149,7 @@
 }
 
 
-- (void)addText:(NSDictionary *)property {
+- (void)addText:(NSDictionary *)property material:(SCNMaterial *)material {
     
     // init SCNText
     NSString *text = [NSString stringWithFormat:@"%@", property[@"text"]];
@@ -191,9 +182,8 @@
     scnText.chamferRadius = chamfer / size;
     
     // material
-    SCNMaterial *face = [self materialFromProperty:property];
-    SCNMaterial *border = [self materialFromProperty:property];
-    scnText.materials = @[face, face, border, border, border];
+//    scnText.materials = @[face, face, border, border, border];
+    scnText.materials = @[material, material, material, material, material];
     
     // init SCNNode
     SCNNode *textNode = [SCNNode nodeWithGeometry:scnText];
@@ -222,9 +212,5 @@
 }
 
 - (void)addImage:(NSDictionary *)property {}
-
-- (SCNMaterial *)materialFromProperty:(NSDictionary *)property {
-    return [RCTConvert SCNMaterial:property[@"material"]];
-}
 
 @end
