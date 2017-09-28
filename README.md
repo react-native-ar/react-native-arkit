@@ -151,7 +151,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ width, height, length, chamfer }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Sphere />`](https://developer.apple.com/documentation/scenekit/scnsphere)
 
@@ -161,7 +161,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ radius }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Cylinder />`](https://developer.apple.com/documentation/scenekit/scncylinder)
 
@@ -171,7 +171,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ radius, height }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Cone />`](https://developer.apple.com/documentation/scenekit/scncone)
 
@@ -181,7 +181,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ topR, bottomR, height }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Pyramid />`](https://developer.apple.com/documentation/scenekit/scnpyramid)
 
@@ -191,7 +191,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ width, height, length }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Tube />`](https://developer.apple.com/documentation/scenekit/scntube)
 
@@ -201,7 +201,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ innerR, outerR, height }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Torus />`](https://developer.apple.com/documentation/scenekit/scntorus)
 
@@ -211,7 +211,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ ringR, pipeR }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Capsule />`](https://developer.apple.com/documentation/scenekit/scncapsule)
 
@@ -221,7 +221,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ capR, height }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Plane />`](https://developer.apple.com/documentation/scenekit/scnplane)
 
@@ -231,7 +231,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `pos` | `{ x, y, z }` |
 | `shape` | `{ width, length }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 #### [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
 
@@ -242,7 +242,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `text` | `String` |
 | `pos` | `{ x, y, z, angle }` |
 | `font` | `{ name, size, depth, chamfer }` |
-| `material` | `{ color, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness }` |
 
 
 #### `<ARKit.Model />`
