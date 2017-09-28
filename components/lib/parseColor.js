@@ -1,12 +1,4 @@
-import Color from 'color';
-
-export const normalizeColor = colorRaw => {
-  const color = new Color(colorRaw);
-  return {
-    alpha: 1,
-    ...color.unitObject(),
-  };
-};
+import { processColor } from 'react-native';
 
 export function parseColorInProps(props) {
   if (props && props.material && props.material.color) {
@@ -14,7 +6,7 @@ export function parseColorInProps(props) {
       ...props,
       material: {
         ...props.material,
-        color: normalizeColor(props.material.color),
+        color: processColor(props.material.color),
       },
     };
   }

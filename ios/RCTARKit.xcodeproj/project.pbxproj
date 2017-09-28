@@ -11,6 +11,7 @@
 		10062C831F127572009AE974 /* RCTARKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10062C821F127572009AE974 /* RCTARKitManager.m */; };
 		1021FE1C1F3EDB98000E7339 /* ARModelManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1021FE181F3EDB90000E7339 /* ARModelManager.m */; };
 		1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1021FE191F3EDB90000E7339 /* ARTextManager.m */; };
+		105F124E1F7C0719006D4BA3 /* RCTConvert+ARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */; };
 		106999E51F3EC30100032829 /* ARBoxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106999E41F3EC2FB00032829 /* ARBoxManager.m */; };
 		106DA3161F443CF300B93D36 /* ARPyramidManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA3151F443CF300B93D36 /* ARPyramidManager.m */; };
 		106DA3191F443D1D00B93D36 /* ARSphereManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA3181F443D1D00B93D36 /* ARSphereManager.m */; };
@@ -48,6 +49,8 @@
 		1021FE191F3EDB90000E7339 /* ARTextManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARTextManager.m; sourceTree = "<group>"; };
 		1021FE1A1F3EDB90000E7339 /* ARTextManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARTextManager.h; sourceTree = "<group>"; };
 		1021FE1B1F3EDB90000E7339 /* ARModelManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARModelManager.h; sourceTree = "<group>"; };
+		105F124C1F7C0718006D4BA3 /* RCTConvert+ARKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RCTConvert+ARKit.h"; sourceTree = "<group>"; };
+		105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RCTConvert+ARKit.m"; sourceTree = "<group>"; };
 		106999E31F3EC2FB00032829 /* ARBoxManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARBoxManager.h; sourceTree = "<group>"; };
 		106999E41F3EC2FB00032829 /* ARBoxManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARBoxManager.m; sourceTree = "<group>"; };
 		106DA3141F443CF300B93D36 /* ARPyramidManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARPyramidManager.h; sourceTree = "<group>"; };
@@ -147,6 +150,8 @@
 				10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */,
 				10062C811F127566009AE974 /* RCTARKitManager.h */,
 				10062C821F127572009AE974 /* RCTARKitManager.m */,
+				105F124C1F7C0718006D4BA3 /* RCTConvert+ARKit.h */,
+				105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -219,6 +224,7 @@
 				106DA31F1F443D3900B93D36 /* ARConeManager.m in Sources */,
 				1021FE1C1F3EDB98000E7339 /* ARModelManager.m in Sources */,
 				1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */,
+				105F124E1F7C0719006D4BA3 /* RCTConvert+ARKit.m in Sources */,
 				106DA31C1F443D2A00B93D36 /* ARCylinderManager.m in Sources */,
 				106DA3221F443D8300B93D36 /* ARTubeManager.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */,
