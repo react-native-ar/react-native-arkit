@@ -45,7 +45,7 @@ RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 }
 
 RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[RCTARKit sharedInstance] resume];
+    [[ARKit sharedInstance] resume];
     resolve(@{});
 }
 
@@ -85,7 +85,7 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
 }
 
 RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[RCTARKit sharedInstance] focusScene];
+    [[ARKit sharedInstance] focusScene];
     resolve(@{});
 }
 

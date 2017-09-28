@@ -25,7 +25,7 @@ export default (Manager, propTypes = {}) => {
           id: this.identifier,
           ...props,
         },
-        processColorInMaterial(this.props.material),
+        processColorInMaterial(props.material),
       );
     }
 

@@ -12,6 +12,8 @@
 @dynamic referenceFrame;
 @end
 
+CGFloat focDistance = 0.2f;
+
 
 @interface RCTARKitNodes () <RCTARKitSessionDelegate>
 
@@ -268,7 +270,7 @@ static SCNQuaternion makeQuaternionFromDict(NSDictionary *dict) {
     simd_float4 z = frame.camera.transform.columns[2];
     self.cameraDirection = SCNVector3Make(-z.x, -z.y, -z.z);
     self.cameraOrigin.eulerAngles = SCNVector3Make(0, atan2f(z.x, z.z), 0);
-    self.frontOfCamera.position = SCNVector3Make(pos.x - 0.2 * z.x, pos.y  - 0.2 * z.y, pos.z - 0.2 * z.z);
+    self.frontOfCamera.position = SCNVector3Make(pos.x - focDistance * z.x, pos.y  - focDistance * z.y, pos.z - focDistance * z.z);
     self.frontOfCamera.eulerAngles = self.cameraOrigin.eulerAngles;
 }
 
