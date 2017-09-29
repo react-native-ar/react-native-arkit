@@ -81,12 +81,15 @@
 
 - (void)resume {
     [self.session runWithConfiguration:self.configuration];
-//    [self.nodeManager clear];
 }
 
 - (void)focusScene {
     [self.nodeManager.localOrigin setPosition:self.nodeManager.cameraOrigin.position];
     [self.nodeManager.localOrigin setRotation:self.nodeManager.cameraOrigin.rotation];
+}
+
+- (void)clearScene {
+     [self.nodeManager clear];
 }
 
 

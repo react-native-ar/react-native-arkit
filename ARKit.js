@@ -35,7 +35,9 @@ class ARKit extends Component {
     reason: 0,
     floor: null,
   };
-
+  componentWillMount() {
+    ARKitManager.clearScene();
+  }
   componentDidMount() {
     ARKitManager.resume();
   }
