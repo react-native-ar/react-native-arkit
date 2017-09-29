@@ -8,6 +8,11 @@ import generateId from './generateId';
 
 const ARGeosManager = NativeModules.ARGeosManager;
 
+const nodeProps = (id, props) => ({
+  id,
+  ...pick(props, ['position', 'eulerAngles', 'rotation', 'orientation']),
+});
+
 export default (mountConfig, propTypes = {}) => {
   let mountMethod;
   if (typeof mountConfig === 'string') {
@@ -17,15 +22,7 @@ export default (mountConfig, propTypes = {}) => {
           shape: props.shape,
           material: processColorInMaterial(props.material),
         },
-        {
-          id,
-          ...pick(props, [
-            'position',
-            'eulerAngles',
-            'rotation',
-            'orientation',
-          ]),
-        },
+        nodeProps(id, props),
         props.frame,
       );
     };
@@ -36,15 +33,7 @@ export default (mountConfig, propTypes = {}) => {
           ...pick(props, mountConfig.pick),
           material: processColorInMaterial(props.material),
         },
-        {
-          id,
-          ...pick(props, [
-            'position',
-            'eulerAngles',
-            'rotation',
-            'orientation',
-          ]),
-        },
+        nodeProps(id, props),
         props.frame,
       );
     };
