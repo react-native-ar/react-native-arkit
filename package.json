@@ -19,7 +19,7 @@
     "prop-types": "^15.5.7",
     "react": "16.0.0-alpha.12",
     "react-animation-frame":
-      "https://github.com/panter/react-animation-frame.git#c893ef12130d57801c33b0392c5931874e1b465a"
+      "https://github.com/panter/react-animation-frame.git#082529deaf86e5b16a243c82bd023aa1715f41b2"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
