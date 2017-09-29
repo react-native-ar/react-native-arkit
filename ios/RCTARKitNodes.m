@@ -12,7 +12,7 @@
 @dynamic referenceFrame;
 @end
 
-CGFloat focDistance = 0.2f;
+CGFloat focDistance = 0.8f;
 
 
 @interface RCTARKitNodes () <RCTARKitSessionDelegate>
