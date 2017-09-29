@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARCapsule = createArComponent(NativeModules.ARCapsuleManager, {
+const ARCapsule = createArComponent('addCapsule', {
   shape: PropTypes.shape({
     capR: PropTypes.number,
     height: PropTypes.number,

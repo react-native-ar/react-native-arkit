@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARTorus = createArComponent(NativeModules.ARTorusManager, {
+const ARTorus = createArComponent('addTorus', {
   shape: PropTypes.shape({
     ringR: PropTypes.number,
     pipeR: PropTypes.number,

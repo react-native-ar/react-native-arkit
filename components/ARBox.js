@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARBox = createArComponent(NativeModules.ARBoxManager, {
+const ARBox = createArComponent('addBox', {
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,

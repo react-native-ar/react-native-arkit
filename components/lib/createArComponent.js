@@ -1,36 +1,58 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
+import { NativeModules } from 'react-native';
+import pick from 'lodash/pick';
 
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
-export default (Manager, propTypes = {}) => {
+const ARGeosManager = NativeModules.ARGeosManager;
+
+const nodeProps = (id, props) => ({
+  id,
+  ...pick(props, ['position', 'eulerAngles', 'rotation', 'orientation']),
+});
+
+export default (mountConfig, propTypes = {}) => {
+  let mountMethod;
+  if (typeof mountConfig === 'string') {
+    mountMethod = (id, props) => {
+      ARGeosManager[mountConfig](
+        {
+          shape: props.shape,
+          material: processColorInMaterial(props.material),
+        },
+        nodeProps(id, props),
+        props.frame,
+      );
+    };
+  } else {
+    mountMethod = (id, props) => {
+      mountConfig.mount(
+        {
+          ...pick(props, mountConfig.pick),
+          material: processColorInMaterial(props.material),
+        },
+        nodeProps(id, props),
+        props.frame,
+      );
+    };
+  }
+
   const ARComponent = class extends Component {
     identifier = null;
 
     componentWillMount() {
       this.identifier = this.props.id || generateId();
-      Manager.mount(
-        {
-          id: this.identifier,
-          ...this.props,
-        },
-        processColorInMaterial(this.props.material),
-      );
+      mountMethod(this.identifier, this.props);
     }
 
     componentWillUpdate(props) {
-      Manager.mount(
-        {
-          id: this.identifier,
-          ...props,
-        },
-        processColorInMaterial(props.material),
-      );
+      mountMethod(this.identifier, props);
     }
 
     componentWillUnmount() {
-      Manager.unmount(this.identifier);
+      ARGeosManager.unmount(this.identifier);
     }
 
     render() {
@@ -39,11 +61,11 @@ export default (Manager, propTypes = {}) => {
   };
 
   ARComponent.propTypes = {
-    pos: PropTypes.shape({
+    frame: PropTypes.string,
+    position: PropTypes.shape({
       x: PropTypes.number,
       y: PropTypes.number,
       z: PropTypes.number,
-      frame: PropTypes.string,
     }),
     eulerAngles: PropTypes.shape({
       x: PropTypes.number,

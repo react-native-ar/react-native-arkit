@@ -7,19 +7,16 @@
 //
 
 #import "ARTextManager.h"
-#import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
+#import "RCTConvert+ARKit.h"
 
 @implementation ARTextManager
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(mount:(NSDictionary *)property material:(SCNMaterial *)material) {
-    [[RCTARKitGeos sharedInstance] addText:property material:material];
-}
-
-RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
-    [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
+RCT_EXPORT_METHOD(mount:(SCNTextNode *)textNode node:(SCNNode *)node frame:(NSString *)frame) {
+    [node addChildNode:textNode];
+    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
 }
 
 @end

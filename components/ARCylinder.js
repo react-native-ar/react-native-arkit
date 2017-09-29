@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARCylinder = createArComponent(NativeModules.ARCylinderManager, {
+const ARCylinder = createArComponent('addCylinder', {
   shape: PropTypes.shape({
     radius: PropTypes.number,
     height: PropTypes.number,

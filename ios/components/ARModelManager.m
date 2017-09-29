@@ -7,19 +7,23 @@
 //
 
 #import "ARModelManager.h"
-#import "RCTARKitGeos.h"
 #import "RCTARKitNodes.h"
+#import "RCTARKitIO.h"
 
 @implementation ARModelManager
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(mount:(NSDictionary *)property material:(SCNMaterial *)material) {
-    [[RCTARKitGeos sharedInstance] addModel:property];
-}
-
-RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
-    [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
+RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSString *)frame) {
+    NSDictionary *model = property[@"model"];
+    CGFloat scale = [model[@"scale"] floatValue];
+    
+    NSString *path = [NSString stringWithFormat:@"%@", model[@"file"]];
+    SCNNode *modelNode = [[RCTARKitIO sharedInstance] loadModel:path nodeName:model[@"node"] withAnimation:YES];
+    modelNode.scale = SCNVector3Make(scale, scale, scale);
+    
+    [node addChildNode:modelNode];
+    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
 }
 
 @end
