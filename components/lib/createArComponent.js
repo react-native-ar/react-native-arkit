@@ -2,7 +2,13 @@ import { Component } from 'react';
 import PropTypes from 'prop-types';
 import { NativeModules } from 'react-native';
 import pick from 'lodash/pick';
-
+import {
+  position,
+  eulerAngles,
+  rotation,
+  orientation,
+  material,
+} from './propTypes';
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
@@ -59,37 +65,13 @@ export default (mountConfig, propTypes = {}) => {
       return null;
     }
   };
-
   ARComponent.propTypes = {
     frame: PropTypes.string,
-    position: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-    }),
-    eulerAngles: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-    }),
-    rotation: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-      w: PropTypes.number,
-    }),
-    orientation: PropTypes.shape({
-      x: PropTypes.number,
-      y: PropTypes.number,
-      z: PropTypes.number,
-      w: PropTypes.number,
-    }),
-
-    material: PropTypes.shape({
-      diffuse: PropTypes.string,
-      metalness: PropTypes.number,
-      roughness: PropTypes.number,
-    }),
+    position,
+    eulerAngles,
+    rotation,
+    orientation,
+    material,
     ...propTypes,
   };
 
