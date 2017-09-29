@@ -27,6 +27,13 @@ RCT_EXPORT_MODULE()
                      @"ExistingPlane": @(ARHitTestResultTypeExistingPlane),
                      @"ExistingPlaneUsingExtent": @(ARHitTestResultTypeExistingPlaneUsingExtent)
                      },
+             @"LightingModel": @{
+                     @"Constant": SCNLightingModelConstant,
+                     @"Blinn": SCNLightingModelBlinn,
+                     @"Lambert": SCNLightingModelLambert,
+                     @"Phong": SCNLightingModelPhong,
+                     @"PhysicallyBased": SCNLightingModelPhysicallyBased
+                     }
              };
 }
 
