@@ -151,7 +151,7 @@
 
 - (NSString *)getAppLibraryCachesPathWithSubDirectory:(NSString *)directory {
     NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
-                      stringByAppendingPathComponent:@"com.qftgtr.hippo"];
+                      stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
     if (directory) {
         path = [path stringByAppendingPathComponent:directory];
     }
