@@ -57,6 +57,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)snapshot:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)snapshotCamera:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)focusScene;
+- (void)clearScene;
 - (NSDictionary *)readCameraPosition;
 
 
