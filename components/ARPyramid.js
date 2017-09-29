@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARPyramid = createArComponent(NativeModules.ARPyramidManager, {
+const ARPyramid = createArComponent('addPyramid', {
   shape: PropTypes.shape({
     width: PropTypes.number,
     length: PropTypes.number,

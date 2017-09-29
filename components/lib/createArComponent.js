@@ -1,39 +1,73 @@
 import { Component } from 'react';
-
-import { parseColorInProps } from './parseColor';
+import PropTypes from 'prop-types';
+import { NativeModules } from 'react-native';
+import pick from 'lodash/pick';
+import {
+  position,
+  eulerAngles,
+  rotation,
+  orientation,
+  material,
+} from './propTypes';
+import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
-import { pos, eulerAngles, rotation, orientation, material } from './propTypes';
 
-export default (Manager, propTypes = {}) => {
+const ARGeosManager = NativeModules.ARGeosManager;
+
+const nodeProps = (id, props) => ({
+  id,
+  ...pick(props, ['position', 'eulerAngles', 'rotation', 'orientation']),
+});
+
+export default (mountConfig, propTypes = {}) => {
+  let mountMethod;
+  if (typeof mountConfig === 'string') {
+    mountMethod = (id, props) => {
+      ARGeosManager[mountConfig](
+        {
+          shape: props.shape,
+          material: processColorInMaterial(props.material),
+        },
+        nodeProps(id, props),
+        props.frame,
+      );
+    };
+  } else {
+    mountMethod = (id, props) => {
+      mountConfig.mount(
+        {
+          ...pick(props, mountConfig.pick),
+          material: processColorInMaterial(props.material),
+        },
+        nodeProps(id, props),
+        props.frame,
+      );
+    };
+  }
+
   const ARComponent = class extends Component {
     identifier = null;
 
     componentWillMount() {
       this.identifier = this.props.id || generateId();
-      Manager.mount({
-        id: this.identifier,
-        ...parseColorInProps(this.props),
-      });
+      mountMethod(this.identifier, this.props);
     }
 
     componentWillUpdate(props) {
-      Manager.mount({
-        id: this.identifier,
-        ...parseColorInProps(props),
-      });
+      mountMethod(this.identifier, props);
     }
 
     componentWillUnmount() {
-      Manager.unmount(this.identifier);
+      ARGeosManager.unmount(this.identifier);
     }
 
     render() {
       return null;
     }
   };
-
   ARComponent.propTypes = {
-    pos,
+    frame: PropTypes.string,
+    position,
     eulerAngles,
     rotation,
     orientation,

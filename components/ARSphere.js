@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARSphere = createArComponent(NativeModules.ARSphereManager, {
+const ARSphere = createArComponent('addSphere', {
   shape: PropTypes.shape({
     radius: PropTypes.number,
   }),

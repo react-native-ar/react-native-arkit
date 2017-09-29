@@ -13,7 +13,7 @@
 @import CoreLocation;
 
 @interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate> {
-    RCTPromiseResolveBlock _resolve;
+    RCTARKitResolve _resolve;
 }
 
 @property (nonatomic, strong) ARSession* session;
@@ -186,13 +186,13 @@ static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
 
 #pragma mark - snapshot methods
 
-- (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+- (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
     
     resolve([self.nodeManager getSceneObjectsHitResult:tapPoint]);
 }
 
 
-- (void)snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+- (void)snapshot:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
     UIImage *image = [self.arView snapshot];
     // FIXME: I belive this is not the right way. I don't know how to pass 'resolve' to the completionSelector
     // If you know how to do it, please PR. Thanks!
@@ -201,7 +201,7 @@ static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
 }
 
 
-- (void)snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+- (void)snapshotCamera:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
     
     // thx https://stackoverflow.com/a/8094038/1463534
     CVPixelBufferRef pixelBuffer = self.arView.session.currentFrame.capturedImage;
@@ -231,7 +231,7 @@ static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
 
 #pragma mark - plane hit detection
 
-- (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject {
+- (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
     
     resolve([self getPlaneHitResult:tapPoint types:types]);
 }

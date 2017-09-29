@@ -3,7 +3,7 @@ import withAnimationFrame from 'react-animation-frame';
 
 import { NativeModules, Animated } from 'react-native';
 
-import { pos } from './lib/propTypes';
+import { position } from './lib/propTypes';
 
 const ARKitManager = NativeModules.ARKitManager;
 
@@ -47,7 +47,7 @@ const ARSprite = withAnimationFrame(
 );
 
 ARSprite.propTypes = {
-  pos,
+  position,
 };
 
 module.exports = ARSprite;

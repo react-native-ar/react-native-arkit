@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
 #import <ARKit/ARKit.h>
-#import <React/RCTBridgeModule.h>
 #import "RCTARKitDelegate.h"
 
 typedef NS_OPTIONS(NSUInteger, RFReferenceFrame) {
@@ -36,7 +35,7 @@ typedef NS_OPTIONS(NSUInteger, RFReferenceFrame) {
 
 + (instancetype)sharedInstance;
 
-- (void)addNodeToScene:(SCNNode *)node property:(NSDictionary *)property;
+- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame;
 
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
 - (SCNNode *)nodeForKey:(NSString *)key;

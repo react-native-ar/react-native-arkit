@@ -135,15 +135,15 @@
 }
 
 
-- (void)saveScene:(SCNScene *)scene as:(NSString *)filename resolve:(RCTPromiseResolveBlock)resolve {
+- (void)saveScene:(SCNScene *)scene as:(NSString *)filename finishHandler:(nullable ARKitIOExportHandler)finishHandler {
     NSString *assetPath = [self getAppLibraryCachesPathWithSubDirectory:nil];
     NSString *exportPath = [NSString stringWithFormat:@"file://%@/%@", assetPath, filename];
     NSLog(@"exportModel to ===> %@", exportPath);
     NSURL *url = [NSURL URLWithString:[exportPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     
     [scene writeToURL:url options:nil delegate:nil progressHandler:^(float totalProgress, NSError * _Nullable error, BOOL * _Nonnull stop) {
-        if (totalProgress == 1.0) {
-            resolve(@{ @"filename": filename, @"path": exportPath });
+        if (totalProgress == 1.0 && finishHandler) {
+            finishHandler(filename, exportPath);
         }
     }];
 }
@@ -151,7 +151,7 @@
 
 - (NSString *)getAppLibraryCachesPathWithSubDirectory:(NSString *)directory {
     NSString *path = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject]
-                      stringByAppendingPathComponent:@"com.qftgtr.hippo"];
+                      stringByAppendingPathComponent:[[NSBundle mainBundle] bundleIdentifier]];
     if (directory) {
         path = [path stringByAppendingPathComponent:directory];
     }

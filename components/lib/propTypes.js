@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 
-export const pos = PropTypes.shape({
+export const position = PropTypes.shape({
   x: PropTypes.number,
   y: PropTypes.number,
   z: PropTypes.number,
-  frame: PropTypes.string,
 });
 export const eulerAngles = PropTypes.shape({
   x: PropTypes.number,

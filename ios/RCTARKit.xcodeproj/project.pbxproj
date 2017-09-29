@@ -7,19 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		100543FC1F77F85D0090A051 /* RCTARKitGeos.m in Sources */ = {isa = PBXBuildFile; fileRef = 100543FB1F77F85D0090A051 /* RCTARKitGeos.m */; };
 		10062C831F127572009AE974 /* RCTARKitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10062C821F127572009AE974 /* RCTARKitManager.m */; };
 		1021FE1C1F3EDB98000E7339 /* ARModelManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1021FE181F3EDB90000E7339 /* ARModelManager.m */; };
 		1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1021FE191F3EDB90000E7339 /* ARTextManager.m */; };
-		106999E51F3EC30100032829 /* ARBoxManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106999E41F3EC2FB00032829 /* ARBoxManager.m */; };
-		106DA3161F443CF300B93D36 /* ARPyramidManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA3151F443CF300B93D36 /* ARPyramidManager.m */; };
-		106DA3191F443D1D00B93D36 /* ARSphereManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA3181F443D1D00B93D36 /* ARSphereManager.m */; };
-		106DA31C1F443D2A00B93D36 /* ARCylinderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA31B1F443D2A00B93D36 /* ARCylinderManager.m */; };
-		106DA31F1F443D3900B93D36 /* ARConeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA31E1F443D3900B93D36 /* ARConeManager.m */; };
-		106DA3221F443D8300B93D36 /* ARTubeManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA3211F443D8300B93D36 /* ARTubeManager.m */; };
-		106DA3251F443D9000B93D36 /* ARTorusManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA3241F443D9000B93D36 /* ARTorusManager.m */; };
-		106DA3281F443DA200B93D36 /* ARCapsuleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA3271F443DA200B93D36 /* ARCapsuleManager.m */; };
-		106DA32B1F443DB500B93D36 /* ARPlaneManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 106DA32A1F443DB500B93D36 /* ARPlaneManager.m */; };
+		105F124E1F7C0719006D4BA3 /* RCTConvert+ARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */; };
+		10DCBC4B1F7CE836008C89E7 /* ARGeosManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10DCBC4A1F7CE836008C89E7 /* ARGeosManager.m */; };
 		10E553291F1391350059B7EC /* Plane.m in Sources */ = {isa = PBXBuildFile; fileRef = 10E553281F1391350059B7EC /* Plane.m */; };
 		10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 10ED47A61F38BC00004DF043 /* DeviceMotion.m */; };
 		10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */; };
@@ -40,32 +32,16 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		100543FA1F77F85D0090A051 /* RCTARKitGeos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitGeos.h; sourceTree = "<group>"; };
-		100543FB1F77F85D0090A051 /* RCTARKitGeos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitGeos.m; sourceTree = "<group>"; };
 		10062C811F127566009AE974 /* RCTARKitManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitManager.h; sourceTree = "<group>"; };
 		10062C821F127572009AE974 /* RCTARKitManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitManager.m; sourceTree = "<group>"; };
 		1021FE181F3EDB90000E7339 /* ARModelManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARModelManager.m; sourceTree = "<group>"; };
 		1021FE191F3EDB90000E7339 /* ARTextManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARTextManager.m; sourceTree = "<group>"; };
 		1021FE1A1F3EDB90000E7339 /* ARTextManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARTextManager.h; sourceTree = "<group>"; };
 		1021FE1B1F3EDB90000E7339 /* ARModelManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARModelManager.h; sourceTree = "<group>"; };
-		106999E31F3EC2FB00032829 /* ARBoxManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARBoxManager.h; sourceTree = "<group>"; };
-		106999E41F3EC2FB00032829 /* ARBoxManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARBoxManager.m; sourceTree = "<group>"; };
-		106DA3141F443CF300B93D36 /* ARPyramidManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARPyramidManager.h; sourceTree = "<group>"; };
-		106DA3151F443CF300B93D36 /* ARPyramidManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARPyramidManager.m; sourceTree = "<group>"; };
-		106DA3171F443D1D00B93D36 /* ARSphereManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARSphereManager.h; sourceTree = "<group>"; };
-		106DA3181F443D1D00B93D36 /* ARSphereManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARSphereManager.m; sourceTree = "<group>"; };
-		106DA31A1F443D2A00B93D36 /* ARCylinderManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARCylinderManager.h; sourceTree = "<group>"; };
-		106DA31B1F443D2A00B93D36 /* ARCylinderManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARCylinderManager.m; sourceTree = "<group>"; };
-		106DA31D1F443D3900B93D36 /* ARConeManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARConeManager.h; sourceTree = "<group>"; };
-		106DA31E1F443D3900B93D36 /* ARConeManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARConeManager.m; sourceTree = "<group>"; };
-		106DA3201F443D8300B93D36 /* ARTubeManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARTubeManager.h; sourceTree = "<group>"; };
-		106DA3211F443D8300B93D36 /* ARTubeManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARTubeManager.m; sourceTree = "<group>"; };
-		106DA3231F443D9000B93D36 /* ARTorusManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARTorusManager.h; sourceTree = "<group>"; };
-		106DA3241F443D9000B93D36 /* ARTorusManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARTorusManager.m; sourceTree = "<group>"; };
-		106DA3261F443DA200B93D36 /* ARCapsuleManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARCapsuleManager.h; sourceTree = "<group>"; };
-		106DA3271F443DA200B93D36 /* ARCapsuleManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARCapsuleManager.m; sourceTree = "<group>"; };
-		106DA3291F443DB500B93D36 /* ARPlaneManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARPlaneManager.h; sourceTree = "<group>"; };
-		106DA32A1F443DB500B93D36 /* ARPlaneManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARPlaneManager.m; sourceTree = "<group>"; };
+		105F124C1F7C0718006D4BA3 /* RCTConvert+ARKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RCTConvert+ARKit.h"; sourceTree = "<group>"; };
+		105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RCTConvert+ARKit.m"; sourceTree = "<group>"; };
+		10DCBC491F7CE836008C89E7 /* ARGeosManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARGeosManager.h; sourceTree = "<group>"; };
+		10DCBC4A1F7CE836008C89E7 /* ARGeosManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARGeosManager.m; sourceTree = "<group>"; };
 		10E553271F1391350059B7EC /* Plane.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plane.h; sourceTree = "<group>"; };
 		10E553281F1391350059B7EC /* Plane.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Plane.m; sourceTree = "<group>"; };
 		10ED47A51F38BC00004DF043 /* DeviceMotion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceMotion.h; sourceTree = "<group>"; };
@@ -94,24 +70,8 @@
 		106999E21F3EC2FB00032829 /* components */ = {
 			isa = PBXGroup;
 			children = (
-				106999E31F3EC2FB00032829 /* ARBoxManager.h */,
-				106999E41F3EC2FB00032829 /* ARBoxManager.m */,
-				106DA3171F443D1D00B93D36 /* ARSphereManager.h */,
-				106DA3181F443D1D00B93D36 /* ARSphereManager.m */,
-				106DA31A1F443D2A00B93D36 /* ARCylinderManager.h */,
-				106DA31B1F443D2A00B93D36 /* ARCylinderManager.m */,
-				106DA31D1F443D3900B93D36 /* ARConeManager.h */,
-				106DA31E1F443D3900B93D36 /* ARConeManager.m */,
-				106DA3141F443CF300B93D36 /* ARPyramidManager.h */,
-				106DA3151F443CF300B93D36 /* ARPyramidManager.m */,
-				106DA3201F443D8300B93D36 /* ARTubeManager.h */,
-				106DA3211F443D8300B93D36 /* ARTubeManager.m */,
-				106DA3231F443D9000B93D36 /* ARTorusManager.h */,
-				106DA3241F443D9000B93D36 /* ARTorusManager.m */,
-				106DA3261F443DA200B93D36 /* ARCapsuleManager.h */,
-				106DA3271F443DA200B93D36 /* ARCapsuleManager.m */,
-				106DA3291F443DB500B93D36 /* ARPlaneManager.h */,
-				106DA32A1F443DB500B93D36 /* ARPlaneManager.m */,
+				10DCBC491F7CE836008C89E7 /* ARGeosManager.h */,
+				10DCBC4A1F7CE836008C89E7 /* ARGeosManager.m */,
 				1021FE1A1F3EDB90000E7339 /* ARTextManager.h */,
 				1021FE191F3EDB90000E7339 /* ARTextManager.m */,
 				1021FE1B1F3EDB90000E7339 /* ARModelManager.h */,
@@ -139,14 +99,14 @@
 				B3E7B5881CC2AC0600A0062D /* RCTARKit.h */,
 				B3E7B5891CC2AC0600A0062D /* RCTARKit.m */,
 				10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */,
-				100543FA1F77F85D0090A051 /* RCTARKitGeos.h */,
-				100543FB1F77F85D0090A051 /* RCTARKitGeos.m */,
 				10FEF6111F774C8F00EC21AE /* RCTARKitIO.h */,
 				10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */,
 				10FEF60F1F774C8F00EC21AE /* RCTARKitNodes.h */,
 				10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */,
 				10062C811F127566009AE974 /* RCTARKitManager.h */,
 				10062C821F127572009AE974 /* RCTARKitManager.m */,
+				105F124C1F7C0718006D4BA3 /* RCTConvert+ARKit.h */,
+				105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -207,24 +167,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				106DA3251F443D9000B93D36 /* ARTorusManager.m in Sources */,
-				106DA32B1F443DB500B93D36 /* ARPlaneManager.m in Sources */,
-				106DA3161F443CF300B93D36 /* ARPyramidManager.m in Sources */,
 				10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */,
-				106DA3191F443D1D00B93D36 /* ARSphereManager.m in Sources */,
-				106999E51F3EC30100032829 /* ARBoxManager.m in Sources */,
-				106DA3281F443DA200B93D36 /* ARCapsuleManager.m in Sources */,
+				10DCBC4B1F7CE836008C89E7 /* ARGeosManager.m in Sources */,
 				10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */,
 				10E553291F1391350059B7EC /* Plane.m in Sources */,
-				106DA31F1F443D3900B93D36 /* ARConeManager.m in Sources */,
 				1021FE1C1F3EDB98000E7339 /* ARModelManager.m in Sources */,
 				1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */,
-				106DA31C1F443D2A00B93D36 /* ARCylinderManager.m in Sources */,
-				106DA3221F443D8300B93D36 /* ARTubeManager.m in Sources */,
+				105F124E1F7C0719006D4BA3 /* RCTConvert+ARKit.m in Sources */,
 				B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */,
 				10062C831F127572009AE974 /* RCTARKitManager.m in Sources */,
 				10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */,
-				100543FC1F77F85D0090A051 /* RCTARKitGeos.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,7 +216,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -298,7 +250,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

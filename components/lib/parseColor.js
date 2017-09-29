@@ -1,22 +1,16 @@
-import Color from 'color';
+import { processColor } from 'react-native';
 
-export const normalizeColor = colorRaw => {
-  const color = new Color(colorRaw);
-  return {
-    alpha: 1,
-    ...color.unitObject(),
-  };
-};
-
-export function parseColorInProps(props) {
-  if (props && props.material && props.material.color) {
-    return {
-      ...props,
-      material: {
-        ...props.material,
-        color: normalizeColor(props.material.color),
-      },
-    };
+export function processColorInMaterial(material) {
+  if (!material) {
+    return material;
   }
-  return props;
+
+  if (!material.diffuse && !material.color) {
+    return material;
+  }
+
+  return {
+    ...material,
+    diffuse: processColor(material.diffuse || material.color),
+  };
 }

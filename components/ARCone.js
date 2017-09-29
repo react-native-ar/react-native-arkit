@@ -7,11 +7,9 @@
 
 import PropTypes from 'prop-types';
 
-import { NativeModules } from 'react-native';
-
 import createArComponent from './lib/createArComponent';
 
-const ARCone = createArComponent(NativeModules.ARConeManager, {
+const ARCone = createArComponent('addCone', {
   shape: PropTypes.shape({
     topR: PropTypes.number,
     bottomR: PropTypes.number,
