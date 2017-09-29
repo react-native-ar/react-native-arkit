@@ -75,9 +75,10 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 
 
 
-#if __has_include("RCTARKitARCL.h")
+//#if __has_include("RCTARKitARCL.h")
 #import "RCTARKitARCL.h"
 @compatibility_alias ARKit RCTARKitARCL;
-#else
-@compatibility_alias ARKit RCTARKit;
-#endif
+//#else
+//@compatibility_alias ARKit RCTARKit;
+//#endif
+

@@ -64,6 +64,9 @@
         
         // start ARKit
         [self addSubview:arView];
+        NSLog(@"layout %@", NSStringFromCGRect(self.bounds));
+        self.frame = CGRectMake(0, 0, 375, 667);
+        arView.frame = CGRectMake(0, 0, 375, 667);
         [self resume];
         
     }
@@ -72,6 +75,7 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    NSLog(@"layout subview %@", NSStringFromCGRect(self.bounds));
     self.arView.frame = self.bounds;
 }
 
