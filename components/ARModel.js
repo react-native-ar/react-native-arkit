@@ -10,15 +10,25 @@ import PropTypes from 'prop-types';
 import { NativeModules } from 'react-native';
 
 import createArComponent from './lib/createArComponent';
+import { shaders } from './lib/propTypes';
 
 const ARModel = createArComponent(
-  { mount: NativeModules.ARModelManager.mount, pick: ['model'] },
+  {
+    mount: NativeModules.ARModelManager.mount,
+    pick: ['model', 'material', 'shape'],
+  },
   {
     model: PropTypes.shape({
       file: PropTypes.string,
       node: PropTypes.string,
       scale: PropTypes.number,
       alpha: PropTypes.number,
+    }),
+    material: PropTypes.shape({
+      shaders,
+    }),
+    shape: PropTypes.shape({
+      shaders,
     }),
   },
 );

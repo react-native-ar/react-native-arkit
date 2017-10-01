@@ -33,6 +33,12 @@ RCT_EXPORT_MODULE()
                      @"Lambert": SCNLightingModelLambert,
                      @"Phong": SCNLightingModelPhong,
                      @"PhysicallyBased": SCNLightingModelPhysicallyBased
+                     },
+             @"ShaderModifierEntryPoint": @{
+                     @"Geometry": SCNShaderModifierEntryPointGeometry,
+                     @"Surface": SCNShaderModifierEntryPointSurface,
+                     @"LighingModel": SCNShaderModifierEntryPointLightingModel,
+                     @"Fragment": SCNShaderModifierEntryPointFragment
                      }
              };
 }
