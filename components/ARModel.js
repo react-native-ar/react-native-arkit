@@ -27,9 +27,6 @@ const ARModel = createArComponent(
     material: PropTypes.shape({
       shaders,
     }),
-    shape: PropTypes.shape({
-      shaders,
-    }),
   },
 );
 

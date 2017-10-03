@@ -31,6 +31,10 @@
         material.roughness.contents = @([json[@"roughness"] floatValue]);
     }
     
+    if(json[@"shaders"] ) {
+        material.shaderModifiers = json[@"shaders"];
+    }
+    
     return material;
 }
 

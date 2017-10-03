@@ -42,4 +42,5 @@ export const material = PropTypes.shape({
   metalness: PropTypes.number,
   roughness: PropTypes.number,
   lightingModel: PropTypes.oneOf(values(ARKitManager.LightingModel)),
+  shaders,
 });
