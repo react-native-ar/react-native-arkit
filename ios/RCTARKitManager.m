@@ -20,6 +20,7 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
+    
     return @{
              @"ARHitTestResultType": @{
                      @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
@@ -39,6 +40,15 @@ RCT_EXPORT_MODULE()
                      @"Surface": SCNShaderModifierEntryPointSurface,
                      @"LighingModel": SCNShaderModifierEntryPointLightingModel,
                      @"Fragment": SCNShaderModifierEntryPointFragment
+                     },
+             @"BlendMode": @{
+                     @"Alpha": [@(SCNBlendModeAlpha) stringValue],
+                     @"Add": [@(SCNBlendModeAdd) stringValue],
+                     @"Subtract": [@(SCNBlendModeSubtract) stringValue],
+                     @"Multiply": [@(SCNBlendModeMultiply) stringValue],
+                     @"Screen": [@(SCNBlendModeScreen) stringValue],
+                     @"Replace": [@(SCNBlendModeReplace) stringValue],
+                     
                      }
              };
 }

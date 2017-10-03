@@ -22,18 +22,24 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSS
     SCNNode *modelNode = [[RCTARKitIO sharedInstance] loadModel:path nodeName:model[@"node"] withAnimation:YES];
     modelNode.scale = SCNVector3Make(scale, scale, scale);
     NSDictionary *shaderModifiers;
-
+    SCNBlendMode blendMode = SCNBlendModeAlpha;
+    
     if(property[@"material"] ) {
         NSDictionary* material = property[@"material"];
         if(material[@"shaders"] ) {
             shaderModifiers = material[@"shaders"];
         }
+        if (material[@"blendMode"]) {
+            blendMode = (SCNBlendMode) [material[@"blendMode"] integerValue];
+        }
+       
     }
-   
+    
     if(shaderModifiers) {
         for(id idx in node.geometry.materials) {
             SCNMaterial* material = (SCNMaterial* )idx;
             material.shaderModifiers = shaderModifiers;
+            material.blendMode = blendMode;
         }
     }
     
@@ -44,6 +50,7 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSS
             for(id idx in node.geometry.materials) {
                 SCNMaterial* material = (SCNMaterial* )idx;
                 material.shaderModifiers = shaderModifiers;
+                material.blendMode = blendMode;
             }
         }
     
