@@ -11,6 +11,7 @@ const ARSprite = withAnimationFrame(
   class extends Component {
     identifier = null;
     mounted = false;
+
     constructor(props) {
       super(props);
 
@@ -19,7 +20,7 @@ const ARSprite = withAnimationFrame(
         pos2D: new Animated.ValueXY(), // inits to zero
       };
     }
-    onAnimationFrame(time, lastTimestamp) {
+    onAnimationFrame() {
       ARKitManager.projectPoint(
         this.props.position,
       ).then(({ x, y, z, distance }) => {
@@ -27,10 +28,7 @@ const ARSprite = withAnimationFrame(
           const visible = z < 1;
           if (visible !== this.state.visible) this.setState({ visible });
 
-          Animated.timing(this.state.pos2D, {
-            duration: time - lastTimestamp,
-            toValue: { x, y },
-          }).start();
+          this.state.pos2D.setValue({ x, y });
         }
       });
     }
