@@ -27,6 +27,13 @@ RCT_EXPORT_MODULE()
                      @"ExistingPlane": @(ARHitTestResultTypeExistingPlane),
                      @"ExistingPlaneUsingExtent": @(ARHitTestResultTypeExistingPlaneUsingExtent)
                      },
+             @"LightingModel": @{
+                     @"Constant": SCNLightingModelConstant,
+                     @"Blinn": SCNLightingModelBlinn,
+                     @"Lambert": SCNLightingModelLambert,
+                     @"Phong": SCNLightingModelPhong,
+                     @"PhysicallyBased": SCNLightingModelPhysicallyBased
+                     }
              };
 }
 
@@ -102,6 +109,11 @@ RCT_EXPORT_METHOD(projectPoint:
 
 RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] focusScene];
+    resolve(@{});
+}
+
+RCT_EXPORT_METHOD(clearScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance] clearScene];
     resolve(@{});
 }
 

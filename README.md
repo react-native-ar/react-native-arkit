@@ -154,7 +154,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length, chamfer }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Sphere />`](https://developer.apple.com/documentation/scenekit/scnsphere)
 
@@ -165,7 +165,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Cylinder />`](https://developer.apple.com/documentation/scenekit/scncylinder)
 
@@ -176,7 +176,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius, height }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Cone />`](https://developer.apple.com/documentation/scenekit/scncone)
 
@@ -187,7 +187,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ topR, bottomR, height }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Pyramid />`](https://developer.apple.com/documentation/scenekit/scnpyramid)
 
@@ -198,7 +198,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Tube />`](https://developer.apple.com/documentation/scenekit/scntube)
 
@@ -209,7 +209,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ innerR, outerR, height }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Torus />`](https://developer.apple.com/documentation/scenekit/scntorus)
 
@@ -220,7 +220,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ ringR, pipeR }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Capsule />`](https://developer.apple.com/documentation/scenekit/scncapsule)
 
@@ -231,7 +231,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ capR, height }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Plane />`](https://developer.apple.com/documentation/scenekit/scnplane)
 
@@ -242,7 +242,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, length }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
 
@@ -254,7 +254,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
 | `font` | `{ name, size, depth, chamfer }` |
-| `material` | `{ diffuse, metalness, roughness }` |
+| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 
 #### `<ARKit.Model />`
