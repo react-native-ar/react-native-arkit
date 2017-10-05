@@ -16,7 +16,7 @@ const ARSprite = withAnimationFrame(
       super(props);
 
       this.state = {
-        visible: true,
+        visible: false,
         pos2D: new Animated.ValueXY(), // inits to zero
       };
     }
