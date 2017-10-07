@@ -19,6 +19,7 @@ import ARCapsule from './components/ARCapsule';
 import ARPlane from './components/ARPlane';
 import ARText from './components/ARText';
 import ARModel from './components/ARModel';
+import ARSprite from './components/ARSprite';
 import ARGroup from './components/ARGroup';
 
 ARKit.Box = ARBox;
@@ -32,6 +33,7 @@ ARKit.Capsule = ARCapsule;
 ARKit.Plane = ARPlane;
 ARKit.Text = ARText;
 ARKit.Model = ARModel;
+ARKit.Sprite = ARSprite;
 ARKit.Group = ARGroup;
 
 module.exports = {

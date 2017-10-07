@@ -9,13 +9,7 @@
   "author": "Zehao Li <qft.gtr@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/HippoAR/react-native-arkit",
-  "keywords": [
-    "react-native",
-    "react",
-    "native",
-    "ARKit",
-    "AR"
-  ],
+  "keywords": ["react-native", "react", "native", "ARKit", "AR"],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -23,7 +17,8 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "prop-types": "^15.5.7",
-    "react": "16.0.0-alpha.12"
+    "react": "16.0.0-alpha.12",
+    "react-animation-frame": "^0.3.5"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",

@@ -21,6 +21,7 @@ import generateId from './components/lib/generateId';
 const ARKitManager = NativeModules.ARKitManager;
 
 const TRACKING_STATES = ['NOT_AVAILABLE', 'LIMITED', 'NORMAL'];
+
 const TRACKING_REASONS = [
   'NONE',
   'INITIALIZING',

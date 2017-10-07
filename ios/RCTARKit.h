@@ -54,6 +54,8 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)resume;
 - (void)hitTestPlane:(CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)hitTestSceneObjects:(CGPoint)tapPoint resolve:(RCTARKitResolve) resolve reject:(RCTARKitReject)reject;
+- (SCNVector3)projectPoint:(SCNVector3)point;
+- (float)getCameraDistanceToPoint:(SCNVector3)point;
 - (void)snapshot:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)snapshotCamera:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)focusScene;

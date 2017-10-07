@@ -74,11 +74,11 @@ RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejec
 
 
 RCT_EXPORT_METHOD(
-  hitTestPlanes: (NSDictionary *)pointDict
-  types:(NSUInteger)types
-  resolve:(RCTPromiseResolveBlock)resolve
-  reject:(RCTPromiseRejectBlock)reject
-  ) {
+                  hitTestPlanes: (NSDictionary *)pointDict
+                  types:(NSUInteger)types
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject
+                  ) {
     CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
     [[ARKit sharedInstance] hitTestPlane:point types:types resolve:resolve reject:reject];
 }
@@ -109,6 +109,22 @@ RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
 
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] readCameraPosition]);
+}
+
+RCT_EXPORT_METHOD(projectPoint:
+                  (NSDictionary *)pointDict
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+    SCNVector3 point = SCNVector3Make(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue], [pointDict[@"z"] floatValue] );
+    SCNVector3 pointProjected = [[ARKit sharedInstance] projectPoint:point];
+    float distance = [[ARKit sharedInstance] getCameraDistanceToPoint:point];
+    resolve(@{
+              @"x": @(pointProjected.x),
+              @"y": @(pointProjected.y),
+              @"z": @(pointProjected.z),
+              @"distance": @(distance)
+              });
+    
 }
 
 RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
