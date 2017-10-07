@@ -10,17 +10,24 @@ import some from 'lodash/some';
 import { NativeModules } from 'react-native';
 
 import {
-  position,
   eulerAngles,
-  rotation,
-  orientation,
   material,
+  orientation,
+  position,
+  rotation,
+  transition,
 } from './propTypes';
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
 const ARGeosManager = NativeModules.ARGeosManager;
-const NODE_PROPS = ['position', 'eulerAngles', 'rotation', 'orientation'];
+const NODE_PROPS = [
+  'position',
+  'eulerAngles',
+  'rotation',
+  'orientation',
+  'transition',
+];
 const KEYS_THAT_NEED_REMOUNT = ['material', 'shape', 'model'];
 
 const nodeProps = (id, props) => ({
@@ -56,12 +63,12 @@ export default (mountConfig, propTypes = {}) => {
   const ARComponent = class extends Component {
     identifier = null;
 
-    componentWillMount() {
+    componentDidMount() {
       this.identifier = this.props.id || generateId();
       mount(this.identifier, this.props);
     }
 
-    componentWillUpdate(props) {
+    componentDidUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
         key => !isDeepEqual(props[key], this.props[key]),
@@ -75,11 +82,16 @@ export default (mountConfig, propTypes = {}) => {
         // TODO: we should be able to update
         mount(this.identifier, props);
       } else {
-        ARGeosManager.update(this.identifier, pick(props, changedKeys));
+        // always include transition
+        ARGeosManager.update(
+          this.identifier,
+          pick(props, ['transition', ...changedKeys]),
+        );
       }
     }
 
     componentWillUnmount() {
+      console.log('unmounting', this.identifier);
       ARGeosManager.unmount(this.identifier);
     }
 
@@ -90,6 +102,7 @@ export default (mountConfig, propTypes = {}) => {
   ARComponent.propTypes = {
     frame: PropTypes.string,
     position,
+    transition,
     eulerAngles,
     rotation,
     orientation,

@@ -239,6 +239,17 @@
 }
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json {
+    if(json[@"transition"]) {
+        NSDictionary * transition =json[@"transition"];
+        if(transition[@"duration"]) {
+            [SCNTransaction setAnimationDuration:[transition[@"duration"] floatValue]];
+        } else {
+            [SCNTransaction setAnimationDuration:0.0];
+        }
+      
+    } else {
+        [SCNTransaction setAnimationDuration:0.0];
+    }
     if (json[@"position"]) {
         node.position = [self SCNVector3:json[@"position"]];
     }
