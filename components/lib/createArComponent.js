@@ -68,11 +68,12 @@ export default (mountConfig, propTypes = {}) => {
       mount(this.identifier, this.props);
     }
 
-    componentDidUpdate(props) {
+    componentWillUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
         key => !isDeepEqual(props[key], this.props[key]),
       );
+
       if (isEmpty(changedKeys)) {
         return;
       }
@@ -80,6 +81,7 @@ export default (mountConfig, propTypes = {}) => {
       if (some(KEYS_THAT_NEED_REMOUNT, k => changedKeys.includes(k))) {
         // remount
         // TODO: we should be able to update
+
         mount(this.identifier, props);
       } else {
         // always include transition
