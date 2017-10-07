@@ -91,7 +91,6 @@ export default (mountConfig, propTypes = {}) => {
     }
 
     componentWillUnmount() {
-      console.log('unmounting', this.identifier);
       ARGeosManager.unmount(this.identifier);
     }
 
