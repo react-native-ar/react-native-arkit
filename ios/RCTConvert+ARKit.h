@@ -17,6 +17,7 @@
 @interface RCTConvert (ARKit)
 
 + (SCNMaterial *)SCNMaterial:(id)json;
++ (void)addMaterialProperties:(SCNMaterial *)material properties:(id)json;
 + (SCNVector3)SCNVector3:(id)json;
 + (SCNVector4)SCNVector4:(id)json;
 + (SCNNode *)SCNNode:(id)json;
