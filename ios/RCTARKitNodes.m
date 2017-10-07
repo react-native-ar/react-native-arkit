@@ -7,6 +7,7 @@
 //
 
 #import "RCTARKitNodes.h"
+#import "RCTConvert+ARKit.h"
 
 @implementation SCNNode (ReferenceFrame)
 @dynamic referenceFrame;
@@ -198,6 +199,14 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     }
 }
 
+- (void)updateNode:(NSString *)key properties:(NSDictionary *) properties {
+     SCNNode *node = [self.nodes objectForKey:key];
+    // only basic properties like position and rotation can currently be updated this way
+    if(node) {
+        [RCTConvert setNodeProperties:node properties:properties];
+    }
+    
+}
 
 
 #pragma mark - RCTARKitSessionDelegate

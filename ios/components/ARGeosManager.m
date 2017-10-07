@@ -62,4 +62,8 @@ RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
     [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
 
+RCT_EXPORT_METHOD(update:(NSString *)identifier properties:(NSDictionary *) properties) {
+    [[RCTARKitNodes sharedInstance] updateNode:identifier properties:properties];
+}
+
 @end

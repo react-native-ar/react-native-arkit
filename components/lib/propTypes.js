@@ -10,6 +10,9 @@ export const position = PropTypes.shape({
   y: PropTypes.number,
   z: PropTypes.number,
 });
+export const transition = PropTypes.shape({
+  duration: PropTypes.number,
+});
 export const eulerAngles = PropTypes.shape({
   x: PropTypes.number,
   y: PropTypes.number,

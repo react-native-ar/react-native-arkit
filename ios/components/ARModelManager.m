@@ -31,7 +31,7 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSS
     if(materialJson) {
         for(id idx in node.geometry.materials) {
             SCNMaterial* material = (SCNMaterial* )idx;
-            [RCTConvert addMaterialProperties:material properties:materialJson];
+            [RCTConvert setMaterialProperties:material properties:materialJson];
         }
     }
     
@@ -41,7 +41,7 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSS
         if(materialJson) {
             for(id idx in node.geometry.materials) {
                 SCNMaterial* material = (SCNMaterial* )idx;
-                [RCTConvert addMaterialProperties:material properties:materialJson];
+                [RCTConvert setMaterialProperties:material properties:materialJson];
             }
         }
     
