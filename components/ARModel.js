@@ -9,8 +9,8 @@ import PropTypes from 'prop-types';
 
 import { NativeModules } from 'react-native';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
-import { shaders } from './lib/propTypes';
 
 const ARModel = createArComponent(
   {
@@ -24,9 +24,7 @@ const ARModel = createArComponent(
       scale: PropTypes.number,
       alpha: PropTypes.number,
     }),
-    material: PropTypes.shape({
-      shaders,
-    }),
+    material,
   },
 );
 

@@ -9,6 +9,7 @@
 #import "ARModelManager.h"
 #import "RCTARKitNodes.h"
 #import "RCTARKitIO.h"
+#import "RCTConvert+ARKit.h"
 
 @implementation ARModelManager
 
@@ -21,36 +22,26 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSS
     NSString *path = [NSString stringWithFormat:@"%@", model[@"file"]];
     SCNNode *modelNode = [[RCTARKitIO sharedInstance] loadModel:path nodeName:model[@"node"] withAnimation:YES];
     modelNode.scale = SCNVector3Make(scale, scale, scale);
-    NSDictionary *shaderModifiers;
-    SCNBlendMode blendMode = SCNBlendModeAlpha;
-    
+    NSDictionary* materialJson;
     if(property[@"material"] ) {
-        NSDictionary* material = property[@"material"];
-        if(material[@"shaders"] ) {
-            shaderModifiers = material[@"shaders"];
-        }
-        if (material[@"blendMode"]) {
-            blendMode = (SCNBlendMode) [material[@"blendMode"] integerValue];
-        }
-       
+        materialJson = property[@"material"];
     }
     
-    if(shaderModifiers) {
+    
+    if(materialJson) {
         for(id idx in node.geometry.materials) {
             SCNMaterial* material = (SCNMaterial* )idx;
-            material.shaderModifiers = shaderModifiers;
-            material.blendMode = blendMode;
+            [RCTConvert addMaterialProperties:material properties:materialJson];
         }
     }
     
     for(id idx in modelNode.childNodes) {
         // iterate over all childnodes and apply shaders
         SCNNode* node = (SCNNode *)idx;
-        if(shaderModifiers) {
+        if(materialJson) {
             for(id idx in node.geometry.materials) {
                 SCNMaterial* material = (SCNMaterial* )idx;
-                material.shaderModifiers = shaderModifiers;
-                material.blendMode = blendMode;
+                [RCTConvert addMaterialProperties:material properties:materialJson];
             }
         }
     

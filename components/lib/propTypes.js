@@ -37,10 +37,17 @@ export const shaders = PropTypes.shape({
   [ARKitManager.ShaderModifierEntryPoint.Fragment]: PropTypes.string,
 });
 
+export const lightingModel = PropTypes.oneOf(
+  values(ARKitManager.LightingModel),
+);
+
+export const blendMode = PropTypes.oneOf(values(ARKitManager.BlendMode));
+
 export const material = PropTypes.shape({
   color: PropTypes.string,
   metalness: PropTypes.number,
   roughness: PropTypes.number,
-  lightingModel: PropTypes.oneOf(values(ARKitManager.LightingModel)),
+  blendMode,
+  lightingModel,
   shaders,
 });
