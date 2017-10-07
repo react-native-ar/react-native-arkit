@@ -12,14 +12,21 @@
 
 + (SCNMaterial *)SCNMaterial:(id)json {
     SCNMaterial *material = [SCNMaterial new];
-  
+    [self addMaterialProperties:material properties:json];
+    
+    return material;
+}
+
+
++ (void)addMaterialProperties:(SCNMaterial *)material properties:(id)json {
+    if (json[@"blendMode"]) {
+        material.blendMode = (SCNBlendMode) [json[@"blendMode"] integerValue];
+    }
     if (json[@"lightingModel"]) {
         material.lightingModelName = json[@"lightingModel"];
     }
     if (json[@"diffuse"]) {
         material.diffuse.contents = [self UIColor:json[@"diffuse"]];
-    } else {
-        material.diffuse.contents = [UIColor blackColor];
     }
     
     if (json[@"metalness"]) {
@@ -31,8 +38,11 @@
         material.roughness.contents = @([json[@"roughness"] floatValue]);
     }
     
-    return material;
+    if(json[@"shaders"] ) {
+        material.shaderModifiers = json[@"shaders"];
+    }
 }
+
 
 + (SCNVector3)SCNVector3:(id)json {
     CGFloat x = [json[@"x"] floatValue];

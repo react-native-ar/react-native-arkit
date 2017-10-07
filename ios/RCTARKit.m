@@ -91,7 +91,7 @@
 }
 
 - (void)clearScene {
-     [self.nodeManager clear];
+    [self.nodeManager clear];
 }
 
 
@@ -142,8 +142,31 @@
 }
 
 - (NSDictionary *)readCameraPosition {
+    // deprecated
     SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
-    return @{ @"x": @(cameraPosition.x), @"y": @(cameraPosition.y), @"z": @(cameraPosition.z) };
+    return vectorToJson(cameraPosition);
+}
+
+static NSDictionary * vectorToJson(const SCNVector3 v) {
+    return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z) };
+}
+static NSDictionary * vector4ToJson(const SCNVector4 v) {
+    return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z), @"w": @(v.w) };
+}
+
+
+- (NSDictionary *)readCamera {
+    SCNVector3 position = self.nodeManager.cameraOrigin.position;
+    SCNVector4 rotation = self.nodeManager.cameraOrigin.rotation;
+    SCNVector4 orientation = self.nodeManager.cameraOrigin.orientation;
+    SCNVector3 eulerAngles = self.nodeManager.cameraOrigin.eulerAngles;
+    return @{
+             @"position":vectorToJson(position),
+             @"rotation":vector4ToJson(rotation),
+             @"orientation":vector4ToJson(orientation),
+             @"eulerAngles":vectorToJson(eulerAngles),
+             
+             };
 }
 
 - (SCNVector3)projectPoint:(SCNVector3)point {

@@ -20,6 +20,7 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
+    
     return @{
              @"ARHitTestResultType": @{
                      @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
@@ -33,6 +34,21 @@ RCT_EXPORT_MODULE()
                      @"Lambert": SCNLightingModelLambert,
                      @"Phong": SCNLightingModelPhong,
                      @"PhysicallyBased": SCNLightingModelPhysicallyBased
+                     },
+             @"ShaderModifierEntryPoint": @{
+                     @"Geometry": SCNShaderModifierEntryPointGeometry,
+                     @"Surface": SCNShaderModifierEntryPointSurface,
+                     @"LighingModel": SCNShaderModifierEntryPointLightingModel,
+                     @"Fragment": SCNShaderModifierEntryPointFragment
+                     },
+             @"BlendMode": @{
+                     @"Alpha": [@(SCNBlendModeAlpha) stringValue],
+                     @"Add": [@(SCNBlendModeAdd) stringValue],
+                     @"Subtract": [@(SCNBlendModeSubtract) stringValue],
+                     @"Multiply": [@(SCNBlendModeMultiply) stringValue],
+                     @"Screen": [@(SCNBlendModeScreen) stringValue],
+                     @"Replace": [@(SCNBlendModeReplace) stringValue],
+                     
                      }
              };
 }
@@ -85,6 +101,10 @@ RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRej
 
 RCT_EXPORT_METHOD(snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] snapshotCamera:resolve reject:reject];
+}
+
+RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[ARKit sharedInstance] readCamera]);
 }
 
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

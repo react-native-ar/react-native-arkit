@@ -20,41 +20,40 @@ const nodeProps = (id, props) => ({
 });
 
 export default (mountConfig, propTypes = {}) => {
-  let mountMethod;
-  if (typeof mountConfig === 'string') {
-    mountMethod = (id, props) => {
-      ARGeosManager[mountConfig](
-        {
+  const getShapeAndMaterialProps = props =>
+    typeof mountConfig === 'string'
+      ? {
           shape: props.shape,
           material: processColorInMaterial(props.material),
-        },
-        nodeProps(id, props),
-        props.frame,
-      );
-    };
-  } else {
-    mountMethod = (id, props) => {
-      mountConfig.mount(
-        {
+        }
+      : {
           ...pick(props, mountConfig.pick),
           material: processColorInMaterial(props.material),
-        },
-        nodeProps(id, props),
-        props.frame,
-      );
-    };
-  }
+        };
+
+  const mountFunc =
+    typeof mountConfig === 'string'
+      ? ARGeosManager[mountConfig]
+      : mountConfig.mount;
+
+  const mount = (id, props) => {
+    mountFunc(
+      getShapeAndMaterialProps(props),
+      nodeProps(id, props),
+      props.frame,
+    );
+  };
 
   const ARComponent = class extends Component {
     identifier = null;
 
     componentWillMount() {
       this.identifier = this.props.id || generateId();
-      mountMethod(this.identifier, this.props);
+      mount(this.identifier, this.props);
     }
 
     componentWillUpdate(props) {
-      mountMethod(this.identifier, props);
+      mount(this.identifier, props);
     }
 
     componentWillUnmount() {
