@@ -9,44 +9,30 @@ const ARKitManager = NativeModules.ARKitManager;
 
 const ARSprite = withAnimationFrame(
   class extends Component {
-    identifier = null;
-    mounted = false;
-
     constructor(props) {
       super(props);
-
       this.state = {
-        visible: false,
+        zIndex: new Animated.Value(),
         pos2D: new Animated.ValueXY(), // inits to zero
       };
     }
     onAnimationFrame() {
-      ARKitManager.projectPoint(
-        this.props.position,
-      ).then(({ x, y, z, distance }) => {
-        if (this.mounted) {
-          const visible = z < 1;
-          if (visible !== this.state.visible) this.setState({ visible });
-
-          this.state.pos2D.setValue({ x, y });
-        }
-      });
-    }
-    componentDidMount() {
-      this.mounted = true;
-    }
-
-    componentWillUnmount() {
-      this.mounted = false;
+      ARKitManager.projectPoint(this.props.position).then(
+        Animated.event([
+          {
+            x: this.state.pos2D.x,
+            y: this.state.pos2D.y,
+            z: this.state.zIndex,
+          },
+        ]),
+      );
     }
 
     render() {
-      if (!this.state.visible) {
-        return null;
-      }
       return (
         <Animated.View
           style={{
+            position: 'absolute',
             transform: this.state.pos2D.getTranslateTransform(),
             ...this.props.style,
           }}
