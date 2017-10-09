@@ -13,6 +13,10 @@ const ARPlane = createArComponent('addPlane', {
   shape: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number,
+    cornerRadius: PropTypes.number,
+    cornerSegmentCount: PropTypes.number,
+    widthSegmentCount: PropTypes.number,
+    heightSegmentCount: PropTypes.number,
   }),
 });
 
