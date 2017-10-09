@@ -149,7 +149,18 @@
     CGFloat width = [shape[@"width"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
-    
+    if(shape[@"cornerRadius"]) {
+        geometry.cornerRadius = [shape[@"cornerRadius"] floatValue];
+    }
+    if(shape[@"cornerSegmentCount"]) {
+        geometry.cornerSegmentCount = [shape[@"cornerSegmentCount"] intValue];
+    }
+    if(shape[@"widthSegmentCount"]) {
+        geometry.widthSegmentCount = [shape[@"widthSegmentCount"] intValue];
+    }
+    if(shape[@"heightSegmentCount"]) {
+        geometry.heightSegmentCount = [shape[@"heightSegmentCount"] intValue];
+    }
     SCNMaterial *material = [self SCNMaterial:json[@"material"]];
     material.doubleSided = YES;
     geometry.materials = @[material];
