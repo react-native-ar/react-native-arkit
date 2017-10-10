@@ -22,6 +22,7 @@
 @end
 
 
+void dispatch_once_on_main_thread(dispatch_once_t *predicate,
                                   dispatch_block_t block) {
     if ([NSThread isMainThread]) {
         dispatch_once(predicate, block);
