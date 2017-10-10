@@ -10,9 +10,11 @@ export const position = PropTypes.shape({
   y: PropTypes.number,
   z: PropTypes.number,
 });
+
 export const transition = PropTypes.shape({
   duration: PropTypes.number,
 });
+
 export const eulerAngles = PropTypes.shape({
   x: PropTypes.number,
   y: PropTypes.number,
@@ -44,7 +46,9 @@ export const lightingModel = PropTypes.oneOf(
   values(ARKitManager.LightingModel),
 );
 
-export const blendMode = PropTypes.oneOf(values(ARKitManager.BlendMode));
+export const blendMode = PropTypes.oneOf(
+  values(ARKitManager.BlendMode),
+);
 
 export const material = PropTypes.shape({
   color: PropTypes.string,
@@ -54,3 +58,8 @@ export const material = PropTypes.shape({
   lightingModel,
   shaders,
 });
+
+export const light = PropTypes.shape({
+   color: PropTypes.string,
+});
+
