@@ -16,7 +16,9 @@ import {
   position,
   rotation,
   transition,
+  light,
 } from './propTypes';
+
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
@@ -47,11 +49,13 @@ export default (mountConfig, propTypes = {}) => {
           material: processColorInMaterial(props.material),
         };
 
+      
   const mountFunc =
     typeof mountConfig === 'string'
       ? ARGeosManager[mountConfig]
       : mountConfig.mount;
 
+  
   const mount = (id, props) => {
     mountFunc(
       getShapeAndMaterialProps(props),
@@ -81,7 +85,6 @@ export default (mountConfig, propTypes = {}) => {
       if (some(KEYS_THAT_NEED_REMOUNT, k => changedKeys.includes(k))) {
         // remount
         // TODO: we should be able to update
-
         mount(this.identifier, props);
       } else {
         // always include transition
