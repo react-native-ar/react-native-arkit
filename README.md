@@ -13,6 +13,10 @@ React Native binding for iOS ARKit.
 
 **Note**: ARKit is only supported by devices with A9 or later processors (iPhone 6s/7/SE/8/X, iPad 2017/Pro) on iOS 11. You also need Xcode 9 to build the project.
 
+There is a Slack group that anyone can join for help / support / general questions.
+
+[**Join Slack**](https://join.slack.com/t/react-native-ar/shared_invite/enQtMjUzMzg3MjM0MTQ5LWU3Nzg2YjI4MGRjMTM1ZDBlNmIwYTE4YmM0M2U0NmY2YjBiYzQ4YzlkODExMTA0NDkwMzFhYWY4ZDE2M2Q4NGY)
+
 ## Getting started
 
 `$ npm install react-native-arkit --save`

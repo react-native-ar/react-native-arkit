@@ -20,6 +20,7 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
+    
     return @{
              @"ARHitTestResultType": @{
                      @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
@@ -33,6 +34,21 @@ RCT_EXPORT_MODULE()
                      @"Lambert": SCNLightingModelLambert,
                      @"Phong": SCNLightingModelPhong,
                      @"PhysicallyBased": SCNLightingModelPhysicallyBased
+                     },
+             @"ShaderModifierEntryPoint": @{
+                     @"Geometry": SCNShaderModifierEntryPointGeometry,
+                     @"Surface": SCNShaderModifierEntryPointSurface,
+                     @"LighingModel": SCNShaderModifierEntryPointLightingModel,
+                     @"Fragment": SCNShaderModifierEntryPointFragment
+                     },
+             @"BlendMode": @{
+                     @"Alpha": [@(SCNBlendModeAlpha) stringValue],
+                     @"Add": [@(SCNBlendModeAdd) stringValue],
+                     @"Subtract": [@(SCNBlendModeSubtract) stringValue],
+                     @"Multiply": [@(SCNBlendModeMultiply) stringValue],
+                     @"Screen": [@(SCNBlendModeScreen) stringValue],
+                     @"Replace": [@(SCNBlendModeReplace) stringValue],
+                     
                      }
              };
 }
@@ -58,11 +74,11 @@ RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejec
 
 
 RCT_EXPORT_METHOD(
-  hitTestPlanes: (NSDictionary *)pointDict
-  types:(NSUInteger)types
-  resolve:(RCTPromiseResolveBlock)resolve
-  reject:(RCTPromiseRejectBlock)reject
-  ) {
+                  hitTestPlanes: (NSDictionary *)pointDict
+                  types:(NSUInteger)types
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject
+                  ) {
     CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
     [[ARKit sharedInstance] hitTestPlane:point types:types resolve:resolve reject:reject];
 }
@@ -87,8 +103,28 @@ RCT_EXPORT_METHOD(snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTProm
     [[ARKit sharedInstance] snapshotCamera:resolve reject:reject];
 }
 
+RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[ARKit sharedInstance] readCamera]);
+}
+
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] readCameraPosition]);
+}
+
+RCT_EXPORT_METHOD(projectPoint:
+                  (NSDictionary *)pointDict
+                  resolve:(RCTPromiseResolveBlock)resolve
+                  reject:(RCTPromiseRejectBlock)reject) {
+    SCNVector3 point = SCNVector3Make(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue], [pointDict[@"z"] floatValue] );
+    SCNVector3 pointProjected = [[ARKit sharedInstance] projectPoint:point];
+    float distance = [[ARKit sharedInstance] getCameraDistanceToPoint:point];
+    resolve(@{
+              @"x": @(pointProjected.x),
+              @"y": @(pointProjected.y),
+              @"z": @(pointProjected.z),
+              @"distance": @(distance)
+              });
+    
 }
 
 RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

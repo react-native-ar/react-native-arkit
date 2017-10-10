@@ -12,27 +12,12 @@
 
 + (SCNMaterial *)SCNMaterial:(id)json {
     SCNMaterial *material = [SCNMaterial new];
-  
-    if (json[@"lightingModel"]) {
-        material.lightingModelName = json[@"lightingModel"];
-    }
-    if (json[@"diffuse"]) {
-        material.diffuse.contents = [self UIColor:json[@"diffuse"]];
-    } else {
-        material.diffuse.contents = [UIColor blackColor];
-    }
-    
-    if (json[@"metalness"]) {
-        material.lightingModelName = SCNLightingModelPhysicallyBased;
-        material.metalness.contents = @([json[@"metalness"] floatValue]);
-    }
-    if (json[@"roughness"]) {
-        material.lightingModelName = SCNLightingModelPhysicallyBased;
-        material.roughness.contents = @([json[@"roughness"] floatValue]);
-    }
+    [self setMaterialProperties:material properties:json];
     
     return material;
 }
+
+
 
 + (SCNVector3)SCNVector3:(id)json {
     CGFloat x = [json[@"x"] floatValue];
@@ -49,20 +34,12 @@
     return SCNVector4Make(x, y, z, w);
 }
 
+
 + (SCNNode *)SCNNode:(id)json {
     SCNNode *node = [SCNNode new];
         
     node.name = [NSString stringWithFormat:@"%@", json[@"id"]];
-    node.position = [self SCNVector3:json[@"position"]];
-    node.eulerAngles = [self SCNVector3:json[@"eulerAngles"]];
-    
-    if (json[@"orientation"]) {
-        node.orientation = [self SCNVector4:json[@"orientation"]];
-    }
-    
-    if (json[@"rotation"]) {
-        node.rotation = [self SCNVector4:json[@"rotation"]];
-    }
+    [self setNodeProperties:node properties:json];
 
     return node;
 }
@@ -172,11 +149,21 @@
     CGFloat width = [shape[@"width"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     SCNPlane *geometry = [SCNPlane planeWithWidth:width height:height];
-    
+    if(shape[@"cornerRadius"]) {
+        geometry.cornerRadius = [shape[@"cornerRadius"] floatValue];
+    }
+    if(shape[@"cornerSegmentCount"]) {
+        geometry.cornerSegmentCount = [shape[@"cornerSegmentCount"] intValue];
+    }
+    if(shape[@"widthSegmentCount"]) {
+        geometry.widthSegmentCount = [shape[@"widthSegmentCount"] intValue];
+    }
+    if(shape[@"heightSegmentCount"]) {
+        geometry.heightSegmentCount = [shape[@"heightSegmentCount"] intValue];
+    }
     SCNMaterial *material = [self SCNMaterial:json[@"material"]];
     material.doubleSided = YES;
     geometry.materials = @[material];
-    
     return geometry;
 }
 
@@ -235,5 +222,62 @@
     
     return textNode;
 }
+
+
++ (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json {
+    if (json[@"blendMode"]) {
+        material.blendMode = (SCNBlendMode) [json[@"blendMode"] integerValue];
+    }
+    if (json[@"lightingModel"]) {
+        material.lightingModelName = json[@"lightingModel"];
+    }
+    if (json[@"diffuse"]) {
+        material.diffuse.contents = [self UIColor:json[@"diffuse"]];
+    }
+    
+    if (json[@"metalness"]) {
+        material.lightingModelName = SCNLightingModelPhysicallyBased;
+        material.metalness.contents = @([json[@"metalness"] floatValue]);
+    }
+    if (json[@"roughness"]) {
+        material.lightingModelName = SCNLightingModelPhysicallyBased;
+        material.roughness.contents = @([json[@"roughness"] floatValue]);
+    }
+    
+    if(json[@"shaders"] ) {
+        material.shaderModifiers = json[@"shaders"];
+    }
+}
+
++ (void)setNodeProperties:(SCNNode *)node properties:(id)json {
+    if(json[@"transition"]) {
+        NSDictionary * transition =json[@"transition"];
+        if(transition[@"duration"]) {
+            [SCNTransaction setAnimationDuration:[transition[@"duration"] floatValue]];
+        } else {
+            [SCNTransaction setAnimationDuration:0.0];
+        }
+      
+    } else {
+        [SCNTransaction setAnimationDuration:0.0];
+    }
+    if (json[@"position"]) {
+        node.position = [self SCNVector3:json[@"position"]];
+    }
+    
+    if (json[@"eulerAngles"]) {
+        node.eulerAngles = [self SCNVector3:json[@"eulerAngles"]];
+    }
+    
+    if (json[@"orientation"]) {
+        node.orientation = [self SCNVector4:json[@"orientation"]];
+    }
+    
+    if (json[@"rotation"]) {
+        node.rotation = [self SCNVector4:json[@"rotation"]];
+    }
+}
+
+
 
 @end

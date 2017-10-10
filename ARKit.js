@@ -21,6 +21,7 @@ import generateId from './components/lib/generateId';
 const ARKitManager = NativeModules.ARKitManager;
 
 const TRACKING_STATES = ['NOT_AVAILABLE', 'LIMITED', 'NORMAL'];
+
 const TRACKING_REASONS = [
   'NONE',
   'INITIALIZING',
@@ -35,9 +36,7 @@ class ARKit extends Component {
     reason: 0,
     floor: null,
   };
-  componentWillMount() {
-    ARKitManager.clearScene();
-  }
+
   componentDidMount() {
     ARKitManager.resume();
   }
