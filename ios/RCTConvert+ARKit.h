@@ -34,6 +34,8 @@
 
 + (SCNTextNode *)SCNTextNode:(id)json;
 
++ (SCNLight *)SCNLight:(id)json;
+
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json;
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json;
 
