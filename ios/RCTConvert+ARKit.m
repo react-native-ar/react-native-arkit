@@ -58,6 +58,18 @@
     return geometry;
 }
 
+
++ (SCNLight *)SCNLight:(id)json {
+    NSDictionary *lightSpec = json[@"light"];
+    CGFloat width = [lightSpec[@"white"] floatValue];
+    CGFloat height = [lightSpec[@"alpha"] floatValue];
+    // creates the node
+    SCNNode *lightNode = [SCNNode node];
+    // adding light 
+    
+    return lightNode;
+}
+
 + (SCNSphere *)SCNSphere:(id)json {
     NSDictionary* shape = json[@"shape"];
     CGFloat radius = [shape[@"radius"] floatValue];
