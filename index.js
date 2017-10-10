@@ -21,6 +21,8 @@ import ARText from './components/ARText';
 import ARModel from './components/ARModel';
 import ARSprite from './components/ARSprite';
 import ARGroup from './components/ARGroup';
+import ARLight from './components/ARLight';
+
 
 ARKit.Box = ARBox;
 ARKit.Sphere = ARSphere;
@@ -35,6 +37,8 @@ ARKit.Text = ARText;
 ARKit.Model = ARModel;
 ARKit.Sprite = ARSprite;
 ARKit.Group = ARGroup;
+ARKit.Light = ARLight;
+
 
 module.exports = {
   ARKit,
@@ -51,4 +55,5 @@ module.exports = {
   ARText,
   ARModel,
   ARGroup,
+  ARLight,
 };
