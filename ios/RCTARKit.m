@@ -22,13 +22,27 @@
 @end
 
 
+void dispatch_once_on_main_thread(dispatch_once_t *predicate,
+                                  dispatch_block_t block) {
+    if ([NSThread isMainThread]) {
+        dispatch_once(predicate, block);
+    } else {
+        if (DISPATCH_EXPECT(*predicate == 0L, NO)) {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                dispatch_once(predicate, block);
+            });
+        }
+    }
+}
+
+
 @implementation RCTARKit
 
 + (instancetype)sharedInstance {
     static RCTARKit *instance = nil;
     static dispatch_once_t onceToken;
 
-    dispatch_once(&onceToken, ^{
+    dispatch_once_on_main_thread(&onceToken, ^{
         if (instance == nil) {
             ARSCNView *arView = [[ARSCNView alloc] init];
             instance = [[self alloc] initWithARView:arView];
@@ -67,7 +81,6 @@
         // start ARKit
         [self addSubview:arView];
         [self resume];
-
     }
     return self;
 }
