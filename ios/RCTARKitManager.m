@@ -9,6 +9,8 @@
 #import "RCTARKitManager.h"
 #import "RCTARKit.h"
 #import "RCTARKitNodes.h"
+#import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 
 @implementation RCTARKitManager
 
@@ -95,12 +97,90 @@ RCT_EXPORT_METHOD(
 
 
 
-RCT_EXPORT_METHOD(snapshot:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[ARKit sharedInstance] snapshot:resolve reject:reject];
+- (NSString *)getAssetUrl:(NSString *)localID {
+    // thx https://stackoverflow.com/a/34788748/1463534
+    // heck, objective c is such a mess
+    NSString *  assetID = [localID stringByReplacingOccurrencesOfString:@"/.*" withString:@"" options:NSRegularExpressionSearch range:NSMakeRange(0, [localID length])];
+    NSString * ext = @"JPG";
+    NSString * assetURLStr = [NSString stringWithFormat:@"assets-library://asset/asset.%@?id=%@&ext=%@", ext, assetID, ext];
+    return assetURLStr;
 }
 
-RCT_EXPORT_METHOD(snapshotCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[ARKit sharedInstance] snapshotCamera:resolve reject:reject];
+- (void)storeImageInPhotoAlbum:(UIImage *)image reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
+    __block PHObjectPlaceholder *placeholder;
+    
+    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+        PHAssetChangeRequest* createAssetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+        placeholder = [createAssetRequest placeholderForCreatedAsset];
+        
+    } completionHandler:^(BOOL success, NSError *error) {
+        if (success)
+        {
+           
+            NSString * localID = placeholder.localIdentifier;
+            
+            NSString * assetURLStr = [self getAssetUrl:localID];
+          
+            resolve(@{@"url": assetURLStr});
+        }
+        else
+        {
+            reject(@"snapshot_error", @"Could not store snapshot", error);
+        }
+    }];
+}
+
+
+- (void)storeImageInDirectory:(UIImage *)image directory:(NSString *)directory reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
+    
+    NSData *pngData = UIImagePNGRepresentation(image);
+    
+    NSString *prefixString = @"capture";
+    
+    NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
+    NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@.png", prefixString, guid];
+    
+    NSString *filePath = [directory stringByAppendingPathComponent:uniqueFileName]; //Add the file name
+    bool success = [pngData writeToFile:filePath atomically:YES]; //Write the file
+    if(success) {
+        resolve(@{@"url": filePath});
+    } else {
+        // TODO use NSError from writeToFile
+        reject(@"snapshot_error",  [NSString stringWithFormat:@"could not save to '%@'", filePath], nil);
+    }
+    
+}
+
+- (void)storeImage:(UIImage *)image options:(NSDictionary *)options reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
+    NSString * target = @"cameraRoll";
+    if(options[@"target"]) {
+        target = options[@"target"];
+    }
+    if([target isEqualToString:@"cameraRoll"]) {
+        // camera roll / photo album
+        [self storeImageInPhotoAlbum:image reject:reject resolve:resolve];
+    } else if([target isEqualToString:@"cache"]) {
+        NSString * cacheDir =  [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+        [self storeImageInDirectory:image directory:cacheDir reject:reject resolve:resolve];
+    } else if([target isEqualToString:@"documents"]) {
+        NSString * documentsDir =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        [self storeImageInDirectory:image directory:documentsDir reject:reject resolve:resolve];
+    } else {
+        [self storeImageInDirectory:image directory:target reject:reject resolve:resolve];
+    }
+}
+
+RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    UIImage *image = [[ARKit sharedInstance] getSnaphshot];
+    [self storeImage:image options:options reject:reject resolve:resolve];
+}
+
+
+
+
+RCT_EXPORT_METHOD(snapshotCamera:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    UIImage *image = [[ARKit sharedInstance] getSnaphshotCamera];
+    [self storeImage:image options:options reject:reject resolve:resolve];
 }
 
 RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

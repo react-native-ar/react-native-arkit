@@ -231,40 +231,32 @@ static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
 }
 
 
-- (void)snapshot:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
+- (UIImage *)getSnaphshot {
     UIImage *image = [self.arView snapshot];
-    // FIXME: I belive this is not the right way. I don't know how to pass 'resolve' to the completionSelector
-    // If you know how to do it, please PR. Thanks!
-    _resolve = resolve;
-    UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
+    return image;
 }
 
 
-- (void)snapshotCamera:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
 
-    // thx https://stackoverflow.com/a/8094038/1463534
+
+
+- (UIImage *)getSnaphsotCamera {
     CVPixelBufferRef pixelBuffer = self.arView.session.currentFrame.capturedImage;
     CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
-
+    
     CIContext *temporaryContext = [CIContext contextWithOptions:nil];
     CGImageRef videoImage = [temporaryContext
                              createCGImage:ciImage
                              fromRect:CGRectMake(0, 0,
                                                  CVPixelBufferGetWidth(pixelBuffer),
                                                  CVPixelBufferGetHeight(pixelBuffer))];
-
+    
     UIImage *image = [UIImage imageWithCGImage:videoImage scale: 1.0 orientation:UIImageOrientationRight];
     CGImageRelease(videoImage);
-    _resolve = resolve;
-    UIImageWriteToSavedPhotosAlbum(image, self, @selector(thisImage:savedInAlbumWithError:ctx:), NULL);
+    return image;
 }
 
-- (void)thisImage:(UIImage *)image savedInAlbumWithError:(NSError *)error ctx:(void *)ctx {
-    if (error) {
-    } else {
-        _resolve(@{ @"success": @(YES) });
-    }
-}
+
 
 
 
