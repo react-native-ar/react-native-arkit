@@ -131,17 +131,23 @@ RCT_EXPORT_METHOD(
 }
 
 
-- (void)storeImageInDirectory:(UIImage *)image directory:(NSString *)directory reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
-    
-    NSData *pngData = UIImagePNGRepresentation(image);
-    
+- (void)storeImageInDirectory:(UIImage *)image directory:(NSString *)directory format:(NSString *)format reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
+    NSData *data;
+    if([format isEqualToString:@"jpg"]) {
+        data = UIImageJPEGRepresentation(image, 0.9);
+    } else if([format isEqualToString:@"png"]) {
+        data = UIImagePNGRepresentation(image);
+    } else {
+        reject(@"snapshot_error", [NSString stringWithFormat:@"unkown file format '%@'", format], nil);
+        return;
+    }
     NSString *prefixString = @"capture";
     
     NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
-    NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@.png", prefixString, guid];
+    NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@.%@", prefixString, guid, format];
     
     NSString *filePath = [directory stringByAppendingPathComponent:uniqueFileName]; //Add the file name
-    bool success = [pngData writeToFile:filePath atomically:YES]; //Write the file
+    bool success = [data writeToFile:filePath atomically:YES]; //Write the file
     if(success) {
         resolve(@{@"url": filePath});
     } else {
@@ -153,20 +159,28 @@ RCT_EXPORT_METHOD(
 
 - (void)storeImage:(UIImage *)image options:(NSDictionary *)options reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
     NSString * target = @"cameraRoll";
+    NSString * format = @"png";
+    
     if(options[@"target"]) {
         target = options[@"target"];
+    }
+    if(options[@"format"]) {
+        format = options[@"format"];
     }
     if([target isEqualToString:@"cameraRoll"]) {
         // camera roll / photo album
         [self storeImageInPhotoAlbum:image reject:reject resolve:resolve];
-    } else if([target isEqualToString:@"cache"]) {
-        NSString * cacheDir =  [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
-        [self storeImageInDirectory:image directory:cacheDir reject:reject resolve:resolve];
-    } else if([target isEqualToString:@"documents"]) {
-        NSString * documentsDir =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        [self storeImageInDirectory:image directory:documentsDir reject:reject resolve:resolve];
     } else {
-        [self storeImageInDirectory:image directory:target reject:reject resolve:resolve];
+        NSString * dir;
+        if([target isEqualToString:@"cache"]) {
+            dir =  [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+        } else if([target isEqualToString:@"documents"]) {
+            dir =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+
+        } else {
+            dir = target;
+        }
+        [self storeImageInDirectory:image directory:dir format:format reject:reject resolve:resolve];
     }
 }
 

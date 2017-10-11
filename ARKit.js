@@ -156,8 +156,10 @@ Object.keys(ARKitManager).forEach(key => {
   ARKit[key] = ARKitManager[key];
 });
 
-const addDefaultsToSnapShotFunc = funcName => ({ target = 'cameraRoll' }) =>
-  ARKitManager[funcName]({ target });
+const addDefaultsToSnapShotFunc = funcName => ({
+  target = 'cameraRoll',
+  format = 'png',
+}) => ARKitManager[funcName]({ target, format });
 
 ARKit.snapshot = addDefaultsToSnapShotFunc('snapshot');
 ARKit.snapshotCamera = addDefaultsToSnapShotFunc('snapshotCamera');
