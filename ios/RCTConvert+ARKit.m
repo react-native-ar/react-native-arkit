@@ -188,6 +188,7 @@
     
     SCNMaterial *material = [self SCNMaterial:json[@"material"]];
     material.doubleSided = YES;
+
     geometry.materials = @[material];
     return geometry;
 }
