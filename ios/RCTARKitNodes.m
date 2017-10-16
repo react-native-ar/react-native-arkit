@@ -218,6 +218,7 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     self.cameraOrigin.eulerAngles = SCNVector3Make(0, atan2f(z.x, z.z), 0);
     self.frontOfCamera.position = SCNVector3Make(pos.x - focDistance * z.x, pos.y  - focDistance * z.y, pos.z - focDistance * z.z);
     self.frontOfCamera.eulerAngles = self.cameraOrigin.eulerAngles;
+    
 }
 
 @end
