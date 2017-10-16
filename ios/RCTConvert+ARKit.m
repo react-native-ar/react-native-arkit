@@ -7,6 +7,7 @@
 //
 
 #import "RCTConvert+ARKit.h"
+#import "SVGBezierPath.h"
 
 @implementation RCTConvert (ARKit)
 
@@ -167,6 +168,30 @@
     return geometry;
 }
 
++ (SCNShape * )SCNShape:(id)json {
+    NSDictionary* shape = json[@"shape"];
+    NSString * pathString =shape[@"path"];
+
+    NSArray * paths = [SVGBezierPath pathsFromSVGString:pathString];
+    SVGBezierPath * fullPath;
+    for(SVGBezierPath *path in paths) {
+        if(!fullPath) {
+            fullPath = path;
+        } else {
+            [fullPath appendPath:path];
+        }
+    }
+   
+    fullPath.flatness = 0.01;
+    CGFloat extrusion = [shape[@"extrusion"] floatValue];
+    SCNShape *geometry = [SCNShape shapeWithPath:fullPath extrusionDepth:extrusion];
+    
+    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
+    material.doubleSided = YES;
+    geometry.materials = @[material];
+    return geometry;
+}
+
 
 + (SCNTextNode *)SCNTextNode:(id)json {
     // init SCNText
@@ -263,6 +288,12 @@
     }
     if (json[@"position"]) {
         node.position = [self SCNVector3:json[@"position"]];
+    }
+    
+    if (json[@"scale"]) {
+        CGFloat scale = [json[@"scale"] floatValue];
+        node.scale = SCNVector3Make(scale, scale, scale);
+  
     }
     
     if (json[@"eulerAngles"]) {

@@ -16,7 +16,6 @@
 		10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 10ED47A61F38BC00004DF043 /* DeviceMotion.m */; };
 		10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */; };
 		10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */; };
-		B14F3AF71F94F8BA00B73842 /* PocketSVG.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B14F3AF41F94F8B100B73842 /* PocketSVG.framework */; };
 		B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTARKit.m */; };
 /* End PBXBuildFile section */
 
@@ -43,6 +42,15 @@
 			buildActionMask = 2147483647;
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B14C363A1F9504D70047CB67 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -80,7 +88,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B14F3AF71F94F8BA00B73842 /* PocketSVG.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,6 +174,7 @@
 				58B511D71A9E6C8500147676 /* Sources */,
 				58B511D81A9E6C8500147676 /* Frameworks */,
 				58B511D91A9E6C8500147676 /* CopyFiles */,
+				B14C363A1F9504D70047CB67 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -338,6 +346,7 @@
 					"$(SRCROOT)/../../react-native-arcl/ios",
 					../../../ios/Pods/Headers/Public/,
 					../../../ios/Pods/Headers/Public/React,
+					"$(SRCROOT)/../../_PocketSVG/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -359,6 +368,7 @@
 					"$(SRCROOT)/../../react-native-arcl/ios",
 					../../../ios/Pods/Headers/Public/,
 					../../../ios/Pods/Headers/Public/React,
+					"$(SRCROOT)/../../_PocketSVG/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";

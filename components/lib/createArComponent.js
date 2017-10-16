@@ -15,7 +15,7 @@ import {
   orientation,
   position,
   rotation,
-  transition,
+  transition
 } from './propTypes';
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
@@ -25,14 +25,15 @@ const NODE_PROPS = [
   'position',
   'eulerAngles',
   'rotation',
+  'scale',
   'orientation',
-  'transition',
+  'transition'
 ];
 const KEYS_THAT_NEED_REMOUNT = ['material', 'shape', 'model'];
 
 const nodeProps = (id, props) => ({
   id,
-  ...pick(props, NODE_PROPS),
+  ...pick(props, NODE_PROPS)
 });
 
 export default (mountConfig, propTypes = {}) => {
@@ -40,11 +41,11 @@ export default (mountConfig, propTypes = {}) => {
     typeof mountConfig === 'string'
       ? {
           shape: props.shape,
-          material: processColorInMaterial(props.material),
+          material: processColorInMaterial(props.material)
         }
       : {
           ...pick(props, mountConfig.pick),
-          material: processColorInMaterial(props.material),
+          material: processColorInMaterial(props.material)
         };
 
   const mountFunc =
@@ -56,7 +57,7 @@ export default (mountConfig, propTypes = {}) => {
     mountFunc(
       getShapeAndMaterialProps(props),
       nodeProps(id, props),
-      props.frame,
+      props.frame
     );
   };
 
@@ -71,7 +72,7 @@ export default (mountConfig, propTypes = {}) => {
     componentWillUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
-        key => !isDeepEqual(props[key], this.props[key]),
+        key => !isDeepEqual(props[key], this.props[key])
       );
 
       if (isEmpty(changedKeys)) {
@@ -87,7 +88,7 @@ export default (mountConfig, propTypes = {}) => {
         // always include transition
         ARGeosManager.update(
           this.identifier,
-          pick(props, ['transition', ...changedKeys]),
+          pick(props, ['transition', ...changedKeys])
         );
       }
     }
@@ -108,7 +109,7 @@ export default (mountConfig, propTypes = {}) => {
     rotation,
     orientation,
     material,
-    ...propTypes,
+    ...propTypes
   };
 
   return ARComponent;

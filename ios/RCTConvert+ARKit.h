@@ -31,6 +31,7 @@
 + (SCNTorus *)SCNTorus:(id)json;
 + (SCNCapsule *)SCNCapsule:(id)json;
 + (SCNPlane *)SCNPlane:(id)json;
++ (SCNShape * )SCNShape:(id)json;
 
 + (SCNTextNode *)SCNTextNode:(id)json;
 
