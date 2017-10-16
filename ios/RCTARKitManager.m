@@ -116,12 +116,12 @@ RCT_EXPORT_METHOD(
     } completionHandler:^(BOOL success, NSError *error) {
         if (success)
         {
-           
+            
             NSString * localID = placeholder.localIdentifier;
             
             NSString * assetURLStr = [self getAssetUrl:localID];
-          
-            resolve(@{@"url": assetURLStr});
+            
+            resolve(@{@"url": assetURLStr, @"width":@(image.size.width), @"height": @(image.size.height)});
         }
         else
         {
@@ -149,7 +149,7 @@ RCT_EXPORT_METHOD(
     NSString *filePath = [directory stringByAppendingPathComponent:uniqueFileName]; //Add the file name
     bool success = [data writeToFile:filePath atomically:YES]; //Write the file
     if(success) {
-        resolve(@{@"url": filePath});
+        resolve(@{@"url": filePath, @"width":@(image.size.width), @"height": @(image.size.height)});
     } else {
         // TODO use NSError from writeToFile
         reject(@"snapshot_error",  [NSString stringWithFormat:@"could not save to '%@'", filePath], nil);
@@ -176,7 +176,7 @@ RCT_EXPORT_METHOD(
             dir =  [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
         } else if([target isEqualToString:@"documents"]) {
             dir =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-
+            
         } else {
             dir = target;
         }
@@ -232,3 +232,4 @@ RCT_EXPORT_METHOD(clearScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseR
 }
 
 @end
+
