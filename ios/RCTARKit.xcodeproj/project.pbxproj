@@ -338,6 +338,7 @@
 					"$(SRCROOT)/../../react-native-arcl/ios",
 					../../../ios/Pods/Headers/Public/,
 					../../../ios/Pods/Headers/Public/React,
+					"$(SRCROOT)/../../_PocketSVG/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -359,6 +360,7 @@
 					"$(SRCROOT)/../../react-native-arcl/ios",
 					../../../ios/Pods/Headers/Public/,
 					../../../ios/Pods/Headers/Public/React,
+					"$(SRCROOT)/../../_PocketSVG/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";

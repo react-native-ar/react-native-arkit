@@ -7,6 +7,7 @@
 //
 
 #import "RCTConvert+ARKit.h"
+#import "SVGBezierPath.h"
 
 @implementation RCTConvert (ARKit)
 
@@ -163,6 +164,21 @@
     }
     SCNMaterial *material = [self SCNMaterial:json[@"material"]];
     material.doubleSided = YES;
+    geometry.materials = @[material];
+    return geometry;
+}
+
++ (SCNShape * )SCNShape:(id)json {
+    NSDictionary* shape = json[@"shape"];
+    NSString * pathString =shape[@"path"];
+
+    id path = [SVGBezierPath pathsFromSVGString:pathString];
+
+    CGFloat extrusion = [shape[@"extrusion"] floatValue];
+    SCNPlane *geometry = [SCNShape shapeWithPath:path extrusionDepth:extrusion];
+  
+    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
+   
     geometry.materials = @[material];
     return geometry;
 }
