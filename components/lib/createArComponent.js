@@ -1,4 +1,6 @@
 import { Component } from 'react';
+
+import withAnimationFrame from 'react-animation-frame';
 import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
@@ -8,6 +10,8 @@ import pick from 'lodash/pick';
 import some from 'lodash/some';
 
 import { NativeModules } from 'react-native';
+
+const ARKitManager = NativeModules.ARKitManager;
 
 import {
   eulerAngles,
@@ -63,9 +67,10 @@ export default (mountConfig, propTypes = {}) => {
 
   const ARComponent = class extends Component {
     identifier = null;
-
+    animationIsRunning = true;
     componentDidMount() {
       this.identifier = this.props.id || generateId();
+
       mount(this.identifier, this.props);
     }
 
@@ -101,6 +106,7 @@ export default (mountConfig, propTypes = {}) => {
       return null;
     }
   };
+
   ARComponent.propTypes = {
     frame: PropTypes.string,
     position,

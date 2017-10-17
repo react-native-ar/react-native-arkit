@@ -271,8 +271,10 @@ static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         ARHitTestResult *result = (ARHitTestResult *) obj;
+     
         [resultsMapped addObject:(@{
                                     @"distance": @(result.distance),
+                                    @"anchorId": result.anchor.identifier.UUIDString,
                                     @"point": @{
                                             @"x": @(result.worldTransform.columns[3].x),
                                             @"y": @(result.worldTransform.columns[3].y),

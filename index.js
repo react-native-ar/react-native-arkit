@@ -5,23 +5,23 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
-import ARKit from './ARKit';
-import DeviceMotion from './DeviceMotion';
-
 import ARBox from './components/ARBox';
-import ARSphere from './components/ARSphere';
-import ARCylinder from './components/ARCylinder';
-import ARCone from './components/ARCone';
-import ARPyramid from './components/ARPyramid';
-import ARTube from './components/ARTube';
-import ARTorus from './components/ARTorus';
 import ARCapsule from './components/ARCapsule';
-import ARPlane from './components/ARPlane';
-import ARText from './components/ARText';
-import ARModel from './components/ARModel';
-import ARSprite from './components/ARSprite';
+import ARCone from './components/ARCone';
+import ARCylinder from './components/ARCylinder';
 import ARGroup from './components/ARGroup';
+import ARKit from './ARKit';
+import ARModel from './components/ARModel';
+import ARPlane from './components/ARPlane';
+import ARPyramid from './components/ARPyramid';
 import ARShape from './components/ARShape';
+import ARSphere from './components/ARSphere';
+import ARSprite from './components/ARSprite';
+import ARText from './components/ARText';
+import ARTorus from './components/ARTorus';
+import ARTube from './components/ARTube';
+import DeviceMotion from './DeviceMotion';
+import withProjectedPosition from './hocs/withProjectedPosition';
 
 ARKit.Box = ARBox;
 ARKit.Sphere = ARSphere;
@@ -52,5 +52,6 @@ module.exports = {
   ARPlane,
   ARText,
   ARModel,
-  ARGroup
+  ARGroup,
+  withProjectedPosition,
 };
