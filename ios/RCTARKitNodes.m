@@ -31,7 +31,7 @@ CGFloat focDistance = 0.2f;
 + (instancetype)sharedInstance {
     static RCTARKitNodes *instance = nil;
     static dispatch_once_t onceToken;
-    
+
     dispatch_once(&onceToken, ^{
         if (instance == nil) {
             instance = [[self alloc] init];
@@ -45,15 +45,15 @@ CGFloat focDistance = 0.2f;
         // local reference frame origin
         self.localOrigin = [[SCNNode alloc] init];
         self.localOrigin.name = @"localOrigin";
-        
+
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-        
+
         // front-of-camera frame origin
         self.frontOfCamera = [[SCNNode alloc] init];
         self.frontOfCamera.name = @"frontOfCamera";
-        
+
         // init cahces
         self.nodes = [NSMutableDictionary new];
     }
@@ -65,7 +65,7 @@ CGFloat focDistance = 0.2f;
     _arView = arView;
     self.rootNode = arView.scene.rootNode;
     self.rootNode.name = @"root";
-    
+
     [self.rootNode addChildNode:self.localOrigin];
     [self.rootNode addChildNode:self.cameraOrigin];
     [self.rootNode addChildNode:self.frontOfCamera];
@@ -93,21 +93,21 @@ CGFloat focDistance = 0.2f;
 - (void)clear {
     // clear scene
     NSArray *keys = [self.nodes allKeys];
-    
+
     for (id key in keys) {
         id node = [self.nodes objectForKey:key];
         if (node) {
             [node removeFromParentNode];
         }
-        
+
     }
     [self.nodes removeAllObjects];
 }
 
 - (void)addNodeToLocalFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameLocal;
-    
-    NSLog(@"[RCTARKitNodes] Add model %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+
+    //NSLog(@"[RCTARKitNodes] Add node %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
 
     [self registerNode:node forKey:node.name];
     [self.localOrigin addChildNode:node];
@@ -115,16 +115,16 @@ CGFloat focDistance = 0.2f;
 
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
-    
-    NSLog(@"[RCTARKitNodes] Add model %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+
+    //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     [self registerNode:node forKey:node.name];
     [self.cameraOrigin addChildNode:node];
 }
 
 - (void)addNodeToFrontOfCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
-    
-    NSLog(@"[RCTARKitNodes] Add model %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+
+    //NSLog(@"[RCTARKitNodes] Add node %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     [self registerNode:node forKey:node.name];
     [self.frontOfCamera addChildNode:node];
 }
@@ -153,14 +153,14 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 
 
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
-    
+
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         SCNHitTestResult *result = (SCNHitTestResult *) obj;
         SCNNode * node = result.node;
         NSArray *keys = [self.nodes allKeysForObject: node];
         if([keys count]) {
-            
+
             NSString * firstKey = [keys firstObject];
             [resultsMapped addObject:(@{
                                         @"id": firstKey
@@ -171,10 +171,10 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
             NSLog(@"all nodes %@", self.nodes);
             NSLog(@"origin %@", self.localOrigin);
         }
-        
+
     }];
     return resultsMapped;
-    
+
 }
 
 
@@ -205,7 +205,7 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
     }
-    
+
 }
 
 
@@ -218,7 +218,7 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     self.cameraOrigin.eulerAngles = SCNVector3Make(0, atan2f(z.x, z.z), 0);
     self.frontOfCamera.position = SCNVector3Make(pos.x - focDistance * z.x, pos.y  - focDistance * z.y, pos.z - focDistance * z.z);
     self.frontOfCamera.eulerAngles = self.cameraOrigin.eulerAngles;
-    
+
 }
 
 @end
