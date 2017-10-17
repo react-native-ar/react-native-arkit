@@ -1,6 +1,4 @@
 import { Component } from 'react';
-
-import withAnimationFrame from 'react-animation-frame';
 import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
@@ -11,15 +9,13 @@ import some from 'lodash/some';
 
 import { NativeModules } from 'react-native';
 
-const ARKitManager = NativeModules.ARKitManager;
-
 import {
   eulerAngles,
   material,
   orientation,
   position,
   rotation,
-  transition
+  transition,
 } from './propTypes';
 import { processColorInMaterial } from './parseColor';
 import generateId from './generateId';
@@ -31,13 +27,13 @@ const NODE_PROPS = [
   'rotation',
   'scale',
   'orientation',
-  'transition'
+  'transition',
 ];
 const KEYS_THAT_NEED_REMOUNT = ['material', 'shape', 'model'];
 
 const nodeProps = (id, props) => ({
   id,
-  ...pick(props, NODE_PROPS)
+  ...pick(props, NODE_PROPS),
 });
 
 export default (mountConfig, propTypes = {}) => {
@@ -45,11 +41,11 @@ export default (mountConfig, propTypes = {}) => {
     typeof mountConfig === 'string'
       ? {
           shape: props.shape,
-          material: processColorInMaterial(props.material)
+          material: processColorInMaterial(props.material),
         }
       : {
           ...pick(props, mountConfig.pick),
-          material: processColorInMaterial(props.material)
+          material: processColorInMaterial(props.material),
         };
 
   const mountFunc =
@@ -61,7 +57,7 @@ export default (mountConfig, propTypes = {}) => {
     mountFunc(
       getShapeAndMaterialProps(props),
       nodeProps(id, props),
-      props.frame
+      props.frame,
     );
   };
 
@@ -77,7 +73,7 @@ export default (mountConfig, propTypes = {}) => {
     componentWillUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
-        key => !isDeepEqual(props[key], this.props[key])
+        key => !isDeepEqual(props[key], this.props[key]),
       );
 
       if (isEmpty(changedKeys)) {
@@ -93,7 +89,7 @@ export default (mountConfig, propTypes = {}) => {
         // always include transition
         ARGeosManager.update(
           this.identifier,
-          pick(props, ['transition', ...changedKeys])
+          pick(props, ['transition', ...changedKeys]),
         );
       }
     }
@@ -115,7 +111,7 @@ export default (mountConfig, propTypes = {}) => {
     rotation,
     orientation,
     material,
-    ...propTypes
+    ...propTypes,
   };
 
   return ARComponent;
