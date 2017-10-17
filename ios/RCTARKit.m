@@ -435,26 +435,28 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         }
     }
     if (self.onFeaturesDetected) {
+        NSMutableArray * featurePoints = [NSMutableArray array];
+        for (int i = 0; i < frame.rawFeaturePoints.count; i++) {
+            vector_float3 point = frame.rawFeaturePoints.points[i];
+            
+            NSString * pointId = [NSString stringWithFormat:@"featurepoint_%lld",frame.rawFeaturePoints.identifiers[i]];
+            
+            [featurePoints addObject:@{
+                                       @"x": @(point[0]),
+                                       @"y": @(point[1]),
+                                       @"z": @(point[2]),
+                                       @"id":pointId,
+                                       }];
+            
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            NSMutableArray * featurePoints = [NSMutableArray array];
-            for (int i = 0; i < frame.rawFeaturePoints.count; i++) {
-                vector_float3 point = frame.rawFeaturePoints.points[i];
-                
-                NSString * pointId = [NSString stringWithFormat:@"featurepoint_%lld",frame.rawFeaturePoints.identifiers[i]];
-                
-                [featurePoints addObject:@{
-                                           @"x": @(point[0]),
-                                           @"y": @(point[1]),
-                                           @"z": @(point[2]),
-                                           @"id":pointId,
-                                           }];
-                
-            }
             
-            self.onFeaturesDetected(@{
-                                      @"featurePoints":featurePoints
-                                      });
+            if(self.onFeaturesDetected) {
+                self.onFeaturesDetected(@{
+                                          @"featurePoints":featurePoints
+                                          });
+            }
         });
     }
 }
