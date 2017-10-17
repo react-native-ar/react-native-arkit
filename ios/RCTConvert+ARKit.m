@@ -188,8 +188,6 @@
     
     if (shape[@"pathFlatness"]) {
         path.flatness = [shape[@"pathFlatness"] floatValue];
-    } else {
-        path.flatness = 0.01;
     }
     CGFloat extrusion = [shape[@"extrusion"] floatValue];
     SCNShape *geometry = [SCNShape shapeWithPath:path extrusionDepth:extrusion];
@@ -206,7 +204,19 @@
         if(shape[@"chamferProfilePathFlatness"]) {
             path.flatness = [shape[@"chamferProfilePathFlatness"] floatValue];
         }
-        geometry.chamferProfile = path;
+        // normalize path
+        CGRect boundingBox = path.bounds;
+        if(path.bounds.size.width !=0 && path.bounds.size.height != 0) {
+            CGFloat scaleX = 1/boundingBox.size.width;
+            CGFloat scaleY =  scaleY = 1/boundingBox.size.height;
+            
+            CGAffineTransform transform = CGAffineTransformMakeScale(scaleX, scaleY);
+            [path applyTransform:transform];
+            geometry.chamferProfile = path;
+        } else {
+            NSLog(@"Invalid chamferProfilePathFlatness");
+        }
+       
     }
     
     
