@@ -20,8 +20,7 @@
     "lodash": "^4.17.4",
     "prop-types": "^15.5.7",
     "react": "16.0.0-alpha.12",
-    "react-animation-frame":
-      "https://github.com/panter/react-animation-frame#7946ab8f7ffedc7f0bffc33ba37c38732df60e16"
+    "@panter/react-animation-frame": "^0.3.6"
   },
   "devDependencies": {
     "babel-eslint": "^7.2.3",
