@@ -23,15 +23,18 @@ There is a Slack group that anyone can join for help / support / general questio
 
 `$ react-native link react-native-arkit`
 
+! Currently automatic installation does not work as PocketSVG is missing. Follow the manual installation
+
 ### Manual installation
 
 
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-arkit` and add `RCTARKit.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libRCTARKit.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
+2. Go to `node_modules` ➜ add `react-native-arkit/RCTARKit.xcodeproj` and `_PocketSVG/_PocketSVG.xcodeproj`
+3. In XCode, in the project navigator, select your project. Add `libRCTARKit.a` `and PocketSVG.framework` to your project's `Build Phases` ➜ `Link Binary With Libraries`
+4. In Tab `General` ➜ `Embedded Binaries` ➜ `+` ➜ Add `PocketSVG.framework ios`
+5. Run your project (`Cmd+R`)<
 
 
 ## Usage
