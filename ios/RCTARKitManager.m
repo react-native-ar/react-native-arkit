@@ -51,6 +51,12 @@ RCT_EXPORT_MODULE()
                      @"Screen": [@(SCNBlendModeScreen) stringValue],
                      @"Replace": [@(SCNBlendModeReplace) stringValue],
                      
+                     },
+             @"ChamferMode": @{
+                     @"Both": [@(SCNChamferModeBoth) stringValue],
+                     @"Back": [@(SCNChamferModeBack) stringValue],
+                     @"Front": [@(SCNChamferModeBack) stringValue],
+                     
                      }
              };
 }

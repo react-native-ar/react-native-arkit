@@ -38,10 +38,10 @@
 
 + (SCNNode *)SCNNode:(id)json {
     SCNNode *node = [SCNNode new];
-        
+    
     node.name = [NSString stringWithFormat:@"%@", json[@"id"]];
     [self setNodeProperties:node properties:json];
-
+    
     return node;
 }
 
@@ -52,10 +52,9 @@
     CGFloat length = [shape[@"length"] floatValue];
     CGFloat chamfer = [shape[@"chamfer"] floatValue];
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
-    
     SCNMaterial *material = [self SCNMaterial:json[@"material"]];
     geometry.materials = @[material, material, material, material, material, material];
-
+    
     return geometry;
 }
 
@@ -66,7 +65,7 @@
     
     SCNMaterial *material = [self SCNMaterial:json[@"material"]];
     geometry.materials = @[material];
-
+    
     return geometry;
 }
 
@@ -132,7 +131,7 @@
     
     return geometry;
 }
-    
+
 + (SCNCapsule *)SCNCapsule:(id)json {
     NSDictionary* shape = json[@"shape"];
     CGFloat capR = [shape[@"capR"] floatValue];
@@ -168,10 +167,7 @@
     return geometry;
 }
 
-+ (SCNShape * )SCNShape:(id)json {
-    NSDictionary* shape = json[@"shape"];
-    NSString * pathString =shape[@"path"];
-
++ (SVGBezierPath *)svgStringToBezier:(NSString *)pathString {
     NSArray * paths = [SVGBezierPath pathsFromSVGString:pathString];
     SVGBezierPath * fullPath;
     for(SVGBezierPath *path in paths) {
@@ -181,14 +177,43 @@
             [fullPath appendPath:path];
         }
     }
-   
-    fullPath.flatness = 0.01;
+    return fullPath;
+}
+
++ (SCNShape * )SCNShape:(id)json {
+    NSDictionary* shape = json[@"shape"];
+    NSString * pathString = shape[@"pathSvg"];
+    
+    SVGBezierPath * path = [self svgStringToBezier:pathString];
+    
+    if (shape[@"pathFlatness"]) {
+        path.flatness = [shape[@"pathFlatness"] floatValue];
+    } else {
+        path.flatness = 0.01;
+    }
     CGFloat extrusion = [shape[@"extrusion"] floatValue];
-    SCNShape *geometry = [SCNShape shapeWithPath:fullPath extrusionDepth:extrusion];
+    SCNShape *geometry = [SCNShape shapeWithPath:path extrusionDepth:extrusion];
+    if (shape[@"chamferMode"]) {
+        geometry.chamferMode = (SCNChamferMode) [shape[@"chamferMode"] integerValue];
+    }
+    if (shape[@"chamferRadius"]) {
+        geometry.chamferRadius = [shape[@"chamferRadius"] floatValue];
+    }
+    
+    if (shape[@"chamferProfilePathSvg"]) {
+        
+        SVGBezierPath * path = [self svgStringToBezier:shape[@"chamferProfilePathSvg"]];
+        if(shape[@"chamferProfilePathFlatness"]) {
+            path.flatness = [shape[@"chamferProfilePathFlatness"] floatValue];
+        }
+        geometry.chamferProfile = path;
+    }
+    
+    
     
     SCNMaterial *material = [self SCNMaterial:json[@"material"]];
     material.doubleSided = YES;
-
+    
     geometry.materials = @[material];
     return geometry;
 }
@@ -209,7 +234,7 @@
     CGFloat fontSize = [font[@"size"] floatValue];
     CGFloat size = fontSize / 12;
     SCNText *scnText = [SCNText textWithString:text extrusionDepth:depth / size];
-
+    
     scnText.flatness = 0.1;
     
     // font
@@ -241,7 +266,7 @@
     SCNVector3 min = SCNVector3Zero;
     SCNVector3 max = SCNVector3Zero;
     [textNode getBoundingBoxMin:&min max:&max];
-
+    
     textNode.position = SCNVector3Make(-(min.x + max.x) / 2 * size,
                                        -(min.y + max.y) / 2 * size,
                                        -(min.z + max.z) / 2 * size);
@@ -283,7 +308,7 @@
         } else {
             [SCNTransaction setAnimationDuration:0.0];
         }
-      
+        
     } else {
         [SCNTransaction setAnimationDuration:0.0];
     }
@@ -294,7 +319,7 @@
     if (json[@"scale"]) {
         CGFloat scale = [json[@"scale"] floatValue];
         node.scale = SCNVector3Make(scale, scale, scale);
-  
+        
     }
     
     if (json[@"eulerAngles"]) {
