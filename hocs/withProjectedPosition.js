@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import withAnimationFrame from 'react-animation-frame';
+import withAnimationFrame from '@panter/react-animation-frame';
 
 import { NativeModules } from 'react-native';
 
