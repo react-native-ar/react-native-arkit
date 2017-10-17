@@ -2,6 +2,12 @@
 # yarn lockfile v1
 
 
+"@panter/react-animation-frame@^0.3.6":
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/@panter/react-animation-frame/-/react-animation-frame-0.3.7.tgz#31a0d7683e4a8d2e1b29ff512cad36513bd43d00"
+  dependencies:
+    react "15.4.2"
+
 "_PocketSVG@https://github.com/pocketsvg/PocketSVG":
   version "0.0.0"
   resolved "https://github.com/pocketsvg/PocketSVG#e6d84ddeb11f99c4420e354ebb9fd34db2cf507a"
@@ -1420,12 +1426,6 @@ prop-types@^15.5.10, prop-types@^15.5.6, prop-types@^15.5.7:
 pseudomap@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
-
-react-animation-frame@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/react-animation-frame/-/react-animation-frame-0.3.5.tgz#6afe77e8c8b8774c56183598ba40c6de4dce4588"
-  dependencies:
-    react "15.4.2"
 
 react-deep-force-update@^1.0.0:
   version "1.1.1"
