@@ -451,10 +451,11 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                                            }];
                 
             }
-            
+            if(self.onFeaturesDetected) {
             self.onFeaturesDetected(@{
                                       @"featurePoints":featurePoints
                                       });
+            }
         });
     }
 }
