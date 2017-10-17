@@ -9,7 +9,7 @@ export default ({ throttleMs = 0 } = {}) => C =>
   withAnimationFrame(
     class extends Component {
       projectionRunning = true;
-      isMounted = false;
+      _isMounted = false;
       constructor(props) {
         super(props);
         this.state = {
@@ -18,7 +18,7 @@ export default ({ throttleMs = 0 } = {}) => C =>
         this.handleAnimation(props);
       }
       componentWillMount() {
-        this.isMounted = true;
+        this._isMounted = true;
       }
       handleAnimation({ projectionEnabled }) {
         if (projectionEnabled) {
@@ -36,7 +36,7 @@ export default ({ throttleMs = 0 } = {}) => C =>
       }
 
       componentWillUnmount() {
-        this.isMounted = false;
+        this._isMounted = false;
       }
 
       onAnimationFrame() {
@@ -48,7 +48,7 @@ export default ({ throttleMs = 0 } = {}) => C =>
         ).then(({ results }) => {
           //  console.log(results);
           const result = results.find(r => r.anchorId === planeId);
-          if (result && this.isMounted) {
+          if (result && this._isMounted) {
             this.setState({
               positionProjected: result.point,
             });
