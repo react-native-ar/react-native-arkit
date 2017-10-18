@@ -1,11 +1,16 @@
 import React, { Component } from 'react';
 import withAnimationFrame from '@panter/react-animation-frame';
-
+import { round } from 'lodash';
 import { NativeModules } from 'react-native';
 
 const ARKitManager = NativeModules.ARKitManager;
 
-export default ({ throttleMs = 0 } = {}) => C =>
+const roundPoint = ({ x, y, z }, precision) => ({
+  x: round(x, precision),
+  y: round(y, precision),
+  z: round(z, precision),
+});
+export default ({ throttleMs = 33 } = {}) => C =>
   withAnimationFrame(
     class extends Component {
       projectionRunning = true;
@@ -50,7 +55,7 @@ export default ({ throttleMs = 0 } = {}) => C =>
           const result = results.find(r => r.anchorId === planeId);
           if (result && this._isMounted) {
             this.setState({
-              positionProjected: result.point,
+              positionProjected: roundPoint(result.point, 3),
             });
           }
         });
