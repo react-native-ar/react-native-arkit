@@ -45,20 +45,27 @@ export default ({ throttleMs = 33 } = {}) => C =>
       }
 
       onAnimationFrame() {
-        const { x, y, planeId } = this.props.projectPosition || {};
+        const { x, y, planeId, plane } = this.props.projectPosition || {};
 
-        ARKitManager.hitTestPlanes(
-          { x, y },
-          ARKitManager.ARHitTestResultType.ExistingPlane,
-        ).then(({ results }) => {
-          //  console.log(results);
-          const result = results.find(r => r.anchorId === planeId);
-          if (result && this._isMounted) {
-            this.setState({
-              positionProjected: roundPoint(result.point, 3),
-            });
-          }
-        });
+        if (planeId) {
+          ARKitManager.hitTestPlanes(
+            { x, y },
+            ARKitManager.ARHitTestResultType.ExistingPlane,
+          ).then(({ results }) => {
+            //  console.log(results);
+            const result = results.find(r => r.anchorId === planeId);
+            if (result && this._isMounted) {
+              this.setState({
+                positionProjected: roundPoint(result.point, 3),
+              });
+            }
+          });
+        } else if (plane) {
+          const { normal = { x: 0, y: 1, z: 0 }, position } = plane;
+          ARKitManager.getCamera().then(camera => {
+            console.log(camera);
+          });
+        }
       }
 
       render() {
