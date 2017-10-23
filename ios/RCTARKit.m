@@ -173,12 +173,13 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     SCNVector4 rotation = self.nodeManager.cameraOrigin.rotation;
     SCNVector4 orientation = self.nodeManager.cameraOrigin.orientation;
     SCNVector3 eulerAngles = self.nodeManager.cameraOrigin.eulerAngles;
+    SCNVector3 direction = self.nodeManager.cameraDirection;
     return @{
              @"position":vectorToJson(position),
              @"rotation":vector4ToJson(rotation),
              @"orientation":vector4ToJson(orientation),
              @"eulerAngles":vectorToJson(eulerAngles),
-             
+             @"direction":vectorToJson(direction),
              };
 }
 
