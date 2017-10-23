@@ -77,6 +77,11 @@ RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejec
     resolve(@{});
 }
 
+RCT_EXPORT_METHOD(reset:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance] reset];
+    resolve(@{});
+}
+
 
 RCT_EXPORT_METHOD(
                   hitTestPlanes: (NSDictionary *)pointDict
