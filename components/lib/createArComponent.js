@@ -63,7 +63,6 @@ export default (mountConfig, propTypes = {}) => {
 
   const ARComponent = class extends Component {
     identifier = null;
-    animationIsRunning = true;
     componentDidMount() {
       this.identifier = this.props.id || generateId();
 
