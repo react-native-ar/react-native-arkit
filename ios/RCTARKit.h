@@ -53,6 +53,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 #pragma mark - Public Method
 - (void)pause;
 - (void)resume;
+- (void)reset;
 - (void)hitTestPlane:(CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)hitTestSceneObjects:(CGPoint)tapPoint resolve:(RCTARKitResolve) resolve reject:(RCTARKitReject)reject;
 - (SCNVector3)projectPoint:(SCNVector3)point;

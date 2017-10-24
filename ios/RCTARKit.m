@@ -98,6 +98,12 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     [self.session runWithConfiguration:self.configuration];
 }
 
+- (void)reset {
+    if (ARWorldTrackingConfiguration.isSupported) {
+        [self.session runWithConfiguration:self.configuration options:ARSessionRunOptionRemoveExistingAnchors | ARSessionRunOptionResetTracking];
+    }
+}
+
 - (void)focusScene {
     [self.nodeManager.localOrigin setPosition:self.nodeManager.cameraOrigin.position];
     [self.nodeManager.localOrigin setRotation:self.nodeManager.cameraOrigin.rotation];
