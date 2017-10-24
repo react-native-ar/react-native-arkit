@@ -31,7 +31,7 @@ CGFloat focDistance = 0.2f;
 + (instancetype)sharedInstance {
     static RCTARKitNodes *instance = nil;
     static dispatch_once_t onceToken;
-
+    
     dispatch_once(&onceToken, ^{
         if (instance == nil) {
             instance = [[self alloc] init];
@@ -45,15 +45,15 @@ CGFloat focDistance = 0.2f;
         // local reference frame origin
         self.localOrigin = [[SCNNode alloc] init];
         self.localOrigin.name = @"localOrigin";
-
+        
         // camera reference frame origin
         self.cameraOrigin = [[SCNNode alloc] init];
         self.cameraOrigin.name = @"cameraOrigin";
-
+        
         // front-of-camera frame origin
         self.frontOfCamera = [[SCNNode alloc] init];
         self.frontOfCamera.name = @"frontOfCamera";
-
+        
         // init cahces
         self.nodes = [NSMutableDictionary new];
     }
@@ -65,7 +65,7 @@ CGFloat focDistance = 0.2f;
     _arView = arView;
     self.rootNode = arView.scene.rootNode;
     self.rootNode.name = @"root";
-
+    
     [self.rootNode addChildNode:self.localOrigin];
     [self.rootNode addChildNode:self.cameraOrigin];
     [self.rootNode addChildNode:self.frontOfCamera];
@@ -93,29 +93,29 @@ CGFloat focDistance = 0.2f;
 - (void)clear {
     // clear scene
     NSArray *keys = [self.nodes allKeys];
-
+    
     for (id key in keys) {
         id node = [self.nodes objectForKey:key];
         if (node) {
             [node removeFromParentNode];
         }
-
+        
     }
     [self.nodes removeAllObjects];
 }
 
 - (void)addNodeToLocalFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameLocal;
-
+    
     //NSLog(@"[RCTARKitNodes] Add node %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-
+    
     [self registerNode:node forKey:node.name];
     [self.localOrigin addChildNode:node];
 }
 
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
-
+    
     //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     [self registerNode:node forKey:node.name];
     [self.cameraOrigin addChildNode:node];
@@ -123,7 +123,7 @@ CGFloat focDistance = 0.2f;
 
 - (void)addNodeToFrontOfCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
-
+    
     //NSLog(@"[RCTARKitNodes] Add node %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     [self registerNode:node forKey:node.name];
     [self.frontOfCamera addChildNode:node];
@@ -132,12 +132,13 @@ CGFloat focDistance = 0.2f;
 
 - (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
     NSDictionary *options = @{
-                              SCNHitTestRootNodeKey: self.localOrigin
+                              SCNHitTestRootNodeKey: self.localOrigin,
+                              SCNHitTestSortResultsKey: @(YES)
                               };
     NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint  options:options];
     NSMutableArray * resultsMapped = [self mapHitResultsWithSceneResults:results];
-    NSDictionary *planeHitResult = getSceneObjectHitResult(resultsMapped, tapPoint);
-    return planeHitResult;
+    NSDictionary *result = getSceneObjectHitResult(resultsMapped, tapPoint);
+    return result;
 }
 
 
@@ -153,17 +154,34 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 
 
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
-
+    
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         SCNHitTestResult *result = (SCNHitTestResult *) obj;
         SCNNode * node = result.node;
         NSArray *keys = [self.nodes allKeysForObject: node];
         if([keys count]) {
-
+            
             NSString * firstKey = [keys firstObject];
+            
+            SCNVector3 point = result.worldCoordinates;
+            SCNVector3 normal = result.worldNormal;
+            
+            float distance = [self getCameraDistanceToPoint:point];
             [resultsMapped addObject:(@{
-                                        @"id": firstKey
+                                        @"id": firstKey,
+                                        @"distance": @(distance),
+                                        @"point": @{
+                                                @"x": @(point.x),
+                                                @"y": @(point.y),
+                                                @"z": @(point.z)
+                                                },
+                                        @"normal": @{
+                                                @"x": @(normal.x),
+                                                @"y": @(normal.y),
+                                                @"z": @(normal.z)
+                                                
+                                                }
                                         } )];
         } else {
             NSLog(@"no key found for node %@", node);
@@ -171,10 +189,10 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
             NSLog(@"all nodes %@", self.nodes);
             NSLog(@"origin %@", self.localOrigin);
         }
-
+        
     }];
     return resultsMapped;
-
+    
 }
 
 
@@ -200,12 +218,12 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 - (void)updateNode:(NSString *)key properties:(NSDictionary *) properties {
-     SCNNode *node = [self.nodes objectForKey:key];
+    SCNNode *node = [self.nodes objectForKey:key];
     // only basic properties like position and rotation can currently be updated this way
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
     }
-
+    
 }
 
 
@@ -218,7 +236,24 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     self.cameraOrigin.eulerAngles = SCNVector3Make(0, atan2f(z.x, z.z), 0);
     self.frontOfCamera.position = SCNVector3Make(pos.x - focDistance * z.x, pos.y  - focDistance * z.y, pos.z - focDistance * z.z);
     self.frontOfCamera.eulerAngles = self.cameraOrigin.eulerAngles;
+    
+}
 
+- (float)getCameraDistanceToPoint:(SCNVector3)point {
+    return getDistance(self.cameraOrigin.position, point);
+}
+
+static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
+    float xd = pointB.x - pointA.x;
+    float yd = pointB.y - pointA.y;
+    float zd = pointB.z - pointA.z;
+    float distance = sqrt(xd * xd + yd * yd + zd * zd);
+    
+    if (distance < 0){
+        return (distance * -1);
+    } else {
+        return (distance);
+    }
 }
 
 @end

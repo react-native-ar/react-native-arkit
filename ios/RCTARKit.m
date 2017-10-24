@@ -187,21 +187,10 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     return [self.arView projectPoint:point];
 }
 
-static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
-    float xd = pointB.x - pointA.x;
-    float yd = pointB.y - pointA.y;
-    float zd = pointB.z - pointA.z;
-    float distance = sqrt(xd * xd + yd * yd + zd * zd);
-    
-    if (distance < 0){
-        return (distance * -1);
-    } else {
-        return (distance);
-    }
-}
+
 
 - (float)getCameraDistanceToPoint:(SCNVector3)point {
-    return getDistance(self.nodeManager.cameraOrigin.position, point);
+    return [self.nodeManager getCameraDistanceToPoint:point];
     
 }
 

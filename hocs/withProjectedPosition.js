@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import withAnimationFrame from '@panter/react-animation-frame';
-import { round } from 'lodash';
+import { round, isFunction } from 'lodash';
 import { NativeModules } from 'react-native';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -10,6 +10,7 @@ const roundPoint = ({ x, y, z }, precision) => ({
   y: round(y, precision),
   z: round(z, precision),
 });
+
 export default ({ throttleMs = 33 } = {}) => C =>
   withAnimationFrame(
     class extends Component {
@@ -19,6 +20,7 @@ export default ({ throttleMs = 33 } = {}) => C =>
         super(props);
         this.state = {
           positionProjected: props.position || { x: 0, y: 0, z: 0 },
+          projectionResult: null,
         };
         this.handleAnimation(props);
       }
@@ -44,26 +46,41 @@ export default ({ throttleMs = 33 } = {}) => C =>
         this._isMounted = false;
       }
 
-      onAnimationFrame() {
-        const { x, y, planeId, plane } = this.props.projectPosition || {};
+      onResult(result) {
+        if (this._isMounted) {
+          if (result) {
+            this.setState({
+              positionProjected: roundPoint(result.point, 3),
+              projectionResult: result,
+            });
+          } else {
+            this.setState({
+              positionProjected: null,
+              projectionResult: null,
+            });
+          }
+        }
+      }
 
-        if (planeId) {
+      onAnimationFrame() {
+        const { x, y, plane, node } = this.props.projectPosition || {};
+
+        if (plane) {
           ARKitManager.hitTestPlanes(
             { x, y },
             ARKitManager.ARHitTestResultType.ExistingPlane,
           ).then(({ results }) => {
-            //  console.log(results);
-            const result = results.find(r => r.anchorId === planeId);
-            if (result && this._isMounted) {
-              this.setState({
-                positionProjected: roundPoint(result.point, 3),
-              });
-            }
+            const result = isFunction(plane)
+              ? plane(results)
+              : results.find(r => r.anchorId === plane);
+            this.onResult(result);
           });
-        } else if (plane) {
-          const { normal = { x: 0, y: 1, z: 0 }, position } = plane;
-          ARKitManager.getCamera().then(camera => {
-            console.log(camera);
+        } else if (node) {
+          ARKitManager.hitTestSceneObjects({ x, y }).then(({ results }) => {
+            const result = isFunction(node)
+              ? node(results)
+              : results.find(r => r.id === node);
+            this.onResult(result);
           });
         }
       }
@@ -73,6 +90,7 @@ export default ({ throttleMs = 33 } = {}) => C =>
           <C
             onProjectedPosition={this.onProjectedPosition}
             positionProjected={this.state.positionProjected}
+            projectionResult={this.state.projectionResult}
             {...this.props}
           />
         );
