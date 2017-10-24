@@ -340,7 +340,7 @@ const Cursor3D = withProjectedPosition()(({positionProjected, projectionResult})
 
 ```
 
-It's recommended that you specify a transition duration (0.1s works nice), as the position gets updated rapidly, but slightly throttled. 
+It's recommended that you specify a transition duration (0.1s works nice), as the position gets updated rapidly, but slightly throttled.
 
 Now you can use your 3D cursor like this:
 
@@ -369,6 +369,8 @@ If you don't have the id, but want to place the cursor on a certain plane (e.g. 
 />
 
 ```
+
+You can also add a property `onProjectedPosition` to your cursor which will be called with the hit result on every frame
 
 It uses https://developer.apple.com/documentation/arkit/arframe/2875718-hittest with some default options. Please file an issue or send a PR if you need more control over the options here!
 
