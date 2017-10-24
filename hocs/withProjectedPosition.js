@@ -72,7 +72,7 @@ export default ({ throttleMs = 33 } = {}) => C =>
           ).then(({ results }) => {
             const result = isFunction(plane)
               ? plane(results)
-              : results.find(r => r.anchorId === plane);
+              : results.find(r => r.id === plane);
             this.onResult(result);
           });
         } else if (node) {

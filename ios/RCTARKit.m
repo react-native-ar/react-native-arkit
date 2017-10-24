@@ -41,7 +41,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 + (instancetype)sharedInstance {
     static RCTARKit *instance = nil;
     static dispatch_once_t onceToken;
-    
+
     dispatch_once_on_main_thread(&onceToken, ^{
         if (instance == nil) {
             ARSCNView *arView = [[ARSCNView alloc] init];
@@ -54,30 +54,30 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 - (instancetype)initWithARView:(ARSCNView *)arView {
     if ((self = [super init])) {
         self.arView = arView;
-        
+
         // delegates
         arView.delegate = self;
         arView.session.delegate = self;
-        
+
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
-        
+
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
         self.sessionDelegates = [NSMutableArray array];
-        
+
         // nodeManager
         self.nodeManager = [RCTARKitNodes sharedInstance];
         self.nodeManager.arView = arView;
         [self.sessionDelegates addObject:self.nodeManager];
-        
+
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
         arView.scene.rootNode.name = @"root";
-        
+
         self.planes = [NSMutableDictionary new];
-        
+
         // start ARKit
         [self addSubview:arView];
         [self resume];
@@ -197,7 +197,7 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 
 - (float)getCameraDistanceToPoint:(SCNVector3)point {
     return [self.nodeManager getCameraDistanceToPoint:point];
-    
+
 }
 
 
@@ -208,12 +208,12 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     if (_configuration) {
         return _configuration;
     }
-    
+
     if (!ARWorldTrackingConfiguration.isSupported) {}
-    
+
     _configuration = [ARWorldTrackingConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
-    
+
     return _configuration;
 }
 
@@ -222,7 +222,7 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 #pragma mark - snapshot methods
 
 - (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
-    
+
     resolve([self.nodeManager getSceneObjectsHitResult:tapPoint]);
 }
 
@@ -239,14 +239,14 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 - (UIImage *)getSnaphsotCamera {
     CVPixelBufferRef pixelBuffer = self.arView.session.currentFrame.capturedImage;
     CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
-    
+
     CIContext *temporaryContext = [CIContext contextWithOptions:nil];
     CGImageRef videoImage = [temporaryContext
                              createCGImage:ciImage
                              fromRect:CGRectMake(0, 0,
                                                  CVPixelBufferGetWidth(pixelBuffer),
                                                  CVPixelBufferGetHeight(pixelBuffer))];
-    
+
     UIImage *image = [UIImage imageWithCGImage:videoImage scale: 1.0 orientation:UIImageOrientationRight];
     CGImageRelease(videoImage);
     return image;
@@ -259,7 +259,7 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 #pragma mark - plane hit detection
 
 - (void)hitTestPlane:(const CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
-    
+
     resolve([self getPlaneHitResult:tapPoint types:types]);
 }
 
@@ -267,16 +267,16 @@ static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         ARHitTestResult *result = (ARHitTestResult *) obj;
-     
+
         [resultsMapped addObject:(@{
                                     @"distance": @(result.distance),
-                                    @"anchorId": result.anchor.identifier.UUIDString,
+                                    @"id": result.anchor.identifier.UUIDString,
                                     @"point": @{
                                             @"x": @(result.worldTransform.columns[3].x),
                                             @"y": @(result.worldTransform.columns[3].y),
                                             @"z": @(result.worldTransform.columns[3].z)
                                             }
-                                    
+
                                     } )];
     }];
     return resultsMapped;
@@ -313,7 +313,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
         self.onTapOnPlaneUsingExtent(planeHitResult);
     }
-    
+
     if(self.onTapOnPlaneNoExtent) {
         // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
         NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
@@ -346,13 +346,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     }
-    
+
     SCNNode *parent = [node parentNode];
     NSLog(@"plane detected");
     //    NSLog(@"%f %f %f", parent.position.x, parent.position.y, parent.position.z);
-    
+
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    
+
     //    NSLog(@"%@", @{
     //            @"id": planeAnchor.identifier.UUIDString,
     //            @"alignment": @(planeAnchor.alignment),
@@ -361,7 +361,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     //            @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
     //            @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
     //            });
-    
+
     if (self.onPlaneDetected) {
         self.onPlaneDetected(@{
                                @"id": planeAnchor.identifier.UUIDString,
@@ -372,7 +372,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                                //                               @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                                });
     }
-    
+
     //Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
     //[self.planes setObject:plane forKey:anchor.identifier];
     //[node addChildNode:plane];
@@ -383,13 +383,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    
+
     SCNNode *parent = [node parentNode];
     //    NSLog(@"%@", parent.name);
     //    NSLog(@"%f %f %f", node.position.x, node.position.y, node.position.z);
     //    NSLog(@"%f %f %f %f", node.rotation.x, node.rotation.y, node.rotation.z, node.rotation.w);
-    
-    
+
+
     //    NSLog(@"%@", @{
     //                   @"id": planeAnchor.identifier.UUIDString,
     //                   @"alignment": @(planeAnchor.alignment),
@@ -398,7 +398,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     //                   @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
     //                   @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
     //                   });
-    
+
     if (self.onPlaneUpdate) {
         self.onPlaneUpdate(@{
                              @"id": planeAnchor.identifier.UUIDString,
@@ -409,12 +409,12 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                              //                             @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
                              });
     }
-    
+
     Plane *plane = [self.planes objectForKey:anchor.identifier];
     if (plane == nil) {
         return;
     }
-    
+
     [plane update:(ARPlaneAnchor *)anchor];
 }
 
@@ -436,20 +436,20 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         NSMutableArray * featurePoints = [NSMutableArray array];
         for (int i = 0; i < frame.rawFeaturePoints.count; i++) {
             vector_float3 point = frame.rawFeaturePoints.points[i];
-            
+
             NSString * pointId = [NSString stringWithFormat:@"featurepoint_%lld",frame.rawFeaturePoints.identifiers[i]];
-            
+
             [featurePoints addObject:@{
                                        @"x": @(point[0]),
                                        @"y": @(point[1]),
                                        @"z": @(point[2]),
                                        @"id":pointId,
                                        }];
-            
+
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            
-            
+
+
             if(self.onFeaturesDetected) {
                 self.onFeaturesDetected(@{
                                           @"featurePoints":featurePoints
