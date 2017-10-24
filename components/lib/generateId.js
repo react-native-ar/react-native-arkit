@@ -3,6 +3,7 @@
 const digits = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 function toSex(num, base) {
+  /* eslint no-param-reassign:0 */
   if (base) {
     num = parseInt(num, base);
   }
