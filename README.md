@@ -311,6 +311,96 @@ See https://github.com/HippoAR/react-native-arkit/pull/89 for details
 | `shape` | `{ pathSvg, extrusion, pathFlatness, chamferRadius, chamferProfilePathSvg, chamferProfilePathFlatness }` |
 
 
+### HOCs (higher order components)
+
+#### withProjectedPosition()
+
+this hoc allows you to create 3D components where the position is always at the same point on the screen, but sticks to a plane or object.
+
+Think about a 3D cursor that can be moved across your table or a 3D cursor on a wall.
+
+You can use the hoc like this:
+
+```
+const Cursor3D = withProjectedPosition()(({positionProjected, projectionResult}) => {
+  if(!projectionResult) {
+    // nothing has been hit, don't render it
+    return null;
+  }
+  return (
+    <ARKit.Sphere
+      position={positionProjected}
+      shape={{
+        radius: 0.1
+        }}
+    />
+  )
+})
+
+```
+
+Now you can your 3D cursor like this:
+
+##### Attach to a given detected horizontal plane
+
+Given you have detected a plane with onPlaneDetected, you can make the cursor stick to that plane:
+
+```
+<Cursor3D projectPosition={{
+  x: windowWidth / 2,
+  y: windowHeight / 2,
+  plane: "my-planeId"
+  }}
+/>
+
+```
+
+If you don't have the id, but want to place the cursor on a certain plane (e.g. the first or last one), pass a function for plane. This function will get all hit-results and you can return the one you need:
+
+```
+<Cursor3D projectPosition={{
+  x: windowWidth / 2,
+  y: windowHeight / 2,
+  plane: (results) => results.length > 0 ? results[0] : null
+  }}
+/>
+
+```
+
+It uses https://developer.apple.com/documentation/arkit/arframe/2875718-hittest with some default options. Please file an issue or send a PR if you need more control over the options here!
+
+##### Attach to a given 3D object
+
+You can attach the cursor on a 3D object, e.g. a non-horizontal-plane or similar:
+
+Given there is some 3D object on your scene with `id="my-nodeId"`
+
+```
+<Cursor3D projectPosition={{
+  x: windowWidth / 2,
+  y: windowHeight / 2,
+  node: "my-nodeId"
+  }}
+/>
+```
+
+Like with planes, you can select the node with a function.
+
+E.gl you have several "walls" with ids "wall_1", "wall_2", etc.
+
+```
+<Cursor3D projectPosition={{
+  x: windowWidth / 2,
+  y: windowHeight / 2,
+  node: results => results.find(r => r.id.startsWith('wall_')),
+  }}
+/>
+```
+
+
+It uses https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522929-hittest with some default options. Please file an issue or send a PR if you need more control over the options here!
+
+
 
 ## Contributing
 
