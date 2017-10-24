@@ -59,6 +59,9 @@ export default ({ throttleMs = 33 } = {}) => C =>
               projectionResult: null,
             });
           }
+          if (this.props.onProjectedPosition) {
+            this.props.onProjectedPosition(result);
+          }
         }
       }
 
@@ -88,7 +91,6 @@ export default ({ throttleMs = 33 } = {}) => C =>
       render() {
         return (
           <C
-            onProjectedPosition={this.onProjectedPosition}
             positionProjected={this.state.positionProjected}
             projectionResult={this.state.projectionResult}
             {...this.props}
