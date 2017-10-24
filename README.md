@@ -315,7 +315,7 @@ See https://github.com/HippoAR/react-native-arkit/pull/89 for details
 
 #### withProjectedPosition()
 
-this hoc allows you to create 3D components where the position is always at the same point on the screen, but sticks to a plane or object.
+this hoc allows you to create 3D components where the position is always relative to the same point on the screen/camera, but sticks to a plane or object.
 
 Think about a 3D cursor that can be moved across your table or a 3D cursor on a wall.
 
