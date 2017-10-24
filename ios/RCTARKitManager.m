@@ -63,6 +63,8 @@ RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneUsingExtent, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneNoExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onEvent, RCTBubblingEventBlock)
 
 RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
@@ -72,6 +74,11 @@ RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 
 RCT_EXPORT_METHOD(resume:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] resume];
+    resolve(@{});
+}
+
+RCT_EXPORT_METHOD(reset:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance] reset];
     resolve(@{});
 }
 
