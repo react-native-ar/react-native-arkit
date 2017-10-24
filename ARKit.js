@@ -13,7 +13,7 @@ import {
   View,
   Text,
   NativeModules,
-  requireNativeComponent,
+  requireNativeComponent
 } from 'react-native';
 
 import generateId from './components/lib/generateId';
@@ -26,7 +26,7 @@ const TRACKING_REASONS = [
   'NONE',
   'INITIALIZING',
   'EXCESSIVE_MOTION',
-  'INSUFFICIENT_FEATURES',
+  'INSUFFICIENT_FEATURES'
 ];
 const TRACKING_STATES_COLOR = ['red', 'orange', 'green'];
 
@@ -34,7 +34,7 @@ class ARKit extends Component {
   state = {
     state: 0,
     reason: 0,
-    floor: null,
+    floor: null
   };
   componentWillMount() {
     ARKitManager.clearScene();
@@ -55,7 +55,7 @@ class ARKit extends Component {
           <View
             style={[
               styles.stateIcon,
-              { backgroundColor: TRACKING_STATES_COLOR[this.state.state] },
+              { backgroundColor: TRACKING_STATES_COLOR[this.state.state] }
             ]}
           />
           <Text style={styles.stateText}>
@@ -84,13 +84,13 @@ class ARKit extends Component {
   _onTrackingState = ({
     state = this.state.state,
     reason = this.state.reason,
-    floor,
+    floor
   }) => {
     if (this.props.onTrackingState) {
       this.props.onTrackingState({
         state: TRACKING_STATES[state] || state,
         reason: TRACKING_REASONS[reason] || reason,
-        floor,
+        floor
       });
     }
 
@@ -98,7 +98,7 @@ class ARKit extends Component {
       this.setState({
         state,
         reason,
-        floor: floor ? floor.toFixed(2) : this.state.floor,
+        floor: floor ? floor.toFixed(2) : this.state.floor
       });
     }
   };
@@ -138,19 +138,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 4,
     backgroundColor: 'black',
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
   stateIcon: {
     width: 12,
     height: 12,
     borderRadius: 6,
-    marginRight: 4,
+    marginRight: 4
   },
   stateText: {
     color: 'white',
     fontSize: 10,
-    height: 12,
-  },
+    height: 12
+  }
 });
 
 // copy all ARKitManager properties to ARKit
@@ -160,7 +160,7 @@ Object.keys(ARKitManager).forEach(key => {
 
 const addDefaultsToSnapShotFunc = funcName => ({
   target = 'cameraRoll',
-  format = 'png',
+  format = 'png'
 }) => ARKitManager[funcName]({ target, format });
 
 ARKit.snapshot = addDefaultsToSnapShotFunc('snapshot');
@@ -182,7 +182,7 @@ ARKit.propTypes = {
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
   onTapOnPlaneNoExtent: PropTypes.func,
-  onEvent: PropTypes.func,
+  onEvent: PropTypes.func
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);

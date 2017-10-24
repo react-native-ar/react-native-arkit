@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"_PocketSVG@https://github.com/pocketsvg/PocketSVG":
+  version "0.0.0"
+  resolved "https://github.com/pocketsvg/PocketSVG#e6d84ddeb11f99c4420e354ebb9fd34db2cf507a"
+
 acorn-jsx@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-3.0.1.tgz#afdf9488fb1ecefc8348f6fb22f464e32a58b36b"

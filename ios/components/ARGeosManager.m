@@ -58,6 +58,11 @@ RCT_EXPORT_METHOD(addPlane:(SCNPlane *)geometry node:(SCNNode *)node frame:(NSSt
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
 }
 
+RCT_EXPORT_METHOD(addShape:(SCNShape *)geometry node:(SCNNode *)node frame:(NSString *)frame) {
+    node.geometry = geometry;
+    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
+}
+
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
     [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
