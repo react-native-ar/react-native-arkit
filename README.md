@@ -330,6 +330,7 @@ const Cursor3D = withProjectedPosition()(({positionProjected, projectionResult})
   return (
     <ARKit.Sphere
       position={positionProjected}
+      transition={{duration: 0.1}}
       shape={{
         radius: 0.1
         }}
@@ -339,7 +340,9 @@ const Cursor3D = withProjectedPosition()(({positionProjected, projectionResult})
 
 ```
 
-Now you can your 3D cursor like this:
+It's recommended that you specify a transition duration (0.1s works nice), as the position gets updated rapidly, but slightly throttled. 
+
+Now you can use your 3D cursor like this:
 
 ##### Attach to a given detected horizontal plane
 
