@@ -135,7 +135,7 @@ CGFloat focDistance = 0.2f;
                               SCNHitTestRootNodeKey: self.localOrigin,
                               SCNHitTestSortResultsKey: @(YES)
                               };
-    NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint  options:options];
+    NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint options:options];
     NSMutableArray * resultsMapped = [self mapHitResultsWithSceneResults:results];
     NSDictionary *result = getSceneObjectHitResult(resultsMapped, tapPoint);
     return result;
@@ -156,39 +156,32 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
     
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         SCNHitTestResult *result = (SCNHitTestResult *) obj;
         SCNNode * node = result.node;
-        NSArray *keys = [self.nodes allKeysForObject: node];
-        if([keys count]) {
-            
-            NSString * firstKey = [keys firstObject];
-            
-            SCNVector3 point = result.worldCoordinates;
-            SCNVector3 normal = result.worldNormal;
-            
-            float distance = [self getCameraDistanceToPoint:point];
-            [resultsMapped addObject:(@{
-                                        @"id": firstKey,
-                                        @"distance": @(distance),
-                                        @"point": @{
-                                                @"x": @(point.x),
-                                                @"y": @(point.y),
-                                                @"z": @(point.z)
-                                                },
-                                        @"normal": @{
-                                                @"x": @(normal.x),
-                                                @"y": @(normal.y),
-                                                @"z": @(normal.z)
-                                                
-                                                }
-                                        } )];
-        } else {
-            NSLog(@"no key found for node %@", node);
-            NSLog(@"for results %@", results);
-            NSLog(@"all nodes %@", self.nodes);
-            NSLog(@"origin %@", self.localOrigin);
-        }
+        
+        
+        SCNVector3 point = result.worldCoordinates;
+        SCNVector3 normal = result.worldNormal;
+        NSString * nodeId = node.name;
+        float distance = [self getCameraDistanceToPoint:point];
+        [resultsMapped addObject:(@{
+                                    @"id": nodeId,
+                                    @"distance": @(distance),
+                                    @"point": @{
+                                            @"x": @(point.x),
+                                            @"y": @(point.y),
+                                            @"z": @(point.z)
+                                            },
+                                    @"normal": @{
+                                            @"x": @(normal.x),
+                                            @"y": @(normal.y),
+                                            @"z": @(normal.z)
+                                            
+                                            }
+                                    } )];
+        
         
     }];
     return resultsMapped;
