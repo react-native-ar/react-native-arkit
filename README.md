@@ -152,6 +152,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
 | `planeDetection` | `Boolean` | `false` | ARKit plane detection.
 | `lightEstimation` | `Boolean` | `false` | ARKit light estimation.
+| `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | `ARKit.ARWorldAlignment.Gravity` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera.|
 
 ##### Events
 
