@@ -17,7 +17,9 @@ There is a Slack group that anyone can join for help / support / general questio
 
 ## Getting started
 
-`$ npm install react-native-arkit --save`
+`$ yarn install react-native-arkit --save`
+
+(npm does not work properly at the moment)
 
 ### Mostly automatic installation
 
