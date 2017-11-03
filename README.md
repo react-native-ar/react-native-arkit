@@ -17,7 +17,7 @@ There is a Slack group that anyone can join for help / support / general questio
 
 ## Getting started
 
-`$ yarn add react-native-arkit
+`$ yarn add react-native-arkit`
 
 (npm does not work properly at the moment)
 
