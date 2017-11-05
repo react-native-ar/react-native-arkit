@@ -19,7 +19,10 @@ There is a Slack group that anyone can join for help / support / general questio
 
 `$ yarn add react-native-arkit`
 
-(npm does not work properly at the moment)
+make sure to use the latest version of yarn (>=1.x.x)
+
+(npm does not work properly at the moment. See https://github.com/HippoAR/react-native-arkit/issues/103)
+
 
 ### Mostly automatic installation
 
