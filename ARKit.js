@@ -176,6 +176,7 @@ ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
   lightEstimation: PropTypes.bool,
+  worldAlignment: PropTypes.number,
   onPlaneDetected: PropTypes.func,
   onFeaturesDetected: PropTypes.func,
   onPlaneUpdate: PropTypes.func,

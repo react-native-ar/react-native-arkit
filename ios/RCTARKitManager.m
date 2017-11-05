@@ -57,6 +57,11 @@ RCT_EXPORT_MODULE()
                      @"Back": [@(SCNChamferModeBack) stringValue],
                      @"Front": [@(SCNChamferModeBack) stringValue],
                      
+                     },
+             @"ARWorldAlignment": @{
+                     @"Gravity": @(ARWorldAlignmentGravity),
+                     @"GravityAndHeading": @(ARWorldAlignmentGravityAndHeading),
+                     @"Camera": @(ARWorldAlignmentCamera),
                      }
              };
 }
@@ -64,6 +69,7 @@ RCT_EXPORT_MODULE()
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(planeDetection, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(lightEstimation, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(worldAlignment, NSInteger)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)

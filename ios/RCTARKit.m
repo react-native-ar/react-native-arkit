@@ -160,6 +160,23 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     [self resume];
 }
 
+- (ARWorldAlignment)worldAlignment {
+    ARConfiguration *configuration = self.session.configuration;
+    return configuration.worldAlignment;
+}
+
+- (void)setWorldAlignment:(ARWorldAlignment)worldAlignment {
+    ARConfiguration *configuration = self.configuration;
+    if (worldAlignment == ARWorldAlignmentGravityAndHeading) {
+        configuration.worldAlignment = ARWorldAlignmentGravityAndHeading;
+    } else if (worldAlignment == ARWorldAlignmentCamera) {
+        configuration.worldAlignment = ARWorldAlignmentCamera;
+    } else {
+        configuration.worldAlignment = ARWorldAlignmentGravity;
+    }
+    [self resume];
+}
+
 - (NSDictionary *)readCameraPosition {
     // deprecated
     SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
