@@ -30,7 +30,10 @@ const TRACKING_REASONS = [
 ];
 const TRACKING_STATES_COLOR = ['red', 'orange', 'green'];
 
+// clear scene on start (not on mount)
+// this is only needed if you reload the app (in dev mode)
 ARKitManager.clearScene();
+
 class ARKit extends Component {
   state = {
     state: 0,
