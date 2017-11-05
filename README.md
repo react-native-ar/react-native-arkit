@@ -271,7 +271,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|
 | `position` | `{ x, y, z }` |
 | `eulerAngles` | `{ x, y, z }` |
-| `shape` | `{ width, length }` |
+| `shape` | `{ width, height }` |
 | `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
