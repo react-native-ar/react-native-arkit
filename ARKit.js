@@ -30,6 +30,7 @@ const TRACKING_REASONS = [
 ];
 const TRACKING_STATES_COLOR = ['red', 'orange', 'green'];
 
+ARKitManager.clearScene();
 class ARKit extends Component {
   state = {
     state: 0,
@@ -43,7 +44,6 @@ class ARKit extends Component {
 
   componentWillUnmount() {
     ARKitManager.pause();
-    ARKitManager.clearScene();
   }
 
   render(AR = RCTARKit) {
