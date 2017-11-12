@@ -380,7 +380,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     //            });
 
     if (self.onPlaneDetected) {
-        self.onPlaneDetected(@{
+        self.onPlaneDetected(@{ 
                                @"id": planeAnchor.identifier.UUIDString,
                                @"alignment": @(planeAnchor.alignment),
                                @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
