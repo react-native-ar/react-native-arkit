@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARPlane = createArComponent('addPlane', {
@@ -18,6 +19,7 @@ const ARPlane = createArComponent('addPlane', {
     widthSegmentCount: PropTypes.number,
     heightSegmentCount: PropTypes.number,
   }),
+  material,
 });
 
 module.exports = ARPlane;

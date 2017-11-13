@@ -58,6 +58,8 @@
     return geometry;
 }
 
+
+
 + (SCNSphere *)SCNSphere:(id)json {
     NSDictionary* shape = json[@"shape"];
     CGFloat radius = [shape[@"radius"] floatValue];
@@ -288,6 +290,13 @@
 }
 
 
++ (SCNLight *)SCNLight:(id)json {
+    SCNLight * light = [SCNLight light];
+    [self setLightProperties:light properties:json];
+    return light;
+}
+
+
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json {
     if (json[@"blendMode"]) {
         material.blendMode = (SCNBlendMode) [json[@"blendMode"] integerValue];
@@ -348,6 +357,71 @@
     }
 }
 
+
++ (void)setLightProperties:(SCNLight *)light properties:(id)json {
+    if(json[@"type"]) {
+        light.type = json[@"type"];
+    }
+    if(json[@"color"]) {
+        light.color = json[@"color"];
+    }
+    if(json[@"temperature"]) {
+        light.temperature = [json[@"temperature"] floatValue];
+    }
+    
+    if(json[@"intensity"]) {
+        light.intensity = [json[@"intensity"] floatValue];
+    }
+    
+    if(json[@"attenuationStartDistance"]) {
+        light.attenuationStartDistance = [json[@"attenuationStartDistance"] floatValue];
+    }
+    
+    if(json[@"attenuationEndDistance"]) {
+        light.attenuationEndDistance = [json[@"attenuationEndDistance"] floatValue];
+    }
+    
+    if(json[@"spotInnerAngle"]) {
+        light.spotInnerAngle = [json[@"spotInnerAngle"] floatValue];
+    }
+    
+    if(json[@"spotOuterAngle"]) {
+        light.spotOuterAngle = [json[@"spotOuterAngle"] floatValue];
+    }
+    
+    if(json[@"castsShadow"]) {
+        light.castsShadow = [json[@"castsShadow"] boolValue];
+    }
+    
+    if(json[@"shadowRadius"]) {
+        light.shadowRadius = [json[@"shadowRadius"] floatValue];
+    }
+    
+    if(json[@"shadowColor"]) {
+        light.shadowColor = json[@"shadowColor"];
+    }
+    
+    
+    if(json[@"shadowSampleCount"]) {
+        light.shadowSampleCount = [json[@"shadowSampleCount"] integerValue];
+    }
+    
+    if(json[@"shadowBias"]) {
+        light.shadowBias = [json[@"shadowBias"] floatValue];
+    }
+    
+    if(json[@"orthographicScale"]) {
+        light.orthographicScale = [json[@"orthographicScale"] floatValue];
+    }
+    
+    if(json[@"zFar"]) {
+        light.zFar = [json[@"zFar"] floatValue];
+    }
+    
+    if(json[@"zNear"]) {
+        light.zNear = [json[@"zNear"] floatValue];
+    }
+}
 
 
 @end

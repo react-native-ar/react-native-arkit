@@ -37,6 +37,14 @@ RCT_EXPORT_MODULE()
                      @"Phong": SCNLightingModelPhong,
                      @"PhysicallyBased": SCNLightingModelPhysicallyBased
                      },
+             @"LightType": @{
+                     @"Ambient": SCNLightTypeAmbient,
+                     @"Directional": SCNLightTypeDirectional,
+                     @"Omni": SCNLightTypeOmni,
+                     @"Probe": SCNLightTypeProbe,
+                     @"Spot": SCNLightTypeSpot,
+                     @"IES": SCNLightTypeIES
+                     },
              @"ShaderModifierEntryPoint": @{
                      @"Geometry": SCNShaderModifierEntryPointGeometry,
                      @"Surface": SCNShaderModifierEntryPointSurface,

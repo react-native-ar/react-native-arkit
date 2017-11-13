@@ -63,11 +63,17 @@ RCT_EXPORT_METHOD(addShape:(SCNShape *)geometry node:(SCNNode *)node frame:(NSSt
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
 }
 
+RCT_EXPORT_METHOD(addLight:(SCNLight *)light node:(SCNNode *)node frame:(NSString *)frame) {
+    node.light = light;
+    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
+}
+
+
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
     [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
 
-RCT_EXPORT_METHOD(update:(NSString *)identifier properties:(NSDictionary *) properties) {
+RCT_EXPORT_METHOD(updateNode:(NSString *)identifier properties:(NSDictionary *) properties) {
     [[RCTARKitNodes sharedInstance] updateNode:identifier properties:properties];
 }
 

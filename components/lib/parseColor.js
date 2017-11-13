@@ -15,3 +15,5 @@ export function processColorInMaterial(material) {
     diffuse: processColor(material.diffuse || material.color),
   };
 }
+
+export { processColor };
