@@ -161,32 +161,32 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
         SCNHitTestResult *result = (SCNHitTestResult *) obj;
         SCNNode * node = result.node;
         
- 
-        NSArray *ids = [self getIdHierarchy:node];
+        NSString * nodeId = [self findNodeId:node];
+        if(nodeId) {
         
-        SCNVector3 point = result.worldCoordinates;
-        SCNVector3 normal = result.worldNormal;
-        float distance = [self getCameraDistanceToPoint:point];
-        
-        [resultsMapped addObject:(@{
-                                    @"id": ids.count > 0 ? ids[0] : @"",
-                                    @"ids": ids,
-                                    @"distance": @(distance),
-                                    @"point": @{
-                                            @"x": @(point.x),
-                                            @"y": @(point.y),
-                                            @"z": @(point.z)
-                                            },
-                                    @"normal": @{
-                                            @"x": @(normal.x),
-                                            @"y": @(normal.y),
-                                            @"z": @(normal.z)
-                                            
-                                            }
-                                    } )];
-        
-        
+            SCNVector3 point = result.worldCoordinates;
+            SCNVector3 normal = result.worldNormal;
+            float distance = [self getCameraDistanceToPoint:point];
+         
+            [resultsMapped addObject:(@{
+                                        @"id": nodeId,
+                                        @"distance": @(distance),
+                                        @"point": @{
+                                                @"x": @(point.x),
+                                                @"y": @(point.y),
+                                                @"z": @(point.z)
+                                                },
+                                        @"normal": @{
+                                                @"x": @(normal.x),
+                                                @"y": @(normal.y),
+                                                @"z": @(normal.z)
+                                                
+                                                }
+                                        } )];
+        }
+            
     }];
+    
     return resultsMapped;
     
 }
@@ -201,18 +201,21 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     }
 }
 
-- (NSArray *) getIdHierarchy:(SCNNode *) node {
-    NSMutableArray * ids = [NSMutableArray new];
-   
-    SCNNode* _node = node;
+
+- (NSString *) findNodeId:(SCNNode *)nodeWithParents {
+
+    SCNNode* _node = nodeWithParents;
     while(_node) {
-        if(_node.name)
-            [ids addObject:_node.name];
+        if(_node.name && [self.nodes objectForKey:_node.name]) {
+            return _node.name;
+        }
         _node = _node.parentNode;
     }
-    return ids;
+    return nil;
 
 }
+
+
 - (SCNNode *)nodeForKey:(NSString *)key {
     return [self.nodes objectForKey:key];
 }
