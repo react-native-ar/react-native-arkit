@@ -106,6 +106,19 @@ export default class ReactNativeARKit extends Component {
             position={{ x: 0.2, y: 0.6, z: 0 }}
             font={{ size: 0.15, depth: 0.05 }}
           />
+          <ARKit.Light
+            position={{ x: 1, y: 3, z: 2 }}
+            type={ARKit.LightType.Omni}
+            color="white"
+          />
+          <ARKit.Light
+            position={{ x: 0, y: 1, z: 0 }}
+            type={ARKit.LightType.Spot}
+            eulerAngles={{ x: -Math.PI / 2 }}
+            spotInnerAngle={45}
+            spotOuterAngle={45}
+            color="green"
+          />
           <ARKit.Model
             position={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
             scale={0.01}
@@ -307,6 +320,21 @@ SceneKit only supports `.scn` and `.dae` formats.
 
 Creates a extruded shape by an svg path.
 See https://github.com/HippoAR/react-native-arkit/pull/89 for details
+
+#### [`<ARKit.Light />`](https://developer.apple.com/documentation/scenekit/scnlight)
+
+##### Props
+
+| Prop | Type |
+|---|---|
+| `position` | `{ x, y, z }` |
+| `eulerAngles` | `{ x, y, z }` |
+| `type` | any of `ARKit.LightType`, see [here for details](https://developer.apple.com/documentation/scenekit/scnlight.lighttype)
+| `color` | `string` |
+
+Most properties described here are also supported: https://developer.apple.com/documentation/scenekit/scnlight
+
+This feature is new. If you experience any problem, please report an issue!
 
 ##### Props
 
