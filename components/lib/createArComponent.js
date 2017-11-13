@@ -106,9 +106,6 @@ export default (mountConfig, propTypes = {}) => {
       }
 
       if (some(nonNodePropKeys, k => changedKeys.includes(k))) {
-        // remount
-        // TODO: we should be able to update
-
         update(this.identifier, props);
       } else if (some(NODE_PROPS, k => changedKeys.includes(k))) {
         ARGeosManager.updateNode(this.identifier, pick(props, NODE_PROPS));
