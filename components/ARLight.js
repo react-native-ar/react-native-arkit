@@ -15,7 +15,7 @@ const ARLight = createArComponent('addLight', {
   castsShadow: PropTypes.bool,
   shadowRadius: PropTypes.number,
   shadowColor: color,
-  shadowMapSize: PropTypes.number,
+  // shadowMapSize: PropTypes.number,
   shadowSampleCount: PropTypes.number,
   // shadowMode // not supported yet https://developer.apple.com/documentation/scenekit/scnlight/1522847-shadowmode
   shadowBias: PropTypes.number,

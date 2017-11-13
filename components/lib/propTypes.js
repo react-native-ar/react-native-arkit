@@ -5,13 +5,11 @@ import { NativeModules } from 'react-native';
 
 const ARKitManager = NativeModules.ARKitManager;
 
-export const position = {
-  propTypes: PropTypes.shape({
-    x: PropTypes.number,
-    y: PropTypes.number,
-    z: PropTypes.number,
-  }),
-};
+export const position = PropTypes.shape({
+  x: PropTypes.number,
+  y: PropTypes.number,
+  z: PropTypes.number,
+});
 
 export const scale = PropTypes.number;
 
@@ -53,7 +51,7 @@ export const blendMode = PropTypes.oneOf(values(ARKitManager.BlendMode));
 export const chamferMode = PropTypes.oneOf(values(ARKitManager.ChamferMode));
 export const color = PropTypes.string;
 
-export const lightType = PropTypes.oneOf(values(ARKitManager.LightTypes));
+export const lightType = PropTypes.oneOf(values(ARKitManager.LightType));
 
 export const material = PropTypes.shape({
   color,

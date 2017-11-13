@@ -60,6 +60,7 @@
 
 
 
+
 + (SCNSphere *)SCNSphere:(id)json {
     NSDictionary* shape = json[@"shape"];
     CGFloat radius = [shape[@"radius"] floatValue];
@@ -363,7 +364,7 @@
         light.type = json[@"type"];
     }
     if(json[@"color"]) {
-        light.color = json[@"color"];
+        light.color = (__bridge id _Nonnull)([RCTConvert CGColor:json[@"color"]]);
     }
     if(json[@"temperature"]) {
         light.temperature = [json[@"temperature"] floatValue];
