@@ -159,6 +159,13 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     configuration.lightEstimationEnabled = lightEstimation;
     [self resume];
 }
+- (void)setAutoenablesDefaultLighting:(BOOL)autoenablesDefaultLighting {
+    self.arView.autoenablesDefaultLighting = autoenablesDefaultLighting;
+}
+
+- (BOOL)autoenablesDefaultLighting {
+    return self.arView.autoenablesDefaultLighting;
+}
 
 - (ARWorldAlignment)worldAlignment {
     ARConfiguration *configuration = self.session.configuration;

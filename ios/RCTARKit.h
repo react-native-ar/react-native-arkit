@@ -36,6 +36,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, assign) BOOL debug;
 @property (nonatomic, assign) BOOL planeDetection;
 @property (nonatomic, assign) BOOL lightEstimation;
+@property (nonatomic, assign) BOOL autoenablesDefaultLighting;
 @property (nonatomic, assign) ARWorldAlignment worldAlignment;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
