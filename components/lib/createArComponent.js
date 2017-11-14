@@ -10,10 +10,12 @@ import some from 'lodash/some';
 import { NativeModules } from 'react-native';
 
 import {
+  castsShadow,
   categoryBitMask,
   eulerAngles,
   orientation,
   position,
+  renderingOrder,
   rotation,
   scale,
   transition,
@@ -21,7 +23,7 @@ import {
 import { processColor, processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
-const { ARGeosManager, ARKitManager } = NativeModules;
+const { ARGeosManager } = NativeModules;
 
 const PROP_TYPES_IMMUTABLE = {
   id: PropTypes.string,
@@ -35,6 +37,8 @@ const PROP_TYPES_NODE = {
   rotation,
   scale,
   categoryBitMask,
+  castsShadow,
+  renderingOrder,
 };
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);

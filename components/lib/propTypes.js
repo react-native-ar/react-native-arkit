@@ -47,6 +47,8 @@ export const lightingModel = PropTypes.oneOf(
   values(ARKitManager.LightingModel),
 );
 
+export const castsShadow = PropTypes.bool;
+export const renderingOrder = PropTypes.number;
 export const blendMode = PropTypes.oneOf(values(ARKitManager.BlendMode));
 export const chamferMode = PropTypes.oneOf(values(ARKitManager.ChamferMode));
 export const color = PropTypes.string;

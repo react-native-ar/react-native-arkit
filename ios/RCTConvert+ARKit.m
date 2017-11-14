@@ -219,7 +219,7 @@
         } else {
             NSLog(@"Invalid chamferProfilePathFlatness");
         }
-       
+        
     }
     
     
@@ -274,10 +274,10 @@
     // SCNTextNode
     SCNTextNode *textNode = [SCNNode nodeWithGeometry:scnText];
     textNode.name = [NSString stringWithFormat:@"%@", json[@"id"]];
-
+    
     
     textNode.scale = SCNVector3Make(size, size, size);
-   
+    
     // position textNode
     SCNVector3 min = SCNVector3Zero;
     SCNVector3 max = SCNVector3Zero;
@@ -336,6 +336,12 @@
     
     if (json[@"categoryBitMask"]) {
         node.categoryBitMask = [json[@"categoryBitMask"] integerValue];
+    }
+    if (json[@"renderingOrder"]) {
+        node.renderingOrder = [json[@"renderingOrder"] integerValue];
+    }
+    if (json[@"castsShadow"]) {
+        node.castsShadow = [json[@"castsShadow"] boolValue];
     }
     if(json[@"transition"]) {
         NSDictionary * transition =json[@"transition"];
