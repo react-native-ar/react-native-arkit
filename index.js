@@ -45,6 +45,7 @@ module.exports = {
   DeviceMotion,
   ARBox,
   ARSphere,
+  ARSprite,
   ARCylinder,
   ARCone,
   ARPyramid,
@@ -56,5 +57,5 @@ module.exports = {
   ARModel,
   ARLight,
   ARGroup,
-  withProjectedPosition,
+  withProjectedPosition
 };
