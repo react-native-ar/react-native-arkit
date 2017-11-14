@@ -249,6 +249,10 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
 
+RCT_EXPORT_METHOD(getCurrentLightEstimation:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[ARKit sharedInstance] getCurrentLightEstimation]);
+}
+
 RCT_EXPORT_METHOD(projectPoint:
                   (NSDictionary *)pointDict
                   resolve:(RCTPromiseResolveBlock)resolve

@@ -67,6 +67,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)clearScene;
 - (NSDictionary *)readCameraPosition;
 - (NSDictionary *)readCamera;
+- (NSDictionary* )getCurrentLightEstimation;
 
 
 

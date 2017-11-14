@@ -74,6 +74,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
+        
         arView.scene.rootNode.name = @"root";
         
         self.planes = [NSMutableDictionary new];
@@ -153,6 +154,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     ARConfiguration *configuration = self.session.configuration;
     return configuration.lightEstimationEnabled;
 }
+
 
 - (void)setLightEstimationEnabled:(BOOL)lightEstimationEnabled {
     ARConfiguration *configuration = self.session.configuration;
@@ -237,7 +239,7 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     
     _configuration = [ARWorldTrackingConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
-    
+    _configuration.lightEstimationEnabled = YES;
     return _configuration;
 }
 
@@ -407,22 +409,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    
-    SCNNode *parent = [node parentNode];
-    //    NSLog(@"%@", parent.name);
-    //    NSLog(@"%f %f %f", node.position.x, node.position.y, node.position.z);
-    //    NSLog(@"%f %f %f %f", node.rotation.x, node.rotation.y, node.rotation.z, node.rotation.w);
-    
-    
-    //    NSLog(@"%@", @{
-    //                   @"id": planeAnchor.identifier.UUIDString,
-    //                   @"alignment": @(planeAnchor.alignment),
-    //                   @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
-    //                   @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
-    //                   @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-    //                   @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
-    //                   });
-    
+
     if (self.onPlaneUpdate) {
         self.onPlaneUpdate(@{
                              @"id": planeAnchor.identifier.UUIDString,
@@ -449,6 +436,10 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 
 #pragma mark - ARSessionDelegate
+
+- (NSDictionary *)getCurrentLightEstimation {
+    return [self wrapLightEstimation:self.arView.session.currentFrame.lightEstimate];
+}
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
     for (id<RCTARKitSessionDelegate> sessionDelegate in self.sessionDelegates) {
@@ -483,21 +474,29 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
     
     if (self.onLightEstimation) {
-        ARLightEstimate *estimate = frame.lightEstimate;
-        if(estimate) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                
-                if(self.onLightEstimation) {
-                    self.onLightEstimation(@{
-                                             @"ambientColorTemperature":@(estimate.ambientColorTemperature),
-                                             @"ambientIntensity":@(estimate.ambientIntensity),
-                                             });
-                }
-            });
-        }
+        /** this is called rapidly and is therefore demanding, better poll it from outside with getCurrentLightEstimation **/
+        
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(self.onLightEstimation) {
+                NSDictionary *estimate = [self getCurrentLightEstimation];
+                self.onLightEstimation(estimate);
+            }
+        });
+        
     }
     
+}
+
+- (NSDictionary *)wrapLightEstimation:(ARLightEstimate *)estimate {
+    if(!estimate) {
+        return nil;
+    }
+    return @{
+             @"ambientColorTemperature":@(estimate.ambientColorTemperature),
+             @"ambientIntensity":@(estimate.ambientIntensity),
+             };
 }
 
 

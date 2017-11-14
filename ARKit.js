@@ -187,6 +187,8 @@ ARKit.propTypes = {
   worldAlignment: PropTypes.number,
   onPlaneDetected: PropTypes.func,
   onFeaturesDetected: PropTypes.func,
+  // onLightEstimation is called rapidly, better poll with
+  // ARKit.getCurrentLightEstimation()
   onLightEstimation: PropTypes.func,
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
