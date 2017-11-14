@@ -210,7 +210,7 @@ All methods return a promise with the result.
 Most 3d object have these common properties
 
 | Prop | Type | Description |
-|---|---|
+|---|---|---|
 | `position` | `{ x, y, z }` | The object's position (y is up) |
 | `scale` | Number | The scale of the object. Defaults to 1 |
 | `eulerAngles` | `{ x, y, z }` | The rotation in eulerAngles |
@@ -244,7 +244,7 @@ E.g. you can scale an object on unmount:
 Most objects take a material property with these sub-props:
 
 | Prop | Type | Description |
-|---|---|
+|---|---|---|
 | `diffuse` | colorstring | diffuse color  |
 | `metalness` | number | metalness of the object |
 | `roughness` | number | roughness of the object |
@@ -387,7 +387,7 @@ You might set `autoenablesDefaultLighting={false}` on The `<ARKit />` component 
 
 
 | Prop | Type | Description |
-|---|---|
+|---|---|---|
 | `position` | `{ x, y, z }` |  |
 | `eulerAngles` | `{ x, y, z }` |  |
 | `type` | any of `ARKit.LightType` | see [here for details](https://developer.apple.com/documentation/scenekit/scnlight.lighttype) |
