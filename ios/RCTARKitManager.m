@@ -37,6 +37,28 @@ RCT_EXPORT_MODULE()
                      @"Phong": SCNLightingModelPhong,
                      @"PhysicallyBased": SCNLightingModelPhysicallyBased
                      },
+             @"LightType": @{
+                     @"Ambient": SCNLightTypeAmbient,
+                     @"Directional": SCNLightTypeDirectional,
+                     @"Omni": SCNLightTypeOmni,
+                     @"Probe": SCNLightTypeProbe,
+                     @"Spot": SCNLightTypeSpot,
+                     @"IES": SCNLightTypeIES
+                     },
+             @"ShadowMode": @{
+                     @"Forward": [@(SCNShadowModeForward) stringValue],
+                     @"Deferred": [@(SCNShadowModeDeferred) stringValue],
+                     @"ModeModulated": [@(SCNShadowModeModulated) stringValue],
+                     },
+             @"ColorMask": @{
+                     @"All": [@(SCNColorMaskAll) stringValue],
+                     @"None": [@(SCNColorMaskNone) stringValue],
+                     @"Alpha": [@(SCNColorMaskAlpha) stringValue],
+                     @"Blue": [@(SCNColorMaskBlue) stringValue],
+                     @"Red": [@(SCNColorMaskRed) stringValue],
+                     @"Green": [@(SCNColorMaskGreen) stringValue],
+                     },
+             
              @"ShaderModifierEntryPoint": @{
                      @"Geometry": SCNShaderModifierEntryPointGeometry,
                      @"Surface": SCNShaderModifierEntryPointSurface,
@@ -68,13 +90,15 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(planeDetection, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(lightEstimation, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(lightEstimationEnabled, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(autoenablesDefaultLighting, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(worldAlignment, NSInteger)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneUsingExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneNoExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onEvent, RCTBubblingEventBlock)
@@ -223,6 +247,14 @@ RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
 
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] readCameraPosition]);
+}
+
+RCT_EXPORT_METHOD(getCurrentLightEstimation:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[ARKit sharedInstance] getCurrentLightEstimation]);
+}
+
+RCT_EXPORT_METHOD(getCurrentDetectedFeaturePoints:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[ARKit sharedInstance] getCurrentDetectedFeaturePoints]);
 }
 
 RCT_EXPORT_METHOD(projectPoint:

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { chamferMode } from './lib/propTypes';
+import { chamferMode, material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARShape = createArComponent('addShape', {
@@ -11,8 +11,9 @@ const ARShape = createArComponent('addShape', {
     chamferMode,
     chamferRadius: PropTypes.number,
     chamferProfilePathSvg: PropTypes.string,
-    chamferProfilePathFlatness: PropTypes.string
-  })
+    chamferProfilePathFlatness: PropTypes.string,
+  }),
+  material,
 });
 
 module.exports = ARShape;

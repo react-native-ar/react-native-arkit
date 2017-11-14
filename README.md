@@ -61,7 +61,12 @@ export default class ReactNativeARKit extends Component {
           style={{ flex: 1 }}
           debug
           planeDetection
-          lightEstimation
+          // enable light estimation (defaults to true)
+          lightEstimationEnabled
+          // get the current lightEstimation (if enabled)
+          // it fires rapidly, so better poll it from outside with
+          // ARKit.getCurrentLightEstimation()
+          onLightEstimation={e => console.log(e.nativeEvent)}
           onPlaneDetected={console.log} // event listener for plane detection
           onPlaneUpdate={console.log} // event listener for plane update
         >
@@ -105,6 +110,19 @@ export default class ReactNativeARKit extends Component {
             text="ARKit is Cool!"
             position={{ x: 0.2, y: 0.6, z: 0 }}
             font={{ size: 0.15, depth: 0.05 }}
+          />
+          <ARKit.Light
+            position={{ x: 1, y: 3, z: 2 }}
+            type={ARKit.LightType.Omni}
+            color="white"
+          />
+          <ARKit.Light
+            position={{ x: 0, y: 1, z: 0 }}
+            type={ARKit.LightType.Spot}
+            eulerAngles={{ x: -Math.PI / 2 }}
+            spotInnerAngle={45}
+            spotOuterAngle={45}
+            color="green"
           />
           <ARKit.Model
             position={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
@@ -156,7 +174,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|---|---|
 | `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
 | `planeDetection` | `Boolean` | `false` | ARKit plane detection.
-| `lightEstimation` | `Boolean` | `false` | ARKit light estimation.
+| `lightEstimationEnabled` | `Boolean` | `false` | ARKit light estimation.
 | `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | `ARKit.ARWorldAlignment.Gravity` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera.|
 
 ##### Events
@@ -164,157 +182,225 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | Event Name | Returns | Notes
 |---|---|---|
 | `onPlaneDetected` | `{ id, center, extent }` | When a plane is first detected.
+| `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
+| `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
 | `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
 
 ##### Static methods
+
+All methods return a promise with the result.
 
 | Method Name | Arguments |  Notes
 |---|---|---|
 | `snapshot` |  |  | Take a screenshot (will save to Photo Library) |
 | `snapshotCamera` |  | Take a screenshot without 3d models (will save to Photo Library) |
 | `getCameraPosition` |  | Get the current position of the `ARCamera` |
+| `getCurrentLightEstimation` |  | Get current light estimation  `{ ambientColorTemperature, ambientIntensity}`
+| `getCurrentDetectedFeaturePoints` |  | Get current detected feature points (in last current frame)  (array)
+
 | `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation) |
 | `hitTestPlanes` | point, type  |  check if a plane has ben hit by point (`{x,y}`) with detection type (any of `ARKit.ARHitTestResultType`). See https://developer.apple.com/documentation/arkit/arhittestresulttype?language=objc for further information |
 | `hitTestSceneObjects` | point |  check if a scene object has ben hit by point (`{x,y}`) |
 
 
+#### 3D objects
+
+##### General props
+
+Most 3d object have these common properties
+
+| Prop | Type | Description |
+|---|---|
+| `position` | `{ x, y, z }` | The object's position (y is up) |
+| `scale` | Number | The scale of the object. Defaults to 1 |
+| `eulerAngles` | `{ x, y, z }` | The rotation in eulerAngles |
+| `rotation` | TODO | see scenkit documentation |
+| `orientation` | TODO | see scenkit documentation |
+| `shape` | depends on object | the shape of the object (will probably renamed to geometry in future versions)
+| `material` | `{ diffuse, metalness, roughness, lightingModel, shaders }` | the material of the object |
+| `transition` | `{duration: 1}` | Some property changes can be animated like in css transitions. Currently you can specify the duration (in seconds). |
+| `renderingOrder` | Number | Order in which object is rendered. Usefull to place elements "behind" others, although they are nearer. |
+| `categoryBitMask` | Number / bitmask | control which lights affect this object |
+| `castsShadow` | `boolean` | whether this object casts hadows | 
+
+*New experimental feature:*
+
+You can switch properties on mount or onmount by specifying `propsOnMount` and `propsOnUnmount`.
+E.g. you can scale an object on unmount:
+
+```
+<ARKit.Sphere
+  position={{x:0,y:0,z:0}}
+  scale={1}
+  transition={{duration: 1}}
+  propsOnUnmount={{
+    scale: 0
+  }}
+/>
+```
+
+#### Material properties
+
+Most objects take a material property with these sub-props:
+
+| Prop | Type | Description |
+|---|---|
+| `diffuse` | colorstring | diffuse color  |
+| `metalness` | number | metalness of the object |
+| `roughness` | number | roughness of the object |
+| `lightingModel` | `ARKit.LightingModel.*` | [LightingModel](https://developer.apple.com/documentation/scenekit/scnmaterial.lightingmodel) |
+| `shaders` | Object with keys from `ARKit.ShaderModifierEntryPoint.*` and shader strings as values | [Shader modifiers](https://developer.apple.com/documentation/scenekit/scnshadable) |
+| `colorBufferWriteMask` | `ARKit.ColorMask.*` | [color mask](https://developer.apple.com/documentation/scenekit/scncolormask). Set to ARKit.ColorMask.None so that an object is transparent, but receives deferred shadows. |
+
+
+
+
 
 #### [`<ARKit.Box />`](https://developer.apple.com/documentation/scenekit/scnbox)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length, chamfer }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
+And any common object property (position, material, etc.)
 
 #### [`<ARKit.Sphere />`](https://developer.apple.com/documentation/scenekit/scnsphere)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
+
 
 #### [`<ARKit.Cylinder />`](https://developer.apple.com/documentation/scenekit/scncylinder)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Cone />`](https://developer.apple.com/documentation/scenekit/scncone)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ topR, bottomR, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Pyramid />`](https://developer.apple.com/documentation/scenekit/scnpyramid)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Tube />`](https://developer.apple.com/documentation/scenekit/scntube)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ innerR, outerR, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Torus />`](https://developer.apple.com/documentation/scenekit/scntorus)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ ringR, pipeR }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Capsule />`](https://developer.apple.com/documentation/scenekit/scncapsule)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ capR, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Plane />`](https://developer.apple.com/documentation/scenekit/scnplane)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
+Notice: planes are veritcally aligned. If you want a horizontal plane, rotate it around the x-axis.
+
+*Example*:
+
+This is a horizontal plane that only receives shadows, but is invisible otherwise:
+
+```
+<ARKit.Plane
+    eulerAngles={{ x: Math.PI / 2 }}
+    position={floorPlane.position}
+    renderingOrder={9999}
+    material={{
+      color: '#ffffff',
+      lightingModel: ARKit.LightingModel.Constant,
+      colorBufferWriteMask: ARKit.ColorMask.None,
+    }}
+    shape={{
+      width: 100,
+      height: 100,
+    }}
+  />
+```
+
 
 #### [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
-
-##### Props
 
 | Prop | Type |
 |---|---|
 | `text` | `String` |
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `font` | `{ name, size, depth, chamfer }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
 
 
 #### `<ARKit.Model />`
 
 SceneKit only supports `.scn` and `.dae` formats.
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `model` | `{ file, node, scale, alpha }` |
+
+Objects currently don't take material property.
 
 #### `<ARKit.Shape />`
 
 Creates a extruded shape by an svg path.
 See https://github.com/HippoAR/react-native-arkit/pull/89 for details
 
-##### Props
-
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ pathSvg, extrusion, pathFlatness, chamferRadius, chamferProfilePathSvg, chamferProfilePathFlatness }` |
+
+
+
+#### [`<ARKit.Light />`](https://developer.apple.com/documentation/scenekit/scnlight)
+
+Place lights on the scene!
+
+You might set `autoenablesDefaultLighting={false}` on The `<ARKit />` component to disable default lighting. You can use `lightEstimationEnabled` and `ARKit.getCurrentLightEstimation()` to find values for intensity and temperature. This produces much nicer results then `autoenablesDefaultLighting`.
+
+
+| Prop | Type | Description |
+|---|---|
+| `position` | `{ x, y, z }` |  |
+| `eulerAngles` | `{ x, y, z }` |  |
+| `type` | any of `ARKit.LightType` | see [here for details](https://developer.apple.com/documentation/scenekit/scnlight.lighttype) |
+| `color` | `string` | the color of the light |
+| `temperature` | `Number` | The color temperature of the light |
+| `intensity` | `Number` | The light intensity
+| `lightCategoryBitMask` | `Number`/`bitmask` | control which objects are lit by this light |
+| `castsShadow` | `boolean` | whether to cast shadows on object |
+| `shadowMode`| `ARKit.ShadowMode.* | Define the shadowmode. Set to `ARKit.ShadowMode.Deferred` to cast shadows on invisible objects (like an invisible floor plane) |
+
+
+Most properties described here are also supported: https://developer.apple.com/documentation/scenekit/scnlight
+
+This feature is new. If you experience any problem, please report an issue!
 
 
 ### HOCs (higher order components)

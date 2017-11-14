@@ -115,7 +115,6 @@ CGFloat focDistance = 0.2f;
 
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
-    
     //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     [self registerNode:node forKey:node.name];
     [self.cameraOrigin addChildNode:node];
@@ -221,9 +220,18 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 - (void)removeNodeForKey:(NSString *)key {
+    
     SCNNode *node = [self.nodes objectForKey:key];
     if (node) {
+       // NSLog(@"removing node %@", key);
+        if(node.light) {
+            // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
+            node.hidden = YES;
+            
+              [node removeFromParentNode];
+        } else {
         [node removeFromParentNode];
+        }
         [self.nodes removeObjectForKey:key];
     }
 }

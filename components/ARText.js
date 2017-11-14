@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 
 import { NativeModules } from 'react-native';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARText = createArComponent(
@@ -22,6 +23,7 @@ const ARText = createArComponent(
       depth: PropTypes.number,
       chamfer: PropTypes.number,
     }),
+    material,
   },
 );
 

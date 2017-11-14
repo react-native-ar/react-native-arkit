@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARTorus = createArComponent('addTorus', {
@@ -14,6 +15,7 @@ const ARTorus = createArComponent('addTorus', {
     ringR: PropTypes.number,
     pipeR: PropTypes.number,
   }),
+  material,
 });
 
 module.exports = ARTorus;

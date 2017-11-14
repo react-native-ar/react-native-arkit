@@ -58,6 +58,9 @@
     return geometry;
 }
 
+
+
+
 + (SCNSphere *)SCNSphere:(id)json {
     NSDictionary* shape = json[@"shape"];
     CGFloat radius = [shape[@"radius"] floatValue];
@@ -216,7 +219,7 @@
         } else {
             NSLog(@"Invalid chamferProfilePathFlatness");
         }
-       
+        
     }
     
     
@@ -271,10 +274,10 @@
     // SCNTextNode
     SCNTextNode *textNode = [SCNNode nodeWithGeometry:scnText];
     textNode.name = [NSString stringWithFormat:@"%@", json[@"id"]];
-
+    
     
     textNode.scale = SCNVector3Make(size, size, size);
-   
+    
     // position textNode
     SCNVector3 min = SCNVector3Zero;
     SCNVector3 max = SCNVector3Zero;
@@ -288,6 +291,13 @@
 }
 
 
++ (SCNLight *)SCNLight:(id)json {
+    SCNLight * light = [SCNLight light];
+    [self setLightProperties:light properties:json];
+    return light;
+}
+
+
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json {
     if (json[@"blendMode"]) {
         material.blendMode = (SCNBlendMode) [json[@"blendMode"] integerValue];
@@ -295,6 +305,7 @@
     if (json[@"lightingModel"]) {
         material.lightingModelName = json[@"lightingModel"];
     }
+    
     if (json[@"diffuse"]) {
         material.diffuse.contents = [self UIColor:json[@"diffuse"]];
     }
@@ -311,9 +322,27 @@
     if(json[@"shaders"] ) {
         material.shaderModifiers = json[@"shaders"];
     }
+    
+    if(json[@"writesToDepthBuffer"] ) {
+        material.writesToDepthBuffer = [json[@"writesToDepthBuffer"] boolValue];
+    }
+    
+    if(json[@"colorBufferWriteMask"] ) {
+        material.colorBufferWriteMask = [json[@"colorBufferWriteMask"] integerValue];
+    }
 }
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json {
+    
+    if (json[@"categoryBitMask"]) {
+        node.categoryBitMask = [json[@"categoryBitMask"] integerValue];
+    }
+    if (json[@"renderingOrder"]) {
+        node.renderingOrder = [json[@"renderingOrder"] integerValue];
+    }
+    if (json[@"castsShadow"]) {
+        node.castsShadow = [json[@"castsShadow"] boolValue];
+    }
     if(json[@"transition"]) {
         NSDictionary * transition =json[@"transition"];
         if(transition[@"duration"]) {
@@ -348,6 +377,77 @@
     }
 }
 
+
++ (void)setLightProperties:(SCNLight *)light properties:(id)json {
+    if (json[@"lightCategoryBitMask"]) {
+        light.categoryBitMask = [json[@"lightCategoryBitMask"] integerValue];
+    }
+    if(json[@"type"]) {
+        light.type = json[@"type"];
+    }
+    if(json[@"color"]) {
+        light.color = (__bridge id _Nonnull)([RCTConvert CGColor:json[@"color"]]);
+    }
+    if(json[@"temperature"]) {
+        light.temperature = [json[@"temperature"] floatValue];
+    }
+    
+    if(json[@"intensity"]) {
+        light.intensity = [json[@"intensity"] floatValue];
+    }
+    
+    if(json[@"attenuationStartDistance"]) {
+        light.attenuationStartDistance = [json[@"attenuationStartDistance"] floatValue];
+    }
+    
+    if(json[@"attenuationEndDistance"]) {
+        light.attenuationEndDistance = [json[@"attenuationEndDistance"] floatValue];
+    }
+    
+    if(json[@"spotInnerAngle"]) {
+        light.spotInnerAngle = [json[@"spotInnerAngle"] floatValue];
+    }
+    
+    if(json[@"spotOuterAngle"]) {
+        light.spotOuterAngle = [json[@"spotOuterAngle"] floatValue];
+    }
+    
+    if(json[@"castsShadow"]) {
+        light.castsShadow = [json[@"castsShadow"] boolValue];
+    }
+    
+    if(json[@"shadowRadius"]) {
+        light.shadowRadius = [json[@"shadowRadius"] floatValue];
+    }
+    
+    if(json[@"shadowColor"]) {
+        light.shadowColor = (__bridge id _Nonnull)([RCTConvert CGColor:json[@"shadowColor"]]);
+    }
+    
+    
+    if(json[@"shadowSampleCount"]) {
+        light.shadowSampleCount = [json[@"shadowSampleCount"] integerValue];
+    }
+    
+    if(json[@"shadowBias"]) {
+        light.shadowBias = [json[@"shadowBias"] floatValue];
+    }
+    
+    if(json[@"shadowMode"]) {
+        light.shadowMode = [json[@"shadowMode"] integerValue];
+    }
+    if(json[@"orthographicScale"]) {
+        light.orthographicScale = [json[@"orthographicScale"] floatValue];
+    }
+    
+    if(json[@"zFar"]) {
+        light.zFar = [json[@"zFar"] floatValue];
+    }
+    
+    if(json[@"zNear"]) {
+        light.zNear = [json[@"zNear"] floatValue];
+    }
+}
 
 
 @end

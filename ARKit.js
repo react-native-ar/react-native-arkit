@@ -182,10 +182,14 @@ ARKit.exportModel = presetId => {
 ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
-  lightEstimation: PropTypes.bool,
+  lightEstimationEnabled: PropTypes.bool,
+  autoenablesDefaultLighting: PropTypes.bool,
   worldAlignment: PropTypes.number,
   onPlaneDetected: PropTypes.func,
   onFeaturesDetected: PropTypes.func,
+  // onLightEstimation is called rapidly, better poll with
+  // ARKit.getCurrentLightEstimation()
+  onLightEstimation: PropTypes.func,
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,

@@ -11,6 +11,7 @@ import ARCone from './components/ARCone';
 import ARCylinder from './components/ARCylinder';
 import ARGroup from './components/ARGroup';
 import ARKit from './ARKit';
+import ARLight from './components/ARLight';
 import ARModel from './components/ARModel';
 import ARPlane from './components/ARPlane';
 import ARPyramid from './components/ARPyramid';
@@ -37,6 +38,7 @@ ARKit.Model = ARModel;
 ARKit.Sprite = ARSprite;
 ARKit.Group = ARGroup;
 ARKit.Shape = ARShape;
+ARKit.Light = ARLight;
 
 module.exports = {
   ARKit,
@@ -52,6 +54,7 @@ module.exports = {
   ARPlane,
   ARText,
   ARModel,
+  ARLight,
   ARGroup,
   withProjectedPosition,
 };
