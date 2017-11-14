@@ -392,7 +392,7 @@ You might set `autoenablesDefaultLighting={false}` on The `<ARKit />` component 
 | `type` | any of `ARKit.LightType` | see [here for details](https://developer.apple.com/documentation/scenekit/scnlight.lighttype) |
 | `color` | `string` | the color of the light |
 | `temperature` | `Number` | The color temperature of the light |
-| `intensity` | `Number` | The light intensity
+| `intensity` | `Number` | The light intensity |
 | `lightCategoryBitMask` | `Number`/`bitmask` | control which objects are lit by this light |
 | `castsShadow` | `boolean` | whether to cast shadows on object |
 | `shadowMode`| `ARKit.ShadowMode.* | Define the shadowmode. Set to `ARKit.ShadowMode.Deferred` to cast shadows on invisible objects (like an invisible floor plane) |
