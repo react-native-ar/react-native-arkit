@@ -221,7 +221,7 @@ Most 3d object have these common properties
 | `transition` | `{duration: 1}` | Some property changes can be animated like in css transitions. Currently you can specify the duration (in seconds). |
 | `renderingOrder` | Number | Order in which object is rendered. Usefull to place elements "behind" others, although they are nearer. |
 | `categoryBitMask` | Number / bitmask | control which lights affect this object |
-| `castsShadow` | `boolean` | whether this object casts hadows | 
+| `castsShadow` | `boolean` | whether this object casts hadows |
 
 *New experimental feature:*
 
@@ -385,6 +385,7 @@ Place lights on the scene!
 You might set `autoenablesDefaultLighting={false}` on The `<ARKit />` component to disable default lighting. You can use `lightEstimationEnabled` and `ARKit.getCurrentLightEstimation()` to find values for intensity and temperature. This produces much nicer results then `autoenablesDefaultLighting`.
 
 
+
 | Prop | Type | Description |
 |---|---|
 | `position` | `{ x, y, z }` |  |
@@ -396,6 +397,7 @@ You might set `autoenablesDefaultLighting={false}` on The `<ARKit />` component 
 | `lightCategoryBitMask` | `Number`/`bitmask` | control which objects are lit by this light |
 | `castsShadow` | `boolean` | whether to cast shadows on object |
 | `shadowMode`| `ARKit.ShadowMode.* | Define the shadowmode. Set to `ARKit.ShadowMode.Deferred` to cast shadows on invisible objects (like an invisible floor plane) |
+
 
 
 Most properties described here are also supported: https://developer.apple.com/documentation/scenekit/scnlight
