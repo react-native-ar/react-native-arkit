@@ -29,6 +29,10 @@ const PROP_TYPES_IMMUTABLE = {
   id: PropTypes.string,
   frame: PropTypes.string,
 };
+const MOUNT_UNMOUNT_ANIMATION_PROPS = {
+  propsOnMount: PropTypes.any,
+  propsOnUnMount: PropTypes.any,
+};
 const PROP_TYPES_NODE = {
   position,
   transition,
@@ -51,6 +55,7 @@ const nodeProps = (id, props) => ({
 
 export default (mountConfig, propTypes = {}) => {
   const allPropTypes = {
+    ...MOUNT_UNMOUNT_ANIMATION_PROPS,
     ...PROP_TYPES_IMMUTABLE,
     ...PROP_TYPES_NODE,
     ...propTypes,
@@ -90,7 +95,13 @@ export default (mountConfig, propTypes = {}) => {
     identifier = null;
     componentDidMount() {
       this.identifier = this.props.id || generateId();
-      mount(this.identifier, this.props);
+      const { propsOnMount, ...props } = this.props;
+      if (propsOnMount) {
+        mount(this.identifier, { ...props, ...propsOnMount });
+        this.componentWillUpdate(props);
+      } else {
+        mount(this.identifier, props);
+      }
     }
 
     componentWillUpdate(props) {
@@ -122,7 +133,18 @@ export default (mountConfig, propTypes = {}) => {
     }
 
     componentWillUnmount() {
-      ARGeosManager.unmount(this.identifier);
+      const { propsOnUnmount, ...props } = this.props;
+      if (propsOnUnmount) {
+        const fullProps = { ...props, ...propsOnUnmount };
+        const { transition: { duration = 0 } = {} } = fullProps;
+
+        this.componentWillUpdate(fullProps);
+        global.setTimeout(() => {
+          ARGeosManager.unmount(this.identifier);
+        }, duration * 1000);
+      } else {
+        ARGeosManager.unmount(this.identifier);
+      }
     }
 
     render() {

@@ -203,158 +203,204 @@ All methods return a promise with the result.
 | `hitTestSceneObjects` | point |  check if a scene object has ben hit by point (`{x,y}`) |
 
 
+#### 3D objects
+
+##### General props
+
+Most 3d object have these common properties
+
+| Prop | Type | Description |
+|---|---|
+| `position` | `{ x, y, z }` | The object's position (y is up) |
+| `scale` | Number | The scale of the object. Defaults to 1 |
+| `eulerAngles` | `{ x, y, z }` | The rotation in eulerAngles |
+| `rotation` | TODO | see scenkit documentation |
+| `orientation` | TODO | see scenkit documentation |
+| `shape` | depends on object | the shape of the object (will probably renamed to geometry in future versions)
+| `material` | `{ diffuse, metalness, roughness, lightingModel, shaders }` | the material of the object |
+| `transition` | `{duration: 1}` | Some property changes can be animated like in css transitions. Currently you can specify the duration (in seconds). |
+| `renderingOrder` | Number | Order in which object is rendered. Usefull to place elements "behind" others, although they are nearer. |
+| `categoryBitMask` | Number / bitmask | control which lights affect this object |
+| `castsShadow` | `boolean` | whether this object casts hadows | 
+
+*New experimental feature:*
+
+You can switch properties on mount or onmount by specifying `propsOnMount` and `propsOnUnmount`.
+E.g. you can scale an object on unmount:
+
+```
+<ARKit.Sphere
+  position={{x:0,y:0,z:0}}
+  scale={1}
+  transition={{duration: 1}}
+  propsOnUnmount={{
+    scale: 0
+  }}
+/>
+```
+
+#### Material properties
+
+Most objects take a material property with these sub-props:
+
+| Prop | Type | Description |
+|---|---|
+| `diffuse` | colorstring | diffuse color  |
+| `metalness` | number | metalness of the object |
+| `roughness` | number | roughness of the object |
+| `lightingModel` | `ARKit.LightingModel.*` | [LightingModel](https://developer.apple.com/documentation/scenekit/scnmaterial.lightingmodel) |
+| `shaders` | Object with keys from `ARKit.ShaderModifierEntryPoint.*` and shader strings as values | [Shader modifiers](https://developer.apple.com/documentation/scenekit/scnshadable) |
+| `colorBufferWriteMask` | `ARKit.ColorMask.*` | [color mask](https://developer.apple.com/documentation/scenekit/scncolormask). Set to ARKit.ColorMask.None so that an object is transparent, but receives deferred shadows. |
+
+
+
+
 
 #### [`<ARKit.Box />`](https://developer.apple.com/documentation/scenekit/scnbox)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length, chamfer }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
+And any common object property (position, material, etc.)
 
 #### [`<ARKit.Sphere />`](https://developer.apple.com/documentation/scenekit/scnsphere)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
+
 
 #### [`<ARKit.Cylinder />`](https://developer.apple.com/documentation/scenekit/scncylinder)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ radius, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Cone />`](https://developer.apple.com/documentation/scenekit/scncone)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ topR, bottomR, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Pyramid />`](https://developer.apple.com/documentation/scenekit/scnpyramid)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height, length }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Tube />`](https://developer.apple.com/documentation/scenekit/scntube)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ innerR, outerR, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Torus />`](https://developer.apple.com/documentation/scenekit/scntorus)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ ringR, pipeR }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Capsule />`](https://developer.apple.com/documentation/scenekit/scncapsule)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ capR, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
 
 #### [`<ARKit.Plane />`](https://developer.apple.com/documentation/scenekit/scnplane)
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `shape` | `{ width, height }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
+Notice: planes are veritcally aligned. If you want a horizontal plane, rotate it around the x-axis.
+
+*Example*:
+
+This is a horizontal plane that only receives shadows, but is invisible otherwise:
+
+```
+<ARKit.Plane
+    eulerAngles={{ x: Math.PI / 2 }}
+    position={floorPlane.position}
+    renderingOrder={9999}
+    material={{
+      color: '#ffffff',
+      lightingModel: ARKit.LightingModel.Constant,
+      colorBufferWriteMask: ARKit.ColorMask.None,
+    }}
+    shape={{
+      width: 100,
+      height: 100,
+    }}
+  />
+```
+
 
 #### [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
-
-##### Props
 
 | Prop | Type |
 |---|---|
 | `text` | `String` |
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `font` | `{ name, size, depth, chamfer }` |
-| `material` | `{ diffuse, metalness, roughness, lightingModel }` |
+
 
 
 #### `<ARKit.Model />`
 
 SceneKit only supports `.scn` and `.dae` formats.
 
-##### Props
 
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
 | `model` | `{ file, node, scale, alpha }` |
+
+Objects currently don't take material property.
 
 #### `<ARKit.Shape />`
 
 Creates a extruded shape by an svg path.
 See https://github.com/HippoAR/react-native-arkit/pull/89 for details
 
-#### [`<ARKit.Light />`](https://developer.apple.com/documentation/scenekit/scnlight)
-
-##### Props
-
 | Prop | Type |
 |---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
-| `type` | any of `ARKit.LightType`, see [here for details](https://developer.apple.com/documentation/scenekit/scnlight.lighttype)
-| `color` | `string` |
+| `shape` | `{ pathSvg, extrusion, pathFlatness, chamferRadius, chamferProfilePathSvg, chamferProfilePathFlatness }` |
+
+
+
+#### [`<ARKit.Light />`](https://developer.apple.com/documentation/scenekit/scnlight)
+
+Place lights on the scene!
+
+You might set `autoenablesDefaultLighting={false}` on The `<ARKit />` component to disable default lighting. You can use `lightEstimationEnabled` and `ARKit.getCurrentLightEstimation()` to find values for intensity and temperature. This produces much nicer results then `autoenablesDefaultLighting`.
+
+
+| Prop | Type | Description |
+|---|---|
+| `position` | `{ x, y, z }` |  |
+| `eulerAngles` | `{ x, y, z }` |  |
+| `type` | any of `ARKit.LightType` | see [here for details](https://developer.apple.com/documentation/scenekit/scnlight.lighttype) |
+| `color` | `string` | the color of the light |
+| `temperature` | `Number` | The color temperature of the light |
+| `intensity` | `Number` | The light intensity
+| `lightCategoryBitMask` | `Number`/`bitmask` | control which objects are lit by this light |
+| `castsShadow` | `boolean` | whether to cast shadows on object |
+| `shadowMode`| `ARKit.ShadowMode.* | Define the shadowmode. Set to `ARKit.ShadowMode.Deferred` to cast shadows on invisible objects (like an invisible floor plane) |
+
 
 Most properties described here are also supported: https://developer.apple.com/documentation/scenekit/scnlight
 
 This feature is new. If you experience any problem, please report an issue!
-
-##### Props
-
-| Prop | Type |
-|---|---|
-| `position` | `{ x, y, z }` |
-| `eulerAngles` | `{ x, y, z }` |
-| `shape` | `{ pathSvg, extrusion, pathFlatness, chamferRadius, chamferProfilePathSvg, chamferProfilePathFlatness }` |
 
 
 ### HOCs (higher order components)
