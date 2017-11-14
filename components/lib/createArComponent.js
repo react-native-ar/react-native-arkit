@@ -53,6 +53,7 @@ const nodeProps = (id, props) => ({
   ...pick(props, NODE_PROPS),
 });
 
+const DEBUG = false;
 const TIMERS = {};
 export default (mountConfig, propTypes = {}) => {
   const allPropTypes = {
@@ -101,6 +102,8 @@ export default (mountConfig, propTypes = {}) => {
         const {
           transition: transitionOnMount = { duration: 0 },
         } = propsOnMount;
+        if (DEBUG) console.log('mount', { ...props, ...propsOnMount });
+        this.doPendingTimers();
         mount(this.identifier, { ...props, ...propsOnMount });
 
         this.delayed(() => {
@@ -118,6 +121,9 @@ export default (mountConfig, propTypes = {}) => {
         key => !isDeepEqual(props[key], this.props[key]),
       );
 
+      if (DEBUG) {
+        console.log('will update', changedKeys, props);
+      }
       if (isEmpty(changedKeys)) {
         return;
       }
@@ -132,10 +138,12 @@ export default (mountConfig, propTypes = {}) => {
         }
       }
       if (some(NODE_PROPS, k => changedKeys.includes(k))) {
+        if (DEBUG) console.log('update node');
         ARGeosManager.updateNode(this.identifier, pick(props, NODE_PROPS));
       }
 
       if (some(nonNodePropKeys, k => changedKeys.includes(k))) {
+        if (DEBUG) console.log('update other stuff');
         update(this.identifier, props);
       }
     }
@@ -151,6 +159,7 @@ export default (mountConfig, propTypes = {}) => {
           ARGeosManager.unmount(this.identifier);
         }, duration * 1000);
       } else {
+        this.doPendingTimers();
         ARGeosManager.unmount(this.identifier);
       }
     }
@@ -158,14 +167,7 @@ export default (mountConfig, propTypes = {}) => {
     do something delayed, but keep order of events per id
     * */
     delayed(callback, duration) {
-      if (TIMERS[this.identifier]) {
-        // timer is running, do it now, otherwise we might change order
-        // e.g. it could be that an unmount  happens after a remount
-
-        global.clearTimeout(TIMERS[this.identifier].handle);
-        TIMERS[this.identifier].callback.call(this);
-      }
-
+      this.doPendingTimers();
       TIMERS[this.identifier] = {
         handle: global.setTimeout(() => {
           callback.call(this);
@@ -173,6 +175,16 @@ export default (mountConfig, propTypes = {}) => {
         }, duration),
         callback,
       };
+    }
+
+    doPendingTimers() {
+      if (TIMERS[this.identifier]) {
+        // timer is running, do it now, otherwise we might change order
+        // e.g. it could be that an unmount  happens after a remount
+        global.clearTimeout(TIMERS[this.identifier].handle);
+        TIMERS[this.identifier].callback.call(this);
+        delete TIMERS[this.identifier];
+      }
     }
 
     render() {
