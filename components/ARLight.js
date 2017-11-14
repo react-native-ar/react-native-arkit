@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 
+import { categoryBitMask, color, lightType, shadowMode } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
-import { color, lightType } from './lib/propTypes';
 
 const ARLight = createArComponent('addLight', {
   type: lightType,
@@ -17,11 +17,12 @@ const ARLight = createArComponent('addLight', {
   shadowColor: color,
   // shadowMapSize: PropTypes.number,
   shadowSampleCount: PropTypes.number,
-  // shadowMode // not supported yet https://developer.apple.com/documentation/scenekit/scnlight/1522847-shadowmode
+  shadowMode,
   shadowBias: PropTypes.number,
   orthographicScale: PropTypes.number,
   zFar: PropTypes.number,
   zNear: PropTypes.number,
+  lightCategoryBitMask: categoryBitMask,
 });
 
 module.exports = ARLight;

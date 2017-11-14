@@ -305,6 +305,7 @@
     if (json[@"lightingModel"]) {
         material.lightingModelName = json[@"lightingModel"];
     }
+    
     if (json[@"diffuse"]) {
         material.diffuse.contents = [self UIColor:json[@"diffuse"]];
     }
@@ -321,9 +322,21 @@
     if(json[@"shaders"] ) {
         material.shaderModifiers = json[@"shaders"];
     }
+    
+    if(json[@"writesToDepthBuffer"] ) {
+        material.writesToDepthBuffer = [json[@"writesToDepthBuffer"] boolValue];
+    }
+    
+    if(json[@"colorBufferWriteMask"] ) {
+        material.colorBufferWriteMask = [json[@"colorBufferWriteMask"] integerValue];
+    }
 }
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json {
+    
+    if (json[@"categoryBitMask"]) {
+        node.categoryBitMask = [json[@"categoryBitMask"] integerValue];
+    }
     if(json[@"transition"]) {
         NSDictionary * transition =json[@"transition"];
         if(transition[@"duration"]) {
@@ -360,6 +373,9 @@
 
 
 + (void)setLightProperties:(SCNLight *)light properties:(id)json {
+    if (json[@"lightCategoryBitMask"]) {
+        light.categoryBitMask = [json[@"lightCategoryBitMask"] integerValue];
+    }
     if(json[@"type"]) {
         light.type = json[@"type"];
     }
@@ -399,7 +415,7 @@
     }
     
     if(json[@"shadowColor"]) {
-        light.shadowColor = json[@"shadowColor"];
+        light.shadowColor = (__bridge id _Nonnull)([RCTConvert CGColor:json[@"shadowColor"]]);
     }
     
     
@@ -411,6 +427,9 @@
         light.shadowBias = [json[@"shadowBias"] floatValue];
     }
     
+    if(json[@"shadowMode"]) {
+        light.shadowMode = [json[@"shadowMode"] integerValue];
+    }
     if(json[@"orthographicScale"]) {
         light.orthographicScale = [json[@"orthographicScale"] floatValue];
     }

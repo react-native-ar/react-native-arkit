@@ -10,6 +10,7 @@ import some from 'lodash/some';
 import { NativeModules } from 'react-native';
 
 import {
+  categoryBitMask,
   eulerAngles,
   orientation,
   position,
@@ -20,7 +21,7 @@ import {
 import { processColor, processColorInMaterial } from './parseColor';
 import generateId from './generateId';
 
-const ARGeosManager = NativeModules.ARGeosManager;
+const { ARGeosManager, ARKitManager } = NativeModules;
 
 const PROP_TYPES_IMMUTABLE = {
   id: PropTypes.string,
@@ -33,6 +34,7 @@ const PROP_TYPES_NODE = {
   eulerAngles,
   rotation,
   scale,
+  categoryBitMask,
 };
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
@@ -54,6 +56,9 @@ export default (mountConfig, propTypes = {}) => {
   const getNonNodeProps = props => ({
     ...pick(props, nonNodePropKeys),
     ...(props.color ? { color: processColor(props.color) } : {}),
+    ...(props.shadowColor
+      ? { shadowColor: processColor(props.shadowColor) }
+      : {}),
     ...(props.material
       ? { material: processColorInMaterial(props.material) }
       : {}),
@@ -81,7 +86,6 @@ export default (mountConfig, propTypes = {}) => {
     identifier = null;
     componentDidMount() {
       this.identifier = this.props.id || generateId();
-
       mount(this.identifier, this.props);
     }
 
@@ -104,11 +108,12 @@ export default (mountConfig, propTypes = {}) => {
           );
         }
       }
+      if (some(NODE_PROPS, k => changedKeys.includes(k))) {
+        ARGeosManager.updateNode(this.identifier, pick(props, NODE_PROPS));
+      }
 
       if (some(nonNodePropKeys, k => changedKeys.includes(k))) {
         update(this.identifier, props);
-      } else if (some(NODE_PROPS, k => changedKeys.includes(k))) {
-        ARGeosManager.updateNode(this.identifier, pick(props, NODE_PROPS));
       }
     }
 

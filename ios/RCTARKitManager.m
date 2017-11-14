@@ -45,6 +45,20 @@ RCT_EXPORT_MODULE()
                      @"Spot": SCNLightTypeSpot,
                      @"IES": SCNLightTypeIES
                      },
+             @"ShadowMode": @{
+                     @"Forward": [@(SCNShadowModeForward) stringValue],
+                     @"Deferred": [@(SCNShadowModeDeferred) stringValue],
+                     @"ModeModulated": [@(SCNShadowModeModulated) stringValue],
+                     },
+             @"ColorMask": @{
+                     @"All": [@(SCNColorMaskAll) stringValue],
+                     @"None": [@(SCNColorMaskNone) stringValue],
+                     @"Alpha": [@(SCNColorMaskAlpha) stringValue],
+                     @"Blue": [@(SCNColorMaskBlue) stringValue],
+                     @"Red": [@(SCNColorMaskRed) stringValue],
+                     @"Green": [@(SCNColorMaskGreen) stringValue],
+                     },
+             
              @"ShaderModifierEntryPoint": @{
                      @"Geometry": SCNShaderModifierEntryPointGeometry,
                      @"Surface": SCNShaderModifierEntryPointSurface,

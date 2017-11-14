@@ -70,11 +70,17 @@ RCT_EXPORT_METHOD(addLight:(SCNLight *)light node:(SCNNode *)node frame:(NSStrin
 
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
+ 
+    
     [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
+
+    
 }
 
 RCT_EXPORT_METHOD(updateNode:(NSString *)identifier properties:(NSDictionary *) properties) {
+
     [[RCTARKitNodes sharedInstance] updateNode:identifier properties:properties];
+
 }
 
 @end

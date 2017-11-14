@@ -12,7 +12,7 @@ export const position = PropTypes.shape({
 });
 
 export const scale = PropTypes.number;
-
+export const categoryBitMask = PropTypes.number;
 export const transition = PropTypes.shape({
   duration: PropTypes.number,
 });
@@ -52,7 +52,10 @@ export const chamferMode = PropTypes.oneOf(values(ARKitManager.ChamferMode));
 export const color = PropTypes.string;
 
 export const lightType = PropTypes.oneOf(values(ARKitManager.LightType));
-
+export const shadowMode = PropTypes.oneOf(values(ARKitManager.ShadowMode));
+export const colorBufferWriteMask = PropTypes.oneOf(
+  values(ARKitManager.ColorMask),
+);
 export const material = PropTypes.shape({
   color,
   metalness: PropTypes.number,
@@ -60,4 +63,6 @@ export const material = PropTypes.shape({
   blendMode,
   lightingModel,
   shaders,
+  writesToDepthBuffer: PropTypes.bool,
+  colorBufferWriteMask,
 });
