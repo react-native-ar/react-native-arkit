@@ -253,6 +253,10 @@ RCT_EXPORT_METHOD(getCurrentLightEstimation:(RCTPromiseResolveBlock)resolve reje
     resolve([[ARKit sharedInstance] getCurrentLightEstimation]);
 }
 
+RCT_EXPORT_METHOD(getCurrentDetectedFeaturePoints:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve([[ARKit sharedInstance] getCurrentDetectedFeaturePoints]);
+}
+
 RCT_EXPORT_METHOD(projectPoint:
                   (NSDictionary *)pointDict
                   resolve:(RCTPromiseResolveBlock)resolve

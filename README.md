@@ -61,7 +61,12 @@ export default class ReactNativeARKit extends Component {
           style={{ flex: 1 }}
           debug
           planeDetection
-          lightEstimation
+          // enable light estimation (defaults to true)
+          lightEstimationEnabled
+          // get the current lightEstimation (if enabled)
+          // it fires rapidly, so better poll it from outside with
+          // ARKit.getCurrentLightEstimation()
+          onLightEstimation={e => console.log(e.nativeEvent)}
           onPlaneDetected={console.log} // event listener for plane detection
           onPlaneUpdate={console.log} // event listener for plane update
         >
@@ -169,7 +174,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 |---|---|---|---|
 | `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
 | `planeDetection` | `Boolean` | `false` | ARKit plane detection.
-| `lightEstimation` | `Boolean` | `false` | ARKit light estimation.
+| `lightEstimationEnabled` | `Boolean` | `false` | ARKit light estimation.
 | `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | `ARKit.ARWorldAlignment.Gravity` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera.|
 
 ##### Events
@@ -177,15 +182,22 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | Event Name | Returns | Notes
 |---|---|---|
 | `onPlaneDetected` | `{ id, center, extent }` | When a plane is first detected.
+| `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
+| `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
 | `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
 
 ##### Static methods
+
+All methods return a promise with the result.
 
 | Method Name | Arguments |  Notes
 |---|---|---|
 | `snapshot` |  |  | Take a screenshot (will save to Photo Library) |
 | `snapshotCamera` |  | Take a screenshot without 3d models (will save to Photo Library) |
 | `getCameraPosition` |  | Get the current position of the `ARCamera` |
+| `getCurrentLightEstimation` |  | Get current light estimation  `{ ambientColorTemperature, ambientIntensity}`
+| `getCurrentDetectedFeaturePoints` |  | Get current detected feature points (in last current frame)  (array)
+
 | `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation) |
 | `hitTestPlanes` | point, type  |  check if a plane has ben hit by point (`{x,y}`) with detection type (any of `ARKit.ARHitTestResultType`). See https://developer.apple.com/documentation/arkit/arhittestresulttype?language=objc for further information |
 | `hitTestSceneObjects` | point |  check if a scene object has ben hit by point (`{x,y}`) |

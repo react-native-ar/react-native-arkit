@@ -157,7 +157,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 
 
 - (void)setLightEstimationEnabled:(BOOL)lightEstimationEnabled {
-    ARConfiguration *configuration = self.session.configuration;
+    ARConfiguration *configuration = self.configuration;
     configuration.lightEstimationEnabled = lightEstimationEnabled;
     [self resume];
 }
@@ -239,7 +239,7 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     
     _configuration = [ARWorldTrackingConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
-    _configuration.lightEstimationEnabled = YES;
+    _configuration.lightEstimationEnabled = NO;
     return _configuration;
 }
 
@@ -437,8 +437,30 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 #pragma mark - ARSessionDelegate
 
+- (ARFrame * _Nullable)currentFrame {
+    return self.arView.session.currentFrame;
+}
+
 - (NSDictionary *)getCurrentLightEstimation {
-    return [self wrapLightEstimation:self.arView.session.currentFrame.lightEstimate];
+    return [self wrapLightEstimation:[self currentFrame].lightEstimate];
+}
+
+- (NSMutableArray *)getCurrentDetectedFeaturePoints {
+    NSMutableArray * featurePoints = [NSMutableArray array];
+    for (int i = 0; i < [self currentFrame].rawFeaturePoints.count; i++) {
+        vector_float3 point = [self currentFrame].rawFeaturePoints.points[i];
+        
+        NSString * pointId = [NSString stringWithFormat:@"featurepoint_%lld",[self currentFrame].rawFeaturePoints.identifiers[i]];
+        
+        [featurePoints addObject:@{
+                                   @"x": @(point[0]),
+                                   @"y": @(point[1]),
+                                   @"z": @(point[2]),
+                                   @"id":pointId,
+                                   }];
+        
+    }
+    return featurePoints;
 }
 
 - (void)session:(ARSession *)session didUpdateFrame:(ARFrame *)frame {
@@ -448,20 +470,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         }
     }
     if (self.onFeaturesDetected) {
-        NSMutableArray * featurePoints = [NSMutableArray array];
-        for (int i = 0; i < frame.rawFeaturePoints.count; i++) {
-            vector_float3 point = frame.rawFeaturePoints.points[i];
-            
-            NSString * pointId = [NSString stringWithFormat:@"featurepoint_%lld",frame.rawFeaturePoints.identifiers[i]];
-            
-            [featurePoints addObject:@{
-                                       @"x": @(point[0]),
-                                       @"y": @(point[1]),
-                                       @"z": @(point[2]),
-                                       @"id":pointId,
-                                       }];
-            
-        }
+        NSMutableArray * featurePoints = [self getCurrentDetectedFeaturePoints];
         dispatch_async(dispatch_get_main_queue(), ^{
             
             
@@ -473,7 +482,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         });
     }
     
-    if (self.onLightEstimation) {
+    if (self.lightEstimationEnabled && self.onLightEstimation) {
         /** this is called rapidly and is therefore demanding, better poll it from outside with getCurrentLightEstimation **/
         
         
