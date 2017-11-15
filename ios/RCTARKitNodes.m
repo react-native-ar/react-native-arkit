@@ -223,16 +223,14 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     
     SCNNode *node = [self.nodes objectForKey:key];
     if (node) {
-       // NSLog(@"removing node %@", key);
+        [self.nodes removeObjectForKey:key];
         if(node.light) {
             // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
             node.hidden = YES;
-            
-              [node removeFromParentNode];
+            [node removeFromParentNode];
         } else {
-        [node removeFromParentNode];
+            [node removeFromParentNode];
         }
-        [self.nodes removeObjectForKey:key];
     }
 }
 
