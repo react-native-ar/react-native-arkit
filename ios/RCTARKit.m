@@ -136,12 +136,12 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 }
 
 - (BOOL)planeDetection {
-    ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.session.configuration;
+    ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.configuration;
     return configuration.planeDetection == ARPlaneDetectionHorizontal;
 }
 
 - (void)setPlaneDetection:(BOOL)planeDetection {
-    ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.session.configuration;
+    ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.configuration;
     if (planeDetection) {
         configuration.planeDetection = ARPlaneDetectionHorizontal;
     } else {
@@ -151,7 +151,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 }
 
 - (BOOL)lightEstimationEnabled {
-    ARConfiguration *configuration = self.session.configuration;
+    ARConfiguration *configuration = self.configuration;
     return configuration.lightEstimationEnabled;
 }
 
@@ -170,7 +170,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 }
 
 - (ARWorldAlignment)worldAlignment {
-    ARConfiguration *configuration = self.session.configuration;
+    ARConfiguration *configuration = self.configuration;
     return configuration.worldAlignment;
 }
 
