@@ -11,9 +11,9 @@ const ARShape = createArComponent('addShape', {
     chamferMode,
     chamferRadius: PropTypes.number,
     chamferProfilePathSvg: PropTypes.string,
-    chamferProfilePathFlatness: PropTypes.string,
+    chamferProfilePathFlatness: PropTypes.number,
   }),
   material,
 });
 
-module.exports = ARShape;
+export default ARShape;

@@ -38,6 +38,8 @@
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json;
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json;
++ (void)setShapeProperties:(SCNGeometry *)geometry properties:(id)json;
++ (void)setLightProperties:(SCNLight *)light properties:(id)json;
 
 @end
 

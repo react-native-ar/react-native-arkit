@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { NativeModules } from 'react-native';
 import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
@@ -6,8 +7,6 @@ import isEmpty from 'lodash/isEmpty';
 import keys from 'lodash/keys';
 import pick from 'lodash/pick';
 import some from 'lodash/some';
-
-import { NativeModules } from 'react-native';
 
 import {
   castsShadow,
@@ -47,25 +46,29 @@ const PROP_TYPES_NODE = {
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
 const IMMUTABLE_PROPS = keys(PROP_TYPES_IMMUTABLE);
-
-const nodeProps = (id, props) => ({
-  id,
-  ...pick(props, NODE_PROPS),
-});
-
 const DEBUG = false;
 const TIMERS = {};
-export default (mountConfig, propTypes = {}) => {
+
+/**
+mountConfig,
+propTypes,
+nonUpdateablePropKeys: if a prop key is in this list,
+the property will be updated on scenekit, instead of beeing remounted.
+
+this excludes at the moment: model, font, text, (???)
+* */
+export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
   const allPropTypes = {
     ...MOUNT_UNMOUNT_ANIMATION_PROPS,
     ...PROP_TYPES_IMMUTABLE,
     ...PROP_TYPES_NODE,
     ...propTypes,
   };
+  // any custom props (material, shape, ...)
   const nonNodePropKeys = keys(propTypes);
 
-  const getNonNodeProps = props => ({
-    ...pick(props, nonNodePropKeys),
+  const processColors = props => ({
+    ...props,
     ...(props.color ? { color: processColor(props.color) } : {}),
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
@@ -75,22 +78,25 @@ export default (mountConfig, propTypes = {}) => {
       : {}),
   });
 
+  const getNonNodeProps = props => ({
+    ...pick(props, nonNodePropKeys),
+    ...processColors(props),
+  });
+
   const mountFunc =
     typeof mountConfig === 'string'
       ? ARGeosManager[mountConfig]
       : mountConfig.mount;
 
-  // this function is only called on non-node properties
-  const updateFunc =
-    typeof mountConfig === 'object' && mountConfig.update
-      ? mountConfig.update
-      : mountFunc;
-
   const mount = (id, props) => {
-    mountFunc(getNonNodeProps(props), nodeProps(id, props), props.frame);
-  };
-  const update = (id, props) => {
-    updateFunc(getNonNodeProps(props), nodeProps(id, props), props.frame);
+    mountFunc(
+      getNonNodeProps(props),
+      {
+        id,
+        ...pick(props, NODE_PROPS),
+      },
+      props.frame,
+    );
   };
 
   const ARComponent = class extends Component {
@@ -99,12 +105,13 @@ export default (mountConfig, propTypes = {}) => {
       this.identifier = this.props.id || generateId();
       const { propsOnMount, ...props } = this.props;
       if (propsOnMount) {
+        const fullPropsOnMount = { ...props, ...propsOnMount };
         const {
           transition: transitionOnMount = { duration: 0 },
-        } = propsOnMount;
-        if (DEBUG) console.log('mount', { ...props, ...propsOnMount });
+        } = fullPropsOnMount;
+        if (DEBUG) console.log('mount', fullPropsOnMount);
         this.doPendingTimers();
-        mount(this.identifier, { ...props, ...propsOnMount });
+        mount(this.identifier, fullPropsOnMount);
 
         this.delayed(() => {
           this.props = propsOnMount;
@@ -121,12 +128,10 @@ export default (mountConfig, propTypes = {}) => {
         key => !isDeepEqual(props[key], this.props[key]),
       );
 
-      if (DEBUG) {
-        console.log('will update', changedKeys, props);
-      }
       if (isEmpty(changedKeys)) {
         return;
       }
+
       if (__DEV__) {
         const nonAllowedUpdates = filter(changedKeys, k =>
           IMMUTABLE_PROPS.includes(k),
@@ -137,14 +142,25 @@ export default (mountConfig, propTypes = {}) => {
           );
         }
       }
-      if (some(NODE_PROPS, k => changedKeys.includes(k))) {
-        if (DEBUG) console.log('update node');
-        ARGeosManager.updateNode(this.identifier, pick(props, NODE_PROPS));
-      }
 
-      if (some(nonNodePropKeys, k => changedKeys.includes(k))) {
-        if (DEBUG) console.log('update other stuff');
-        update(this.identifier, props);
+      if (some(changedKeys, k => nonUpdateablePropKeys.includes(k))) {
+        if (DEBUG) console.log('need to remount node because of ', changedKeys);
+        mount(this.identifier, { ...this.props, ...props });
+      } else {
+        // every property is updateable
+        // send only these changed property to the native part
+
+        const propsToupdate = {
+          // always inclue transition
+          transition: {
+            ...this.props.transition,
+            ...props.transition,
+          },
+          ...processColors(pick(props, changedKeys)),
+        };
+
+        if (DEBUG) console.log('update node', propsToupdate);
+        ARGeosManager.updateNode(this.identifier, propsToupdate);
       }
     }
 

@@ -25,4 +25,4 @@ const ARLight = createArComponent('addLight', {
   lightCategoryBitMask: categoryBitMask,
 });
 
-module.exports = ARLight;
+export default ARLight;

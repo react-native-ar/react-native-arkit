@@ -36,7 +36,7 @@ typedef NS_OPTIONS(NSUInteger, RFReferenceFrame) {
 + (instancetype)sharedInstance;
 
 - (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame;
-- (void)updateNode:(NSString *)key properties:(NSDictionary *) properties;
+- (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties;
 - (float)getCameraDistanceToPoint:(SCNVector3)point;
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
 - (SCNNode *)nodeForKey:(NSString *)key;

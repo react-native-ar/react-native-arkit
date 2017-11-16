@@ -18,4 +18,4 @@ const ARCylinder = createArComponent('addCylinder', {
   material,
 });
 
-module.exports = ARCylinder;
+export default ARCylinder;

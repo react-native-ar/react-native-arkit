@@ -40,7 +40,7 @@ ARKit.Group = ARGroup;
 ARKit.Shape = ARShape;
 ARKit.Light = ARLight;
 
-module.exports = {
+export {
   ARKit,
   DeviceMotion,
   ARBox,
@@ -57,5 +57,5 @@ module.exports = {
   ARModel,
   ARLight,
   ARGroup,
-  withProjectedPosition
+  withProjectedPosition,
 };

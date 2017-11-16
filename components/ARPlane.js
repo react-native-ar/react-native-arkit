@@ -22,4 +22,4 @@ const ARPlane = createArComponent('addPlane', {
   material,
 });
 
-module.exports = ARPlane;
+export default ARPlane;

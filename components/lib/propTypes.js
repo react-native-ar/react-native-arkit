@@ -1,7 +1,6 @@
+import { NativeModules } from 'react-native';
 import { values } from 'lodash';
 import PropTypes from 'prop-types';
-
-import { NativeModules } from 'react-native';
 
 const ARKitManager = NativeModules.ARKitManager;
 

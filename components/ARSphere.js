@@ -17,4 +17,4 @@ const ARSphere = createArComponent('addSphere', {
   material,
 });
 
-module.exports = ARSphere;
+export default ARSphere;

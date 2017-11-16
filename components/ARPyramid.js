@@ -19,4 +19,4 @@ const ARPyramid = createArComponent('addPyramid', {
   material,
 });
 
-module.exports = ARPyramid;
+export default ARPyramid;

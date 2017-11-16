@@ -20,4 +20,4 @@ const ARBox = createArComponent('addBox', {
   material,
 });
 
-module.exports = ARBox;
+export default ARBox;

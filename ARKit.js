@@ -199,4 +199,4 @@ ARKit.propTypes = {
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
 
-module.exports = ARKit;
+export default ARKit;

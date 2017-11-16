@@ -239,7 +239,6 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     
     _configuration = [ARWorldTrackingConfiguration new];
     _configuration.planeDetection = ARPlaneDetectionHorizontal;
-  
     return _configuration;
 }
 
