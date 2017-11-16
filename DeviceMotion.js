@@ -16,4 +16,4 @@ const DeviceMotion = {
   },
 };
 
-module.exports = DeviceMotion;
+export default DeviceMotion;

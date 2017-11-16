@@ -19,4 +19,4 @@ const ARTube = createArComponent('addTube', {
   material,
 });
 
-module.exports = ARTube;
+export default ARTube;

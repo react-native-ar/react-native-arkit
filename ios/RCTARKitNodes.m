@@ -234,14 +234,28 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     }
 }
 
-- (void)updateNode:(NSString *)key properties:(NSDictionary *) properties {
-    SCNNode *node = [self.nodes objectForKey:key];
-    // only basic properties like position and rotation can currently be updated this way
+- (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties {
+    SCNNode *node = [self.nodes objectForKey:nodeId];
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
+        if(node.geometry && properties[@"shape"]) {
+              [RCTConvert setShapeProperties:node.geometry properties:properties[@"shape"]];
+        }
+        if(properties[@"material"]) {
+            for (id material in node.geometry.materials) {
+                [RCTConvert setMaterialProperties:material properties:properties[@"material"]];
+            }
+        }
+        if(node.light) {
+            [RCTConvert setLightProperties:node.light properties:properties];
+        }
+        
+        
     }
     
 }
+
+
 
 
 #pragma mark - RCTARKitSessionDelegate

@@ -7,4 +7,4 @@ const ARGroup = class extends Component {
   }
 };
 
-module.exports = ARGroup;
+export default ARGroup;

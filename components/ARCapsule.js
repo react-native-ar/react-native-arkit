@@ -18,4 +18,4 @@ const ARCapsule = createArComponent('addCapsule', {
   material,
 });
 
-module.exports = ARCapsule;
+export default ARCapsule;

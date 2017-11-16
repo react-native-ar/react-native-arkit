@@ -21,10 +21,11 @@ const ARText = createArComponent(
       // weight: PropTypes.string,
       size: PropTypes.number,
       depth: PropTypes.number,
-      chamfer: PropTypes.number,
+      chamfer: PropTypes.number
     }),
-    material,
+    material
   },
+  ['text', 'font']
 );
 
-module.exports = ARText;
+export default ARText;

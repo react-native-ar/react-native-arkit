@@ -45,20 +45,30 @@
     return node;
 }
 
+
++ (void)addMaterials:(SCNGeometry *)geometry json:(id)json sides:(int) sides {
+    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
+    
+    NSMutableArray *materials = [NSMutableArray array];
+    for (int i = 0; i < sides; i++)
+        [materials addObject: material];
+    geometry.materials = materials;
+}
+
 + (SCNBox *)SCNBox:(id)json {
     NSDictionary *shape = json[@"shape"];
+    
+    
     CGFloat width = [shape[@"width"] floatValue];
     CGFloat height = [shape[@"height"] floatValue];
     CGFloat length = [shape[@"length"] floatValue];
     CGFloat chamfer = [shape[@"chamfer"] floatValue];
     SCNBox *geometry = [SCNBox boxWithWidth:width height:height length:length chamferRadius:chamfer];
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material, material, material, material, material, material];
+    
+    [self addMaterials:geometry json:json sides:6];
     
     return geometry;
 }
-
-
 
 
 + (SCNSphere *)SCNSphere:(id)json {
@@ -66,8 +76,7 @@
     CGFloat radius = [shape[@"radius"] floatValue];
     SCNSphere *geometry = [SCNSphere sphereWithRadius:radius];
     
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material];
+    [self addMaterials:geometry json:json sides:1];
     
     return geometry;
 }
@@ -78,8 +87,7 @@
     CGFloat height = [shape[@"height"] floatValue];
     SCNCylinder *geometry = [SCNCylinder cylinderWithRadius:radius height:height];
     
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material, material, material];
+    [self addMaterials:geometry json:json sides:3];
     
     return geometry;
 }
@@ -91,8 +99,7 @@
     CGFloat height = [shape[@"height"] floatValue];
     SCNCone *geometry = [SCNCone coneWithTopRadius:topR bottomRadius:bottomR height:height];
     
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material, material];
+    [self addMaterials:geometry json:json sides:2];
     
     return geometry;
 }
@@ -104,8 +111,7 @@
     CGFloat height = [shape[@"height"] floatValue];
     SCNPyramid *geometry = [SCNPyramid pyramidWithWidth:width height:height length:length];
     
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material, material, material, material, material];
+    [self addMaterials:geometry json:json sides:5];
     
     return geometry;
 }
@@ -117,8 +123,7 @@
     CGFloat height = [shape[@"height"] floatValue];
     SCNTube *geometry = [SCNTube tubeWithInnerRadius:innerR outerRadius:outerR height:height];
     
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material, material, material, material];
+    [self addMaterials:geometry json:json sides:4];
     
     return geometry;
 }
@@ -129,8 +134,7 @@
     CGFloat pipeR = [shape[@"pipeR"] floatValue];
     SCNTorus *geometry = [SCNTorus torusWithRingRadius:ringR pipeRadius:pipeR];
     
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material];
+    [self addMaterials:geometry json:json sides:1];
     
     return geometry;
 }
@@ -141,8 +145,7 @@
     CGFloat height = [shape[@"height"] floatValue];
     SCNCapsule *geometry = [SCNCapsule capsuleWithCapRadius:capR height:height];
     
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    geometry.materials = @[material];
+    [self addMaterials:geometry json:json sides:1];
     
     return geometry;
 }
@@ -164,9 +167,8 @@
     if(shape[@"heightSegmentCount"]) {
         geometry.heightSegmentCount = [shape[@"heightSegmentCount"] intValue];
     }
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    material.doubleSided = YES;
-    geometry.materials = @[material];
+    [self addMaterials:geometry json:json sides:1];
+    
     return geometry;
 }
 
@@ -183,8 +185,34 @@
     return fullPath;
 }
 
++ (void)setChamferProfilePathSvg:(SCNShape *)geometry properties:(NSDictionary *)shape {
+    if (shape[@"chamferProfilePathSvg"]) {
+       
+    
+    SVGBezierPath * path = [self svgStringToBezier:shape[@"chamferProfilePathSvg"]];
+    if(shape[@"chamferProfilePathFlatness"]) {
+        path.flatness = [shape[@"chamferProfilePathFlatness"] floatValue];
+    }
+    // normalize path
+    CGRect boundingBox = path.bounds;
+    if(path.bounds.size.width !=0 && path.bounds.size.height != 0) {
+        CGFloat scaleX = 1/boundingBox.size.width;
+        CGFloat scaleY =  scaleY = 1/boundingBox.size.height;
+        
+        CGAffineTransform transform = CGAffineTransformMakeScale(scaleX, scaleY);
+        [path applyTransform:transform];
+        geometry.chamferProfile = path;
+    } else {
+        NSLog(@"Invalid chamferProfilePathFlatness");
+    }
+    }
+    
+}
+
 + (SCNShape * )SCNShape:(id)json {
     NSDictionary* shape = json[@"shape"];
+    
+    
     NSString * pathString = shape[@"pathSvg"];
     
     SVGBezierPath * path = [self svgStringToBezier:pathString];
@@ -192,42 +220,22 @@
     if (shape[@"pathFlatness"]) {
         path.flatness = [shape[@"pathFlatness"] floatValue];
     }
+    
     CGFloat extrusion = [shape[@"extrusion"] floatValue];
     SCNShape *geometry = [SCNShape shapeWithPath:path extrusionDepth:extrusion];
+    
     if (shape[@"chamferMode"]) {
         geometry.chamferMode = (SCNChamferMode) [shape[@"chamferMode"] integerValue];
     }
     if (shape[@"chamferRadius"]) {
         geometry.chamferRadius = [shape[@"chamferRadius"] floatValue];
     }
-    
     if (shape[@"chamferProfilePathSvg"]) {
-        
-        SVGBezierPath * path = [self svgStringToBezier:shape[@"chamferProfilePathSvg"]];
-        if(shape[@"chamferProfilePathFlatness"]) {
-            path.flatness = [shape[@"chamferProfilePathFlatness"] floatValue];
-        }
-        // normalize path
-        CGRect boundingBox = path.bounds;
-        if(path.bounds.size.width !=0 && path.bounds.size.height != 0) {
-            CGFloat scaleX = 1/boundingBox.size.width;
-            CGFloat scaleY =  scaleY = 1/boundingBox.size.height;
-            
-            CGAffineTransform transform = CGAffineTransformMakeScale(scaleX, scaleY);
-            [path applyTransform:transform];
-            geometry.chamferProfile = path;
-        } else {
-            NSLog(@"Invalid chamferProfilePathFlatness");
-        }
-        
+        [self setChamferProfilePathSvg:geometry properties:shape];
     }
     
+    [self addMaterials:geometry json:json sides:1];
     
-    
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    material.doubleSided = YES;
-    
-    geometry.materials = @[material];
     return geometry;
 }
 
@@ -267,8 +275,7 @@
     
     // material
     //    scnText.materials = @[face, face, border, border, border];
-    SCNMaterial *material = [self SCNMaterial:json[@"material"]];
-    scnText.materials = @[material, material, material, material, material];
+    [self addMaterials:scnText json:json sides:5];
     
     
     // SCNTextNode
@@ -299,9 +306,16 @@
 
 
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json {
+    if (json[@"doubleSided"]) {
+        material.doubleSided = [json[@"doubleSided"] boolValue];
+    } else {
+        material.doubleSided = YES;
+    }
+    
     if (json[@"blendMode"]) {
         material.blendMode = (SCNBlendMode) [json[@"blendMode"] integerValue];
     }
+    
     if (json[@"lightingModel"]) {
         material.lightingModelName = json[@"lightingModel"];
     }
@@ -376,6 +390,41 @@
         node.rotation = [self SCNVector4:json[@"rotation"]];
     }
 }
+
+
++ (NSSet *) specialShapeProperties {
+    return [[NSSet alloc] initWithArray:
+            @[@"pathSvg", @"chamferProfilePathSvg"]];
+}
+
+
++ (void)setShapeProperties:(SCNGeometry *)geometry properties:(id)shapeJson {
+    
+    // most properties are strings
+    for (NSString* key in shapeJson) {
+        if(![self.specialShapeProperties containsObject:key]) {
+            id value = [NSNumber numberWithFloat:[shapeJson[key] floatValue]];
+            [geometry setValue:value forKey:key];
+        }
+    }
+    
+    if([geometry isKindOfClass:[SCNShape class]]) {
+        SCNShape * shapeGeometry = (SCNShape * ) geometry;
+        if(shapeJson[@"pathSvg"]) {
+            NSString * pathString = shapeJson[@"pathSvg"];
+            SVGBezierPath * path = [self svgStringToBezier:pathString];
+            if (shapeJson[@"pathFlatness"]) {
+                path.flatness = [shapeJson[@"pathFlatness"] floatValue];
+            }
+            shapeGeometry.path = path;
+        }
+        if (shapeJson[@"chamferProfilePathSvg"]) {
+            [self setChamferProfilePathSvg: shapeGeometry properties:shapeJson];
+        }
+        
+    }
+}
+
 
 
 + (void)setLightProperties:(SCNLight *)light properties:(id)json {

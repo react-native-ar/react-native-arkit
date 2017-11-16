@@ -18,4 +18,4 @@ const ARTorus = createArComponent('addTorus', {
   material,
 });
 
-module.exports = ARTorus;
+export default ARTorus;

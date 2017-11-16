@@ -25,6 +25,7 @@ const ARModel = createArComponent(
     }),
     material,
   },
+  ['model'],
 );
 
-module.exports = ARModel;
+export default ARModel;

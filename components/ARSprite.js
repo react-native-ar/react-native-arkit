@@ -48,4 +48,4 @@ ARSprite.propTypes = {
   position
 };
 
-module.exports = ARSprite;
+export default ARSprite;

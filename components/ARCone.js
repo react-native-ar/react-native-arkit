@@ -19,4 +19,4 @@ const ARCone = createArComponent('addCone', {
   material,
 });
 
-module.exports = ARCone;
+export default ARCone;
