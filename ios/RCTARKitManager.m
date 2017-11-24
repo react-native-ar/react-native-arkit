@@ -84,6 +84,10 @@ RCT_EXPORT_MODULE()
                      @"Gravity": @(ARWorldAlignmentGravity),
                      @"GravityAndHeading": @(ARWorldAlignmentGravityAndHeading),
                      @"Camera": @(ARWorldAlignmentCamera),
+                     },
+             @"FillMode": @{
+                     @"Fill": [@(SCNFillModeFill) stringValue],
+                     @"Lines": [@(SCNFillModeLines) stringValue],
                      }
              };
 }
