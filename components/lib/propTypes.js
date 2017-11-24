@@ -51,7 +51,7 @@ export const renderingOrder = PropTypes.number;
 export const blendMode = PropTypes.oneOf(values(ARKitManager.BlendMode));
 export const chamferMode = PropTypes.oneOf(values(ARKitManager.ChamferMode));
 export const color = PropTypes.string;
-export const fillMode = PropTypes.onOf(values(ARKitManager.FillMode));
+export const fillMode = PropTypes.oneOf(values(ARKitManager.FillMode));
 
 export const lightType = PropTypes.oneOf(values(ARKitManager.LightType));
 export const shadowMode = PropTypes.oneOf(values(ARKitManager.ShadowMode));
