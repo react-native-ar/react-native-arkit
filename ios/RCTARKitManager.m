@@ -22,7 +22,7 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
-    
+
     return @{
              @"ARHitTestResultType": @{
                      @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
@@ -58,7 +58,7 @@ RCT_EXPORT_MODULE()
                      @"Red": [@(SCNColorMaskRed) stringValue],
                      @"Green": [@(SCNColorMaskGreen) stringValue],
                      },
-             
+
              @"ShaderModifierEntryPoint": @{
                      @"Geometry": SCNShaderModifierEntryPointGeometry,
                      @"Surface": SCNShaderModifierEntryPointSurface,
@@ -72,13 +72,13 @@ RCT_EXPORT_MODULE()
                      @"Multiply": [@(SCNBlendModeMultiply) stringValue],
                      @"Screen": [@(SCNBlendModeScreen) stringValue],
                      @"Replace": [@(SCNBlendModeReplace) stringValue],
-                     
+
                      },
              @"ChamferMode": @{
                      @"Both": [@(SCNChamferModeBoth) stringValue],
                      @"Back": [@(SCNChamferModeBack) stringValue],
                      @"Front": [@(SCNChamferModeBack) stringValue],
-                     
+
                      },
              @"ARWorldAlignment": @{
                      @"Gravity": @(ARWorldAlignmentGravity),
@@ -86,8 +86,8 @@ RCT_EXPORT_MODULE()
                      @"Camera": @(ARWorldAlignmentCamera),
                      },
              @"FillMode": @{
-                     @"Fill": [@(SCNFillModeFill) stringValue],
-                     @"Lines": [@(SCNFillModeLines) stringValue],
+                     @"Fill": [@(SCNFillModeFill) integerValue],
+                     @"Lines": [@(SCNFillModeLines) integerValue],
                      }
              };
 }
@@ -156,19 +156,19 @@ RCT_EXPORT_METHOD(
 
 - (void)storeImageInPhotoAlbum:(UIImage *)image reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
     __block PHObjectPlaceholder *placeholder;
-    
+
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
         PHAssetChangeRequest* createAssetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
         placeholder = [createAssetRequest placeholderForCreatedAsset];
-        
+
     } completionHandler:^(BOOL success, NSError *error) {
         if (success)
         {
-            
+
             NSString * localID = placeholder.localIdentifier;
-            
+
             NSString * assetURLStr = [self getAssetUrl:localID];
-            
+
             resolve(@{@"url": assetURLStr, @"width":@(image.size.width), @"height": @(image.size.height)});
         }
         else
@@ -190,10 +190,10 @@ RCT_EXPORT_METHOD(
         return;
     }
     NSString *prefixString = @"capture";
-    
+
     NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
     NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@.%@", prefixString, guid, format];
-    
+
     NSString *filePath = [directory stringByAppendingPathComponent:uniqueFileName]; //Add the file name
     bool success = [data writeToFile:filePath atomically:YES]; //Write the file
     if(success) {
@@ -202,13 +202,13 @@ RCT_EXPORT_METHOD(
         // TODO use NSError from writeToFile
         reject(@"snapshot_error",  [NSString stringWithFormat:@"could not save to '%@'", filePath], nil);
     }
-    
+
 }
 
 - (void)storeImage:(UIImage *)image options:(NSDictionary *)options reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
     NSString * target = @"cameraRoll";
     NSString * format = @"png";
-    
+
     if(options[@"target"]) {
         target = options[@"target"];
     }
@@ -224,7 +224,7 @@ RCT_EXPORT_METHOD(
             dir =  [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
         } else if([target isEqualToString:@"documents"]) {
             dir =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-            
+
         } else {
             dir = target;
         }
@@ -274,7 +274,7 @@ RCT_EXPORT_METHOD(projectPoint:
               @"z": @(pointProjected.z),
               @"distance": @(distance)
               });
-    
+
 }
 
 RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
@@ -288,4 +288,3 @@ RCT_EXPORT_METHOD(clearScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseR
 }
 
 @end
-
