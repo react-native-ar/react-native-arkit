@@ -344,6 +344,10 @@
     if(json[@"colorBufferWriteMask"] ) {
         material.colorBufferWriteMask = [json[@"colorBufferWriteMask"] integerValue];
     }
+    
+    if(json[@"fillMode"] ) {
+        material.fillMode = [json[@"fillMode"] integerValue];
+    }
 }
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json {
