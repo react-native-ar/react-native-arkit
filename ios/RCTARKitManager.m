@@ -86,8 +86,8 @@ RCT_EXPORT_MODULE()
                      @"Camera": @(ARWorldAlignmentCamera),
                      },
              @"FillMode": @{
-                     @"Fill": [@(SCNFillModeFill) integerValue],
-                     @"Lines": [@(SCNFillModeLines) integerValue],
+                     @"Fill": [@(SCNFillModeFill) stringValue],
+                     @"Lines": [@(SCNFillModeLines) stringValue],
                      }
              };
 }
