@@ -348,6 +348,14 @@
     if(json[@"fillMode"] ) {
         material.fillMode = [json[@"fillMode"] integerValue];
     }
+    
+    if(json[@"doubleSided"]) {
+        material.doubleSided = [json[@"doubleSided"] boolValue];
+    }
+    
+    if(json[@"litPerPixel"]) {
+        material.litPerPixel = [json[@"litPerPixel"] boolValue];
+    }
 }
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json {

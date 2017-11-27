@@ -67,5 +67,7 @@ export const material = PropTypes.shape({
   shaders,
   writesToDepthBuffer: PropTypes.bool,
   colorBufferWriteMask,
+  doubleSided: PropTypes.bool,
+  litPerPixel: PropTypes.bool,
   fillMode,
 });
