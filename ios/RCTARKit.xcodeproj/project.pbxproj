@@ -61,8 +61,6 @@
 		10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitNodes.m; sourceTree = "<group>"; };
 		10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitDelegate.h; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRCTARKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTARKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B14C36631F960C500047CB67 /* PocketSVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PocketSVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B14C36651F960C6E0047CB67 /* PocketSVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PocketSVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5881CC2AC0600A0062D /* RCTARKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTARKit.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RCTARKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTARKit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -119,17 +117,7 @@
 				105F124C1F7C0718006D4BA3 /* RCTConvert+ARKit.h */,
 				105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
-				B13FF7601F94F72400A6C92B /* Frameworks */,
 			);
-			sourceTree = "<group>";
-		};
-		B13FF7601F94F72400A6C92B /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B14C36651F960C6E0047CB67 /* PocketSVG.framework */,
-				B14C36631F960C500047CB67 /* PocketSVG.framework */,
-			);
-			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -291,8 +279,7 @@
 					"$(SRCROOT)/../../react-native-arcl/ios",
 					../../../ios/Pods/Headers/Public/,
 					../../../ios/Pods/Headers/Public/React,
-					"$(SRCROOT)/../../_PocketSVG/**",
-					"../node_modules/_PocketSVG/**",
+					"$(SRCROOT)/../../../ios/Pods/PocketSVG/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -314,8 +301,7 @@
 					"$(SRCROOT)/../../react-native-arcl/ios",
 					../../../ios/Pods/Headers/Public/,
 					../../../ios/Pods/Headers/Public/React,
-					"$(SRCROOT)/../../_PocketSVG/**",
-					"../node_modules/_PocketSVG/**",
+					"$(SRCROOT)/../../../ios/Pods/PocketSVG/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
