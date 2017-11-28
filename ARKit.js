@@ -30,10 +30,6 @@ const TRACKING_REASONS = [
 ];
 const TRACKING_STATES_COLOR = ['red', 'orange', 'green'];
 
-// clear scene on start (not on mount)
-// this is only needed if you reload the app (in dev mode)
-let firstMount = false;
-
 class ARKit extends Component {
   state = {
     state: 0,
@@ -43,11 +39,6 @@ class ARKit extends Component {
 
   componentDidMount() {
     ARKitManager.resume();
-    if (!firstMount) {
-      ARKitManager.clearScene();
-    } else {
-      firstMount = true;
-    }
   }
 
   componentWillUnmount() {
