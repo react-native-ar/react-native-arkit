@@ -9,15 +9,22 @@
   "author": "Zehao Li <qft.gtr@gmail.com>",
   "license": "MIT",
   "homepage": "https://github.com/HippoAR/react-native-arkit",
-  "keywords": ["react-native", "react", "native", "ARKit", "AR"],
+  "keywords": [
+    "react-native",
+    "react",
+    "native",
+    "ARKit",
+    "AR"
+  ],
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "peerDependencies": {
-    "react-native": ">=0.46.0",
+    "prop-types": "*",
     "react": "*",
-    "prop-types": "*"
+    "react-native": ">=0.46.0",
+    "react-native-pod": "^1.1.0"
   },
   "dependencies": {
     "@panter/react-animation-frame": "^0.3.7",
@@ -37,9 +44,9 @@
     "eslint-plugin-prettier": "^2.1.1",
     "eslint-plugin-react": "^7.0.1",
     "prettier": "^1.3.1",
-    "react": "16.0.0-alpha.12",
-    "prop-types": "^15.5.8"
-  }, 
+    "prop-types": "^15.5.8",
+    "react": "16.0.0-alpha.12"
+  },
   "pods": {
     "PocketSVG": "*"
   }
