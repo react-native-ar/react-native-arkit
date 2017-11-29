@@ -323,6 +323,9 @@
     if (json[@"diffuse"]) {
         material.diffuse.contents = [self UIColor:json[@"diffuse"]];
     }
+    if (json[@"transparency"]) {
+        material.transparency = [json[@"transparency"] floatValue];
+    }
     
     if (json[@"metalness"]) {
         material.lightingModelName = SCNLightingModelPhysicallyBased;
@@ -352,6 +355,7 @@
     if(json[@"doubleSided"]) {
         material.doubleSided = [json[@"doubleSided"] boolValue];
     }
+    
     
     if(json[@"litPerPixel"]) {
         material.litPerPixel = [json[@"litPerPixel"] boolValue];
@@ -400,6 +404,10 @@
     
     if (json[@"rotation"]) {
         node.rotation = [self SCNVector4:json[@"rotation"]];
+    }
+    
+    if (json[@"opacity"]) {
+        node.opacity = [json[@"opacity"] floatValue];
     }
 }
 
