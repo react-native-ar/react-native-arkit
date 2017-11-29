@@ -5,9 +5,6 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-
 import {
   StyleSheet,
   View,
@@ -15,7 +12,10 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
+import { whiteBalanceWithTemperature } from './lib/colorUtils';
 import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -168,6 +168,31 @@ ARKit.exportModel = presetId => {
   const id = presetId || generateId();
   const property = { id };
   return ARKitManager.exportModel(property).then(result => ({ ...result, id }));
+};
+
+ARKit.getCameraColorPalette = async ({
+  whiteBalance = true,
+  includeRawColors = false,
+  ...options
+}) => {
+  const colors = await ARKitManager.getCameraColorPaletteRaw(options);
+  if (!whiteBalance) {
+    return colors;
+  }
+  const lightEstimation = await ARKitManager.getCurrentLightEstimation();
+  console.log(lightEstimation);
+  if (!lightEstimation) {
+    return colors;
+  }
+
+  return colors.map(({ color, ...p }) => ({
+    color: whiteBalanceWithTemperature(
+      color,
+      lightEstimation.ambientColorTemperature,
+    ),
+    ...p,
+    ...(includeRawColors ? { colorRaw: color } : {}),
+  }));
 };
 
 ARKit.propTypes = {

@@ -11,6 +11,7 @@
 #import "RCTARKitNodes.h"
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
+#import "color-grabber.h"
 
 @implementation RCTARKitManager
 
@@ -243,6 +244,13 @@ RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlo
 RCT_EXPORT_METHOD(snapshotCamera:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     UIImage *image = [[ARKit sharedInstance] getSnapshotCamera];
     [self storeImage:image options:options reject:reject resolve:resolve];
+}
+
+RCT_EXPORT_METHOD(getCameraColorPaletteRaw:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+   
+    UIImage *image = [[ARKit sharedInstance] getSnapshotCamera];
+    resolve([[ColorGrabber sharedInstance] getColorsFromImage:image options:options]);
+
 }
 
 RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
