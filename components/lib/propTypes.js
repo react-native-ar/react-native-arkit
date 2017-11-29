@@ -58,6 +58,9 @@ export const shadowMode = PropTypes.oneOf(values(ARKitManager.ShadowMode));
 export const colorBufferWriteMask = PropTypes.oneOf(
   values(ARKitManager.ColorMask),
 );
+
+export const opacity = PropTypes.number;
+
 export const material = PropTypes.shape({
   color,
   metalness: PropTypes.number,
@@ -69,5 +72,6 @@ export const material = PropTypes.shape({
   colorBufferWriteMask,
   doubleSided: PropTypes.bool,
   litPerPixel: PropTypes.bool,
+  transparency: PropTypes.number,
   fillMode,
 });

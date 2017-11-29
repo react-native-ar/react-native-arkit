@@ -12,6 +12,7 @@ import {
   castsShadow,
   categoryBitMask,
   eulerAngles,
+  opacity,
   orientation,
   position,
   renderingOrder,
@@ -42,6 +43,7 @@ const PROP_TYPES_NODE = {
   categoryBitMask,
   castsShadow,
   renderingOrder,
+  opacity,
 };
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
