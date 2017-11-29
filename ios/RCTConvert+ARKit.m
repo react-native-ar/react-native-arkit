@@ -331,6 +331,7 @@
         material.lightingModelName = SCNLightingModelPhysicallyBased;
         material.metalness.contents = @([json[@"metalness"] floatValue]);
     }
+    
     if (json[@"roughness"]) {
         material.lightingModelName = SCNLightingModelPhysicallyBased;
         material.roughness.contents = @([json[@"roughness"] floatValue]);

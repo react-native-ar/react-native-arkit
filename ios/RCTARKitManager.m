@@ -233,7 +233,7 @@ RCT_EXPORT_METHOD(
 }
 
 RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    UIImage *image = [[ARKit sharedInstance] getSnaphshot];
+    UIImage *image = [[ARKit sharedInstance] getSnapshot];
     [self storeImage:image options:options reject:reject resolve:resolve];
 }
 
@@ -241,7 +241,7 @@ RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlo
 
 
 RCT_EXPORT_METHOD(snapshotCamera:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    UIImage *image = [[ARKit sharedInstance] getSnaphshotCamera];
+    UIImage *image = [[ARKit sharedInstance] getSnapshotCamera];
     [self storeImage:image options:options reject:reject resolve:resolve];
 }
 

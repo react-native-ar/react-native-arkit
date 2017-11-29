@@ -252,7 +252,7 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 }
 
 
-- (UIImage *)getSnaphshot {
+- (UIImage *)getSnapshot {
     UIImage *image = [self.arView snapshot];
     return image;
 }
@@ -261,7 +261,7 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 
 
 
-- (UIImage *)getSnaphsotCamera {
+- (UIImage *)getSnapshotCamera {
     CVPixelBufferRef pixelBuffer = self.arView.session.currentFrame.capturedImage;
     CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
     
