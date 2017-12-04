@@ -170,17 +170,28 @@ ARKit.exportModel = presetId => {
   return ARKitManager.exportModel(property).then(result => ({ ...result, id }));
 };
 
-ARKit.getCameraColorPalette = async ({
-  whiteBalance = true,
-  includeRawColors = false,
-  ...options
-}) => {
-  const colors = await ARKitManager.getCameraColorPaletteRaw(options);
+ARKit.pickColors = async (
+  {
+    whiteBalance = true,
+    includeRawColors = false,
+    selection = null,
+    // color grabber options, currently undocumented
+    range = 40,
+    dimension = 4,
+    flexibility = 5,
+  } = {},
+) => {
+  const colors = await ARKitManager.pickColorsRaw({
+    selection,
+    range,
+    dimension,
+    flexibility,
+  });
   if (!whiteBalance) {
     return colors;
   }
   const lightEstimation = await ARKitManager.getCurrentLightEstimation();
-  console.log(lightEstimation);
+
   if (!lightEstimation) {
     return colors;
   }
