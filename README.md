@@ -244,7 +244,10 @@ Most objects take a material property with these sub-props:
 
 | Prop | Type | Description |
 |---|---|---|
-| `diffuse` | colorstring | diffuse color  |
+| `diffuse` | { `path`, `color`, `intensity` } | [diffuse](https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse?language=objc)
+| `specular` | { `path`, `color`, `intensity` } | [specular](https://developer.apple.com/documentation/scenekit/scnmaterial/1462516-specular?language=objc)
+| `displacement` | { `path`, `color`, `intensity` } | [displacement](https://developer.apple.com/documentation/scenekit/scnmaterial/2867516-displacement?language=objc)
+| `normal` | { `path`, `color`, `intensity` } |  [normal](https://developer.apple.com/documentation/scenekit/scnmaterial/1462542-normal)
 | `metalness` | number | metalness of the object |
 | `roughness` | number | roughness of the object |
 | `doubleSided` | boolean | render both sides, default is `true` |
