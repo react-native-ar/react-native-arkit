@@ -69,23 +69,15 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
   // any custom props (material, shape, ...)
   const nonNodePropKeys = keys(propTypes);
 
-  const parseMaterials = props => {
-    const material = props.material || {};
-
-    if (props.color) {
-      material.diffuse = { ...material.diffuse, color: props.color };
-    }
-
-    return {
-      ...props,
-      ...(props.shadowColor
-        ? { shadowColor: processColor(props.shadowColor) }
-        : {}),
-      ...(props.material
-        ? { material: processMaterialPropertyContents(material) }
-        : {}),
-    };
-  };
+  const parseMaterials = props => ({
+    ...props,
+    ...(props.shadowColor
+      ? { shadowColor: processColor(props.shadowColor) }
+      : {}),
+    ...(props.material
+      ? { material: processMaterialPropertyContents(props.material) }
+      : {}),
+  });
 
   const getNonNodeProps = props => ({
     ...pick(props, nonNodePropKeys),

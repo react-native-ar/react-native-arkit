@@ -14,16 +14,17 @@ export function processMaterialPropertyContents(material) {
     Object.keys(material),
     materialPropertiesWithMaps,
   );
-  // legacy support for old diffuse.color
-  const color =
-    typeof material.diffuse === 'string' ? material.diffuse : undefined;
 
   return propsToUpdate.reduce(
     (prev, curr) => ({
       ...prev,
       [curr]: {
         ...prev[curr],
-        color: processColor(color || prev[curr].color),
+        color: processColor(
+          curr === 'diffuse' && typeof prev[curr] === 'string'
+            ? prev[curr]
+            : prev[curr].color,
+        ),
       },
     }),
     material,
