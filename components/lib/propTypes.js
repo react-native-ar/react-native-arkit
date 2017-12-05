@@ -62,10 +62,8 @@ export const colorBufferWriteMask = PropTypes.oneOf(
 export const opacity = PropTypes.number;
 
 export const materialProperty = PropTypes.shape({
-  contents: PropTypes.shape({
-    path: PropTypes.string,
-    color: PropTypes.string,
-  }),
+  path: PropTypes.string,
+  color: PropTypes.string,
   intensity: PropTypes.number,
 });
 

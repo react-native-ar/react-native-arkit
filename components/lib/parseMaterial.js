@@ -26,29 +26,26 @@ export function processColorInMaterial(material) {
 }
 
 export function processMaterialPropertyContents(material) {
-  const propsWithMaps = intersection(
+  const propsToUpdate = intersection(
     Object.keys(material),
     materialPropertiesWithMaps,
   );
+  // legacy support for old diffuse.color
+  const color =
+    typeof material.diffuse === 'string' || material.color
+      ? material.diffuse || material.color
+      : undefined;
 
-  return propsWithMaps.reduce((prev, curr) => {
-    const { contents } = curr;
-
-    if (!contents || (!contents.path && !contents.color)) {
-      return prev;
-    }
-
-    return {
+  return propsToUpdate.reduce(
+    (prev, curr) => ({
       ...prev,
       [curr]: {
         ...prev[curr],
-        contents: {
-          [contents.path ? 'path' : 'color']:
-            contents.path || processColor(contents.color),
-        },
+        color: color ? processColor(color) : processColor(prev[curr].color),
       },
-    };
-  }, material);
+    }),
+    material,
+  );
 }
 
 export { processColor };
