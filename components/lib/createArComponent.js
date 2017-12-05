@@ -20,7 +20,7 @@ import {
   scale,
   transition,
 } from './propTypes';
-import { processColor, processColorInMaterial } from './parseColor';
+import { processColor, processColorInMaterial } from './parseMaterial';
 import generateId from './generateId';
 
 const { ARGeosManager } = NativeModules;
