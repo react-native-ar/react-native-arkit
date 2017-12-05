@@ -20,11 +20,7 @@ import {
   scale,
   transition,
 } from './propTypes';
-import {
-  processColor,
-  processColorInMaterial,
-  processMaterialPropertyContents,
-} from './parseMaterial';
+import { processColor, processMaterialPropertyContents } from './parseMaterial';
 import generateId from './generateId';
 
 const { ARGeosManager } = NativeModules;
@@ -73,11 +69,11 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
   // any custom props (material, shape, ...)
   const nonNodePropKeys = keys(propTypes);
 
-  const processColors = props => {
+  const parseMaterials = props => {
     const material = props.material || {};
 
     if (props.color) {
-      material.color = props.color;
+      material.diffuse = { ...material.diffuse, color: props.color };
     }
 
     return {
@@ -93,7 +89,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
   const getNonNodeProps = props => ({
     ...pick(props, nonNodePropKeys),
-    ...processColors(props),
+    ...parseMaterials(props),
   });
 
   const mountFunc =
@@ -169,7 +165,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
             ...this.props.transition,
             ...props.transition,
           },
-          ...processColors(pick(props, changedKeys)),
+          ...parseMaterials(pick(props, changedKeys)),
         };
 
         if (DEBUG) console.log('update node', propsToupdate);
