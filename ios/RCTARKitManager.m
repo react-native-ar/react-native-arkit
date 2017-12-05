@@ -155,7 +155,7 @@ RCT_EXPORT_METHOD(
     return assetURLStr;
 }
 
-- (void)storeImageInPhotoAlbum:(UIImage *)image reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
+- (void)storeImageInPhotoAlbum:(UIImage *)image cameraProperties:(NSDictionary *) cameraProperties  reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
     __block PHObjectPlaceholder *placeholder;
     
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
@@ -170,7 +170,7 @@ RCT_EXPORT_METHOD(
             
             NSString * assetURLStr = [self getAssetUrl:localID];
             
-            resolve(@{@"url": assetURLStr, @"width":@(image.size.width), @"height": @(image.size.height)});
+            resolve(@{@"url": assetURLStr, @"width":@(image.size.width), @"height": @(image.size.height),  @"camera":cameraProperties});
         }
         else
         {
@@ -180,7 +180,7 @@ RCT_EXPORT_METHOD(
 }
 
 
-- (void)storeImageInDirectory:(UIImage *)image directory:(NSString *)directory format:(NSString *)format reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
+- (void)storeImageInDirectory:(UIImage *)image directory:(NSString *)directory format:(NSString *)format cameraProperties:(NSDictionary *) cameraProperties  reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
     NSData *data;
     if([format isEqualToString:@"jpg"]) {
         data = UIImageJPEGRepresentation(image, 0.9);
@@ -198,7 +198,7 @@ RCT_EXPORT_METHOD(
     NSString *filePath = [directory stringByAppendingPathComponent:uniqueFileName]; //Add the file name
     bool success = [data writeToFile:filePath atomically:YES]; //Write the file
     if(success) {
-        resolve(@{@"url": filePath, @"width":@(image.size.width), @"height": @(image.size.height)});
+        resolve(@{@"url": filePath, @"width":@(image.size.width), @"height": @(image.size.height),  @"camera":cameraProperties});
     } else {
         // TODO use NSError from writeToFile
         reject(@"snapshot_error",  [NSString stringWithFormat:@"could not save to '%@'", filePath], nil);
@@ -206,7 +206,7 @@ RCT_EXPORT_METHOD(
     
 }
 
-- (void)storeImage:(UIImage *)image options:(NSDictionary *)options reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
+- (void)storeImage:(UIImage *)image options:(NSDictionary *)options reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve cameraProperties:(NSDictionary *)cameraProperties {
     NSString * target = @"cameraRoll";
     NSString * format = @"png";
     
@@ -218,7 +218,7 @@ RCT_EXPORT_METHOD(
     }
     if([target isEqualToString:@"cameraRoll"]) {
         // camera roll / photo album
-        [self storeImageInPhotoAlbum:image reject:reject resolve:resolve];
+        [self storeImageInPhotoAlbum:image cameraProperties:cameraProperties reject:reject resolve:resolve ];
     } else {
         NSString * dir;
         if([target isEqualToString:@"cache"]) {
@@ -229,15 +229,17 @@ RCT_EXPORT_METHOD(
         } else {
             dir = target;
         }
-        [self storeImageInDirectory:image directory:dir format:format reject:reject resolve:resolve];
+        [self storeImageInDirectory:image directory:dir format:format cameraProperties:cameraProperties reject:reject resolve:resolve ];
     }
 }
 
 RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSDictionary * selection = options[@"selection"];
+        NSDictionary * cameraProperties = [[ARKit sharedInstance] readCamera];
         UIImage *image = [[ARKit sharedInstance] getSnapshot:selection];
-        [self storeImage:image options:options reject:reject resolve:resolve];
+        
+        [self storeImage:image options:options reject:reject resolve:resolve cameraProperties:cameraProperties ];
     });
 }
 
@@ -247,21 +249,26 @@ RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlo
 RCT_EXPORT_METHOD(snapshotCamera:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSDictionary * selection = options[@"selection"];
+        NSDictionary * cameraProperties = [[ARKit sharedInstance] readCamera];
         UIImage *image = [[ARKit sharedInstance] getSnapshotCamera:selection];
-        [self storeImage:image options:options reject:reject resolve:resolve];
+        [self storeImage:image options:options reject:reject resolve:resolve cameraProperties:cameraProperties];
     });
 }
 
 RCT_EXPORT_METHOD(pickColorsRaw:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         NSDictionary * selection = options[@"selection"];
         UIImage *image = [[ARKit sharedInstance] getSnapshotCamera:selection];
         resolve([[ColorGrabber sharedInstance] getColorsFromImage:image options:options]);
     });
-    
-    
+}
+
+RCT_EXPORT_METHOD(pickColorsRawFromFile:(NSString * )filePath options:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+        resolve([[ColorGrabber sharedInstance] getColorsFromImage:image options:options]);
+    });
 }
 
 RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

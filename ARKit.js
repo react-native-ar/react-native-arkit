@@ -15,7 +15,7 @@ import {
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
-import { whiteBalanceWithTemperature } from './lib/colorUtils';
+import { pickColors, pickColorsFromFile } from './lib/pickColors';
 import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -170,42 +170,8 @@ ARKit.exportModel = presetId => {
   return ARKitManager.exportModel(property).then(result => ({ ...result, id }));
 };
 
-ARKit.pickColors = async (
-  {
-    whiteBalance = true,
-    includeRawColors = false,
-    selection = null,
-    // color grabber options, currently undocumented
-    range = 40,
-    dimension = 4,
-    flexibility = 5,
-  } = {},
-) => {
-  const colors = await ARKitManager.pickColorsRaw({
-    selection,
-    range,
-    dimension,
-    flexibility,
-  });
-  if (!whiteBalance) {
-    return colors;
-  }
-  const lightEstimation = await ARKitManager.getCurrentLightEstimation();
-
-  if (!lightEstimation) {
-    return colors;
-  }
-
-  return colors.map(({ color, ...p }) => ({
-    color: whiteBalanceWithTemperature(
-      color,
-      lightEstimation.ambientColorTemperature,
-    ),
-    ...p,
-    ...(includeRawColors ? { colorRaw: color } : {}),
-  }));
-};
-
+ARKit.pickColors = pickColors;
+ARKit.pickColorsFromFile = pickColorsFromFile;
 ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
