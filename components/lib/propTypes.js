@@ -61,8 +61,20 @@ export const colorBufferWriteMask = PropTypes.oneOf(
 
 export const opacity = PropTypes.number;
 
+export const materialProperty = PropTypes.shape({
+  contents: PropTypes.shape({
+    path: PropTypes.string,
+    color: PropTypes.string,
+  }),
+  intensity: PropTypes.number,
+});
+
 export const material = PropTypes.shape({
   color,
+  normal: materialProperty,
+  specular: materialProperty,
+  displacement: materialProperty,
+  diffuse: PropTypes.oneOf([PropTypes.string, materialProperty]),
   metalness: PropTypes.number,
   roughness: PropTypes.number,
   blendMode,
