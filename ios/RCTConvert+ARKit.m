@@ -305,6 +305,17 @@
 }
 
 
++ (void)setMaterialPropertyContents:(id)property material:(SCNMaterialProperty *)material {
+    if (property[@"path"]) {
+        material.contents = property[@"path"];
+    } else if (property[@"color"]) {
+        material.contents = property[@"color"];
+    }
+    if (property[@"intensity"]) {
+        material.intensity = [property[@"intensity"] floatValue];
+    }
+}
+
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json {
     if (json[@"doubleSided"]) {
         material.doubleSided = [json[@"doubleSided"] boolValue];
@@ -321,10 +332,23 @@
     }
 
     if (json[@"diffuse"]) {
+//        [self setMaterialPropertyContents:json[@"diffuse"] material:material.diffuse];
         material.diffuse.contents = [NSString stringWithFormat:@"%@", json[@"diffuse"]];
-                                                                        
     }
+    
 
+    if (json[@"normal"]) {
+        [self setMaterialPropertyContents:json[@"normal"] material:material.normal];
+    }
+    
+    if (json[@"displacement"]) {
+        [self setMaterialPropertyContents:json[@"displacement"] material:material.displacement];
+    }
+    
+    if (json[@"specular"]) {
+        [self setMaterialPropertyContents:json[@"specular"] material:material.specular];
+    }
+    
     if (json[@"transparency"]) {
         material.transparency = [json[@"transparency"] floatValue];
     }
