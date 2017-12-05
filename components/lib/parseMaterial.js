@@ -32,21 +32,22 @@ export function processMaterialPropertyContents(material) {
   );
 
   return propsWithMaps.reduce((prev, curr) => {
-    const next = prev;
     const { contents } = curr;
 
     if (!contents || (!contents.path && !contents.color)) {
       return prev;
     }
 
-    next[curr] = {
-      ...prev[curr],
-      contents: {
-        [contents.path ? 'path' : 'color']:
-          contents.path || processColor(contents.color),
+    return {
+      ...prev,
+      [curr]: {
+        ...prev[curr],
+        contents: {
+          [contents.path ? 'path' : 'color']:
+            contents.path || processColor(contents.color),
+        },
       },
     };
-    return next;
   }, material);
 }
 
