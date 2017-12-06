@@ -25,6 +25,8 @@ import DeviceMotion from './DeviceMotion';
 import startup from './startup';
 import withProjectedPosition from './hocs/withProjectedPosition';
 
+import * as colorUtils from './lib/colorUtils';
+
 ARKit.Box = ARBox;
 ARKit.Sphere = ARSphere;
 ARKit.Cylinder = ARCylinder;
@@ -44,6 +46,7 @@ ARKit.Light = ARLight;
 startup();
 
 export {
+  colorUtils,
   ARKit,
   DeviceMotion,
   ARBox,

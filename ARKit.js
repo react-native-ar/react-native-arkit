@@ -5,9 +5,6 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-
 import {
   StyleSheet,
   View,
@@ -15,7 +12,10 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
+import { pickColors, pickColorsFromFile } from './lib/pickColors';
 import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -170,6 +170,8 @@ ARKit.exportModel = presetId => {
   return ARKitManager.exportModel(property).then(result => ({ ...result, id }));
 };
 
+ARKit.pickColors = pickColors;
+ARKit.pickColorsFromFile = pickColorsFromFile;
 ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
