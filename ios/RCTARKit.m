@@ -520,7 +520,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     NSMutableArray * featurePoints = [NSMutableArray array];
     for (int i = 0; i < [self currentFrame].rawFeaturePoints.count; i++) {
         vector_float3 positionV = [self currentFrame].rawFeaturePoints.points[i];
-        SCNVector3 position = [self.nodeManager getAbsolutePositionToOrigin:SCNVector3Make(positionV[0],positionV[1],positionV[2])];
+        SCNVector3 position = [self.nodeManager getRelativePositionToOrigin:SCNVector3Make(positionV[0],positionV[1],positionV[2])];
         NSString * pointId = [NSString stringWithFormat:@"featurepoint_%lld",[self currentFrame].rawFeaturePoints.identifiers[i]];
         
         [featurePoints addObject:@{

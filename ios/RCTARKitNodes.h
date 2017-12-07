@@ -45,4 +45,5 @@ typedef NS_OPTIONS(NSUInteger, RFReferenceFrame) {
 - (void)clear;
 - (NSMutableArray *) mapHitResults:(NSArray<ARHitTestResult *> *)results;
 - (SCNVector3)getAbsolutePositionToOrigin:(const SCNVector3)positionRelative;
+- (SCNVector3)getRelativePositionToOrigin:(const SCNVector3)positionAbsolute;
 @end
