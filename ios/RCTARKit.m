@@ -467,10 +467,12 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 
 - (NSDictionary *)makePlaneDetectionResult:(SCNNode *)node planeAnchor:(ARPlaneAnchor *)planeAnchor {
+    
     return @{
              @"id": planeAnchor.identifier.UUIDString,
              @"alignment": @(planeAnchor.alignment),
-             @"position": vectorToJson(node.position),
+             @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
+             @"positionAbsolute": vectorToJson(node.position),
              // node is deprecated
              @"node": vectorToJson(node.position),
              @"center": vector_float3ToJson(planeAnchor.center),
