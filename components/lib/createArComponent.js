@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { NativeModules } from 'react-native';
+import { NativeModules, processColor } from 'react-native';
 import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
@@ -20,7 +20,7 @@ import {
   scale,
   transition,
 } from './propTypes';
-import { processColor, processMaterialPropertyContents } from './parseMaterial';
+import processMaterial from './processMaterial';
 import generateId from './generateId';
 
 const { ARGeosManager } = NativeModules;
@@ -74,9 +74,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
-    ...(props.material
-      ? { material: processMaterialPropertyContents(props.material) }
-      : {}),
+    ...(props.material ? { material: processMaterial(props.material) } : {}),
   });
 
   const getNonNodeProps = props => ({

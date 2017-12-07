@@ -9,7 +9,7 @@ const materialPropertiesWithMaps = [
   'specular',
 ];
 
-export function processMaterialPropertyContents(material) {
+export default function processMaterial(material) {
   const propsToUpdate = intersection(
     Object.keys(material),
     materialPropertiesWithMaps,
@@ -30,5 +30,3 @@ export function processMaterialPropertyContents(material) {
     material,
   );
 }
-
-export { processColor };
