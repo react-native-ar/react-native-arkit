@@ -1,32 +1,26 @@
 import { processColor } from 'react-native';
-import { intersection } from 'lodash';
+import { isString, mapValues, set } from 'lodash';
 
 // https://developer.apple.com/documentation/scenekit/scnmaterial
-const materialPropertiesWithMaps = [
-  'normal',
-  'diffuse',
-  'displacement',
-  'specular',
-];
+const propsWithMaps = ['normal', 'diffuse', 'displacement', 'specular'];
 
 export default function processMaterial(material) {
-  const propsToUpdate = intersection(
-    Object.keys(material),
-    materialPropertiesWithMaps,
-  );
+  // previously it was possible to set { material: { color:'colorstring'}}... translate this to { material: { diffuse: { color: 'colorstring'}}}
+  if (material.color) {
+    set(material, 'diffuse.color', material.color);
+  }
 
-  return propsToUpdate.reduce(
-    (prev, curr) => ({
-      ...prev,
-      [curr]: {
-        ...prev[curr],
-        color: processColor(
-          curr === 'diffuse' && typeof prev[curr] === 'string'
-            ? prev[curr]
-            : prev[curr].color,
-        ),
-      },
-    }),
+  return mapValues(
     material,
+    (prop, key) =>
+      propsWithMaps.includes(key)
+        ? {
+            ...prop,
+            color: processColor(
+              // allow for setting a diffuse  colorstring { diffuse: 'colorstring'}
+              key === 'diffuse' && isString(prop) ? prop : prop.color,
+            ),
+          }
+        : prop,
   );
 }
