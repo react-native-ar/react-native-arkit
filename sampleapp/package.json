@@ -9,11 +9,9 @@
   "dependencies": {
     "react": "16.0.0",
     "react-native": "0.51.0",
-    "react-native-arkit": "../Github/react-native-arkit",
     "react-native-bundlebase": "^1.0.0",
     "react-native-camera-ios-enable": "^1.0.0",
     "react-native-fix-ios-version": "^1.0.0",
-    "react-native-make-demo-app": "../GitHub/react-native-make-demo-app/",
     "react-native-pod": "^1.2.0",
     "react-native-runios-withdevteam": "^1.2.0"
   },
