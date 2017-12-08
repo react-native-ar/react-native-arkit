@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARCone = createArComponent('addCone', {
@@ -15,6 +16,7 @@ const ARCone = createArComponent('addCone', {
     bottomR: PropTypes.number,
     height: PropTypes.number,
   }),
+  material,
 });
 
-module.exports = ARCone;
+export default ARCone;

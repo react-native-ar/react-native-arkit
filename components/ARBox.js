@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARBox = createArComponent('addBox', {
@@ -16,6 +17,7 @@ const ARBox = createArComponent('addBox', {
     length: PropTypes.number,
     chamfer: PropTypes.number,
   }),
+  material,
 });
 
-module.exports = ARBox;
+export default ARBox;

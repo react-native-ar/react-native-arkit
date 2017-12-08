@@ -9,10 +9,11 @@ import PropTypes from 'prop-types';
 
 import { NativeModules } from 'react-native';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARText = createArComponent(
-  { mount: NativeModules.ARTextManager.mount, pick: ['text', 'font'] },
+  { mount: NativeModules.ARTextManager.mount, pick: ['id', 'text', 'font'] },
   {
     text: PropTypes.string,
     font: PropTypes.shape({
@@ -20,9 +21,11 @@ const ARText = createArComponent(
       // weight: PropTypes.string,
       size: PropTypes.number,
       depth: PropTypes.number,
-      chamfer: PropTypes.number,
+      chamfer: PropTypes.number
     }),
+    material
   },
+  ['text', 'font']
 );
 
-module.exports = ARText;
+export default ARText;

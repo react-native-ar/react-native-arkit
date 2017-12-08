@@ -107,16 +107,15 @@ CGFloat focDistance = 0.2f;
 - (void)addNodeToLocalFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameLocal;
     
-    NSLog(@"[RCTARKitNodes] Add model %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-
+    //NSLog(@"[RCTARKitNodes] Add node %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+    
     [self registerNode:node forKey:node.name];
     [self.localOrigin addChildNode:node];
 }
 
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
-    
-    NSLog(@"[RCTARKitNodes] Add model %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+    //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     [self registerNode:node forKey:node.name];
     [self.cameraOrigin addChildNode:node];
 }
@@ -124,7 +123,7 @@ CGFloat focDistance = 0.2f;
 - (void)addNodeToFrontOfCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
     
-    NSLog(@"[RCTARKitNodes] Add model %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
+    //NSLog(@"[RCTARKitNodes] Add node %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     [self registerNode:node forKey:node.name];
     [self.frontOfCamera addChildNode:node];
 }
@@ -132,12 +131,13 @@ CGFloat focDistance = 0.2f;
 
 - (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
     NSDictionary *options = @{
-                              SCNHitTestRootNodeKey: self.localOrigin
+                              SCNHitTestRootNodeKey: self.localOrigin,
+                              SCNHitTestSortResultsKey: @(YES)
                               };
-    NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint  options:options];
+    NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint options:options];
     NSMutableArray * resultsMapped = [self mapHitResultsWithSceneResults:results];
-    NSDictionary *planeHitResult = getSceneObjectHitResult(resultsMapped, tapPoint);
-    return planeHitResult;
+    NSDictionary *result = getSceneObjectHitResult(resultsMapped, tapPoint);
+    return result;
 }
 
 
@@ -155,24 +155,37 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
     
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    
     [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
         SCNHitTestResult *result = (SCNHitTestResult *) obj;
         SCNNode * node = result.node;
-        NSArray *keys = [self.nodes allKeysForObject: node];
-        if([keys count]) {
-            
-            NSString * firstKey = [keys firstObject];
-            [resultsMapped addObject:(@{
-                                        @"id": firstKey
-                                        } )];
-        } else {
-            NSLog(@"no key found for node %@", node);
-            NSLog(@"for results %@", results);
-            NSLog(@"all nodes %@", self.nodes);
-            NSLog(@"origin %@", self.localOrigin);
-        }
         
+        NSString * nodeId = [self findNodeId:node];
+        if(nodeId) {
+        
+            SCNVector3 point = result.worldCoordinates;
+            SCNVector3 normal = result.worldNormal;
+            float distance = [self getCameraDistanceToPoint:point];
+         
+            [resultsMapped addObject:(@{
+                                        @"id": nodeId,
+                                        @"distance": @(distance),
+                                        @"point": @{
+                                                @"x": @(point.x),
+                                                @"y": @(point.y),
+                                                @"z": @(point.z)
+                                                },
+                                        @"normal": @{
+                                                @"x": @(normal.x),
+                                                @"y": @(normal.y),
+                                                @"z": @(normal.z)
+                                                
+                                                }
+                                        } )];
+        }
+            
     }];
+    
     return resultsMapped;
     
 }
@@ -187,26 +200,62 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     }
 }
 
+
+- (NSString *) findNodeId:(SCNNode *)nodeWithParents {
+
+    SCNNode* _node = nodeWithParents;
+    while(_node) {
+        if(_node.name && [self.nodes objectForKey:_node.name]) {
+            return _node.name;
+        }
+        _node = _node.parentNode;
+    }
+    return nil;
+
+}
+
+
 - (SCNNode *)nodeForKey:(NSString *)key {
     return [self.nodes objectForKey:key];
 }
 
 - (void)removeNodeForKey:(NSString *)key {
+    
     SCNNode *node = [self.nodes objectForKey:key];
     if (node) {
-        [node removeFromParentNode];
         [self.nodes removeObjectForKey:key];
+        if(node.light) {
+            // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
+            node.hidden = YES;
+            [node removeFromParentNode];
+        } else {
+            [node removeFromParentNode];
+        }
     }
 }
 
-- (void)updateNode:(NSString *)key properties:(NSDictionary *) properties {
-     SCNNode *node = [self.nodes objectForKey:key];
-    // only basic properties like position and rotation can currently be updated this way
+- (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties {
+    SCNNode *node = [self.nodes objectForKey:nodeId];
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
+        if(node.geometry && properties[@"shape"]) {
+              [RCTConvert setShapeProperties:node.geometry properties:properties[@"shape"]];
+        }
+        if(properties[@"material"]) {
+            for (id material in node.geometry.materials) {
+                [RCTConvert setMaterialProperties:material properties:properties[@"material"]];
+            }
+        }
+        if(node.light) {
+            [RCTConvert setLightProperties:node.light properties:properties];
+        }
+        
+        
     }
     
 }
+
+
 
 
 #pragma mark - RCTARKitSessionDelegate
@@ -219,6 +268,23 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
     self.frontOfCamera.position = SCNVector3Make(pos.x - focDistance * z.x, pos.y  - focDistance * z.y, pos.z - focDistance * z.z);
     self.frontOfCamera.eulerAngles = self.cameraOrigin.eulerAngles;
     
+}
+
+- (float)getCameraDistanceToPoint:(SCNVector3)point {
+    return getDistance(self.cameraOrigin.position, point);
+}
+
+static float getDistance(const SCNVector3 pointA, const SCNVector3 pointB) {
+    float xd = pointB.x - pointA.x;
+    float yd = pointB.y - pointA.y;
+    float zd = pointB.z - pointA.z;
+    float distance = sqrt(xd * xd + yd * yd + zd * zd);
+    
+    if (distance < 0){
+        return (distance * -1);
+    } else {
+        return (distance);
+    }
 }
 
 @end

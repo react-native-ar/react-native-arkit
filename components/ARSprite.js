@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import withAnimationFrame from 'react-animation-frame';
+import withAnimationFrame from '@panter/react-animation-frame';
 
 import { NativeModules, Animated } from 'react-native';
 
@@ -13,7 +13,7 @@ const ARSprite = withAnimationFrame(
       super(props);
       this.state = {
         zIndex: new Animated.Value(),
-        pos2D: new Animated.ValueXY(), // inits to zero
+        pos2D: new Animated.ValueXY() // inits to zero
       };
     }
     onAnimationFrame() {
@@ -22,9 +22,9 @@ const ARSprite = withAnimationFrame(
           {
             x: this.state.pos2D.x,
             y: this.state.pos2D.y,
-            z: this.state.zIndex,
-          },
-        ]),
+            z: this.state.zIndex
+          }
+        ])
       );
     }
 
@@ -34,18 +34,18 @@ const ARSprite = withAnimationFrame(
           style={{
             position: 'absolute',
             transform: this.state.pos2D.getTranslateTransform(),
-            ...this.props.style,
+            ...this.props.style
           }}
         >
           {this.props.children}
         </Animated.View>
       );
     }
-  },
+  }
 );
 
 ARSprite.propTypes = {
-  position,
+  position
 };
 
-module.exports = ARSprite;
+export default ARSprite;

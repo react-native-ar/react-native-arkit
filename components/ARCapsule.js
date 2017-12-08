@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARCapsule = createArComponent('addCapsule', {
@@ -14,6 +15,7 @@ const ARCapsule = createArComponent('addCapsule', {
     capR: PropTypes.number,
     height: PropTypes.number,
   }),
+  material,
 });
 
-module.exports = ARCapsule;
+export default ARCapsule;

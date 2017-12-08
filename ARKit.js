@@ -5,9 +5,6 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
-import PropTypes from 'prop-types';
-import React, { Component } from 'react';
-
 import {
   StyleSheet,
   View,
@@ -15,7 +12,10 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
+import PropTypes from 'prop-types';
+import React, { Component } from 'react';
 
+import { pickColors, pickColorsFromFile } from './lib/pickColors';
 import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -36,9 +36,7 @@ class ARKit extends Component {
     reason: 0,
     floor: null,
   };
-  componentWillMount() {
-    ARKitManager.clearScene();
-  }
+
   componentDidMount() {
     ARKitManager.resume();
   }
@@ -172,12 +170,19 @@ ARKit.exportModel = presetId => {
   return ARKitManager.exportModel(property).then(result => ({ ...result, id }));
 };
 
+ARKit.pickColors = pickColors;
+ARKit.pickColorsFromFile = pickColorsFromFile;
 ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
-  lightEstimation: PropTypes.bool,
+  lightEstimationEnabled: PropTypes.bool,
+  autoenablesDefaultLighting: PropTypes.bool,
+  worldAlignment: PropTypes.number,
   onPlaneDetected: PropTypes.func,
   onFeaturesDetected: PropTypes.func,
+  // onLightEstimation is called rapidly, better poll with
+  // ARKit.getCurrentLightEstimation()
+  onLightEstimation: PropTypes.func,
   onPlaneUpdate: PropTypes.func,
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
@@ -187,4 +192,4 @@ ARKit.propTypes = {
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);
 
-module.exports = ARKit;
+export default ARKit;

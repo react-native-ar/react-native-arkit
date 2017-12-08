@@ -15,7 +15,6 @@ import createArComponent from './lib/createArComponent';
 const ARModel = createArComponent(
   {
     mount: NativeModules.ARModelManager.mount,
-    pick: ['model', 'material', 'shape'],
   },
   {
     model: PropTypes.shape({
@@ -26,6 +25,7 @@ const ARModel = createArComponent(
     }),
     material,
   },
+  ['model'],
 );
 
-module.exports = ARModel;
+export default ARModel;

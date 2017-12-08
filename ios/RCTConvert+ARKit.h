@@ -31,11 +31,15 @@
 + (SCNTorus *)SCNTorus:(id)json;
 + (SCNCapsule *)SCNCapsule:(id)json;
 + (SCNPlane *)SCNPlane:(id)json;
++ (SCNShape * )SCNShape:(id)json;
++ (SCNLight *)SCNLight:(id)json;
 
 + (SCNTextNode *)SCNTextNode:(id)json;
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json;
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json;
++ (void)setShapeProperties:(SCNGeometry *)geometry properties:(id)json;
++ (void)setLightProperties:(SCNLight *)light properties:(id)json;
 
 @end
 

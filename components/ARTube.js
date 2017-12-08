@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 
+import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARTube = createArComponent('addTube', {
@@ -15,6 +16,7 @@ const ARTube = createArComponent('addTube', {
     outerR: PropTypes.number,
     height: PropTypes.number,
   }),
+  material,
 });
 
-module.exports = ARTube;
+export default ARTube;
