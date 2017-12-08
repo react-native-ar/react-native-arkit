@@ -62,6 +62,9 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
+
+        UIRotationGestureRecognizer *rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotationFrom:)];
+        [self.arView addGestureRecognizer:rotationGestureRecognizer];
         
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
@@ -437,6 +440,27 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
         NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
         self.onTapOnPlaneNoExtent(planeHitResult);
+    }
+}
+
+- (void)handleRotationFrom: (UIRotationGestureRecognizer *)recognizer {
+    NSDictionary *rotationGesture = @{
+                              @"rotation": @(recognizer.rotation),
+                              @"velocity": @(recognizer.velocity)
+                              };
+    
+    if(recognizer.state == UIGestureRecognizerStateBegan) {
+        if(self.onRotationGestureBegin) {
+            self.onRotationGestureBegin(rotationGesture);
+        }
+    } else if(recognizer.state == UIGestureRecognizerStateChanged) {
+        if(self.onRotationGestureChange) {
+            self.onRotationGestureChange(rotationGesture);
+        }
+    } else if(recognizer.state == UIGestureRecognizerStateEnded) {
+        if(self.onRotationGestureEnd) {
+            self.onRotationGestureEnd(rotationGesture);
+        }
     }
 }
 

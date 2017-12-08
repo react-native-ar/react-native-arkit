@@ -46,6 +46,9 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneUsingExtent;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
+@property (nonatomic, copy) RCTBubblingEventBlock onRotationGestureBegin;
+@property (nonatomic, copy) RCTBubblingEventBlock onRotationGestureChange;
+@property (nonatomic, copy) RCTBubblingEventBlock onRotationGestureEnd;
 @property (nonatomic, copy) RCTBubblingEventBlock onEvent;
 
 
