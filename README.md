@@ -185,6 +185,9 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
 | `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
 | `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
+| `onRotationGestureBegin` | `{ rotation, velocity }` | The rotation gesture recognizer enters the `begin` state as soon as the position of the user’s fingers changes in a way that indicates that rotation has begun. Note that this event is called just once.
+| `onRotationGestureChange` | `{ rotation, velocity }` | After the initial change, subsequent changes cause the gesture recognizer to enter the `change` state and update the angle of rotation.
+| `onRotationGestureEnd` | `{ rotation, velocity }` | When the user’s fingers lift from the screen, the gesture recognizer enters the `end` state. Note that this event is called just once.
 
 ##### Static methods
 
