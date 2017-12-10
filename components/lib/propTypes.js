@@ -51,14 +51,28 @@ export const renderingOrder = PropTypes.number;
 export const blendMode = PropTypes.oneOf(values(ARKitManager.BlendMode));
 export const chamferMode = PropTypes.oneOf(values(ARKitManager.ChamferMode));
 export const color = PropTypes.string;
+export const fillMode = PropTypes.oneOf(values(ARKitManager.FillMode));
 
 export const lightType = PropTypes.oneOf(values(ARKitManager.LightType));
 export const shadowMode = PropTypes.oneOf(values(ARKitManager.ShadowMode));
 export const colorBufferWriteMask = PropTypes.oneOf(
   values(ARKitManager.ColorMask),
 );
+
+export const opacity = PropTypes.number;
+
+export const materialProperty = PropTypes.shape({
+  path: PropTypes.string,
+  color: PropTypes.string,
+  intensity: PropTypes.number,
+});
+
 export const material = PropTypes.shape({
   color,
+  normal: materialProperty,
+  specular: materialProperty,
+  displacement: materialProperty,
+  diffuse: PropTypes.oneOfType([PropTypes.string, materialProperty]),
   metalness: PropTypes.number,
   roughness: PropTypes.number,
   blendMode,
@@ -66,4 +80,8 @@ export const material = PropTypes.shape({
   shaders,
   writesToDepthBuffer: PropTypes.bool,
   colorBufferWriteMask,
+  doubleSided: PropTypes.bool,
+  litPerPixel: PropTypes.bool,
+  transparency: PropTypes.number,
+  fillMode,
 });

@@ -252,16 +252,19 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 }
 
 
-- (UIImage *)getSnaphshot {
+- (UIImage *)getSnapshot:(NSDictionary *)selection {
     UIImage *image = [self.arView snapshot];
-    return image;
+    
+    
+    return [self cropImage:image toSelection:selection];
+    
 }
 
 
 
 
 
-- (UIImage *)getSnaphsotCamera {
+- (UIImage *)getSnapshotCamera:(NSDictionary *)selection {
     CVPixelBufferRef pixelBuffer = self.arView.session.currentFrame.capturedImage;
     CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
     
@@ -274,11 +277,102 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     
     UIImage *image = [UIImage imageWithCGImage:videoImage scale: 1.0 orientation:UIImageOrientationRight];
     CGImageRelease(videoImage);
-    return image;
+    
+    UIImage *cropped = [self cropImage:image toSelection:selection];
+    return cropped;
+    
 }
 
 
 
+- (UIImage *)cropImage:(UIImage *)imageToCrop toRect:(CGRect)rect
+{
+    //CGRect CropRect = CGRectMake(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height+15);
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect([imageToCrop CGImage], rect);
+    UIImage *cropped = [UIImage imageWithCGImage:imageRef];
+    CGImageRelease(imageRef);
+    
+    return cropped;
+}
+
+static inline double radians (double degrees) {return degrees * M_PI/180;}
+UIImage* rotate(UIImage* src, UIImageOrientation orientation)
+{
+    UIGraphicsBeginImageContext(src.size);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+        [src drawAtPoint:CGPointMake(0, 0)];
+    if (orientation == UIImageOrientationRight) {
+        CGContextRotateCTM (context, radians(90));
+    } else if (orientation == UIImageOrientationLeft) {
+        CGContextRotateCTM (context, radians(-90));
+    } else if (orientation == UIImageOrientationDown) {
+        // NOTHING
+    } else if (orientation == UIImageOrientationUp) {
+        CGContextRotateCTM (context, radians(90));
+    }
+    
+
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+- (UIImage *)cropImage:(UIImage *)imageToCrop toSelection:(NSDictionary *)selection
+{
+    
+    // selection is in view-coordinate system
+    // where as the image is a camera picture with arbitary size
+    // also, the camera picture is cut of so that it "covers" the self.bounds
+    // if selection is nil, crop to the viewport
+    
+    UIImage * image = rotate(imageToCrop, imageToCrop.imageOrientation);
+    
+    float arViewWidth = self.bounds.size.width;
+    float arViewHeight = self.bounds.size.height;
+    float imageWidth = image.size.width;
+    float imageHeight = image.size.height;
+    
+    float arViewRatio = arViewHeight/arViewWidth;
+    float imageRatio = imageHeight/imageWidth;
+    float imageToArWidth = imageWidth/arViewWidth;
+    float imageToArHeight = imageHeight/arViewHeight;
+    
+    float finalHeight;
+    float finalWidth;
+    
+    
+    if (arViewRatio > imageRatio)
+    {
+        finalHeight = arViewHeight*imageToArHeight;
+        finalWidth = arViewHeight*imageToArHeight /arViewRatio;
+    }
+    else
+    {
+        finalWidth = arViewWidth*imageToArWidth;
+        finalHeight = arViewWidth * imageToArWidth * arViewRatio;
+    }
+    
+    float topOffset = (image.size.height - finalHeight)/2;
+    float leftOffset = (image.size.width - finalWidth)/2;
+    
+    
+    float x = leftOffset;
+    float y = topOffset;
+    float width = finalWidth;
+    float height = finalHeight;
+    if(selection && selection != [NSNull null]) {
+        x = leftOffset+ [selection[@"x"] floatValue]*imageToArWidth;
+        y = topOffset+[selection[@"y"] floatValue]*imageToArHeight;
+        width = [selection[@"width"] floatValue]*imageToArWidth;
+        height = [selection[@"height"] floatValue]*imageToArHeight;
+    }
+    CGRect rect = CGRectMake(x, y, width, height);
+    
+    UIImage *cropped = [self cropImage:image toRect:rect];
+    return cropped;
+}
 
 
 #pragma mark - plane hit detection
@@ -408,7 +502,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-
+    
     if (self.onPlaneUpdate) {
         self.onPlaneUpdate(@{
                              @"id": planeAnchor.identifier.UUIDString,

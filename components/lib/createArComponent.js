@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { NativeModules } from 'react-native';
+import { NativeModules, processColor } from 'react-native';
 import PropTypes from 'prop-types';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
@@ -12,6 +12,7 @@ import {
   castsShadow,
   categoryBitMask,
   eulerAngles,
+  opacity,
   orientation,
   position,
   renderingOrder,
@@ -19,7 +20,7 @@ import {
   scale,
   transition,
 } from './propTypes';
-import { processColor, processColorInMaterial } from './parseColor';
+import processMaterial from './processMaterial';
 import generateId from './generateId';
 
 const { ARGeosManager } = NativeModules;
@@ -42,6 +43,7 @@ const PROP_TYPES_NODE = {
   categoryBitMask,
   castsShadow,
   renderingOrder,
+  opacity,
 };
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
@@ -67,20 +69,17 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
   // any custom props (material, shape, ...)
   const nonNodePropKeys = keys(propTypes);
 
-  const processColors = props => ({
+  const parseMaterials = props => ({
     ...props,
-    ...(props.color ? { color: processColor(props.color) } : {}),
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
-    ...(props.material
-      ? { material: processColorInMaterial(props.material) }
-      : {}),
+    ...(props.material ? { material: processMaterial(props.material) } : {}),
   });
 
   const getNonNodeProps = props => ({
     ...pick(props, nonNodePropKeys),
-    ...processColors(props),
+    ...parseMaterials(props),
   });
 
   const mountFunc =
@@ -156,7 +155,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
             ...this.props.transition,
             ...props.transition,
           },
-          ...processColors(pick(props, changedKeys)),
+          ...parseMaterials(pick(props, changedKeys)),
         };
 
         if (DEBUG) console.log('update node', propsToupdate);

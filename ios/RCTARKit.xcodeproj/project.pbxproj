@@ -16,6 +16,7 @@
 		10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 10ED47A61F38BC00004DF043 /* DeviceMotion.m */; };
 		10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */; };
 		10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */; };
+		B1990B221FCEEBD60001AE2F /* color-grabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B1990B211FCEEBD60001AE2F /* color-grabber.m */; };
 		B3E7B58A1CC2AC0600A0062D /* RCTARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RCTARKit.m */; };
 /* End PBXBuildFile section */
 
@@ -61,6 +62,8 @@
 		10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitNodes.m; sourceTree = "<group>"; };
 		10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitDelegate.h; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRCTARKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTARKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1990B201FCEEBD60001AE2F /* color-grabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "color-grabber.h"; sourceTree = "<group>"; };
+		B1990B211FCEEBD60001AE2F /* color-grabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "color-grabber.m"; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RCTARKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTARKit.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RCTARKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTARKit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -100,6 +103,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				B1990B1F1FCEEBD60001AE2F /* color-grabber */,
 				106999E21F3EC2FB00032829 /* components */,
 				10ED47A51F38BC00004DF043 /* DeviceMotion.h */,
 				10ED47A61F38BC00004DF043 /* DeviceMotion.m */,
@@ -118,6 +122,15 @@
 				105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		B1990B1F1FCEEBD60001AE2F /* color-grabber */ = {
+			isa = PBXGroup;
+			children = (
+				B1990B201FCEEBD60001AE2F /* color-grabber.h */,
+				B1990B211FCEEBD60001AE2F /* color-grabber.m */,
+			);
+			path = "color-grabber";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -180,6 +193,7 @@
 				10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */,
 				10DCBC4B1F7CE836008C89E7 /* ARGeosManager.m in Sources */,
 				10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */,
+				B1990B221FCEEBD60001AE2F /* color-grabber.m in Sources */,
 				10E553291F1391350059B7EC /* Plane.m in Sources */,
 				1021FE1C1F3EDB98000E7339 /* ARModelManager.m in Sources */,
 				1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */,

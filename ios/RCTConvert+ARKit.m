@@ -187,24 +187,24 @@
 
 + (void)setChamferProfilePathSvg:(SCNShape *)geometry properties:(NSDictionary *)shape {
     if (shape[@"chamferProfilePathSvg"]) {
-       
-    
-    SVGBezierPath * path = [self svgStringToBezier:shape[@"chamferProfilePathSvg"]];
-    if(shape[@"chamferProfilePathFlatness"]) {
-        path.flatness = [shape[@"chamferProfilePathFlatness"] floatValue];
-    }
-    // normalize path
-    CGRect boundingBox = path.bounds;
-    if(path.bounds.size.width !=0 && path.bounds.size.height != 0) {
-        CGFloat scaleX = 1/boundingBox.size.width;
-        CGFloat scaleY =  scaleY = 1/boundingBox.size.height;
         
-        CGAffineTransform transform = CGAffineTransformMakeScale(scaleX, scaleY);
-        [path applyTransform:transform];
-        geometry.chamferProfile = path;
-    } else {
-        NSLog(@"Invalid chamferProfilePathFlatness");
-    }
+        
+        SVGBezierPath * path = [self svgStringToBezier:shape[@"chamferProfilePathSvg"]];
+        if(shape[@"chamferProfilePathFlatness"]) {
+            path.flatness = [shape[@"chamferProfilePathFlatness"] floatValue];
+        }
+        // normalize path
+        CGRect boundingBox = path.bounds;
+        if(path.bounds.size.width !=0 && path.bounds.size.height != 0) {
+            CGFloat scaleX = 1/boundingBox.size.width;
+            CGFloat scaleY =  scaleY = 1/boundingBox.size.height;
+            
+            CGAffineTransform transform = CGAffineTransformMakeScale(scaleX, scaleY);
+            [path applyTransform:transform];
+            geometry.chamferProfile = path;
+        } else {
+            NSLog(@"Invalid chamferProfilePathFlatness");
+        }
     }
     
 }
@@ -305,6 +305,17 @@
 }
 
 
++ (void)setMaterialPropertyContents:(id)property material:(SCNMaterialProperty *)material {
+    if (property[@"path"]) {
+        material.contents = property[@"path"];
+    } else if (property[@"color"]) {
+        material.contents = [self UIColor:property[@"color"]];
+    }
+    if (property[@"intensity"]) {
+        material.intensity = [property[@"intensity"] floatValue];
+    }
+}
+
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json {
     if (json[@"doubleSided"]) {
         material.doubleSided = [json[@"doubleSided"] boolValue];
@@ -321,13 +332,30 @@
     }
     
     if (json[@"diffuse"]) {
-        material.diffuse.contents = [self UIColor:json[@"diffuse"]];
+        [self setMaterialPropertyContents:json[@"diffuse"] material:material.diffuse];
+    }
+    
+    if (json[@"normal"]) {
+        [self setMaterialPropertyContents:json[@"normal"] material:material.normal];
+    }
+    
+    if (json[@"displacement"]) {
+        [self setMaterialPropertyContents:json[@"displacement"] material:material.displacement];
+    }
+    
+    if (json[@"specular"]) {
+        [self setMaterialPropertyContents:json[@"specular"] material:material.specular];
+    }
+    
+    if (json[@"transparency"]) {
+        material.transparency = [json[@"transparency"] floatValue];
     }
     
     if (json[@"metalness"]) {
         material.lightingModelName = SCNLightingModelPhysicallyBased;
         material.metalness.contents = @([json[@"metalness"] floatValue]);
     }
+    
     if (json[@"roughness"]) {
         material.lightingModelName = SCNLightingModelPhysicallyBased;
         material.roughness.contents = @([json[@"roughness"] floatValue]);
@@ -343,6 +371,18 @@
     
     if(json[@"colorBufferWriteMask"] ) {
         material.colorBufferWriteMask = [json[@"colorBufferWriteMask"] integerValue];
+    }
+    
+    if(json[@"fillMode"] ) {
+        material.fillMode = [json[@"fillMode"] integerValue];
+    }
+    
+    if(json[@"doubleSided"]) {
+        material.doubleSided = [json[@"doubleSided"] boolValue];
+    }
+    
+    if(json[@"litPerPixel"]) {
+        material.litPerPixel = [json[@"litPerPixel"] boolValue];
     }
 }
 
@@ -388,6 +428,10 @@
     
     if (json[@"rotation"]) {
         node.rotation = [self SCNVector4:json[@"rotation"]];
+    }
+    
+    if (json[@"opacity"]) {
+        node.opacity = [json[@"opacity"] floatValue];
     }
 }
 

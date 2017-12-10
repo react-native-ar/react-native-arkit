@@ -22,7 +22,10 @@ import ARText from './components/ARText';
 import ARTorus from './components/ARTorus';
 import ARTube from './components/ARTube';
 import DeviceMotion from './DeviceMotion';
+import startup from './startup';
 import withProjectedPosition from './hocs/withProjectedPosition';
+
+import * as colorUtils from './lib/colorUtils';
 
 ARKit.Box = ARBox;
 ARKit.Sphere = ARSphere;
@@ -40,7 +43,10 @@ ARKit.Group = ARGroup;
 ARKit.Shape = ARShape;
 ARKit.Light = ARLight;
 
+startup();
+
 export {
+  colorUtils,
   ARKit,
   DeviceMotion,
   ARBox,
