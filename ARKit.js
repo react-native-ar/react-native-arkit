@@ -69,9 +69,7 @@ class ARKit extends Component {
           {...this.props}
           onTapOnPlaneUsingExtent={this.callback('onTapOnPlaneUsingExtent')}
           onTapOnPlaneNoExtent={this.callback('onTapOnPlaneNoExtent')}
-          onRotationGestureBegin={this.callback('onRotationGestureBegin')}
-          onRotationGestureChange={this.callback('onRotationGestureChange')}
-          onRotationGestureEnd={this.callback('onRotationGestureEnd')}
+          onRotationGesture={this.callback('onRotationGesture')}          
           onPlaneDetected={this.callback('onPlaneDetected')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
@@ -190,9 +188,7 @@ ARKit.propTypes = {
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
   onTapOnPlaneNoExtent: PropTypes.func,
-  onRotationGestureBegin: PropTypes.func,
-  onRotationGestureChange: PropTypes.func,
-  onRotationGestureEnd: PropTypes.func,
+  onRotationGesture: PropTypes.func,
   onEvent: PropTypes.func,
 };
 

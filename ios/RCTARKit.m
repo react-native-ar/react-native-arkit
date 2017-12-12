@@ -444,22 +444,18 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 - (void)handleRotationFrom: (UIRotationGestureRecognizer *)recognizer {
-    NSDictionary *rotationGesture = @{
-                              @"rotation": @(recognizer.rotation),
-                              @"velocity": @(recognizer.velocity)
-                              };
     
-    if(recognizer.state == UIGestureRecognizerStateBegan) {
-        if(self.onRotationGestureBegin) {
-            self.onRotationGestureBegin(rotationGesture);
-        }
-    } else if(recognizer.state == UIGestureRecognizerStateChanged) {
-        if(self.onRotationGestureChange) {
-            self.onRotationGestureChange(rotationGesture);
-        }
-    } else if(recognizer.state == UIGestureRecognizerStateEnded) {
-        if(self.onRotationGestureEnd) {
-            self.onRotationGestureEnd(rotationGesture);
+    if( recognizer.state == UIGestureRecognizerStateBegan || 
+        recognizer.state == UIGestureRecognizerStateChanged || 
+        recognizer.state == UIGestureRecognizerStateEnded) {
+
+        if(self.onRotationGesture) {
+            NSDictionary *rotationGesture = @{
+                    @"rotation": @(recognizer.rotation),
+                    @"velocity": @(recognizer.velocity)
+                    };
+
+            self.onRotationGesture(rotationGesture);
         }
     }
 }
