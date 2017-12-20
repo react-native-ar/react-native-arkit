@@ -95,7 +95,7 @@ RCT_EXPORT_MODULE();
             int red = CLAMP([reds[r] intValue], 0, 255);
             int green = CLAMP([greens[g] intValue], 0, 255);
             int blue = CLAMP([blues[b] intValue], 0, 255);
-            NSLog([NSString stringWithFormat:@"r: %d, g: %d, b: %d",red,green,blue]);
+            //NSLog([NSString stringWithFormat:@"r: %d, g: %d, b: %d",red,green,blue]);
             
             NSString * rgbString = [NSString stringWithFormat:@"%i,%i,%i",red,green,blue];
             [flexibleColours addObject:rgbString];
@@ -167,7 +167,7 @@ RCT_EXPORT_MODULE();
     for (NSString * key in temp){
         float count = [temp[key] floatValue];
         float percentage = count/totalCount;
-        NSLog(@"%f",percentage);
+        //NSLog(@"%f",percentage);
         NSArray * rgb = [key componentsSeparatedByString:@","];
         float r = [rgb[0] floatValue];
         float g = [rgb[1] floatValue];

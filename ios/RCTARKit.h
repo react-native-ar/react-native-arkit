@@ -48,6 +48,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneUsingExtent;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
 @property (nonatomic, copy) RCTBubblingEventBlock onEvent;
+@property (nonatomic, copy) RCTBubblingEventBlock onARKitError;
 
 
 @property NSMutableDictionary *planes; // plane detected

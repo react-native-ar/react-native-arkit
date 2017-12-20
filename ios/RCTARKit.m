@@ -87,6 +87,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    //NSLog(@"setting view bounds %@", NSStringFromCGRect(self.bounds));
     self.arView.frame = self.bounds;
 }
 
@@ -98,6 +99,15 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     [self.session runWithConfiguration:self.configuration];
 }
 
+- (void)session:(ARSession *)session didFailWithError:(NSError *)error {
+    if(self.onARKitError) {
+        self.onARKitError(RCTJSErrorFromNSError(error));
+    } else {
+        NSLog(@"Initializing ARKIT failed with Error: %@ %@", error, [error userInfo]);
+        
+    }
+   
+}
 - (void)reset {
     if (ARWorldTrackingConfiguration.isSupported) {
         [self.session runWithConfiguration:self.configuration options:ARSessionRunOptionRemoveExistingAnchors | ARSessionRunOptionResetTracking];

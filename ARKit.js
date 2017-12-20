@@ -73,6 +73,7 @@ class ARKit extends Component {
           onPlaneDetected={this.callback('onPlaneDetected')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
+          onARKitError={this.callback('onARKitError')}
           onEvent={this._onEvent}
         />
         {state}
@@ -183,6 +184,7 @@ ARKit.propTypes = {
   lightEstimationEnabled: PropTypes.bool,
   autoenablesDefaultLighting: PropTypes.bool,
   worldAlignment: PropTypes.number,
+  onARKitError: PropTypes.func,
   onPlaneDetected: PropTypes.func,
   onFeaturesDetected: PropTypes.func,
   // onLightEstimation is called rapidly, better poll with

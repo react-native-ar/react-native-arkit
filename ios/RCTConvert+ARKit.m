@@ -390,6 +390,7 @@
     }
     
     if (json[@"scale"]) {
+       
         CGFloat scale = [json[@"scale"] floatValue];
         node.scale = SCNVector3Make(scale, scale, scale);
         
