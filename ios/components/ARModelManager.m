@@ -25,7 +25,7 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSS
         CGFloat scale = [model[@"scale"] floatValue];
         
         NSString *path = [NSString stringWithFormat:@"%@", model[@"file"]];
-        NSLog(@"mounting model: %@ %@", node.name, path);
+        //NSLog(@"mounting model: %@ %@", node.name, path);
         SCNNode *modelNode = [[RCTARKitIO sharedInstance] loadModel:path nodeName:model[@"node"] withAnimation:YES];
         modelNode.scale = SCNVector3Make(scale, scale, scale);
         NSDictionary* materialJson;
