@@ -481,12 +481,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     return @{
              @"id": planeAnchor.identifier.UUIDString,
              @"alignment": @(planeAnchor.alignment),
+             @"eulerAngles":vectorToJson(node.eulerAngles),
              @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
              @"positionAbsolute": vectorToJson(node.position),
-             // node is deprecated
-             @"node": vectorToJson(node.position),
              @"center": vector_float3ToJson(planeAnchor.center),
-             @"extent": vector_float3ToJson(planeAnchor.extent)
+             @"extent": vector_float3ToJson(planeAnchor.extent),
+             // node is deprecated
+             @"node": vectorToJson(node.position)
              };
 }
 
@@ -513,6 +514,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         self.onPlaneUpdate([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
     }
     
+}
+
+- (void)renderer:(id<SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+    if (self.onPlaneRemoved) {
+        self.onPlaneRemoved([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    }
 }
 
 

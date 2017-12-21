@@ -71,6 +71,7 @@ class ARKit extends Component {
           onTapOnPlaneUsingExtent={this.callback('onTapOnPlaneUsingExtent')}
           onTapOnPlaneNoExtent={this.callback('onTapOnPlaneNoExtent')}
           onPlaneDetected={this.callback('onPlaneDetected')}
+          onPlaneRemoved={this.callback('onPlaneRemoved')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
           onARKitError={this.callback('onARKitError')}
@@ -186,6 +187,7 @@ ARKit.propTypes = {
   worldAlignment: PropTypes.number,
   onARKitError: PropTypes.func,
   onPlaneDetected: PropTypes.func,
+  onPlaneRemoved: PropTypes.func,
   onFeaturesDetected: PropTypes.func,
   // onLightEstimation is called rapidly, better poll with
   // ARKit.getCurrentLightEstimation()

@@ -104,6 +104,7 @@ RCT_EXPORT_VIEW_PROPERTY(worldAlignment, NSInteger)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPlaneRemoved, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
