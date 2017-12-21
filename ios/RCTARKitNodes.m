@@ -64,6 +64,7 @@ CGFloat focDistance = 0.2f;
     NSLog(@"setArView");
     _arView = arView;
     self.rootNode = arView.scene.rootNode;
+  
     self.rootNode.name = @"root";
     
     [self.rootNode addChildNode:self.localOrigin];
@@ -152,6 +153,25 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 
+static SCNVector3 toSCNVector3(simd_float4 float4) {
+    SCNVector3 positionAbsolute = SCNVector3Make(float4.x, float4.y, float4.z);
+    return positionAbsolute;
+}
+
+- (SCNVector3)getRelativePositionToOrigin:(const SCNVector3)positionAbsolute {
+    SCNVector3 originPosition = self.localOrigin.position;
+    SCNVector3 position = SCNVector3Make(positionAbsolute.x - originPosition.x, positionAbsolute.y- originPosition.y, positionAbsolute.z - originPosition.z);
+    return position;
+}
+
+- (SCNVector3)getAbsolutePositionToOrigin:(const SCNVector3)positionRelative {
+    SCNVector3 originPosition = self.localOrigin.position;
+    SCNVector3 position = SCNVector3Make(positionRelative.x + originPosition.x, positionRelative.y+ originPosition.y, positionRelative.z + originPosition.z);
+    return position;
+}
+
+
+
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
     
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
@@ -163,17 +183,29 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
         NSString * nodeId = [self findNodeId:node];
         if(nodeId) {
         
-            SCNVector3 point = result.worldCoordinates;
+            SCNVector3 positionAbsolute = result.worldCoordinates;
+            SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
             SCNVector3 normal = result.worldNormal;
-            float distance = [self getCameraDistanceToPoint:point];
+            float distance = [self getCameraDistanceToPoint:positionAbsolute];
          
             [resultsMapped addObject:(@{
                                         @"id": nodeId,
                                         @"distance": @(distance),
+                                        @"positionAbsolute": @{
+                                                @"x": @(positionAbsolute.x),
+                                                @"y": @(positionAbsolute.y),
+                                                @"z": @(positionAbsolute.z)
+                                                },
+                                        @"position": @{
+                                                @"x": @(position.x),
+                                                @"y": @(position.y),
+                                                @"z": @(position.z)
+                                                },
+                                        // point is deprecated
                                         @"point": @{
-                                                @"x": @(point.x),
-                                                @"y": @(point.y),
-                                                @"z": @(point.z)
+                                                @"x": @(position.x),
+                                                @"y": @(position.y),
+                                                @"z": @(position.z)
                                                 },
                                         @"normal": @{
                                                 @"x": @(normal.x),
@@ -191,6 +223,41 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 
+
+
+
+- (NSMutableArray *) mapHitResults:(NSArray<ARHitTestResult *> *)results {
+    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+        ARHitTestResult *result = (ARHitTestResult *) obj;
+        
+        SCNVector3 positionAbsolute = toSCNVector3(result.worldTransform.columns[3]);
+        SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
+        [resultsMapped addObject:(@{
+                                    @"distance": @(result.distance),
+                                    @"id": result.anchor.identifier.UUIDString,
+                                    @"positionAbsolute": @{
+                                            @"x": @(positionAbsolute.x),
+                                            @"y": @(positionAbsolute.y),
+                                            @"z": @(positionAbsolute.z)
+                                            },
+                                    @"position": @{
+                                            @"x": @(position.x),
+                                            @"y": @(position.y),
+                                            @"z": @(position.z)
+                                            },
+                                    // deprecated
+                                    @"point": @{
+                                            @"x": @(position.x),
+                                            @"y": @(position.y),
+                                            @"z": @(position.z)
+                                            }
+                                    
+                                    } )];
+    }];
+    return resultsMapped;
+}
 
 #pragma mark - node register
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
