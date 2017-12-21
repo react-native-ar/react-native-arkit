@@ -17,6 +17,8 @@
 
 RCT_EXPORT_MODULE()
 
+
+
 - (UIView *)view {
     return [ARKit sharedInstance];
 }
@@ -102,12 +104,14 @@ RCT_EXPORT_VIEW_PROPERTY(worldAlignment, NSInteger)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPlaneRemoved, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneUsingExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneNoExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onEvent, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onARKitError, RCTBubblingEventBlock)
 
 RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] pause];

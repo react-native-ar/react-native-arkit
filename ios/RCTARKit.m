@@ -87,6 +87,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    //NSLog(@"setting view bounds %@", NSStringFromCGRect(self.bounds));
     self.arView.frame = self.bounds;
 }
 
@@ -98,6 +99,15 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     [self.session runWithConfiguration:self.configuration];
 }
 
+- (void)session:(ARSession *)session didFailWithError:(NSError *)error {
+    if(self.onARKitError) {
+        self.onARKitError(RCTJSErrorFromNSError(error));
+    } else {
+        NSLog(@"Initializing ARKIT failed with Error: %@ %@", error, [error userInfo]);
+        
+    }
+   
+}
 - (void)reset {
     if (ARWorldTrackingConfiguration.isSupported) {
         [self.session runWithConfiguration:self.configuration options:ARSessionRunOptionRemoveExistingAnchors | ARSessionRunOptionResetTracking];
@@ -471,12 +481,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     return @{
              @"id": planeAnchor.identifier.UUIDString,
              @"alignment": @(planeAnchor.alignment),
+             @"eulerAngles":vectorToJson(node.eulerAngles),
              @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
              @"positionAbsolute": vectorToJson(node.position),
-             // node is deprecated
-             @"node": vectorToJson(node.position),
              @"center": vector_float3ToJson(planeAnchor.center),
-             @"extent": vector_float3ToJson(planeAnchor.extent)
+             @"extent": vector_float3ToJson(planeAnchor.extent),
+             // node is deprecated
+             @"node": vectorToJson(node.position)
              };
 }
 
@@ -503,6 +514,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         self.onPlaneUpdate([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
     }
     
+}
+
+- (void)renderer:(id<SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+    if (self.onPlaneRemoved) {
+        self.onPlaneRemoved([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    }
 }
 
 

@@ -61,7 +61,7 @@ CGFloat focDistance = 0.2f;
 }
 
 - (void)setArView:(ARSCNView *)arView {
-    NSLog(@"setArView");
+    //NSLog(@"setArView");
     _arView = arView;
     self.rootNode = arView.scene.rootNode;
   
@@ -78,6 +78,7 @@ CGFloat focDistance = 0.2f;
  add a node to scene in a reference frame
  */
 - (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame {
+    [self registerNode:node forKey:node.name];
     if (!referenceFrame) {
         referenceFrame = @"Local"; // default to Local frame
     }
@@ -108,16 +109,15 @@ CGFloat focDistance = 0.2f;
 - (void)addNodeToLocalFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameLocal;
     
+    [self.localOrigin addChildNode:node];
     //NSLog(@"[RCTARKitNodes] Add node %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     
-    [self registerNode:node forKey:node.name];
-    [self.localOrigin addChildNode:node];
 }
 
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
     //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-    [self registerNode:node forKey:node.name];
+
     [self.cameraOrigin addChildNode:node];
 }
 
@@ -125,7 +125,7 @@ CGFloat focDistance = 0.2f;
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
     
     //NSLog(@"[RCTARKitNodes] Add node %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-    [self registerNode:node forKey:node.name];
+
     [self.frontOfCamera addChildNode:node];
 }
 
@@ -287,7 +287,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 }
 
 - (void)removeNodeForKey:(NSString *)key {
-    
+    //NSLog(@"removing node: %@ ", key);
     SCNNode *node = [self.nodes objectForKey:key];
     if (node) {
         [self.nodes removeObjectForKey:key];
@@ -303,6 +303,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 
 - (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties {
     SCNNode *node = [self.nodes objectForKey:nodeId];
+    //NSLog(@"updating node %@ :%@", nodeId, properties);
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
         if(node.geometry && properties[@"shape"]) {
@@ -318,6 +319,8 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         }
         
         
+    } else {
+        NSLog(@"WARNING: node does not exists: %@. This means that the node has not been mounted yet, so native calls got out of order", nodeId);
     }
     
 }
