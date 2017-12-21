@@ -183,7 +183,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 | Event Name | Returns | Notes
 |---|---|---|
-| `onARKitError` | `ARKiterror` | will report whether an error occured TODO | 
+| `onARKitError` | `ARKiterror` | will report whether an error occured while initializing ARKit. A common error is when the user has not allowed camera access. Another error is, if you use `worldAlignment=GravityAndHeading` and location service is turned off |
 | `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
 | `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
 | `onPlaneDetected` | `Plane` | When a plane is first detected.
@@ -197,6 +197,9 @@ The `Plane` object has the following properties:
 | `id` | a unique id identifying the plane |
 | `position` | the position of the plane (relative to the origin) |
 | `positionAbsolute` | the absolute position of the plane |
+| `extent` | the extent of the plane | 
+| `eulerAngles` | the rotation of the plane |
+
 
 
 
