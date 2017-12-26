@@ -37,9 +37,11 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, assign) BOOL planeDetection;
 @property (nonatomic, assign) BOOL lightEstimationEnabled;
 @property (nonatomic, assign) BOOL autoenablesDefaultLighting;
+@property (nonatomic, assign) NSDictionary* origin;
 @property (nonatomic, assign) ARWorldAlignment worldAlignment;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
+@property (nonatomic, copy) RCTBubblingEventBlock onPlaneRemoved;
 @property (nonatomic, copy) RCTBubblingEventBlock onFeaturesDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onLightEstimation;
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
@@ -48,6 +50,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
 @property (nonatomic, copy) RCTBubblingEventBlock onRotationGesture;
 @property (nonatomic, copy) RCTBubblingEventBlock onEvent;
+@property (nonatomic, copy) RCTBubblingEventBlock onARKitError;
 
 
 @property NSMutableDictionary *planes; // plane detected

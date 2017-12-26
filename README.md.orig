@@ -186,10 +186,13 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `onARKitError` | `ARKiterror` | will report whether an error occured while initializing ARKit. A common error is when the user has not allowed camera access. Another error is, if you use `worldAlignment=GravityAndHeading` and location service is turned off |
 | `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
 | `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
+<<<<<<< HEAD
+| `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
+| `onRotationGesture` | `{ rotation, velocity }` | The rotation gesture recognizer enters the `begin` state as soon as the position of the user’s fingers changes in a way that indicates that rotation has begun.  After the initial change, subsequent changes cause the gesture recognizer to enter the `change` state and update the angle of rotation. When the user’s fingers lift from the screen, the gesture recognizer enters the `end` state.
+=======
 | `onPlaneDetected` | `Plane` | When a plane is first detected.
 | `onPlaneUpdate` | `Plane` | When a detected plane is updated
 | `onPlaneRemoved` | `Plane` | When a detected plane is updated
-| `onRotationGesture` | `{ rotation, velocity }` | The rotation gesture recognizer enters the `begin` state as soon as the position of the user’s fingers changes in a way that indicates that rotation has begun.  After the initial change, subsequent changes cause the gesture recognizer to enter the `change` state and update the angle of rotation. When the user’s fingers lift from the screen, the gesture recognizer enters the `end` state.
 
 The `Plane` object has the following properties:
 
@@ -200,6 +203,10 @@ The `Plane` object has the following properties:
 | `positionAbsolute` | the absolute position of the plane |
 | `extent` | the extent of the plane | 
 | `eulerAngles` | the rotation of the plane |
+
+
+
+>>>>>>> 75fdf78e4630c7ed64cd148b1dc6ac653c689542
 
 ##### Static methods
 

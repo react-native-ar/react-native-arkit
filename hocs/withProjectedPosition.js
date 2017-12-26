@@ -11,7 +11,7 @@ const roundPoint = ({ x, y, z }, precision) => ({
   z: round(z, precision),
 });
 
-export default ({ throttleMs = 33 } = {}) => C =>
+export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
   withAnimationFrame(
     class extends Component {
       projectionRunning = true;
@@ -91,7 +91,10 @@ export default ({ throttleMs = 33 } = {}) => C =>
       render() {
         return (
           <C
-            positionProjected={this.state.positionProjected}
+            positionProjected={{
+              ...this.state.positionProjected,
+              ...overwritePosition,
+            }}
             projectionResult={this.state.projectionResult}
             {...this.props}
           />
