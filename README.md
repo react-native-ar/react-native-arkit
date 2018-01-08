@@ -212,6 +212,7 @@ All methods return a promise with the result.
 | `snapshot` |  |  | Take a screenshot (will save to Photo Library) |
 | `snapshotCamera` |  | Take a screenshot without 3d models (will save to Photo Library) |
 | `getCameraPosition` |  | Get the current position of the `ARCamera` |
+| `getCamera` |  | Get all properties of the `ARCamera` |
 | `getCurrentLightEstimation` |  | Get current light estimation  `{ ambientColorTemperature, ambientIntensity}` |
 | `getCurrentDetectedFeaturePoints` |  | Get current detected feature points (in last current frame)  (array) |
 | `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation) |
