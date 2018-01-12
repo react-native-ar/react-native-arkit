@@ -188,32 +188,33 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
             SCNVector3 normal = result.worldNormal;
             float distance = [self getCameraDistanceToPoint:positionAbsolute];
          
-            [resultsMapped addObject:(@{
-                                        @"id": nodeId,
-                                        @"distance": @(distance),
-                                        @"positionAbsolute": @{
-                                                @"x": @(positionAbsolute.x),
-                                                @"y": @(positionAbsolute.y),
-                                                @"z": @(positionAbsolute.z)
-                                                },
-                                        @"position": @{
-                                                @"x": @(position.x),
-                                                @"y": @(position.y),
-                                                @"z": @(position.z)
-                                                },
-                                        // point is deprecated
-                                        @"point": @{
-                                                @"x": @(position.x),
-                                                @"y": @(position.y),
-                                                @"z": @(position.z)
-                                                },
-                                        @"normal": @{
-                                                @"x": @(normal.x),
-                                                @"y": @(normal.y),
-                                                @"z": @(normal.z)
-                                                
-                                                }
-                                        } )];
+            NSDictionary *result = @{
+                                            @"id": nodeId,
+                                            @"distance": @(distance),
+                                            @"positionAbsolute": @{
+                                                    @"x": @(positionAbsolute.x),
+                                                    @"y": @(positionAbsolute.y),
+                                                    @"z": @(positionAbsolute.z)
+                                                    },
+                                            @"position": @{
+                                                    @"x": @(position.x),
+                                                    @"y": @(position.y),
+                                                    @"z": @(position.z)
+                                                    },
+                                            // point is deprecated
+                                            @"point": @{
+                                                    @"x": @(position.x),
+                                                    @"y": @(position.y),
+                                                    @"z": @(position.z)
+                                                    },
+                                            @"normal": @{
+                                                    @"x": @(normal.x),
+                                                    @"y": @(normal.y),
+                                                    @"z": @(normal.z)
+                                                    
+                                                    }
+                                            };
+            [resultsMapped addObject:(result )];
         }
             
     }];
