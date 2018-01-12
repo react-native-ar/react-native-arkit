@@ -144,11 +144,7 @@ CGFloat focDistance = 0.2f;
 
 static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
     return @{
-             @"results": resultsMapped,
-             @"tapPoint": @{
-                     @"x": @(tapPoint.x),
-                     @"y": @(tapPoint.y)
-                     }
+             @"results": resultsMapped
              };
 }
 
@@ -201,12 +197,6 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
                                                     @"y": @(position.y),
                                                     @"z": @(position.z)
                                                     },
-                                            // point is deprecated
-                                            @"point": @{
-                                                    @"x": @(position.x),
-                                                    @"y": @(position.y),
-                                                    @"z": @(position.z)
-                                                    },
                                             @"normal": @{
                                                     @"x": @(normal.x),
                                                     @"y": @(normal.y),
@@ -247,14 +237,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
                                             @"x": @(position.x),
                                             @"y": @(position.y),
                                             @"z": @(position.z)
-                                            },
-                                    // deprecated
-                                    @"point": @{
-                                            @"x": @(position.x),
-                                            @"y": @(position.y),
-                                            @"z": @(position.z)
                                             }
-                                    
                                     } )];
     }];
     return resultsMapped;
