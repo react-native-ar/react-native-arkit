@@ -23,6 +23,12 @@ RCT_EXPORT_MODULE()
     return [ARKit sharedInstance];
 }
 
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
+
 - (NSDictionary *)constantsToExport
 {
     

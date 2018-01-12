@@ -21,6 +21,12 @@ RCT_EXPORT_MODULE();
     return self;
 }
 
+
++ (BOOL)requiresMainQueueSetup
+{
+    return YES;
+}
+
 - (CMMotionManager *)motionManager {
     if (_motionManager) {
         return _motionManager;
