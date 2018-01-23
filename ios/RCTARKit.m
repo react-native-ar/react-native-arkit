@@ -80,7 +80,6 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
         
         // start ARKit
         [self addSubview:arView];
-        [self resume];
     }
     return self;
 }
