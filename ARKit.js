@@ -159,13 +159,13 @@ Object.keys(ARKitManager).forEach(key => {
   ARKit[key] = ARKitManager[key];
 });
 
-const defaultPropsObject = {
-  target: 'cameraRoll',
-  format: 'png',
-};
+const addDefaultsToSnapShotFunc = funcName => ({
+  target = 'cameraRoll',
+  format = 'png'
+} = {}) => ARKitManager[funcName]({ target, format });
 
-ARKit.snapshot = () => ARKitManager.snapshot(defaultPropsObject);
-ARKit.snapshotCamera = () => ARKitManager.snapshotCamera(defaultPropsObject);
+ARKit.snapshot = addDefaultsToSnapShotFunc("snapshot");
+ARKit.snapshotCamera = addDefaultsToSnapShotFunc("snapshotCamera");
 
 ARKit.exportModel = presetId => {
   const id = presetId || generateId();
