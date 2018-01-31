@@ -7,8 +7,7 @@
 //
 
 #import "RCTARKit.h"
-#import "Plane.h"
-
+#import "RCTConvert+ARKit.h"
 
 @import CoreLocation;
 
@@ -77,7 +76,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
         
         arView.scene.rootNode.name = @"root";
         
-        self.planes = [NSMutableDictionary new];
+    
         
         // start ARKit
         [self addSubview:arView];
@@ -88,6 +87,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    //NSLog(@"setting view bounds %@", NSStringFromCGRect(self.bounds));
     self.arView.frame = self.bounds;
 }
 
@@ -99,6 +99,15 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     [self.session runWithConfiguration:self.configuration];
 }
 
+- (void)session:(ARSession *)session didFailWithError:(NSError *)error {
+    if(self.onARKitError) {
+        self.onARKitError(RCTJSErrorFromNSError(error));
+    } else {
+        NSLog(@"Initializing ARKIT failed with Error: %@ %@", error, [error userInfo]);
+        
+    }
+   
+}
 - (void)reset {
     if (ARWorldTrackingConfiguration.isSupported) {
         [self.session runWithConfiguration:self.configuration options:ARSessionRunOptionRemoveExistingAnchors | ARSessionRunOptionResetTracking];
@@ -150,6 +159,29 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     [self resume];
 }
 
+-(NSDictionary*)origin {
+    return @{
+             @"position": vectorToJson(self.nodeManager.localOrigin.position)
+             };
+}
+
+-(void)setOrigin:(NSDictionary*)json {
+   
+    if(json[@"transition"]) {
+        NSDictionary * transition =json[@"transition"];
+        if(transition[@"duration"]) {
+            [SCNTransaction setAnimationDuration:[transition[@"duration"] floatValue]];
+        } else {
+            [SCNTransaction setAnimationDuration:0.0];
+        }
+        
+    } else {
+        [SCNTransaction setAnimationDuration:0.0];
+    }
+     SCNVector3 position = [RCTConvert SCNVector3:json[@"position"]];
+    [self.nodeManager.localOrigin setPosition:position];
+}
+
 - (BOOL)lightEstimationEnabled {
     ARConfiguration *configuration = self.configuration;
     return configuration.lightEstimationEnabled;
@@ -195,6 +227,9 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 static NSDictionary * vectorToJson(const SCNVector3 v) {
     return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z) };
 }
+static NSDictionary * vector_float3ToJson(const simd_float3 v) {
+    return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z) };
+}
 static NSDictionary * vector4ToJson(const SCNVector4 v) {
     return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z), @"w": @(v.w) };
 }
@@ -216,7 +251,8 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 }
 
 - (SCNVector3)projectPoint:(SCNVector3)point {
-    return [self.arView projectPoint:point];
+    return [self.arView projectPoint:[self.nodeManager getAbsolutePositionToOrigin:point]];
+    
 }
 
 
@@ -302,7 +338,7 @@ UIImage* rotate(UIImage* src, UIImageOrientation orientation)
     UIGraphicsBeginImageContext(src.size);
     
     CGContextRef context = UIGraphicsGetCurrentContext();
-        [src drawAtPoint:CGPointMake(0, 0)];
+    [src drawAtPoint:CGPointMake(0, 0)];
     if (orientation == UIImageOrientationRight) {
         CGContextRotateCTM (context, radians(90));
     } else if (orientation == UIImageOrientationLeft) {
@@ -313,7 +349,7 @@ UIImage* rotate(UIImage* src, UIImageOrientation orientation)
         CGContextRotateCTM (context, radians(90));
     }
     
-
+    
     
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
@@ -382,27 +418,6 @@ UIImage* rotate(UIImage* src, UIImageOrientation orientation)
     resolve([self getPlaneHitResult:tapPoint types:types]);
 }
 
-static NSMutableArray * mapHitResults(NSArray<ARHitTestResult *> *results) {
-    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
-    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
-        ARHitTestResult *result = (ARHitTestResult *) obj;
-        
-        [resultsMapped addObject:(@{
-                                    @"distance": @(result.distance),
-                                    @"id": result.anchor.identifier.UUIDString,
-                                    @"point": @{
-                                            @"x": @(result.worldTransform.columns[3].x),
-                                            @"y": @(result.worldTransform.columns[3].y),
-                                            @"z": @(result.worldTransform.columns[3].z)
-                                            }
-                                    
-                                    } )];
-    }];
-    return resultsMapped;
-}
-
-
-
 
 
 static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
@@ -418,7 +433,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 - (NSDictionary *)getPlaneHitResult:(const CGPoint)tapPoint  types:(ARHitTestResultType)types; {
     NSArray<ARHitTestResult *> *results = [self.arView hitTest:tapPoint types:types];
-    NSMutableArray * resultsMapped = mapHitResults(results);
+    NSMutableArray * resultsMapped = [self.nodeManager mapHitResults:results];
     NSDictionary *planeHitResult = getPlaneHitResult(resultsMapped, tapPoint);
     return planeHitResult;
 }
@@ -461,70 +476,53 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
+- (NSDictionary *)makePlaneDetectionResult:(SCNNode *)node planeAnchor:(ARPlaneAnchor *)planeAnchor {
+    
+    return @{
+             @"id": planeAnchor.identifier.UUIDString,
+             @"alignment": @(planeAnchor.alignment),
+             @"eulerAngles":vectorToJson(node.eulerAngles),
+             @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
+             @"positionAbsolute": vectorToJson(node.position),
+             @"center": vector_float3ToJson(planeAnchor.center),
+             @"extent": vector_float3ToJson(planeAnchor.extent),
+             // node is deprecated
+             @"node": vectorToJson(node.position)
+             };
+}
+
+- (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+}
+
+
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     }
-    
-    SCNNode *parent = [node parentNode];
-    NSLog(@"plane detected");
-    //    NSLog(@"%f %f %f", parent.position.x, parent.position.y, parent.position.z);
-    
+ 
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    
-    //    NSLog(@"%@", @{
-    //            @"id": planeAnchor.identifier.UUIDString,
-    //            @"alignment": @(planeAnchor.alignment),
-    //            @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
-    //            @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
-    //            @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-    //            @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
-    //            });
-    
     if (self.onPlaneDetected) {
-        self.onPlaneDetected(@{
-                               @"id": planeAnchor.identifier.UUIDString,
-                               @"alignment": @(planeAnchor.alignment),
-                               @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
-                               @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
-                               @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-                               //                               @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
-                               });
+        self.onPlaneDetected([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
     }
     
-    //Plane *plane = [[Plane alloc] initWithAnchor: (ARPlaneAnchor *)anchor isHidden: NO];
-    //[self.planes setObject:plane forKey:anchor.identifier];
-    //[node addChildNode:plane];
-}
-
-- (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
     
     if (self.onPlaneUpdate) {
-        self.onPlaneUpdate(@{
-                             @"id": planeAnchor.identifier.UUIDString,
-                             @"alignment": @(planeAnchor.alignment),
-                             @"node": @{ @"x": @(node.position.x), @"y": @(node.position.y), @"z": @(node.position.z) },
-                             @"center": @{ @"x": @(planeAnchor.center.x), @"y": @(planeAnchor.center.y), @"z": @(planeAnchor.center.z) },
-                             @"extent": @{ @"x": @(planeAnchor.extent.x), @"y": @(planeAnchor.extent.y), @"z": @(planeAnchor.extent.z) },
-                             //                             @"camera": @{ @"x": @(self.cameraOrigin.position.x), @"y": @(self.cameraOrigin.position.y), @"z": @(self.cameraOrigin.position.z) }
-                             });
+        self.onPlaneUpdate([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
     }
     
-    Plane *plane = [self.planes objectForKey:anchor.identifier];
-    if (plane == nil) {
-        return;
-    }
-    
-    [plane update:(ARPlaneAnchor *)anchor];
 }
 
-- (void)renderer:(id <SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    //    [self.planes removeObjectForKey:anchor.identifier];
+- (void)renderer:(id<SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+    if (self.onPlaneRemoved) {
+        self.onPlaneRemoved([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    }
 }
+
 
 
 
@@ -541,14 +539,14 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 - (NSMutableArray *)getCurrentDetectedFeaturePoints {
     NSMutableArray * featurePoints = [NSMutableArray array];
     for (int i = 0; i < [self currentFrame].rawFeaturePoints.count; i++) {
-        vector_float3 point = [self currentFrame].rawFeaturePoints.points[i];
-        
+        vector_float3 positionV = [self currentFrame].rawFeaturePoints.points[i];
+        SCNVector3 position = [self.nodeManager getRelativePositionToOrigin:SCNVector3Make(positionV[0],positionV[1],positionV[2])];
         NSString * pointId = [NSString stringWithFormat:@"featurepoint_%lld",[self currentFrame].rawFeaturePoints.identifiers[i]];
         
         [featurePoints addObject:@{
-                                   @"x": @(point[0]),
-                                   @"y": @(point[1]),
-                                   @"z": @(point[2]),
+                                   @"x": @(position.x),
+                                   @"y": @(position.y),
+                                   @"z": @(position.z),
                                    @"id":pointId,
                                    }];
         
@@ -563,7 +561,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         }
     }
     if (self.onFeaturesDetected) {
-        NSMutableArray * featurePoints = [self getCurrentDetectedFeaturePoints];
+        NSArray * featurePoints = [self getCurrentDetectedFeaturePoints];
         dispatch_async(dispatch_get_main_queue(), ^{
             
             

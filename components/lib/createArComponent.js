@@ -88,6 +88,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
       : mountConfig.mount;
 
   const mount = (id, props) => {
+    if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
     mountFunc(
       getNonNodeProps(props),
       {
@@ -96,6 +97,16 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
       },
       props.frame,
     );
+  };
+
+  const update = (id, props) => {
+    if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] update`, props);
+    ARGeosManager.updateNode(id, props);
+  };
+
+  const unmount = id => {
+    if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] unmount`);
+    ARGeosManager.unmount(id);
   };
 
   const ARComponent = class extends Component {
@@ -108,7 +119,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         const {
           transition: transitionOnMount = { duration: 0 },
         } = fullPropsOnMount;
-        if (DEBUG) console.log('mount', fullPropsOnMount);
+
         this.doPendingTimers();
         mount(this.identifier, fullPropsOnMount);
 
@@ -137,13 +148,20 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         );
         if (nonAllowedUpdates.length > 0) {
           throw new Error(
-            `prop can't be updated: '${nonAllowedUpdates.join(', ')}'`,
+            `[${this
+              .identifier}] prop can't be updated: '${nonAllowedUpdates.join(
+              ', ',
+            )}'`,
           );
         }
       }
 
       if (some(changedKeys, k => nonUpdateablePropKeys.includes(k))) {
-        if (DEBUG) console.log('need to remount node because of ', changedKeys);
+        if (DEBUG)
+          console.log(
+            `[${this.identifier}] need to remount node because of `,
+            changedKeys,
+          );
         mount(this.identifier, { ...this.props, ...props });
       } else {
         // every property is updateable
@@ -158,8 +176,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           ...parseMaterials(pick(props, changedKeys)),
         };
 
-        if (DEBUG) console.log('update node', propsToupdate);
-        ARGeosManager.updateNode(this.identifier, propsToupdate);
+        update(this.identifier, propsToupdate);
       }
     }
 
@@ -171,11 +188,11 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
         this.componentWillUpdate(fullProps);
         this.delayed(() => {
-          ARGeosManager.unmount(this.identifier);
+          unmount(this.identifier);
         }, duration * 1000);
       } else {
         this.doPendingTimers();
-        ARGeosManager.unmount(this.identifier);
+        unmount(this.identifier);
       }
     }
     /**

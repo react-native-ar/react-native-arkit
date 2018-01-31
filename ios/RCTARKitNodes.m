@@ -61,9 +61,10 @@ CGFloat focDistance = 0.2f;
 }
 
 - (void)setArView:(ARSCNView *)arView {
-    NSLog(@"setArView");
+    //NSLog(@"setArView");
     _arView = arView;
     self.rootNode = arView.scene.rootNode;
+  
     self.rootNode.name = @"root";
     
     [self.rootNode addChildNode:self.localOrigin];
@@ -77,6 +78,7 @@ CGFloat focDistance = 0.2f;
  add a node to scene in a reference frame
  */
 - (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame {
+    [self registerNode:node forKey:node.name];
     if (!referenceFrame) {
         referenceFrame = @"Local"; // default to Local frame
     }
@@ -107,16 +109,15 @@ CGFloat focDistance = 0.2f;
 - (void)addNodeToLocalFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameLocal;
     
+    [self.localOrigin addChildNode:node];
     //NSLog(@"[RCTARKitNodes] Add node %@ to Local frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
     
-    [self registerNode:node forKey:node.name];
-    [self.localOrigin addChildNode:node];
 }
 
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
     //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-    [self registerNode:node forKey:node.name];
+
     [self.cameraOrigin addChildNode:node];
 }
 
@@ -124,7 +125,7 @@ CGFloat focDistance = 0.2f;
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
     
     //NSLog(@"[RCTARKitNodes] Add node %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-    [self registerNode:node forKey:node.name];
+
     [self.frontOfCamera addChildNode:node];
 }
 
@@ -152,6 +153,25 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 
+static SCNVector3 toSCNVector3(simd_float4 float4) {
+    SCNVector3 positionAbsolute = SCNVector3Make(float4.x, float4.y, float4.z);
+    return positionAbsolute;
+}
+
+- (SCNVector3)getRelativePositionToOrigin:(const SCNVector3)positionAbsolute {
+    SCNVector3 originPosition = self.localOrigin.position;
+    SCNVector3 position = SCNVector3Make(positionAbsolute.x - originPosition.x, positionAbsolute.y- originPosition.y, positionAbsolute.z - originPosition.z);
+    return position;
+}
+
+- (SCNVector3)getAbsolutePositionToOrigin:(const SCNVector3)positionRelative {
+    SCNVector3 originPosition = self.localOrigin.position;
+    SCNVector3 position = SCNVector3Make(positionRelative.x + originPosition.x, positionRelative.y+ originPosition.y, positionRelative.z + originPosition.z);
+    return position;
+}
+
+
+
 - (NSMutableArray *) mapHitResultsWithSceneResults: (NSArray<SCNHitTestResult *> *)results {
     
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
@@ -163,17 +183,29 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
         NSString * nodeId = [self findNodeId:node];
         if(nodeId) {
         
-            SCNVector3 point = result.worldCoordinates;
+            SCNVector3 positionAbsolute = result.worldCoordinates;
+            SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
             SCNVector3 normal = result.worldNormal;
-            float distance = [self getCameraDistanceToPoint:point];
+            float distance = [self getCameraDistanceToPoint:positionAbsolute];
          
             [resultsMapped addObject:(@{
                                         @"id": nodeId,
                                         @"distance": @(distance),
+                                        @"positionAbsolute": @{
+                                                @"x": @(positionAbsolute.x),
+                                                @"y": @(positionAbsolute.y),
+                                                @"z": @(positionAbsolute.z)
+                                                },
+                                        @"position": @{
+                                                @"x": @(position.x),
+                                                @"y": @(position.y),
+                                                @"z": @(position.z)
+                                                },
+                                        // point is deprecated
                                         @"point": @{
-                                                @"x": @(point.x),
-                                                @"y": @(point.y),
-                                                @"z": @(point.z)
+                                                @"x": @(position.x),
+                                                @"y": @(position.y),
+                                                @"z": @(position.z)
                                                 },
                                         @"normal": @{
                                                 @"x": @(normal.x),
@@ -191,6 +223,41 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 
+
+
+
+- (NSMutableArray *) mapHitResults:(NSArray<ARHitTestResult *> *)results {
+    NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
+    
+    [results enumerateObjectsUsingBlock:^(id obj, NSUInteger index, BOOL *stop) {
+        ARHitTestResult *result = (ARHitTestResult *) obj;
+        
+        SCNVector3 positionAbsolute = toSCNVector3(result.worldTransform.columns[3]);
+        SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
+        [resultsMapped addObject:(@{
+                                    @"distance": @(result.distance),
+                                    @"id": result.anchor.identifier.UUIDString,
+                                    @"positionAbsolute": @{
+                                            @"x": @(positionAbsolute.x),
+                                            @"y": @(positionAbsolute.y),
+                                            @"z": @(positionAbsolute.z)
+                                            },
+                                    @"position": @{
+                                            @"x": @(position.x),
+                                            @"y": @(position.y),
+                                            @"z": @(position.z)
+                                            },
+                                    // deprecated
+                                    @"point": @{
+                                            @"x": @(position.x),
+                                            @"y": @(position.y),
+                                            @"z": @(position.z)
+                                            }
+                                    
+                                    } )];
+    }];
+    return resultsMapped;
+}
 
 #pragma mark - node register
 - (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
@@ -220,7 +287,7 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 }
 
 - (void)removeNodeForKey:(NSString *)key {
-    
+    //NSLog(@"removing node: %@ ", key);
     SCNNode *node = [self.nodes objectForKey:key];
     if (node) {
         [self.nodes removeObjectForKey:key];
@@ -236,6 +303,7 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
 
 - (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties {
     SCNNode *node = [self.nodes objectForKey:nodeId];
+    //NSLog(@"updating node %@ :%@", nodeId, properties);
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
         if(node.geometry && properties[@"shape"]) {
@@ -251,6 +319,8 @@ static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, con
         }
         
         
+    } else {
+        NSLog(@"WARNING: node does not exists: %@. This means that the node has not been mounted yet, so native calls got out of order", nodeId);
     }
     
 }

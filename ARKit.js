@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 
 import { pickColors, pickColorsFromFile } from './lib/pickColors';
+import { position, transition } from './components/lib/propTypes';
 import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -70,8 +71,10 @@ class ARKit extends Component {
           onTapOnPlaneUsingExtent={this.callback('onTapOnPlaneUsingExtent')}
           onTapOnPlaneNoExtent={this.callback('onTapOnPlaneNoExtent')}
           onPlaneDetected={this.callback('onPlaneDetected')}
+          onPlaneRemoved={this.callback('onPlaneRemoved')}
           onPlaneUpdate={this.callback('onPlaneUpdate')}
           onTrackingState={this.callback('onTrackingState')}
+          onARKitError={this.callback('onARKitError')}
           onEvent={this._onEvent}
         />
         {state}
@@ -175,10 +178,16 @@ ARKit.pickColorsFromFile = pickColorsFromFile;
 ARKit.propTypes = {
   debug: PropTypes.bool,
   planeDetection: PropTypes.bool,
+  origin: PropTypes.shape({
+    position,
+    transition,
+  }),
   lightEstimationEnabled: PropTypes.bool,
   autoenablesDefaultLighting: PropTypes.bool,
   worldAlignment: PropTypes.number,
+  onARKitError: PropTypes.func,
   onPlaneDetected: PropTypes.func,
+  onPlaneRemoved: PropTypes.func,
   onFeaturesDetected: PropTypes.func,
   // onLightEstimation is called rapidly, better poll with
   // ARKit.getCurrentLightEstimation()

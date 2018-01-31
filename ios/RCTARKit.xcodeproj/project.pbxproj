@@ -12,7 +12,6 @@
 		1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 1021FE191F3EDB90000E7339 /* ARTextManager.m */; };
 		105F124E1F7C0719006D4BA3 /* RCTConvert+ARKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */; };
 		10DCBC4B1F7CE836008C89E7 /* ARGeosManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 10DCBC4A1F7CE836008C89E7 /* ARGeosManager.m */; };
-		10E553291F1391350059B7EC /* Plane.m in Sources */ = {isa = PBXBuildFile; fileRef = 10E553281F1391350059B7EC /* Plane.m */; };
 		10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 10ED47A61F38BC00004DF043 /* DeviceMotion.m */; };
 		10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */; };
 		10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */; };
@@ -52,8 +51,6 @@
 		105F124D1F7C0718006D4BA3 /* RCTConvert+ARKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RCTConvert+ARKit.m"; sourceTree = "<group>"; };
 		10DCBC491F7CE836008C89E7 /* ARGeosManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARGeosManager.h; sourceTree = "<group>"; };
 		10DCBC4A1F7CE836008C89E7 /* ARGeosManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ARGeosManager.m; sourceTree = "<group>"; };
-		10E553271F1391350059B7EC /* Plane.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Plane.h; sourceTree = "<group>"; };
-		10E553281F1391350059B7EC /* Plane.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Plane.m; sourceTree = "<group>"; };
 		10ED47A51F38BC00004DF043 /* DeviceMotion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DeviceMotion.h; sourceTree = "<group>"; };
 		10ED47A61F38BC00004DF043 /* DeviceMotion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DeviceMotion.m; sourceTree = "<group>"; };
 		10FEF60F1F774C8F00EC21AE /* RCTARKitNodes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitNodes.h; sourceTree = "<group>"; };
@@ -107,8 +104,6 @@
 				106999E21F3EC2FB00032829 /* components */,
 				10ED47A51F38BC00004DF043 /* DeviceMotion.h */,
 				10ED47A61F38BC00004DF043 /* DeviceMotion.m */,
-				10E553271F1391350059B7EC /* Plane.h */,
-				10E553281F1391350059B7EC /* Plane.m */,
 				B3E7B5881CC2AC0600A0062D /* RCTARKit.h */,
 				B3E7B5891CC2AC0600A0062D /* RCTARKit.m */,
 				10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */,
@@ -194,7 +189,6 @@
 				10DCBC4B1F7CE836008C89E7 /* ARGeosManager.m in Sources */,
 				10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */,
 				B1990B221FCEEBD60001AE2F /* color-grabber.m in Sources */,
-				10E553291F1391350059B7EC /* Plane.m in Sources */,
 				1021FE1C1F3EDB98000E7339 /* ARModelManager.m in Sources */,
 				1021FE1D1F3EDB9B000E7339 /* ARTextManager.m in Sources */,
 				105F124E1F7C0719006D4BA3 /* RCTConvert+ARKit.m in Sources */,

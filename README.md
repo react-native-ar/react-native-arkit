@@ -69,6 +69,7 @@ export default class ReactNativeARKit extends Component {
           onLightEstimation={e => console.log(e.nativeEvent)}
           onPlaneDetected={console.log} // event listener for plane detection
           onPlaneUpdate={console.log} // event listener for plane update
+          onPlaneRemoved={console.log} // arkit sometimes removes detected planes
         >
           <ARKit.Box
             position={{ x: 0, y: 0, z: 0 }}
@@ -176,15 +177,31 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `planeDetection` | `Boolean` | `false` | ARKit plane detection.
 | `lightEstimationEnabled` | `Boolean` | `false` | ARKit light estimation.
 | `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | `ARKit.ARWorldAlignment.Gravity` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera.|
+| `origin` | `{position, transition}` | Usually `{0,0,0}` is where you launched the app. If you want to have a different origin, you can set it here. E.g. if you set `origin={{position: {0,-1, 0}, transition: {duration: 1}}}` the new origin will be one meter below. If you have any objects already placed, they will get moved down using the given transition. All hit-test functions or similar will report coordinates relative to that new origin as `position`. You can get the original coordinates with `positionAbsolute` in these functions |  
 
 ##### Events
 
 | Event Name | Returns | Notes
 |---|---|---|
-| `onPlaneDetected` | `{ id, center, extent }` | When a plane is first detected.
+| `onARKitError` | `ARKiterror` | will report whether an error occured while initializing ARKit. A common error is when the user has not allowed camera access. Another error is, if you use `worldAlignment=GravityAndHeading` and location service is turned off |
 | `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
 | `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
-| `onPlaneUpdate` | `{ id, center, extent }` | When a detected plane is updated
+| `onPlaneDetected` | `Plane` | When a plane is first detected.
+| `onPlaneUpdate` | `Plane` | When a detected plane is updated
+| `onPlaneRemoved` | `Plane` | When a detected plane is updated
+
+The `Plane` object has the following properties:
+
+| Property | Description
+|---|---|
+| `id` | a unique id identifying the plane |
+| `position` | the position of the plane (relative to the origin) |
+| `positionAbsolute` | the absolute position of the plane |
+| `extent` | the extent of the plane | 
+| `eulerAngles` | the rotation of the plane |
+
+
+
 
 ##### Static methods
 
@@ -195,6 +212,7 @@ All methods return a promise with the result.
 | `snapshot` |  |  | Take a screenshot (will save to Photo Library) |
 | `snapshotCamera` |  | Take a screenshot without 3d models (will save to Photo Library) |
 | `getCameraPosition` |  | Get the current position of the `ARCamera` |
+| `getCamera` |  | Get all properties of the `ARCamera` |
 | `getCurrentLightEstimation` |  | Get current light estimation  `{ ambientColorTemperature, ambientIntensity}` |
 | `getCurrentDetectedFeaturePoints` |  | Get current detected feature points (in last current frame)  (array) |
 | `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation) |
@@ -253,7 +271,7 @@ Most objects take a material property with these sub-props:
 | `doubleSided` | boolean | render both sides, default is `true` |
 | `litPerPixel` | boolean | calculate lighting per-pixel or vertex [litPerPixel](https://developer.apple.com/documentation/scenekit/scnmaterial/1462580-litperpixel) |
 | `lightingModel` | `ARKit.LightingModel.*` | [LightingModel](https://developer.apple.com/documentation/scenekit/scnmaterial.lightingmodel) |
-| `blendMode` | `ARKit.BlendMode.*` | [BlendMode](https://developer.apple.com/documentation/scenekit/scnmaterial/1462585-blendmode) | 
+| `blendMode` | `ARKit.BlendMode.*` | [BlendMode](https://developer.apple.com/documentation/scenekit/scnmaterial/1462585-blendmode) |
 | `fillMode` | `ARKit.FillMode.*` | [FillMode](https://developer.apple.com/documentation/scenekit/scnmaterial/2867442-fillmode)
 | `shaders` | Object with keys from `ARKit.ShaderModifierEntryPoint.*` and shader strings as values | [Shader modifiers](https://developer.apple.com/documentation/scenekit/scnshadable) |
 | `colorBufferWriteMask` | `ARKit.ColorMask.*` | [color mask](https://developer.apple.com/documentation/scenekit/scncolormask). Set to ARKit.ColorMask.None so that an object is transparent, but receives deferred shadows. |
