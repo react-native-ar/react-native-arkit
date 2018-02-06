@@ -422,11 +422,7 @@ UIImage* rotate(UIImage* src, UIImageOrientation orientation)
 
 static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
     return @{
-             @"results": resultsMapped,
-             @"tapPoint": @{
-                     @"x": @(tapPoint.x),
-                     @"y": @(tapPoint.y)
-                     }
+             @"results": resultsMapped
              };
 }
 

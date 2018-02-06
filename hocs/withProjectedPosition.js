@@ -5,7 +5,7 @@ import { NativeModules } from 'react-native';
 
 const ARKitManager = NativeModules.ARKitManager;
 
-const roundPoint = ({ x, y, z }, precision) => ({
+const rountPosition = ({ x, y, z }, precision) => ({
   x: round(x, precision),
   y: round(y, precision),
   z: round(z, precision),
@@ -50,7 +50,7 @@ export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
         if (this._isMounted) {
           if (result) {
             this.setState({
-              positionProjected: roundPoint(result.point, 3),
+              positionProjected: rountPosition(result.position, 3),
               projectionResult: result,
             });
           } else {
