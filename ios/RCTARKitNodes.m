@@ -133,7 +133,8 @@ CGFloat focDistance = 0.2f;
 - (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
     NSDictionary *options = @{
                               SCNHitTestRootNodeKey: self.localOrigin,
-                              SCNHitTestSortResultsKey: @(YES)
+                              SCNHitTestSortResultsKey: @(YES),
+                              SCNHitTestOptionSearchMode: @(SCNHitTestSearchModeAll)
                               };
     NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint options:options];
     NSMutableArray * resultsMapped = [self mapHitResultsWithSceneResults:results];
@@ -183,7 +184,6 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
             SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
             SCNVector3 normal = result.worldNormal;
             float distance = [self getCameraDistanceToPoint:positionAbsolute];
-         
             NSDictionary *result = @{
                                             @"id": nodeId,
                                             @"distance": @(distance),
@@ -201,7 +201,6 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
                                                     @"x": @(normal.x),
                                                     @"y": @(normal.y),
                                                     @"z": @(normal.z)
-                                                    
                                                     }
                                             };
             [resultsMapped addObject:(result )];
