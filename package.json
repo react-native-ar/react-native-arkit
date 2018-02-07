@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@panter/react-animation-frame": "^0.3.7",
-    "_PocketSVG": "https://github.com/pocketsvg/PocketSVG",
     "fast-deep-equal": "^1.0.0",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.7"

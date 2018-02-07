@@ -36,7 +36,7 @@ make sure to use the latest version of yarn (>=1.x.x)
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ add `react-native-arkit/RCTARKit.xcodeproj` and `_PocketSVG/_PocketSVG.xcodeproj`
+2. Go to `node_modules` ➜ add `react-native-arkit/ios/RCTARKit.xcodeproj` and `react-native-arkit/ios/PocketSVG/PocketSVG.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRCTARKit.a` `and PocketSVG.framework` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. In Tab `General` ➜ `Embedded Binaries` ➜ `+` ➜ Add `PocketSVG.framework ios`
 5. Run your project (`Cmd+R`)<
@@ -197,7 +197,7 @@ The `Plane` object has the following properties:
 | `id` | a unique id identifying the plane |
 | `position` | the position of the plane (relative to the origin) |
 | `positionAbsolute` | the absolute position of the plane |
-| `extent` | the extent of the plane | 
+| `extent` | the extent of the plane |
 | `eulerAngles` | the rotation of the plane |
 
 
