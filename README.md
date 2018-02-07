@@ -129,6 +129,7 @@ export default class ReactNativeARKit extends Component {
             position={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
             scale={0.01}
             model={{
+              scale: 1, // this is deprecated, use the scale property that is available on all 3d objects
               file: 'art.scnassets/ship.scn', // make sure you have the model file in the ios project
             }}
           />
