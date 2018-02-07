@@ -22,7 +22,11 @@ RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSS
     // we need to do the model loading in its own queue, otherwise it can block, so that react-to-native-calls get out of order
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSDictionary *model = property[@"model"];
-        CGFloat scale = [model[@"scale"] floatValue];
+        CGFloat scale = 1;
+        if(model[@"scale"]) {
+            // deprecated
+            scale = [model[@"scale"] floatValue];
+        }
         
         NSString *path = [NSString stringWithFormat:@"%@", model[@"file"]];
         //NSLog(@"mounting model: %@ %@", node.name, path);
