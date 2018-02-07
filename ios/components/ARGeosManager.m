@@ -71,11 +71,18 @@ RCT_EXPORT_METHOD(addLight:(SCNLight *)light node:(SCNNode *)node frame:(NSStrin
 
 
 RCT_EXPORT_METHOD(unmount:(NSString *)identifier) {
+    //NSLog(@"unmounting node: %@ ", identifier);
     [[RCTARKitNodes sharedInstance] removeNodeForKey:identifier];
 }
 
-RCT_EXPORT_METHOD(updateNode:(NSString *)identifier properties:(NSDictionary *) properties) {
-    [[RCTARKitNodes sharedInstance] updateNode:identifier properties:properties];
+RCT_EXPORT_METHOD(updateNode:(NSString *)identifier properties:(NSDictionary *) properties resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    //NSLog(@"updating node: %@ ", identifier);
+    bool success = [[RCTARKitNodes sharedInstance] updateNode:identifier properties:properties];
+    if(success) {
+        resolve(nil);
+    } else {
+        reject(@"updateNodeError", @"could not update node", nil);
+    }
 }
 
 @end
