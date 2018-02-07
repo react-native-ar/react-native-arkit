@@ -101,12 +101,12 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
   const update = (id, props) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] update`, props);
-    ARGeosManager.updateNode(id, props);
+    return ARGeosManager.updateNode(id, props);
   };
 
   const unmount = id => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] unmount`);
-    ARGeosManager.unmount(id);
+    return ARGeosManager.unmount(id);
   };
 
   const ARComponent = class extends Component {
@@ -176,7 +176,11 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           ...parseMaterials(pick(props, changedKeys)),
         };
 
-        update(this.identifier, propsToupdate);
+        update(this.identifier, propsToupdate).catch(() => {
+          // sometimes calls are out of order, so this node has been unmounted
+          // we therefore mount again
+          mount(this.identifier, { ...this.props, ...props });
+        });
       }
     }
 

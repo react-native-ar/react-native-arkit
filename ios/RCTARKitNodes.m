@@ -6,8 +6,10 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
+#import "RCTARKit.h"
 #import "RCTARKitNodes.h"
 #import "RCTConvert+ARKit.h"
+
 
 @implementation SCNNode (ReferenceFrame)
 @dynamic referenceFrame;
@@ -17,6 +19,7 @@ CGFloat focDistance = 0.2f;
 
 
 @interface RCTARKitNodes () <RCTARKitSessionDelegate>
+
 
 @property (nonatomic, strong) SCNNode* rootNode;
 
@@ -54,7 +57,7 @@ CGFloat focDistance = 0.2f;
         self.frontOfCamera = [[SCNNode alloc] init];
         self.frontOfCamera.name = @"frontOfCamera";
         
-        // init cahces
+        // init caches
         self.nodes = [NSMutableDictionary new];
     }
     return self;
@@ -64,7 +67,7 @@ CGFloat focDistance = 0.2f;
     //NSLog(@"setArView");
     _arView = arView;
     self.rootNode = arView.scene.rootNode;
-  
+    
     self.rootNode.name = @"root";
     
     [self.rootNode addChildNode:self.localOrigin];
@@ -78,6 +81,7 @@ CGFloat focDistance = 0.2f;
  add a node to scene in a reference frame
  */
 - (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame {
+    //NSLog(@"addNodeToScene node: %@ ", node.name);
     [self registerNode:node forKey:node.name];
     if (!referenceFrame) {
         referenceFrame = @"Local"; // default to Local frame
@@ -117,7 +121,7 @@ CGFloat focDistance = 0.2f;
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
     //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-
+    
     [self.cameraOrigin addChildNode:node];
 }
 
@@ -125,7 +129,7 @@ CGFloat focDistance = 0.2f;
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
     
     //NSLog(@"[RCTARKitNodes] Add node %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-
+    
     [self.frontOfCamera addChildNode:node];
 }
 
@@ -179,33 +183,33 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         
         NSString * nodeId = [self findNodeId:node];
         if(nodeId) {
-        
+            
             SCNVector3 positionAbsolute = result.worldCoordinates;
             SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
             SCNVector3 normal = result.worldNormal;
             float distance = [self getCameraDistanceToPoint:positionAbsolute];
             NSDictionary *result = @{
-                                            @"id": nodeId,
-                                            @"distance": @(distance),
-                                            @"positionAbsolute": @{
-                                                    @"x": @(positionAbsolute.x),
-                                                    @"y": @(positionAbsolute.y),
-                                                    @"z": @(positionAbsolute.z)
-                                                    },
-                                            @"position": @{
-                                                    @"x": @(position.x),
-                                                    @"y": @(position.y),
-                                                    @"z": @(position.z)
-                                                    },
-                                            @"normal": @{
-                                                    @"x": @(normal.x),
-                                                    @"y": @(normal.y),
-                                                    @"z": @(normal.z)
-                                                    }
-                                            };
+                                     @"id": nodeId,
+                                     @"distance": @(distance),
+                                     @"positionAbsolute": @{
+                                             @"x": @(positionAbsolute.x),
+                                             @"y": @(positionAbsolute.y),
+                                             @"z": @(positionAbsolute.z)
+                                             },
+                                     @"position": @{
+                                             @"x": @(position.x),
+                                             @"y": @(position.y),
+                                             @"z": @(position.z)
+                                             },
+                                     @"normal": @{
+                                             @"x": @(normal.x),
+                                             @"y": @(normal.y),
+                                             @"z": @(normal.z)
+                                             }
+                                     };
             [resultsMapped addObject:(result )];
         }
-            
+        
     }];
     
     return resultsMapped;
@@ -252,7 +256,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 
 
 - (NSString *) findNodeId:(SCNNode *)nodeWithParents {
-
+    
     SCNNode* _node = nodeWithParents;
     while(_node) {
         if(_node.name && [self.nodes objectForKey:_node.name]) {
@@ -261,7 +265,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         _node = _node.parentNode;
     }
     return nil;
-
+    
 }
 
 
@@ -270,9 +274,10 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 }
 
 - (void)removeNodeForKey:(NSString *)key {
-    //NSLog(@"removing node: %@ ", key);
+    
     SCNNode *node = [self.nodes objectForKey:key];
     if (node) {
+        //NSLog(@"removing node: %@ ", key);
         [self.nodes removeObjectForKey:key];
         if(node.light) {
             // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
@@ -284,13 +289,15 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
     }
 }
 
-- (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties {
+- (bool)updateNode:(NSString *)nodeId
+        properties:(NSDictionary *) properties {
+    
     SCNNode *node = [self.nodes objectForKey:nodeId];
     //NSLog(@"updating node %@ :%@", nodeId, properties);
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
         if(node.geometry && properties[@"shape"]) {
-              [RCTConvert setShapeProperties:node.geometry properties:properties[@"shape"]];
+            [RCTConvert setShapeProperties:node.geometry properties:properties[@"shape"]];
         }
         if(properties[@"material"]) {
             for (id material in node.geometry.materials) {
@@ -300,10 +307,11 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         if(node.light) {
             [RCTConvert setLightProperties:node.light properties:properties];
         }
-        
-        
+        return true;
     } else {
         NSLog(@"WARNING: node does not exists: %@. This means that the node has not been mounted yet, so native calls got out of order", nodeId);
+        
+        return false;
     }
     
 }
