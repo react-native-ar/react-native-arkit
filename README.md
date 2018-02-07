@@ -127,9 +127,9 @@ export default class ReactNativeARKit extends Component {
           />
           <ARKit.Model
             position={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
-            scale={0.01}
             model={{
               file: 'art.scnassets/ship.scn', // make sure you have the model file in the ios project
+              scale: 0.01,
             }}
           />
           <ARKit.Shape
