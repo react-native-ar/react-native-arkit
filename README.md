@@ -42,6 +42,19 @@ make sure to use the latest version of yarn (>=1.x.x)
 5. Run your project (`Cmd+R`)<
 
 
+##### iOS Project configuration
+
+These steps are mandatory regardless of doing a manual or automatic installation:
+
+1. Give permissions for camera usage. In `Info.plist` add the following:
+
+```
+<key>NSCameraUsageDescription</key>
+<string>Your message to user when the camera is accessed for the first time</string>
+```
+2. ARKit only runs on arm64-ready devices so the default build architecture should be set to arm64: go to `Build settings` ➜ `Build Active Architecture Only` and change the value to `Yes`.
+
+
 ## Usage
 
 A simple sample React Native ARKit App
