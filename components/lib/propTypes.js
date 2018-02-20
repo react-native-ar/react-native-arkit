@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 const ARKitManager = NativeModules.ARKitManager;
 
 export const position = PropTypes.shape({
-  x: PropTypes.number,
-  y: PropTypes.number,
-  z: PropTypes.number,
+  x: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  y: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
+  z: PropTypes.oneOfType([PropTypes.number, PropTypes.object]),
 });
 
 export const scale = PropTypes.number;
