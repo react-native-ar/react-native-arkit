@@ -35,6 +35,25 @@ export const orientation = PropTypes.shape({
   w: PropTypes.number,
 });
 
+export const textureTranslation = PropTypes.shape({
+  x: PropTypes.number,
+  y: PropTypes.number,
+  z: PropTypes.number,
+});
+
+export const textureRotation = PropTypes.shape({
+  angle: PropTypes.number,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  z: PropTypes.number,
+});
+
+export const textureScale = PropTypes.shape({
+  x: PropTypes.number,
+  y: PropTypes.number,
+  z: PropTypes.number,
+});
+
 export const shaders = PropTypes.shape({
   [ARKitManager.ShaderModifierEntryPoint.Geometry]: PropTypes.string,
   [ARKitManager.ShaderModifierEntryPoint.Surface]: PropTypes.string,
@@ -61,10 +80,18 @@ export const colorBufferWriteMask = PropTypes.oneOf(
 
 export const opacity = PropTypes.number;
 
+export const wrapMode = PropTypes.oneOf(values(ARKitManager.WrapMode));
+
 export const materialProperty = PropTypes.shape({
   path: PropTypes.string,
   color: PropTypes.string,
   intensity: PropTypes.number,
+  wrapS: wrapMode,
+  wrapT: wrapMode,
+  wrap: wrapMode,
+  translation: textureTranslation,
+  scale: textureScale,
+  rotation: textureRotation,
 });
 
 export const material = PropTypes.shape({
