@@ -306,8 +306,55 @@
 
 
 + (void)setMaterialPropertyContents:(id)property material:(SCNMaterialProperty *)material {
+    
     if (property[@"path"]) {
+        SCNMatrix4 m = SCNMatrix4Identity;
         material.contents = property[@"path"];
+        
+        if (property[@"wrapS"]) {
+            material.wrapS = (SCNWrapMode) [property[@"wrapS"] integerValue];
+        }
+        
+        if (property[@"wrapT"]) {
+            material.wrapT = (SCNWrapMode) [property[@"wrapT"] integerValue];
+        }
+        
+        if (property[@"wrap"]) {
+            material.wrapT = (SCNWrapMode) [property[@"wrapT"] integerValue];
+            material.wrapS = (SCNWrapMode) [property[@"wrapS"] integerValue];
+        }
+        
+        if (property[@"translation"]) {
+            float x = [property[@"translation"][@"x"] floatValue];
+            float y = [property[@"translation"][@"y"] floatValue];
+            float z = [property[@"translation"][@"z"] floatValue];
+            
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeTranslation(x, y, z));
+        }
+        
+        if (property[@"rotation"]) {
+            float angle = [property[@"rotation"][@"angle"] floatValue];
+            float x = [property[@"rotation"][@"x"] floatValue];
+            float y = [property[@"rotation"][@"y"] floatValue];
+            float z = [property[@"rotation"][@"z"] floatValue];
+            
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeRotation(angle, x, y, z));
+        }
+        
+        if (property[@"scale"]) {
+            
+            NSLog(@"%@", property[@"scale"]);
+            
+            float x = [property[@"scale"][@"x"] floatValue];
+            float y = [property[@"scale"][@"y"] floatValue];
+            float z = [property[@"scale"][@"z"] floatValue];
+            
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeScale(x, y, z));
+        }
+        
+        material.contentsTransform = m;
+        
+        
     } else if (property[@"color"]) {
         material.contents = [self UIColor:property[@"color"]];
     }
