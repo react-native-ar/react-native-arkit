@@ -7,11 +7,13 @@ export default ARComponent => {
   // so we have to flatten them
   // we would need to have an Animated.ValueXYZ
   const ANIMATEABLE3D = ['position', 'eulerAngles'];
+
   const ARComponentAnimatedInner = Animated.createAnimatedComponent(
     class extends React.Component {
       render() {
         // unflatten
         const unflattened = {};
+
         ANIMATEABLE3D.forEach(key => {
           unflattened[key] = {
             x: get(this.props, `${key}_x`),
