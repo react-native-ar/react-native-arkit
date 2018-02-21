@@ -139,6 +139,19 @@ RCT_EXPORT_METHOD(reset:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
     resolve(@{});
 }
 
+RCT_EXPORT_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+   resolve(@([ARKit isInitialized]));
+}
+
+RCT_EXPORT_METHOD(isMounted:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    if( [ARKit isInitialized]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            resolve(@([[ARKit sharedInstance] isMounted]));
+        });
+    } else {
+        resolve(@(NO));
+    }
+}
 
 RCT_EXPORT_METHOD(
                   hitTestPlanes: (NSDictionary *)pointDict
