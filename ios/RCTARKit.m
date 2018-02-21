@@ -36,9 +36,14 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 
 
 @implementation RCTARKit
+static RCTARKit *instance = nil;
+
++ (bool)isInitialized {
+    return instance !=nil;
+}
 
 + (instancetype)sharedInstance {
-    static RCTARKit *instance = nil;
+    
     static dispatch_once_t onceToken;
     
     dispatch_once_on_main_thread(&onceToken, ^{
@@ -47,7 +52,13 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
             instance = [[self alloc] initWithARView:arView];
         }
     });
+    
     return instance;
+}
+
+- (bool)isMounted {
+    
+    return self.superview != nil;
 }
 
 - (instancetype)initWithARView:(ARSCNView *)arView {
@@ -84,6 +95,8 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     }
     return self;
 }
+
+
 
 - (void)layoutSubviews {
     [super layoutSubviews];
