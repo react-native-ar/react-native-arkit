@@ -21,6 +21,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @interface RCTARKit : UIView
 
 + (instancetype)sharedInstance;
++ (bool)isInitialized;
 - (instancetype)initWithARView:(ARSCNView *)arView;
 
 
@@ -72,8 +73,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (NSDictionary *)readCamera;
 - (NSDictionary* )getCurrentLightEstimation;
 - (NSArray * )getCurrentDetectedFeaturePoints;
-
-
+- (bool)isMounted;
 
 #pragma mark - Delegates
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time;
