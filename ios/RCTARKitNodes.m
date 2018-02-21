@@ -218,7 +218,10 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 
 
 
-
+static id ObjectOrNull(id object)
+{
+    return object ?: [NSNull null];
+}
 
 - (NSMutableArray *) mapHitResults:(NSArray<ARHitTestResult *> *)results {
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
@@ -230,7 +233,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
         [resultsMapped addObject:(@{
                                     @"distance": @(result.distance),
-                                    @"id": result.anchor.identifier.UUIDString,
+                                    @"id": ObjectOrNull(result.anchor.identifier.UUIDString),
                                     @"positionAbsolute": @{
                                             @"x": @(positionAbsolute.x),
                                             @"y": @(positionAbsolute.y),

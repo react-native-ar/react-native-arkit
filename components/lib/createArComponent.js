@@ -20,8 +20,9 @@ import {
   scale,
   transition,
 } from './propTypes';
-import processMaterial from './processMaterial';
+import addAnimatedSupport from './addAnimatedSupport';
 import generateId from './generateId';
+import processMaterial from './processMaterial';
 
 const { ARGeosManager } = NativeModules;
 
@@ -227,8 +228,8 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
       return null;
     }
   };
+  const ARComponentAnimated = addAnimatedSupport(ARComponent);
+  ARComponentAnimated.propTypes = allPropTypes;
 
-  ARComponent.propTypes = allPropTypes;
-
-  return ARComponent;
+  return ARComponentAnimated;
 };
