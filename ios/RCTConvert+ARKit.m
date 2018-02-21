@@ -333,18 +333,15 @@
         }
         
         if (property[@"rotation"]) {
-            float angle = [property[@"rotation"][@"angle"] floatValue];
+            float a = [property[@"rotation"][@"angle"] floatValue];
             float x = [property[@"rotation"][@"x"] floatValue];
             float y = [property[@"rotation"][@"y"] floatValue];
             float z = [property[@"rotation"][@"z"] floatValue];
             
-            m = SCNMatrix4Mult(m, SCNMatrix4MakeRotation(angle, x, y, z));
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeRotation(a, x, y, z));
         }
         
         if (property[@"scale"]) {
-            
-            NSLog(@"%@", property[@"scale"]);
-            
             float x = [property[@"scale"][@"x"] floatValue];
             float y = [property[@"scale"][@"y"] floatValue];
             float z = [property[@"scale"][@"z"] floatValue];
