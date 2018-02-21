@@ -97,6 +97,11 @@ RCT_EXPORT_MODULE()
              @"FillMode": @{
                      @"Fill": [@(SCNFillModeFill) stringValue],
                      @"Lines": [@(SCNFillModeLines) stringValue],
+                     },
+             @"WrapMode": @{
+                     @"Clamp": [@(SCNWrapModeClamp) stringValue],
+                     @"Repeat": [@(SCNWrapModeRepeat) stringValue],
+                     @"Mirror": [@(SCNWrapModeMirror) stringValue],
                      }
              };
 }
