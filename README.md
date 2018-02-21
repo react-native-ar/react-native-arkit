@@ -305,14 +305,14 @@ Map Properties:
 
 | Prop | Type | Description |
 |---|---|---|
-| `path` | string | currently `require` is not supported, so this is an absolute link to a local resource placed in xc.assets |
-| `color` | string | color string, only used if path is not provided |
-| `wrapS` | `ARKit.WrapMode.{ Clamp | Repeat | Mirror }` | [wrapS](https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395384-wraps?language=objc) |
-| `wrapT` | `ARKit.WrapMode.{ Clamp | Repeat | Mirror }` |  [wrapT] (https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395382-wrapt?language=objc) |
-| `wrap` | `ARKit.WrapMode.{ Clamp | Repeat | Mirror }` |  shorthand for setting both wrapS & wrapT |
-| `translation` | `{ x, y, z }` | translate the UVs, equivalent to applying a translation matrix to SceneKit's `transformContents`  |
-| `rotation` | `{ angle, x, y, z }` | rotate the UVs, equivalent to applying a rotation matrix to SceneKit's `transformContents` |
-| `scale` | `{ x, y, z }` | scale the UVs, equivalent to applying a scale matrix to SceneKit's `transformContents`  |
+| `path` | string | Currently `require` is not supported, so this is an absolute link to a local resource placed for example in .xcassets |
+| `color` | string | Color string, only used if path is not provided |
+| `wrapS` | `ARKit.WrapMode.{ Clamp \| Repeat \| Mirror }` | [wrapS](https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395384-wraps?language=objc) |
+| `wrapT` | `ARKit.WrapMode.{ Clamp \| Repeat \| Mirror }` |  [wrapT](https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395382-wrapt?language=objc) |
+| `wrap` | `ARKit.WrapMode.{ Clamp \| Repeat \| Mirror }` |  Shorthand for setting both wrapS & wrapT |
+| `translation` | `{ x, y, z }` | Translate the UVs, equivalent to applying a translation matrix to SceneKit's `transformContents`  |
+| `rotation` | `{ angle, x, y, z }` | Rotate the UVs, equivalent to applying a rotation matrix to SceneKit's `transformContents` |
+| `scale` | `{ x, y, z }` | Scale the UVs, equivalent to applying a scale matrix to SceneKit's `transformContents`  |
 
 
 
