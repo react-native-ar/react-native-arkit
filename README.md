@@ -55,6 +55,8 @@ These steps are mandatory regardless of doing a manual or automatic installation
 2. ARKit only runs on arm64-ready devices so the default build architecture should be set to arm64: go to `Build settings` ➜ `Build Active Architecture Only` and change the value to `Yes`.
 
 
+
+
 ## Usage
 
 A simple sample React Native ARKit App
@@ -83,6 +85,7 @@ export default class ReactNativeARKit extends Component {
           onPlaneDetected={console.log} // event listener for plane detection
           onPlaneUpdate={console.log} // event listener for plane update
           onPlaneRemoved={console.log} // arkit sometimes removes detected planes
+          onARKitError={console.log} // if arkit could not be initialized (e.g. missing permissions), you will get notified here
         >
           <ARKit.Box
             position={{ x: 0, y: 0, z: 0 }}
@@ -219,7 +222,7 @@ The `Plane` object has the following properties:
 
 ##### Static methods
 
-All methods return a promise with the result.
+All methods return a *promise* with the result.
 
 | Method Name | Arguments |  Notes
 |---|---|---|
@@ -232,7 +235,8 @@ All methods return a promise with the result.
 | `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation) |
 | `hitTestPlanes` | point, type  |  check if a plane has ben hit by point (`{x,y}`) with detection type (any of `ARKit.ARHitTestResultType`). See https://developer.apple.com/documentation/arkit/arhittestresulttype?language=objc for further information |
 | `hitTestSceneObjects` | point |  check if a scene object has ben hit by point (`{x,y}`) |
-
+| `isInitialized` | boolean | check whether arkit has been initialized (e.g. by mounting). See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
+| `isMounted` | boolean | check whether arkit has been mounted. See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
 
 #### 3D objects
 
@@ -555,6 +559,21 @@ E.gl you have several "walls" with ids "wall_1", "wall_2", etc.
 
 It uses https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522929-hittest with some default options. Please file an issue or send a PR if you need more control over the options here!
 
+
+## FAQ:
+
+#### Which permissions does this use?
+
+- *camera access* (see section iOS Project configuration above). The user is asked for permission, as soon as you mount an `<ARKit />` component or use any of its API. If user denies access, you will get an error in `onARKitError`
+- *location service*: only needed if you use `ARKit.ARWorldAlignment.GravityAndHeading`.
+
+#### Is there an Android / ARCore version?
+
+Not yet, but there has been a proof-of-concept: https://github.com/HippoAR/react-native-arkit/issues/14. We are looking for contributors to help backporting this proof-of-conept to react-native-arkit.
+
+#### I have another question...
+
+[**Join Slack!**](https://join.slack.com/t/react-native-ar/shared_invite/enQtMjUzMzg3MjM0MTQ5LWU3Nzg2YjI4MGRjMTM1ZDBlNmIwYTE4YmM0M2U0NmY2YjBiYzQ4YzlkODExMTA0NDkwMzFhYWY4ZDE2M2Q4NGY)
 
 
 ## Contributing
