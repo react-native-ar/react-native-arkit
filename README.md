@@ -546,8 +546,8 @@ It uses https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522
 
 #### Which permissions does this use?
 
-- *camera access* (see section iOS Project configuration above). The user is asked for permission, as soon as you mount an `<ARKit />` component or use any of its API. If user denies access, you will get an error in `onARKitError`
-- *location service*: only needed if you use `ARKit.ARWorldAlignment.GravityAndHeading`.
+- **camera access** (see section iOS Project configuration above). The user is asked for permission, as soon as you mount an `<ARKit />` component or use any of its API. If user denies access, you will get an error in `onARKitError`
+- **location service**: only needed if you use `ARKit.ARWorldAlignment.GravityAndHeading`.
 
 #### Is there an Android / ARCore version?
 
