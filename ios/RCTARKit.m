@@ -91,7 +91,6 @@ static RCTARKit *instance = nil;
         
         // start ARKit
         [self addSubview:arView];
-        [self resume];
     }
     return self;
 }
