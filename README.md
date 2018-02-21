@@ -270,16 +270,23 @@ E.g. you can scale an object on unmount:
 />
 ```
 
-#### Material properties
+#### Material
 
 Most objects take a material property with these sub-props:
 
 | Prop | Type | Description |
 |---|---|---|
+<<<<<<< HEAD
 | `diffuse` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } | [diffuse](https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse?language=objc)
 | `specular` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } | [specular](https://developer.apple.com/documentation/scenekit/scnmaterial/1462516-specular?language=objc)
 | `displacement` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } | [displacement](https://developer.apple.com/documentation/scenekit/scnmaterial/2867516-displacement?language=objc)
 | `normal` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } |  [normal](https://developer.apple.com/documentation/scenekit/scnmaterial/1462542-normal)
+=======
+| `diffuse` | `{ ...mapProperties }` (see below) | [diffuse](https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse?language=objc)
+| `specular` | `{ ...mapProperties }` (see below) | [specular](https://developer.apple.com/documentation/scenekit/scnmaterial/1462516-specular?language=objc)
+| `displacement` | `{ ...mapProperties }` (see below) | [displacement](https://developer.apple.com/documentation/scenekit/scnmaterial/2867516-displacement?language=objc)
+| `normal` | `{ ...mapProperties }` (see below) |  [normal](https://developer.apple.com/documentation/scenekit/scnmaterial/1462542-normal)
+>>>>>>> Update README.md
 | `metalness` | number | metalness of the object |
 | `roughness` | number | roughness of the object |
 | `doubleSided` | boolean | render both sides, default is `true` |
@@ -290,7 +297,18 @@ Most objects take a material property with these sub-props:
 | `shaders` | Object with keys from `ARKit.ShaderModifierEntryPoint.*` and shader strings as values | [Shader modifiers](https://developer.apple.com/documentation/scenekit/scnshadable) |
 | `colorBufferWriteMask` | `ARKit.ColorMask.*` | [color mask](https://developer.apple.com/documentation/scenekit/scncolormask). Set to ARKit.ColorMask.None so that an object is transparent, but receives deferred shadows. |
 
+Map Properties:
 
+| Prop | Type | Description |
+|---|---|---|
+| `path` | string | currently `require` is not supported, so this is an absolute link to a local resource placed in xc.assets |
+| `color` | string | color string, only used if path is not provided |
+| `wrapS` | `ARKit.WrapMode.{ Clamp | Repeat | Mirror }` | [wrapS](https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395384-wraps?language=objc) |
+| `wrapT` | `ARKit.WrapMode.{ Clamp | Repeat | Mirror }` |  [wrapT] (https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395382-wrapt?language=objc) |
+| `wrap` | `ARKit.WrapMode.{ Clamp | Repeat | Mirror }` |  shorthand for setting both wrapS & wrapT |
+| `translation` | `{ x, y, z }` | translate the UVs, equivalent to applying a translation matrix to SceneKit's `transformContents`  |
+| `rotation` | `{ angle, x, y, z }` | rotate the UVs, equivalent to applying a rotation matrix to SceneKit's `transformContents` |
+| `scale` | `{ x, y, z }` | scale the UVs, equivalent to applying a scale matrix to SceneKit's `transformContents`  |
 
 
 
