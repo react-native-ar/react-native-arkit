@@ -31,7 +31,7 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
-    
+
     return @{
              @"ARHitTestResultType": @{
                      @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
@@ -67,7 +67,7 @@ RCT_EXPORT_MODULE()
                      @"Red": [@(SCNColorMaskRed) stringValue],
                      @"Green": [@(SCNColorMaskGreen) stringValue],
                      },
-             
+
              @"ShaderModifierEntryPoint": @{
                      @"Geometry": SCNShaderModifierEntryPointGeometry,
                      @"Surface": SCNShaderModifierEntryPointSurface,
@@ -81,13 +81,13 @@ RCT_EXPORT_MODULE()
                      @"Multiply": [@(SCNBlendModeMultiply) stringValue],
                      @"Screen": [@(SCNBlendModeScreen) stringValue],
                      @"Replace": [@(SCNBlendModeReplace) stringValue],
-                     
+
                      },
              @"ChamferMode": @{
                      @"Both": [@(SCNChamferModeBoth) stringValue],
                      @"Back": [@(SCNChamferModeBack) stringValue],
                      @"Front": [@(SCNChamferModeBack) stringValue],
-                     
+
                      },
              @"ARWorldAlignment": @{
                      @"Gravity": @(ARWorldAlignmentGravity),
@@ -115,8 +115,13 @@ RCT_EXPORT_VIEW_PROPERTY(worldAlignment, NSInteger)
 RCT_EXPORT_VIEW_PROPERTY(detectionImages, NSArray *)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
-RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdated, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneRemoved, RCTBubblingEventBlock)
+
+RCT_EXPORT_VIEW_PROPERTY(onAnchorDetected, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onAnchorUpdated, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onAnchorRemoved, RCTBubblingEventBlock)
+
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
@@ -187,19 +192,19 @@ RCT_EXPORT_METHOD(
 
 - (void)storeImageInPhotoAlbum:(UIImage *)image cameraProperties:(NSDictionary *) cameraProperties  reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
     __block PHObjectPlaceholder *placeholder;
-    
+
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
         PHAssetChangeRequest* createAssetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
         placeholder = [createAssetRequest placeholderForCreatedAsset];
-        
+
     } completionHandler:^(BOOL success, NSError *error) {
         if (success)
         {
-            
+
             NSString * localID = placeholder.localIdentifier;
-            
+
             NSString * assetURLStr = [self getAssetUrl:localID];
-            
+
             resolve(@{@"url": assetURLStr, @"width":@(image.size.width), @"height": @(image.size.height),  @"camera":cameraProperties});
         }
         else
@@ -221,10 +226,10 @@ RCT_EXPORT_METHOD(
         return;
     }
     NSString *prefixString = @"capture";
-    
+
     NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
     NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@.%@", prefixString, guid, format];
-    
+
     NSString *filePath = [directory stringByAppendingPathComponent:uniqueFileName]; //Add the file name
     bool success = [data writeToFile:filePath atomically:YES]; //Write the file
     if(success) {
@@ -233,13 +238,13 @@ RCT_EXPORT_METHOD(
         // TODO use NSError from writeToFile
         reject(@"snapshot_error",  [NSString stringWithFormat:@"could not save to '%@'", filePath], nil);
     }
-    
+
 }
 
 - (void)storeImage:(UIImage *)image options:(NSDictionary *)options reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve cameraProperties:(NSDictionary *)cameraProperties {
     NSString * target = @"cameraRoll";
     NSString * format = @"png";
-    
+
     if(options[@"target"]) {
         target = options[@"target"];
     }
@@ -255,7 +260,7 @@ RCT_EXPORT_METHOD(
             dir =  [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
         } else if([target isEqualToString:@"documents"]) {
             dir =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-            
+
         } else {
             dir = target;
         }
@@ -268,7 +273,7 @@ RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlo
         NSDictionary * selection = options[@"selection"];
         NSDictionary * cameraProperties = [[ARKit sharedInstance] readCamera];
         UIImage *image = [[ARKit sharedInstance] getSnapshot:selection];
-        
+
         [self storeImage:image options:options reject:reject resolve:resolve cameraProperties:cameraProperties ];
     });
 }
@@ -287,7 +292,7 @@ RCT_EXPORT_METHOD(snapshotCamera:(NSDictionary *)options resolve:(RCTPromiseReso
 
 RCT_EXPORT_METHOD(pickColorsRaw:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
+
         NSDictionary * selection = options[@"selection"];
         UIImage *image = [[ARKit sharedInstance] getSnapshotCamera:selection];
         resolve([[ColorGrabber sharedInstance] getColorsFromImage:image options:options]);
@@ -330,7 +335,7 @@ RCT_EXPORT_METHOD(projectPoint:
               @"z": @(pointProjected.z),
               @"distance": @(distance)
               });
-    
+
 }
 
 RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

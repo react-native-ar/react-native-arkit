@@ -235,11 +235,11 @@ static RCTARKit *instance = nil;
     
     if (@available(iOS 11.3, *)) {
         ARWorldTrackingConfiguration *configuration = self.configuration;
-        NSMutableSet *detectionImagesSet = [[NSMutableSet alloc] init];
+        NSSet *detectionImagesSet = [[NSSet alloc] init];
         for (id config in detectionImages) {
             if(config[@"resourceGroupName"]) {
                 // TODO: allow bundle to be defined
-                [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
+                detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
             }
             // do something with object
         }
@@ -505,50 +505,70 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
-- (NSDictionary *)makePlaneDetectionResult:(SCNNode *)node planeAnchor:(ARPlaneAnchor *)planeAnchor {
-    
-    return @{
-             @"id": planeAnchor.identifier.UUIDString,
-             @"alignment": @(planeAnchor.alignment),
-             @"eulerAngles":vectorToJson(node.eulerAngles),
-             @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
-             @"positionAbsolute": vectorToJson(node.position),
-             @"center": vector_float3ToJson(planeAnchor.center),
-             @"extent": vector_float3ToJson(planeAnchor.extent),
-             // node is deprecated
-             @"node": vectorToJson(node.position)
-             };
+
+
+- (NSDictionary *)makeAnchorDetectionResult:(SCNNode *)node anchor:(ARAnchor *)anchor {
+    NSDictionary* baseProps = @{
+                                @"id": anchor.identifier.UUIDString,
+                                @"eulerAngles":vectorToJson(node.eulerAngles),
+                                @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
+                                @"positionAbsolute": vectorToJson(node.position)
+                                };
+    NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:baseProps];
+    if([anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+        NSDictionary * planeProperties = [self makePlaneAnchorProperties:planeAnchor];
+        [dict addEntriesFromDictionary:planeProperties];
+    }
+    return dict;
 }
+
+
+- (NSDictionary *)makePlaneAnchorProperties:(ARPlaneAnchor *)planeAnchor {
+    return @{
+             @"type": @"plane",
+             @"alignment": @(planeAnchor.alignment),
+             @"center": vector_float3ToJson(planeAnchor.center),
+             @"extent": vector_float3ToJson(planeAnchor.extent)
+             };
+    
+}
+
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
 }
 
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
-        return;
-    }
     
-    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    if (self.onPlaneDetected) {
-        self.onPlaneDetected([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    NSDictionary *anchorDict = [self makeAnchorDetectionResult:node anchor:anchor];
+    
+    if (self.onPlaneDetected && [anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        self.onPlaneDetected(anchorDict);
+    } else if (self.onAnchorDetected) {
+        self.onAnchorDetected(anchorDict);
     }
     
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+    NSDictionary *anchorDict = [self makeAnchorDetectionResult:node anchor:anchor];
     
-    if (self.onPlaneUpdate) {
-        self.onPlaneUpdate([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    if (self.onPlaneUpdated && [anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        self.onPlaneUpdated(anchorDict);
+    }else if (self.onAnchorUpdated) {
+        self.onAnchorUpdated(anchorDict);
     }
     
 }
 
 - (void)renderer:(id<SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    if (self.onPlaneRemoved) {
-        self.onPlaneRemoved([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    NSDictionary *anchorDict = [self makeAnchorDetectionResult:node anchor:anchor];
+    
+    if (self.onPlaneRemoved && [anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        self.onPlaneRemoved(anchorDict);
+    } else if (self.onAnchorRemoved) {
+        self.onAnchorRemoved(anchorDict);
     }
 }
 

@@ -14,9 +14,15 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { keyBy, mapValues } from 'lodash';
 
+import {
+  deprecated,
+  detectionImages,
+  position,
+  transition,
+} from './components/lib/propTypes';
 import { pickColors, pickColorsFromFile } from './lib/pickColors';
-import { position, transition } from './components/lib/propTypes';
 import generateId from './components/lib/generateId';
 
 const ARKitManager = NativeModules.ARKitManager;
@@ -46,6 +52,24 @@ class ARKit extends Component {
     ARKitManager.pause();
   }
 
+  getCallbackProps() {
+    return mapValues(
+      keyBy([
+        'onTapOnPlaneUsingExtent',
+        'onTapOnPlaneNoExtent',
+        'onPlaneDetected',
+        'onPlaneRemoved',
+        'onPlaneUpdated',
+        'onAnchorDetected',
+        'onAnchorUpdated',
+        'onAnchorRemoved',
+        'onTrackingState',
+        'onARKitError',
+      ]),
+      name => this.callback(name),
+    );
+  }
+
   render(AR = RCTARKit) {
     let state = null;
     if (this.props.debug) {
@@ -68,13 +92,7 @@ class ARKit extends Component {
       <View style={this.props.style}>
         <AR
           {...this.props}
-          onTapOnPlaneUsingExtent={this.callback('onTapOnPlaneUsingExtent')}
-          onTapOnPlaneNoExtent={this.callback('onTapOnPlaneNoExtent')}
-          onPlaneDetected={this.callback('onPlaneDetected')}
-          onPlaneRemoved={this.callback('onPlaneRemoved')}
-          onPlaneUpdate={this.callback('onPlaneUpdate')}
-          onTrackingState={this.callback('onTrackingState')}
-          onARKitError={this.callback('onARKitError')}
+          {...this.getCallbackProps()}
           onEvent={this._onEvent}
         />
         {state}
@@ -94,7 +112,7 @@ class ARKit extends Component {
         floor,
       });
     }
-
+    // TODO: check if we can remove this
     if (this.props.debug) {
       this.setState({
         state,
@@ -113,6 +131,16 @@ class ARKit extends Component {
     const eventListener = this.props[`on${eventName}`];
     if (eventListener) {
       eventListener(event.nativeEvent);
+    }
+  };
+
+  // handle deprecated alias
+  _onPlaneUpdated = nativeEvent => {
+    if (this.props.onPlaneUpdate) {
+      this.props.onPlaneUpdate(nativeEvent);
+    }
+    if (this.props.onPlaneUpdated) {
+      this.props.onPlaneUpdated(nativeEvent);
     }
   };
 
@@ -184,14 +212,23 @@ ARKit.propTypes = {
   lightEstimationEnabled: PropTypes.bool,
   autoenablesDefaultLighting: PropTypes.bool,
   worldAlignment: PropTypes.number,
+  detectionImages,
   onARKitError: PropTypes.func,
-  onPlaneDetected: PropTypes.func,
-  onPlaneRemoved: PropTypes.func,
+
   onFeaturesDetected: PropTypes.func,
   // onLightEstimation is called rapidly, better poll with
   // ARKit.getCurrentLightEstimation()
   onLightEstimation: PropTypes.func,
-  onPlaneUpdate: PropTypes.func,
+
+  onPlaneDetected: PropTypes.func,
+  onPlaneRemoved: PropTypes.func,
+  onPlaneUpdated: PropTypes.func,
+  onPlaneUpdate: deprecated(PropTypes.func, 'Use `onPlaneUpdated` instead'),
+
+  onAnchorDetected: PropTypes.func,
+  onAnchorRemoved: PropTypes.func,
+  onAnchorUpdated: PropTypes.func,
+
   onTrackingState: PropTypes.func,
   onTapOnPlaneUsingExtent: PropTypes.func,
   onTapOnPlaneNoExtent: PropTypes.func,
