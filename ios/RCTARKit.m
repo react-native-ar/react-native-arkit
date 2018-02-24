@@ -87,7 +87,7 @@ static RCTARKit *instance = nil;
         
         arView.scene.rootNode.name = @"root";
         
-    
+        
         
         // start ARKit
         [self addSubview:arView];
@@ -119,7 +119,7 @@ static RCTARKit *instance = nil;
         NSLog(@"Initializing ARKIT failed with Error: %@ %@", error, [error userInfo]);
         
     }
-   
+    
 }
 - (void)reset {
     if (ARWorldTrackingConfiguration.isSupported) {
@@ -179,7 +179,7 @@ static RCTARKit *instance = nil;
 }
 
 -(void)setOrigin:(NSDictionary*)json {
-   
+    
     if(json[@"transition"]) {
         NSDictionary * transition =json[@"transition"];
         if(transition[@"duration"]) {
@@ -191,7 +191,7 @@ static RCTARKit *instance = nil;
     } else {
         [SCNTransaction setAnimationDuration:0.0];
     }
-     SCNVector3 position = [RCTConvert SCNVector3:json[@"position"]];
+    SCNVector3 position = [RCTConvert SCNVector3:json[@"position"]];
     [self.nodeManager.localOrigin setPosition:position];
 }
 
@@ -229,6 +229,26 @@ static RCTARKit *instance = nil;
         configuration.worldAlignment = ARWorldAlignmentGravity;
     }
     [self resume];
+}
+
+- (void)setDetectionImages:(NSArray*) detectionImages {
+    
+    if (@available(iOS 11.3, *)) {
+        ARWorldTrackingConfiguration *configuration = self.configuration;
+        NSMutableSet *detectionImagesSet = [[NSMutableSet alloc] init];
+        for (id config in detectionImages) {
+            if(config[@"resourceGroupName"]) {
+                // TODO: allow bundle to be defined
+                [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
+            }
+            // do something with object
+        }
+        configuration.detectionImages = detectionImagesSet;
+        [self resume];;
+    } else {
+        // Fallback on earlier versions
+    }
+    
 }
 
 - (NSDictionary *)readCameraPosition {
@@ -508,7 +528,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
         return;
     }
- 
+    
     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
     if (self.onPlaneDetected) {
         self.onPlaneDetected([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
@@ -526,7 +546,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 - (void)renderer:(id<SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
     if (self.onPlaneRemoved) {
         self.onPlaneRemoved([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
     }

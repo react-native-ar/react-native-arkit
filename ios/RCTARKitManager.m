@@ -112,6 +112,7 @@ RCT_EXPORT_VIEW_PROPERTY(origin, NSDictionary *)
 RCT_EXPORT_VIEW_PROPERTY(lightEstimationEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(autoenablesDefaultLighting, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(worldAlignment, NSInteger)
+RCT_EXPORT_VIEW_PROPERTY(detectionImages, NSArray *)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
