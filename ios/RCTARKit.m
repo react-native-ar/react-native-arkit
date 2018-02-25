@@ -519,6 +519,14 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
         NSDictionary * planeProperties = [self makePlaneAnchorProperties:planeAnchor];
         [dict addEntriesFromDictionary:planeProperties];
+    } else if (@available(iOS 11.3, *)) {
+        if([anchor isKindOfClass:[ARImageAnchor class]]) {
+            ARImageAnchor *imageAnchor = (ARImageAnchor *)anchor;
+            NSDictionary * imageProperties = [self makeImageAnchorProperties:imageAnchor];
+            [dict addEntriesFromDictionary:imageProperties];
+        }
+    } else {
+        // Fallback on earlier versions
     }
     return dict;
 }
@@ -534,6 +542,16 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     
 }
 
+- (NSDictionary *)makeImageAnchorProperties:(ARImageAnchor *)imageAnchor  API_AVAILABLE(ios(11.3)){
+    return @{
+             @"type": @"image",
+             @"image": @{
+                     @"name": imageAnchor.referenceImage.name
+                     }
+             
+             };
+    
+}
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
 }
