@@ -280,17 +280,10 @@ Most objects take a material property with these sub-props:
 
 | Prop | Type | Description |
 |---|---|---|
-<<<<<<< HEAD
-| `diffuse` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } | [diffuse](https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse?language=objc)
-| `specular` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } | [specular](https://developer.apple.com/documentation/scenekit/scnmaterial/1462516-specular?language=objc)
-| `displacement` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } | [displacement](https://developer.apple.com/documentation/scenekit/scnmaterial/2867516-displacement?language=objc)
-| `normal` | { `path`, `color`, `intensity`, `scale`, `translation`, `rotation`, `wrapS`, `wrapT` } |  [normal](https://developer.apple.com/documentation/scenekit/scnmaterial/1462542-normal)
-=======
 | `diffuse` | `{ ...mapProperties }` (see below) | [diffuse](https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse?language=objc)
 | `specular` | `{ ...mapProperties }` (see below) | [specular](https://developer.apple.com/documentation/scenekit/scnmaterial/1462516-specular?language=objc)
 | `displacement` | `{ ...mapProperties }` (see below) | [displacement](https://developer.apple.com/documentation/scenekit/scnmaterial/2867516-displacement?language=objc)
 | `normal` | `{ ...mapProperties }` (see below) |  [normal](https://developer.apple.com/documentation/scenekit/scnmaterial/1462542-normal)
->>>>>>> Update README.md
 | `metalness` | number | metalness of the object |
 | `roughness` | number | roughness of the object |
 | `doubleSided` | boolean | render both sides, default is `true` |
