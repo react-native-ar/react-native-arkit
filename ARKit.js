@@ -159,13 +159,12 @@ Object.keys(ARKitManager).forEach(key => {
   ARKit[key] = ARKitManager[key];
 });
 
-const addDefaultsToSnapShotFunc = funcName => ({
-  target = 'cameraRoll',
-  format = 'png'
-} = {}) => ARKitManager[funcName]({ target, format });
+const addDefaultsToSnapShotFunc = funcName => (
+  { target = 'cameraRoll', format = 'png' } = {},
+) => ARKitManager[funcName]({ target, format });
 
-ARKit.snapshot = addDefaultsToSnapShotFunc("snapshot");
-ARKit.snapshotCamera = addDefaultsToSnapShotFunc("snapshotCamera");
+ARKit.snapshot = addDefaultsToSnapShotFunc('snapshot');
+ARKit.snapshotCamera = addDefaultsToSnapShotFunc('snapshotCamera');
 
 ARKit.exportModel = presetId => {
   const id = presetId || generateId();
@@ -197,6 +196,8 @@ ARKit.propTypes = {
   onTapOnPlaneUsingExtent: PropTypes.func,
   onTapOnPlaneNoExtent: PropTypes.func,
   onEvent: PropTypes.func,
+  isMounted: PropTypes.func,
+  isInitialized: PropTypes.func,
 };
 
 const RCTARKit = requireNativeComponent('RCTARKit', ARKit);

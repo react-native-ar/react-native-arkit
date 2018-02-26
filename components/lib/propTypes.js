@@ -4,35 +4,58 @@ import PropTypes from 'prop-types';
 
 const ARKitManager = NativeModules.ARKitManager;
 
+const animatableNumber = PropTypes.oneOfType([
+  PropTypes.number,
+  PropTypes.object,
+]);
 export const position = PropTypes.shape({
-  x: PropTypes.number,
-  y: PropTypes.number,
-  z: PropTypes.number,
+  x: animatableNumber,
+  y: animatableNumber,
+  z: animatableNumber,
 });
 
-export const scale = PropTypes.number;
+export const scale = animatableNumber;
 export const categoryBitMask = PropTypes.number;
 export const transition = PropTypes.shape({
   duration: PropTypes.number,
 });
 export const eulerAngles = PropTypes.shape({
-  x: PropTypes.number,
-  y: PropTypes.number,
-  z: PropTypes.number,
+  x: animatableNumber,
+  y: animatableNumber,
+  z: animatableNumber,
 });
 
 export const rotation = PropTypes.shape({
-  x: PropTypes.number,
-  y: PropTypes.number,
-  z: PropTypes.number,
-  w: PropTypes.number,
+  x: animatableNumber,
+  y: animatableNumber,
+  z: animatableNumber,
+  w: animatableNumber,
 });
 
 export const orientation = PropTypes.shape({
+  x: animatableNumber,
+  y: animatableNumber,
+  z: animatableNumber,
+  w: animatableNumber,
+});
+
+export const textureTranslation = PropTypes.shape({
   x: PropTypes.number,
   y: PropTypes.number,
   z: PropTypes.number,
-  w: PropTypes.number,
+});
+
+export const textureRotation = PropTypes.shape({
+  angle: PropTypes.number,
+  x: PropTypes.number,
+  y: PropTypes.number,
+  z: PropTypes.number,
+});
+
+export const textureScale = PropTypes.shape({
+  x: PropTypes.number,
+  y: PropTypes.number,
+  z: PropTypes.number,
 });
 
 export const shaders = PropTypes.shape({
@@ -59,12 +82,20 @@ export const colorBufferWriteMask = PropTypes.oneOf(
   values(ARKitManager.ColorMask),
 );
 
-export const opacity = PropTypes.number;
+export const opacity = animatableNumber;
+
+export const wrapMode = PropTypes.oneOf(values(ARKitManager.WrapMode));
 
 export const materialProperty = PropTypes.shape({
   path: PropTypes.string,
   color: PropTypes.string,
   intensity: PropTypes.number,
+  wrapS: wrapMode,
+  wrapT: wrapMode,
+  wrap: wrapMode,
+  translation: textureTranslation,
+  scale: textureScale,
+  rotation: textureRotation,
 });
 
 export const material = PropTypes.shape({

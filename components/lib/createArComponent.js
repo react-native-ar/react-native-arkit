@@ -20,8 +20,9 @@ import {
   scale,
   transition,
 } from './propTypes';
-import processMaterial from './processMaterial';
+import addAnimatedSupport from './addAnimatedSupport';
 import generateId from './generateId';
+import processMaterial from './processMaterial';
 
 const { ARGeosManager } = NativeModules;
 
@@ -74,6 +75,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
+    ...(props.color ? { color: processColor(props.color) } : {}),
     ...(props.material ? { material: processMaterial(props.material) } : {}),
   });
 
@@ -227,8 +229,8 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
       return null;
     }
   };
+  const ARComponentAnimated = addAnimatedSupport(ARComponent);
+  ARComponentAnimated.propTypes = allPropTypes;
 
-  ARComponent.propTypes = allPropTypes;
-
-  return ARComponent;
+  return ARComponentAnimated;
 };
