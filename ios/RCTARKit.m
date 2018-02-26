@@ -84,11 +84,11 @@ static RCTARKit *instance = nil;
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
-        arView.allowsCameraControl = YES;
         arView.scene.rootNode.name = @"root";
         
         #if TARGET_IPHONE_SIMULATOR
         // allow for basic orbit gestures if we're running in the simulator
+        arView.allowsCameraControl = YES;
         arView.defaultCameraController.interactionMode = SCNInteractionModeOrbitTurntable;
         arView.defaultCameraController.maximumVerticalAngle = 45;
         arView.defaultCameraController.inertiaEnabled = YES;
