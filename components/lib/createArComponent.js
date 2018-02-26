@@ -75,6 +75,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
+    ...(props.color ? { color: processColor(props.color) } : {}),
     ...(props.material ? { material: processMaterial(props.material) } : {}),
   });
 
