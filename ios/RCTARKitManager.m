@@ -60,6 +60,7 @@ RCT_EXPORT_MODULE()
         [arPlaneDetection
          addEntriesFromDictionary:@{
                                     @"Vertical": @(ARPlaneDetectionVertical),
+                                     @"HorizontalVertical": @(ARPlaneDetectionHorizontal + ARPlaneDetectionVertical),
                                     }];
         [arAnchorAligment
          addEntriesFromDictionary:@{

@@ -209,7 +209,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | Prop | Type | Note |
 |---|---|---|
 | `debug` | `Boolean` | Debug mode will show the 3D axis and feature points detected.
-| `planeDetection` | `ARKit.ARPlaneDetection.{ Horizontal \| Vertical \| None }` | ARKit plane detection. Defaults to `Horizontal`. `Vertical` is available with IOS 11.3
+| `planeDetection` | `ARKit.ARPlaneDetection.{ Horizontal \| Vertical \| HorizontalVertical \| None }` | ARKit plane detection. Defaults to `Horizontal`. `Vertical` is available with IOS 11.3
 | `lightEstimationEnabled` | `Boolean` | ARKit light estimation (defaults to false).
 | `worldAlignment` | `ARKit.ARWorldAlignment.{ Gravity \| GravityAndHeading \| Camera }` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera. Defaults to `ARKit.ARWorldAlignment.Gravity`.  [See](https://developer.apple.com/documentation/arkit/arworldalignment)|
 | `origin` | `{position, transition}` | Usually `{0,0,0}` is where you launched the app. If you want to have a different origin, you can set it here. E.g. if you set `origin={{position: {0,-1, 0}, transition: {duration: 1}}}` the new origin will be one meter below. If you have any objects already placed, they will get moved down using the given transition. All hit-test functions or similar will report coordinates relative to that new origin as `position`. You can get the original coordinates with `positionAbsolute` in these functions |  
@@ -275,6 +275,7 @@ If its a `plane`-anchor, it will have these additional properties:
 
 | Property | Description
 |---|---|
+| `alignment` | `ARKit.ARPlaneAnchorAlignment.Horizontal` or `ARKit.ARPlaneAnchorAlignment.Vertical` <br /> so you can check whether it was a horizontal or vertical plane |
 | `extent` | see https://developer.apple.com/documentation/arkit/arplaneanchor?language=objc |
 | `center` | see https://developer.apple.com/documentation/arkit/arplaneanchor?language=objc |
 
