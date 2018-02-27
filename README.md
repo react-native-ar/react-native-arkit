@@ -256,7 +256,8 @@ Most 3d object have these common properties
 | `transition` | `{duration: 1}` | Some property changes can be animated like in css transitions. Currently you can specify the duration (in seconds). |
 | `renderingOrder` | Number | Order in which object is rendered. Usefull to place elements "behind" others, although they are nearer. |
 | `categoryBitMask` | Number / bitmask | control which lights affect this object |
-| `castsShadow` | `boolean` | whether this object casts hadows |
+| `castsShadow` | `boolean` | whether this object casts shadows |
+| `constraint` | `ARKit.Constraint.{ BillboardAxisAll \| BillboardAxisX \| BillboardAxisY \| BillboardAxisZ \| None }` | Constrains the node to always point to the camera |
 
 *New experimental feature:*
 

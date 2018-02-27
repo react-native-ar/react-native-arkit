@@ -102,6 +102,13 @@ RCT_EXPORT_MODULE()
                      @"Clamp": [@(SCNWrapModeClamp) stringValue],
                      @"Repeat": [@(SCNWrapModeRepeat) stringValue],
                      @"Mirror": [@(SCNWrapModeMirror) stringValue],
+                     },
+             @"Constraint": @{
+                     @"None": @"0",
+                     @"BillboardAxisAll": [@(SCNBillboardAxisAll) stringValue],
+                     @"BillboardAxisX": [@(SCNBillboardAxisX) stringValue],
+                     @"BillboardAxisY": [@(SCNBillboardAxisY) stringValue],
+                     @"BillboardAxisZ": [@(SCNBillboardAxisZ) stringValue],
                      }
              };
 }

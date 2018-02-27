@@ -441,6 +441,11 @@
     if (json[@"castsShadow"]) {
         node.castsShadow = [json[@"castsShadow"] boolValue];
     }
+    if (json[@"constraint"]) {
+        SCNBillboardConstraint *constraint = [SCNBillboardConstraint billboardConstraint];
+        constraint.freeAxes = [json[@"constraint"] integerValue];
+        node.constraints = @[constraint];
+    }
     if(json[@"transition"]) {
         NSDictionary * transition =json[@"transition"];
         if(transition[@"duration"]) {
