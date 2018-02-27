@@ -15,7 +15,7 @@ There is a Slack group that anyone can join for help / support / general questio
 
 [**Join Slack**](https://join.slack.com/t/react-native-ar/shared_invite/enQtMjUzMzg3MjM0MTQ5LWU3Nzg2YjI4MGRjMTM1ZDBlNmIwYTE4YmM0M2U0NmY2YjBiYzQ4YzlkODExMTA0NDkwMzFhYWY4ZDE2M2Q4NGY)
 
-# Getting started
+## Getting started
 
 `$ yarn add react-native-arkit`
 
@@ -24,16 +24,16 @@ make sure to use the latest version of yarn (>=1.x.x)
 (npm does not work properly at the moment. See https://github.com/HippoAR/react-native-arkit/issues/103)
 
 
-## Mostly automatic installation
+### Mostly automatic installation
 
 `$ react-native link react-native-arkit`
 
 ! Currently automatic installation does not work as PocketSVG is missing. Follow the manual installation
 
-## Manual installation
+### Manual installation
 
 
-## iOS
+#### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
 2. Go to `node_modules` ➜ add `react-native-arkit/ios/RCTARKit.xcodeproj` and `react-native-arkit/ios/PocketSVG/PocketSVG.xcodeproj`
@@ -42,7 +42,7 @@ make sure to use the latest version of yarn (>=1.x.x)
 5. Run your project (`Cmd+R`)<
 
 
-### iOS Project configuration
+##### iOS Project configuration
 
 These steps are mandatory regardless of doing a manual or automatic installation:
 
@@ -57,7 +57,7 @@ These steps are mandatory regardless of doing a manual or automatic installation
 
 
 
-# Usage
+## Usage
 
 A simple sample React Native ARKit App
 
@@ -202,9 +202,9 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 
 
-## `<ARKit />`-Component
+### `<ARKit />`-Component
 
-## Props
+#### Props
 
 | Prop | Type | Note |
 |---|---|---|
@@ -215,7 +215,7 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 | `origin` | `{position, transition}` | Usually `{0,0,0}` is where you launched the app. If you want to have a different origin, you can set it here. E.g. if you set `origin={{position: {0,-1, 0}, transition: {duration: 1}}}` the new origin will be one meter below. If you have any objects already placed, they will get moved down using the given transition. All hit-test functions or similar will report coordinates relative to that new origin as `position`. You can get the original coordinates with `positionAbsolute` in these functions |  
 | `detectionImages` | `Array<DetectionImage>` | An Array of `DetectionImage` (see below), only available on IOS 11.3 |  
 
-### `DetectionImage`
+##### `DetectionImage`
 
 An `DetectionImage` is an image or image resource group that should be detected by ARKit.
 
@@ -231,7 +231,7 @@ You will then receive theses images in `onAnchorDetected/onAnchorUpdated`. See a
 
 We probably will add the option to load images from other sources as well (PRs encouraged).
 
-## Events
+#### Events
 
 | Event Name | Returns | Notes
 |---|---|---|
@@ -249,7 +249,7 @@ See [Planes and Anchors](#planes-and-anchors) for Details about anchors
 
 
 
-## Planes and Anchors
+#### Planes and Anchors
 
 ARKit can detect different anchors in the real world:
 
@@ -286,7 +286,7 @@ If its a `plane`-anchor, it will have these additional properties:
 
 
 
-## Static methods
+### Static methods
 
 Static Methods can directly be used on the `ARKit`-export:
 
@@ -314,9 +314,9 @@ All methods return a *promise* with the result.
 | `isInitialized` | boolean | check whether arkit has been initialized (e.g. by mounting). See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
 | `isMounted` | boolean | check whether arkit has been mounted. See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
 
-## 3D-Components
+### 3D-Components
 
-## General props
+#### General props
 
 Most 3d object have these common properties
 
@@ -351,7 +351,7 @@ E.g. you can scale an object on unmount:
 />
 ```
 
-## Material
+#### Material
 
 Most objects take a material property with these sub-props:
 
@@ -386,7 +386,7 @@ Map Properties:
 
 
 
-## [`<ARKit.Box />`](https://developer.apple.com/documentation/scenekit/scnbox)
+#### [`<ARKit.Box />`](https://developer.apple.com/documentation/scenekit/scnbox)
 
 
 | Prop | Type |
@@ -395,7 +395,7 @@ Map Properties:
 
 And any common object property (position, material, etc.)
 
-## [`<ARKit.Sphere />`](https://developer.apple.com/documentation/scenekit/scnsphere)
+#### [`<ARKit.Sphere />`](https://developer.apple.com/documentation/scenekit/scnsphere)
 
 
 | Prop | Type |
@@ -404,49 +404,49 @@ And any common object property (position, material, etc.)
 
 
 
-## [`<ARKit.Cylinder />`](https://developer.apple.com/documentation/scenekit/scncylinder)
+#### [`<ARKit.Cylinder />`](https://developer.apple.com/documentation/scenekit/scncylinder)
 
 
 | Prop | Type |
 |---|---|
 | `shape` | `{ radius, height }` |
 
-## [`<ARKit.Cone />`](https://developer.apple.com/documentation/scenekit/scncone)
+#### [`<ARKit.Cone />`](https://developer.apple.com/documentation/scenekit/scncone)
 
 
 | Prop | Type |
 |---|---|
 | `shape` | `{ topR, bottomR, height }` |
 
-## [`<ARKit.Pyramid />`](https://developer.apple.com/documentation/scenekit/scnpyramid)
+#### [`<ARKit.Pyramid />`](https://developer.apple.com/documentation/scenekit/scnpyramid)
 
 
 | Prop | Type |
 |---|---|
 | `shape` | `{ width, height, length }` |
 
-## [`<ARKit.Tube />`](https://developer.apple.com/documentation/scenekit/scntube)
+#### [`<ARKit.Tube />`](https://developer.apple.com/documentation/scenekit/scntube)
 
 
 | Prop | Type |
 |---|---|
 | `shape` | `{ innerR, outerR, height }` |
 
-## [`<ARKit.Torus />`](https://developer.apple.com/documentation/scenekit/scntorus)
+#### [`<ARKit.Torus />`](https://developer.apple.com/documentation/scenekit/scntorus)
 
 
 | Prop | Type |
 |---|---|
 | `shape` | `{ ringR, pipeR }` |
 
-## [`<ARKit.Capsule />`](https://developer.apple.com/documentation/scenekit/scncapsule)
+#### [`<ARKit.Capsule />`](https://developer.apple.com/documentation/scenekit/scncapsule)
 
 
 | Prop | Type |
 |---|---|
 | `shape` | `{ capR, height }` |
 
-## [`<ARKit.Plane />`](https://developer.apple.com/documentation/scenekit/scnplane)
+#### [`<ARKit.Plane />`](https://developer.apple.com/documentation/scenekit/scnplane)
 
 
 | Prop | Type |
@@ -477,7 +477,7 @@ This is a horizontal plane that only receives shadows, but is invisible otherwis
 ```
 
 
-## [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
+#### [`<ARKit.Text />`](https://developer.apple.com/documentation/scenekit/scntext)
 
 | Prop | Type |
 |---|---|
@@ -486,7 +486,7 @@ This is a horizontal plane that only receives shadows, but is invisible otherwis
 
 
 
-## `<ARKit.Model />`
+#### `<ARKit.Model />`
 
 SceneKit only supports `.scn` and `.dae` formats.
 
@@ -497,7 +497,7 @@ SceneKit only supports `.scn` and `.dae` formats.
 
 Objects currently don't take material property.
 
-## `<ARKit.Shape />`
+#### `<ARKit.Shape />`
 
 Creates a extruded shape by an svg path.
 See https://github.com/HippoAR/react-native-arkit/pull/89 for details
@@ -508,7 +508,7 @@ See https://github.com/HippoAR/react-native-arkit/pull/89 for details
 
 
 
-## [`<ARKit.Light />`](https://developer.apple.com/documentation/scenekit/scnlight)
+#### [`<ARKit.Light />`](https://developer.apple.com/documentation/scenekit/scnlight)
 
 Place lights on the scene!
 
@@ -535,9 +535,9 @@ Most properties described here are also supported: https://developer.apple.com/d
 This feature is new. If you experience any problem, please report an issue!
 
 
-## HOCs (higher order components)
+### HOCs (higher order components)
 
-## withProjectedPosition()
+#### withProjectedPosition()
 
 this hoc allows you to create 3D components where the position is always relative to the same point on the screen/camera, but sticks to a plane or object.
 
@@ -568,7 +568,7 @@ It's recommended that you specify a transition duration (0.1s works nice), as th
 
 Now you can use your 3D cursor like this:
 
-### Attach to a given detected horizontal plane
+##### Attach to a given detected horizontal plane
 
 Given you have detected a plane with onPlaneDetected, you can make the cursor stick to that plane:
 
@@ -598,7 +598,7 @@ You can also add a property `onProjectedPosition` to your cursor which will be c
 
 It uses https://developer.apple.com/documentation/arkit/arframe/2875718-hittest with some default options. Please file an issue or send a PR if you need more control over the options here!
 
-### Attach to a given 3D object
+##### Attach to a given 3D object
 
 You can attach the cursor on a 3D object, e.g. a non-horizontal-plane or similar:
 
@@ -630,22 +630,22 @@ E.gl you have several "walls" with ids "wall_1", "wall_2", etc.
 It uses https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522929-hittest with some default options. Please file an issue or send a PR if you need more control over the options here!
 
 
-# FAQ:
+## FAQ:
 
-## Which permissions does this use?
+#### Which permissions does this use?
 
 - **camera access** (see section iOS Project configuration above). The user is asked for permission, as soon as you mount an `<ARKit />` component or use any of its API. If user denies access, you will get an error in `onARKitError`
 - **location service**: only needed if you use `ARKit.ARWorldAlignment.GravityAndHeading`.
 
-## Is there an Android / ARCore version?
+#### Is there an Android / ARCore version?
 
 Not yet, but there has been a proof-of-concept: https://github.com/HippoAR/react-native-arkit/issues/14. We are looking for contributors to help backporting this proof-of-conept to react-native-arkit.
 
-## I have another question...
+#### I have another question...
 
 [**Join Slack!**](https://join.slack.com/t/react-native-ar/shared_invite/enQtMjUzMzg3MjM0MTQ5LWU3Nzg2YjI4MGRjMTM1ZDBlNmIwYTE4YmM0M2U0NmY2YjBiYzQ4YzlkODExMTA0NDkwMzFhYWY4ZDE2M2Q4NGY)
 
 
-# Contributing
+## Contributing
 
 If you find a bug or would like to request a new feature, just [open an issue](https://github.com/HippoAR/react-native-arkit/issues/new). Your contributions are always welcome! Submit a pull request and see [`CONTRIBUTING.md`](CONTRIBUTING.md) for guidelines.
