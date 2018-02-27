@@ -200,22 +200,22 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 <img src="screenshots/geometries.jpg" width="250">
 
-### Components
 
-#### `<ARKit />`
 
-##### Props
+### `<ARKit />`-Component
+
+#### Props
 
 | Prop | Type | Note |
 |---|---|---|
 | `debug` | `Boolean` | Debug mode will show the 3D axis and feature points detected.
 | `planeDetection` | `ARKit.ARPlaneDetection.{ Horizontal \| Vertical \| None }` | ARKit plane detection. Defaults to `Horizontal`. `Vertical` is available with IOS 11.3
 | `lightEstimationEnabled` | `Boolean` | ARKit light estimation (defaults to false).
-| `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera. Defaults to `ARKit.ARWorldAlignment.Gravity`|
+| `worldAlignment` | `ARKit.ARWorldAlignment.{ Gravity \| GravityAndHeading \| Camera }` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera. Defaults to `ARKit.ARWorldAlignment.Gravity`.  [See](https://developer.apple.com/documentation/arkit/arworldalignment)|
 | `origin` | `{position, transition}` | Usually `{0,0,0}` is where you launched the app. If you want to have a different origin, you can set it here. E.g. if you set `origin={{position: {0,-1, 0}, transition: {duration: 1}}}` the new origin will be one meter below. If you have any objects already placed, they will get moved down using the given transition. All hit-test functions or similar will report coordinates relative to that new origin as `position`. You can get the original coordinates with `positionAbsolute` in these functions |  
-| `detectionImages` | `Array<DetectionImage>` | An Array of `DetectionImage`, only available on IOS 11.3 |  
+| `detectionImages` | `Array<DetectionImage>` | An Array of `DetectionImage` (see below), only available on IOS 11.3 |  
 
-###### `DetectionImage`
+##### `DetectionImage`
 
 An `DetectionImage` is an image or image resource group that should be detected by ARKit.
 
@@ -231,7 +231,7 @@ You will then receive theses images in `onAnchorDetected/onAnchorUpdated`. See a
 
 We probably will add the option to load images from other sources as well (PRs encouraged).
 
-##### Events
+#### Events
 
 | Event Name | Returns | Notes
 |---|---|---|
@@ -249,7 +249,7 @@ See [Planes and Anchors](#planes-and-anchors) for Details about anchors
 
 
 
-##### Planes and Anchors
+#### Planes and Anchors
 
 ARKit can detect different anchors in the real world:
 
@@ -285,7 +285,8 @@ If its a `plane`-anchor, it will have these additional properties:
 | `image` | `{name}` | an object with the name of the image.
 
 
-##### Static methods
+
+### Static methods
 
 Static Methods can directly be used on the `ARKit`-export:
 
@@ -313,9 +314,9 @@ All methods return a *promise* with the result.
 | `isInitialized` | boolean | check whether arkit has been initialized (e.g. by mounting). See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
 | `isMounted` | boolean | check whether arkit has been mounted. See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
 
-#### 3D objects
+### 3D-Components
 
-##### General props
+#### General props
 
 Most 3d object have these common properties
 
