@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <SceneKit/SceneKit.h>
 #import <React/RCTConvert.h>
+#import <ARKit/ARKit.h>
 
 @interface SCNTextNode : SCNNode
 @end
@@ -40,6 +41,8 @@
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json;
 + (void)setShapeProperties:(SCNGeometry *)geometry properties:(id)json;
 + (void)setLightProperties:(SCNLight *)light properties:(id)json;
+
++ (ARPlaneDetection)ARPlaneDetection:(id)number;
 
 @end
 

@@ -32,13 +32,49 @@ RCT_EXPORT_MODULE()
 - (NSDictionary *)constantsToExport
 {
     
+    NSMutableDictionary * arHitTestResultType =
+    [NSMutableDictionary dictionaryWithDictionary:
+     @{
+       @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
+       @"EstimatedHorizontalPlane": @(ARHitTestResultTypeEstimatedHorizontalPlane),
+       @"ExistingPlane": @(ARHitTestResultTypeExistingPlane),
+       @"ExistingPlaneUsingExtent": @(ARHitTestResultTypeExistingPlaneUsingExtent),
+       }];
+    NSMutableDictionary * arAnchorAligment =
+    [NSMutableDictionary
+     dictionaryWithDictionary:@{
+                                @"Horizontal": @(ARPlaneAnchorAlignmentHorizontal)
+                                }];
+    NSMutableDictionary * arPlaneDetection =
+    [NSMutableDictionary
+     dictionaryWithDictionary:@{
+                                @"Horizontal": @(ARPlaneDetectionHorizontal),
+                                @"None": @(ARPlaneDetectionNone),
+                                }];
+    if (@available(iOS 11.3, *)) {
+        [arHitTestResultType
+         addEntriesFromDictionary:@{
+                                    @"ExistingPlaneUsingGeometry": @(ARHitTestResultTypeExistingPlaneUsingGeometry),
+                                    @"EstimatedVerticalPlane": @(ARHitTestResultTypeEstimatedVerticalPlane)
+                                    }];
+        [arPlaneDetection
+         addEntriesFromDictionary:@{
+                                    @"Vertical": @(ARPlaneDetectionVertical),
+                                     @"HorizontalVertical": @(ARPlaneDetectionHorizontal + ARPlaneDetectionVertical),
+                                    }];
+        [arAnchorAligment
+         addEntriesFromDictionary:@{
+                                    @"Vertical": @(ARPlaneAnchorAlignmentVertical)
+                                    }];
+    }
+    
+    
+    
+    
     return @{
-             @"ARHitTestResultType": @{
-                     @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
-                     @"EstimatedHorizontalPlane": @(ARHitTestResultTypeEstimatedHorizontalPlane),
-                     @"ExistingPlane": @(ARHitTestResultTypeExistingPlane),
-                     @"ExistingPlaneUsingExtent": @(ARHitTestResultTypeExistingPlaneUsingExtent)
-                     },
+             @"ARHitTestResultType": arHitTestResultType,
+             @"ARPlaneDetection": arPlaneDetection,
+             @"ARPlaneAnchorAlignment": arAnchorAligment,
              @"LightingModel": @{
                      @"Constant": SCNLightingModelConstant,
                      @"Blinn": SCNLightingModelBlinn,
@@ -114,15 +150,21 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(planeDetection, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(planeDetection, ARPlaneDetection)
 RCT_EXPORT_VIEW_PROPERTY(origin, NSDictionary *)
 RCT_EXPORT_VIEW_PROPERTY(lightEstimationEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(autoenablesDefaultLighting, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(worldAlignment, NSInteger)
+RCT_EXPORT_VIEW_PROPERTY(detectionImages, NSArray *)
 
 RCT_EXPORT_VIEW_PROPERTY(onPlaneDetected, RCTBubblingEventBlock)
-RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdate, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPlaneUpdated, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onPlaneRemoved, RCTBubblingEventBlock)
+
+RCT_EXPORT_VIEW_PROPERTY(onAnchorDetected, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onAnchorUpdated, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onAnchorRemoved, RCTBubblingEventBlock)
+
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
@@ -147,7 +189,7 @@ RCT_EXPORT_METHOD(reset:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 }
 
 RCT_EXPORT_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-   resolve(@([ARKit isInitialized]));
+    resolve(@([ARKit isInitialized]));
 }
 
 RCT_EXPORT_METHOD(isMounted:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

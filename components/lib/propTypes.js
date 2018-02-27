@@ -8,6 +8,25 @@ const animatableNumber = PropTypes.oneOfType([
   PropTypes.number,
   PropTypes.object,
 ]);
+
+export const deprecated = (propType, hint = null) => (
+  props,
+  propName,
+  componentName,
+) => {
+  if (props[propName]) {
+    console.warn(
+      `Prop \`${propName}\` supplied to` +
+        ` \`${componentName}\` is deprecated. ${hint}`,
+    );
+  }
+  return PropTypes.checkPropTypes(
+    { [propName]: propType },
+    props,
+    propName,
+    componentName,
+  );
+};
 export const position = PropTypes.shape({
   x: animatableNumber,
   y: animatableNumber,
@@ -19,6 +38,10 @@ export const categoryBitMask = PropTypes.number;
 export const transition = PropTypes.shape({
   duration: PropTypes.number,
 });
+
+export const planeDetection = PropTypes.oneOf(
+  values(ARKitManager.ARPlaneDetection),
+);
 export const eulerAngles = PropTypes.shape({
   x: animatableNumber,
   y: animatableNumber,
@@ -118,3 +141,8 @@ export const material = PropTypes.shape({
   transparency: PropTypes.number,
   fillMode,
 });
+
+const detectionImage = PropTypes.shape({
+  resourceGroupName: PropTypes.string,
+});
+export const detectionImages = PropTypes.arrayOf(detectionImage);

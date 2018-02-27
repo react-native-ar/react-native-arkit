@@ -592,5 +592,10 @@
     }
 }
 
++ (ARPlaneDetection)ARPlaneDetection:(id)number {
+    return (ARPlaneDetection)  [number integerValue];
+}
+
+
 
 @end

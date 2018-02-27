@@ -75,16 +75,34 @@ export default class ReactNativeARKit extends Component {
         <ARKit
           style={{ flex: 1 }}
           debug
-          planeDetection
+          // enable plane detection (defaults to Horizontal)
+          planeDetection={ARKit.planeDetection.Horizontal}
+
           // enable light estimation (defaults to true)
           lightEstimationEnabled
           // get the current lightEstimation (if enabled)
           // it fires rapidly, so better poll it from outside with
           // ARKit.getCurrentLightEstimation()
           onLightEstimation={e => console.log(e.nativeEvent)}
-          onPlaneDetected={console.log} // event listener for plane detection
-          onPlaneUpdate={console.log} // event listener for plane update
-          onPlaneRemoved={console.log} // arkit sometimes removes detected planes
+
+          // event listener for (horizontal) plane detection
+          onPlaneDetected={anchor => console.log(anchor)}
+
+          // event listener for plane update
+          onPlaneUpdated={anchor => console.log(anchor)}
+
+          // arkit sometimes removes detected planes
+          onPlaneRemoved={anchor => console.log(anchor)}
+
+          // event listeners for all anchors, see [Planes and Anchors](#planes-and-anchors)
+          onAnchorDetected={anchor => console.log(anchor)}
+          onAnchorUpdated={anchor => console.log(anchor)}
+          onAnchorRemoved={anchor => console.log(anchor)}
+
+          // you can detect images and will get an anchor for these images
+          detectionImages={[{ resourceGroupName: 'DetectionImages' }]}
+
+
           onARKitError={console.log} // if arkit could not be initialized (e.g. missing permissions), you will get notified here
         >
           <ARKit.Box
@@ -182,45 +200,104 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 <img src="screenshots/geometries.jpg" width="250">
 
-### Components
 
-#### `<ARKit />`
 
-##### Props
+### `<ARKit />`-Component
 
-| Prop | Type | Default | Note |
-|---|---|---|---|
-| `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
-| `planeDetection` | `Boolean` | `false` | ARKit plane detection.
-| `lightEstimationEnabled` | `Boolean` | `false` | ARKit light estimation.
-| `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | `ARKit.ARWorldAlignment.Gravity` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera.|
+#### Props
+
+| Prop | Type | Note |
+|---|---|---|
+| `debug` | `Boolean` | Debug mode will show the 3D axis and feature points detected.
+| `planeDetection` | `ARKit.ARPlaneDetection.{ Horizontal \| Vertical \| HorizontalVertical \| None }` | ARKit plane detection. Defaults to `Horizontal`. `Vertical` is available with IOS 11.3
+| `lightEstimationEnabled` | `Boolean` | ARKit light estimation (defaults to false).
+| `worldAlignment` | `ARKit.ARWorldAlignment.{ Gravity \| GravityAndHeading \| Camera }` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera. Defaults to `ARKit.ARWorldAlignment.Gravity`.  [See](https://developer.apple.com/documentation/arkit/arworldalignment)|
 | `origin` | `{position, transition}` | Usually `{0,0,0}` is where you launched the app. If you want to have a different origin, you can set it here. E.g. if you set `origin={{position: {0,-1, 0}, transition: {duration: 1}}}` the new origin will be one meter below. If you have any objects already placed, they will get moved down using the given transition. All hit-test functions or similar will report coordinates relative to that new origin as `position`. You can get the original coordinates with `positionAbsolute` in these functions |  
+| `detectionImages` | `Array<DetectionImage>` | An Array of `DetectionImage` (see below), only available on IOS 11.3 |  
 
-##### Events
+##### `DetectionImage`
+
+An `DetectionImage` is an image or image resource group that should be detected by ARKit.
+
+See https://developer.apple.com/documentation/arkit/arreferenceimage?language=objc how to add these images.
+
+You will then receive theses images in `onAnchorDetected/onAnchorUpdated`. See also [Planes and Anchors](#planes-and-anchors) for more details.
+
+`DetectionImage` has these properties
+
+| Prop | Type | Notes
+|---|---|---|
+| `resourceGroupName` | `String` | The name of the resource group |
+
+We probably will add the option to load images from other sources as well (PRs encouraged).
+
+#### Events
 
 | Event Name | Returns | Notes
 |---|---|---|
 | `onARKitError` | `ARKiterror` | will report whether an error occured while initializing ARKit. A common error is when the user has not allowed camera access. Another error is, if you use `worldAlignment=GravityAndHeading` and location service is turned off |
 | `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
 | `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
-| `onPlaneDetected` | `Plane` | When a plane is first detected.
-| `onPlaneUpdate` | `Plane` | When a detected plane is updated
-| `onPlaneRemoved` | `Plane` | When a detected plane is updated
+| `onAnchorDetected` | `Anchor` | When an anchor (plane or image) is first detected.
+| `onAnchorUpdated` | `Anchor` | When an anchor is updated
+| `onAnchorRemoved` | `Anchor` | When an anchor is removed
+| `onPlaneDetected` | `Anchor` | When a plane anchor is first detected.
+| `onPlaneUpdated` | `Anchor` | When a detected plane is updated
+| `onPlaneRemoved` | `Anchor` | When a detected plane is removed
 
-The `Plane` object has the following properties:
+See [Planes and Anchors](#planes-and-anchors) for Details about anchors
+
+
+
+#### Planes and Anchors
+
+ARKit can detect different anchors in the real world:
+
+- `plane` horizontal and vertical planes
+- `image`, image-anchors [See DetectionImage](#DetectionImage)
+- face with iphone X or similar (not implemented yet)
+
+You then will receive anchor objects in the `onAnchorDetected`, `onAnchorUpdated`, `onAnchorRemoved` callbacks on your `<ARKit />`-component.
+
+You can use `onPlaneDetected`, `onPlaneUpdated`, `onPlaneRemoved` to only receive plane-anchors (may be deprecated later).
+
+The `Anchor` object has the following properties:
+
+| Property | Type | Description
+|---|---|---|
+| `id` | `String` | a unique id identifying the anchor |
+| `type` | `String` | The type of the anchor (plane, image) |
+| `position` | `{ x, y, z }` | the position of the anchor (relative to the origin) |
+| `positionAbsolute` | `{ x, y, z }` | the absolute position of the anchor |
+| `eulerAngles` | `{ x, y, z }` | the rotation of the plane |
+
+If its a `plane`-anchor, it will have these additional properties:
 
 | Property | Description
 |---|---|
-| `id` | a unique id identifying the plane |
-| `position` | the position of the plane (relative to the origin) |
-| `positionAbsolute` | the absolute position of the plane |
-| `extent` | the extent of the plane |
-| `eulerAngles` | the rotation of the plane |
+| `alignment` | `ARKit.ARPlaneAnchorAlignment.Horizontal` or `ARKit.ARPlaneAnchorAlignment.Vertical` <br /> so you can check whether it was a horizontal or vertical plane |
+| `extent` | see https://developer.apple.com/documentation/arkit/arplaneanchor?language=objc |
+| `center` | see https://developer.apple.com/documentation/arkit/arplaneanchor?language=objc |
+
+`image`-Anchor:
+
+| Property | type | Description
+|---|---|---|
+| `image` | `{name}` | an object with the name of the image.
 
 
 
+### Static methods
 
-##### Static methods
+Static Methods can directly be used on the `ARKit`-export:
+
+```
+import { ARKit } from 'react-native-arkit'
+
+//...
+const result = await ARKit.hitTestSceneObjects(point);
+
+```
 
 All methods return a *promise* with the result.
 
@@ -238,9 +315,9 @@ All methods return a *promise* with the result.
 | `isInitialized` | boolean | check whether arkit has been initialized (e.g. by mounting). See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
 | `isMounted` | boolean | check whether arkit has been mounted. See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
 
-#### 3D objects
+### 3D-Components
 
-##### General props
+#### General props
 
 Most 3d object have these common properties
 
