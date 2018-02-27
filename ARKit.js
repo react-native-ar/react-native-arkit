@@ -89,7 +89,6 @@ class ARKit extends Component {
         </View>
       );
     }
-    console.log(this.props.planeDetection);
     return (
       <View style={this.props.style}>
         <AR
