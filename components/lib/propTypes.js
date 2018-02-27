@@ -38,6 +38,10 @@ export const categoryBitMask = PropTypes.number;
 export const transition = PropTypes.shape({
   duration: PropTypes.number,
 });
+
+export const planeDetection = PropTypes.oneOf(
+  values(ARKitManager.ARPlaneDetection),
+);
 export const eulerAngles = PropTypes.shape({
   x: animatableNumber,
   y: animatableNumber,

@@ -12,13 +12,14 @@ import {
   NativeModules,
   requireNativeComponent,
 } from 'react-native';
+import { keyBy, mapValues, isBoolean } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import { keyBy, mapValues } from 'lodash';
 
 import {
   deprecated,
   detectionImages,
+  planeDetection,
   position,
   transition,
 } from './components/lib/propTypes';
@@ -93,6 +94,12 @@ class ARKit extends Component {
         <AR
           {...this.props}
           {...this.getCallbackProps()}
+          // fallback to old prop type (Was boolean, now is enum)
+          planeDetection={
+            isBoolean(this.props.planeDetection)
+              ? ARKit.ARPlaneDetection.Horizontal
+              : this.props.planeDetection
+          }
           onEvent={this._onEvent}
         />
         {state}
@@ -204,7 +211,7 @@ ARKit.pickColors = pickColors;
 ARKit.pickColorsFromFile = pickColorsFromFile;
 ARKit.propTypes = {
   debug: PropTypes.bool,
-  planeDetection: PropTypes.bool,
+  planeDetection,
   origin: PropTypes.shape({
     position,
     transition,

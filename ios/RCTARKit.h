@@ -35,7 +35,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, strong) RCTARKitNodes *nodeManager;
 
 @property (nonatomic, assign) BOOL debug;
-@property (nonatomic, assign) BOOL planeDetection;
+@property (nonatomic, assign) ARPlaneDetection planeDetection;
 @property (nonatomic, assign) BOOL lightEstimationEnabled;
 @property (nonatomic, assign) BOOL autoenablesDefaultLighting;
 @property (nonatomic, assign) NSDictionary* origin;

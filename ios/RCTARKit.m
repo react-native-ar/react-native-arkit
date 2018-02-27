@@ -94,7 +94,7 @@ static RCTARKit *instance = nil;
         arView.defaultCameraController.inertiaEnabled = YES;
         [arView.defaultCameraController translateInCameraSpaceByX:(float) 0.0 Y:(float) 0.0 Z:(float) 3.0];
         
-        #endif        
+        #endif
         // start ARKit
         [self addSubview:arView];
         [self resume];
@@ -163,18 +163,15 @@ static RCTARKit *instance = nil;
     }
 }
 
-- (BOOL)planeDetection {
+- (ARPlaneDetection)planeDetection {
     ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.configuration;
-    return configuration.planeDetection == ARPlaneDetectionHorizontal;
+    return configuration.planeDetection;
 }
 
-- (void)setPlaneDetection:(BOOL)planeDetection {
+- (void)setPlaneDetection:(ARPlaneDetection)planeDetection {
     ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.configuration;
-    if (planeDetection) {
-        configuration.planeDetection = ARPlaneDetectionHorizontal;
-    } else {
-        configuration.planeDetection = ARPlaneDetectionNone;
-    }
+   
+    configuration.planeDetection = planeDetection;
     [self resume];
 }
 
@@ -516,11 +513,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 - (NSDictionary *)makeAnchorDetectionResult:(SCNNode *)node anchor:(ARAnchor *)anchor {
     NSDictionary* baseProps = @{
                                 @"id": anchor.identifier.UUIDString,
+                                @"type": @"unkown",
                                 @"eulerAngles":vectorToJson(node.eulerAngles),
                                 @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
                                 @"positionAbsolute": vectorToJson(node.position)
                                 };
     NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:baseProps];
+    
     if([anchor isKindOfClass:[ARPlaneAnchor class]]) {
         ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
         NSDictionary * planeProperties = [self makePlaneAnchorProperties:planeAnchor];

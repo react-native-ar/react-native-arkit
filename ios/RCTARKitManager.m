@@ -31,14 +31,49 @@ RCT_EXPORT_MODULE()
 
 - (NSDictionary *)constantsToExport
 {
-
+    
+    NSMutableDictionary * arHitTestResultType =
+    [NSMutableDictionary dictionaryWithDictionary:
+     @{
+       @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
+       @"EstimatedHorizontalPlane": @(ARHitTestResultTypeEstimatedHorizontalPlane),
+       @"ExistingPlane": @(ARHitTestResultTypeExistingPlane),
+       @"ExistingPlaneUsingExtent": @(ARHitTestResultTypeExistingPlaneUsingExtent),
+       }];
+    NSMutableDictionary * arAnchorAligment =
+    [NSMutableDictionary
+     dictionaryWithDictionary:@{
+                                @"Horizontal": @(ARPlaneAnchorAlignmentHorizontal)
+                                }];
+    NSMutableDictionary * arPlaneDetection =
+    [NSMutableDictionary
+     dictionaryWithDictionary:@{
+                                @"Horizontal": @(ARPlaneDetectionHorizontal),
+                                @"None": @(ARPlaneDetectionNone),
+                                }];
+    if (@available(iOS 11.3, *)) {
+        [arHitTestResultType
+         addEntriesFromDictionary:@{
+                                    @"ExistingPlaneUsingGeometry": @(ARHitTestResultTypeExistingPlaneUsingGeometry),
+                                    @"EstimatedVerticalPlane": @(ARHitTestResultTypeEstimatedVerticalPlane)
+                                    }];
+        [arPlaneDetection
+         addEntriesFromDictionary:@{
+                                    @"Vertical": @(ARPlaneDetectionVertical),
+                                    }];
+        [arAnchorAligment
+         addEntriesFromDictionary:@{
+                                    @"Vertical": @(ARPlaneAnchorAlignmentVertical)
+                                    }];
+    }
+    
+    
+    
+    
     return @{
-             @"ARHitTestResultType": @{
-                     @"FeaturePoint": @(ARHitTestResultTypeFeaturePoint),
-                     @"EstimatedHorizontalPlane": @(ARHitTestResultTypeEstimatedHorizontalPlane),
-                     @"ExistingPlane": @(ARHitTestResultTypeExistingPlane),
-                     @"ExistingPlaneUsingExtent": @(ARHitTestResultTypeExistingPlaneUsingExtent)
-                     },
+             @"ARHitTestResultType": arHitTestResultType,
+             @"ARPlaneDetection": arPlaneDetection,
+             @"ARPlaneAnchorAlignment": arAnchorAligment,
              @"LightingModel": @{
                      @"Constant": SCNLightingModelConstant,
                      @"Blinn": SCNLightingModelBlinn,
@@ -67,7 +102,7 @@ RCT_EXPORT_MODULE()
                      @"Red": [@(SCNColorMaskRed) stringValue],
                      @"Green": [@(SCNColorMaskGreen) stringValue],
                      },
-
+             
              @"ShaderModifierEntryPoint": @{
                      @"Geometry": SCNShaderModifierEntryPointGeometry,
                      @"Surface": SCNShaderModifierEntryPointSurface,
@@ -81,13 +116,13 @@ RCT_EXPORT_MODULE()
                      @"Multiply": [@(SCNBlendModeMultiply) stringValue],
                      @"Screen": [@(SCNBlendModeScreen) stringValue],
                      @"Replace": [@(SCNBlendModeReplace) stringValue],
-
+                     
                      },
              @"ChamferMode": @{
                      @"Both": [@(SCNChamferModeBoth) stringValue],
                      @"Back": [@(SCNChamferModeBack) stringValue],
                      @"Front": [@(SCNChamferModeBack) stringValue],
-
+                     
                      },
              @"ARWorldAlignment": @{
                      @"Gravity": @(ARWorldAlignmentGravity),
@@ -114,7 +149,7 @@ RCT_EXPORT_MODULE()
 }
 
 RCT_EXPORT_VIEW_PROPERTY(debug, BOOL)
-RCT_EXPORT_VIEW_PROPERTY(planeDetection, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(planeDetection, ARPlaneDetection)
 RCT_EXPORT_VIEW_PROPERTY(origin, NSDictionary *)
 RCT_EXPORT_VIEW_PROPERTY(lightEstimationEnabled, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(autoenablesDefaultLighting, BOOL)
@@ -153,7 +188,7 @@ RCT_EXPORT_METHOD(reset:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 }
 
 RCT_EXPORT_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-   resolve(@([ARKit isInitialized]));
+    resolve(@([ARKit isInitialized]));
 }
 
 RCT_EXPORT_METHOD(isMounted:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
@@ -199,19 +234,19 @@ RCT_EXPORT_METHOD(
 
 - (void)storeImageInPhotoAlbum:(UIImage *)image cameraProperties:(NSDictionary *) cameraProperties  reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve {
     __block PHObjectPlaceholder *placeholder;
-
+    
     [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
         PHAssetChangeRequest* createAssetRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
         placeholder = [createAssetRequest placeholderForCreatedAsset];
-
+        
     } completionHandler:^(BOOL success, NSError *error) {
         if (success)
         {
-
+            
             NSString * localID = placeholder.localIdentifier;
-
+            
             NSString * assetURLStr = [self getAssetUrl:localID];
-
+            
             resolve(@{@"url": assetURLStr, @"width":@(image.size.width), @"height": @(image.size.height),  @"camera":cameraProperties});
         }
         else
@@ -233,10 +268,10 @@ RCT_EXPORT_METHOD(
         return;
     }
     NSString *prefixString = @"capture";
-
+    
     NSString *guid = [[NSProcessInfo processInfo] globallyUniqueString] ;
     NSString *uniqueFileName = [NSString stringWithFormat:@"%@_%@.%@", prefixString, guid, format];
-
+    
     NSString *filePath = [directory stringByAppendingPathComponent:uniqueFileName]; //Add the file name
     bool success = [data writeToFile:filePath atomically:YES]; //Write the file
     if(success) {
@@ -245,13 +280,13 @@ RCT_EXPORT_METHOD(
         // TODO use NSError from writeToFile
         reject(@"snapshot_error",  [NSString stringWithFormat:@"could not save to '%@'", filePath], nil);
     }
-
+    
 }
 
 - (void)storeImage:(UIImage *)image options:(NSDictionary *)options reject:(RCTPromiseRejectBlock)reject resolve:(RCTPromiseResolveBlock)resolve cameraProperties:(NSDictionary *)cameraProperties {
     NSString * target = @"cameraRoll";
     NSString * format = @"png";
-
+    
     if(options[@"target"]) {
         target = options[@"target"];
     }
@@ -267,7 +302,7 @@ RCT_EXPORT_METHOD(
             dir =  [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
         } else if([target isEqualToString:@"documents"]) {
             dir =  [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-
+            
         } else {
             dir = target;
         }
@@ -280,7 +315,7 @@ RCT_EXPORT_METHOD(snapshot:(NSDictionary *)options resolve:(RCTPromiseResolveBlo
         NSDictionary * selection = options[@"selection"];
         NSDictionary * cameraProperties = [[ARKit sharedInstance] readCamera];
         UIImage *image = [[ARKit sharedInstance] getSnapshot:selection];
-
+        
         [self storeImage:image options:options reject:reject resolve:resolve cameraProperties:cameraProperties ];
     });
 }
@@ -299,7 +334,7 @@ RCT_EXPORT_METHOD(snapshotCamera:(NSDictionary *)options resolve:(RCTPromiseReso
 
 RCT_EXPORT_METHOD(pickColorsRaw:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
+        
         NSDictionary * selection = options[@"selection"];
         UIImage *image = [[ARKit sharedInstance] getSnapshotCamera:selection];
         resolve([[ColorGrabber sharedInstance] getColorsFromImage:image options:options]);
@@ -342,7 +377,7 @@ RCT_EXPORT_METHOD(projectPoint:
               @"z": @(pointProjected.z),
               @"distance": @(distance)
               });
-
+    
 }
 
 RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
