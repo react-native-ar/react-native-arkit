@@ -206,12 +206,12 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 ##### Props
 
-| Prop | Type | Default | Note |
-|---|---|---|---|
-| `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
-| `planeDetection` | `ARKit.ARPlaneDetection.{ Horizontal \| Vertical \| None }` | `Horizontal` | ARKit plane detection. Vertical is available with IOS 11.3
-| `lightEstimationEnabled` | `Boolean` | `false` | ARKit light estimation.
-| `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | `ARKit.ARWorldAlignment.Gravity` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera.|
+| Prop | Type | Note |
+|---|---|---|
+| `debug` | `Boolean` | Debug mode will show the 3D axis and feature points detected.
+| `planeDetection` | `ARKit.ARPlaneDetection.{ Horizontal \| Vertical \| None }` | ARKit plane detection. Defaults to `Horizontal`. `Vertical` is available with IOS 11.3
+| `lightEstimationEnabled` | `Boolean` | ARKit light estimation (defaults to false).
+| `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera. Defaults to `ARKit.ARWorldAlignment.Gravity`|
 | `origin` | `{position, transition}` | Usually `{0,0,0}` is where you launched the app. If you want to have a different origin, you can set it here. E.g. if you set `origin={{position: {0,-1, 0}, transition: {duration: 1}}}` the new origin will be one meter below. If you have any objects already placed, they will get moved down using the given transition. All hit-test functions or similar will report coordinates relative to that new origin as `position`. You can get the original coordinates with `positionAbsolute` in these functions |  
 | `detectionImages` | `Array<DetectionImage>` | An Array of `DetectionImage`, only available on IOS 11.3 |  
 
