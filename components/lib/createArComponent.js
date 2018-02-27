@@ -18,6 +18,7 @@ import {
   renderingOrder,
   rotation,
   scale,
+  constraint,
   transition,
 } from './propTypes';
 import addAnimatedSupport from './addAnimatedSupport';
@@ -45,6 +46,7 @@ const PROP_TYPES_NODE = {
   castsShadow,
   renderingOrder,
   opacity,
+  constraint,
 };
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
@@ -75,6 +77,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
+    ...(props.color ? { color: processColor(props.color) } : {}),
     ...(props.material ? { material: processMaterial(props.material) } : {}),
   });
 

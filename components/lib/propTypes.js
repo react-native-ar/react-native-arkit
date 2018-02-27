@@ -103,6 +103,8 @@ export const colorBufferWriteMask = PropTypes.oneOf(
 
 export const opacity = animatableNumber;
 
+export const constraint = PropTypes.oneOf(values(ARKitManager.Constraint));
+
 export const wrapMode = PropTypes.oneOf(values(ARKitManager.WrapMode));
 
 export const materialProperty = PropTypes.shape({
