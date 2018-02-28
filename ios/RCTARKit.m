@@ -478,7 +478,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
     
     if(self.onTapOnPlaneNoExtent) {
-        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        // Take the screen space tap coordinates    and pass them to the hitTest method on the ARSCNView instance
         NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
         self.onTapOnPlaneNoExtent(planeHitResult);
     }
@@ -495,6 +495,8 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         }
     }
 }
+
+
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time {
     for (id<RCTARKitRendererDelegate> rendererDelegate in self.rendererDelegates) {

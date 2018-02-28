@@ -15,10 +15,10 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSString *)frame) {
+RCT_EXPORT_METHOD(mount:(NSDictionary *)property node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
     //NSLog(@"mounting node: %@ ", node.name);
     // we need to mount first, otherwise, if the loading of the model is slow, it will be registered too late
-    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame];
+    [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
     // we need to do the model loading in its own queue, otherwise it can block, so that react-to-native-calls get out of order
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSDictionary *model = property[@"model"];

@@ -4,7 +4,8 @@ import { isObject, isString, mapValues, set } from 'lodash';
 // https://developer.apple.com/documentation/scenekit/scnmaterial
 const propsWithMaps = ['normal', 'diffuse', 'displacement', 'specular'];
 
-export default function processMaterial(material) {
+export default function processMaterial(materialOrg) {
+  const material = { ...materialOrg };
   // previously it was possible to set { material: { color:'colorstring'}}... translate this to { material: { diffuse: { color: 'colorstring'}}}
   if (material.color) {
     set(material, 'diffuse.color', material.color);
