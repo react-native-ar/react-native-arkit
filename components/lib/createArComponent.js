@@ -25,6 +25,8 @@ import addAnimatedSupport from './addAnimatedSupport';
 import generateId from './generateId';
 import processMaterial from './processMaterial';
 
+const DEBUG = false;
+
 const { ARGeosManager } = NativeModules;
 
 const PROP_TYPES_IMMUTABLE = {
@@ -51,7 +53,7 @@ const PROP_TYPES_NODE = {
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
 const IMMUTABLE_PROPS = keys(PROP_TYPES_IMMUTABLE);
-const DEBUG = false;
+
 const TIMERS = {};
 
 /**
