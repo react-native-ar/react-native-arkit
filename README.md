@@ -1,5 +1,7 @@
 # react-native-arkit
 
+This is the readme from the current development. If you want to see the readme from the latest release, see https://github.com/HippoAR/react-native-arkit/releases
+
 [![npm version](https://img.shields.io/npm/v/react-native-arkit.svg?style=flat)](https://www.npmjs.com/package/react-native-arkit)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-arkit.svg?style=flat)](https://www.npmjs.com/package/react-native-arkit)
 
