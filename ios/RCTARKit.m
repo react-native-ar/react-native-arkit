@@ -234,6 +234,7 @@ static RCTARKit *instance = nil;
     [self resume];
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
 - (void)setDetectionImages:(NSArray*) detectionImages {
     
     if (@available(iOS 11.3, *)) {
@@ -244,16 +245,12 @@ static RCTARKit *instance = nil;
                 // TODO: allow bundle to be defined
                 detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
             }
-            // do something with object
         }
         configuration.detectionImages = detectionImagesSet;
         [self resume];;
-    } else {
-        // Fallback on earlier versions
     }
-    
 }
-
+#endif
 - (NSDictionary *)readCameraPosition {
     // deprecated
     SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
@@ -525,11 +522,13 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         NSDictionary * planeProperties = [self makePlaneAnchorProperties:planeAnchor];
         [dict addEntriesFromDictionary:planeProperties];
     } else if (@available(iOS 11.3, *)) {
+        #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
         if([anchor isKindOfClass:[ARImageAnchor class]]) {
             ARImageAnchor *imageAnchor = (ARImageAnchor *)anchor;
             NSDictionary * imageProperties = [self makeImageAnchorProperties:imageAnchor];
             [dict addEntriesFromDictionary:imageProperties];
         }
+        #endif
     } else {
         // Fallback on earlier versions
     }
@@ -547,6 +546,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
 - (NSDictionary *)makeImageAnchorProperties:(ARImageAnchor *)imageAnchor  API_AVAILABLE(ios(11.3)){
     return @{
              @"type": @"image",
@@ -557,7 +557,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
              };
     
 }
-
+  #endif
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
 }
 

@@ -51,6 +51,7 @@ RCT_EXPORT_MODULE()
                                 @"Horizontal": @(ARPlaneDetectionHorizontal),
                                 @"None": @(ARPlaneDetectionNone),
                                 }];
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
     if (@available(iOS 11.3, *)) {
         [arHitTestResultType
          addEntriesFromDictionary:@{
@@ -67,6 +68,7 @@ RCT_EXPORT_MODULE()
                                     @"Vertical": @(ARPlaneAnchorAlignmentVertical)
                                     }];
     }
+      #endif
     
     
     
