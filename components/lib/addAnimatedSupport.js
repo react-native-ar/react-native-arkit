@@ -1,6 +1,7 @@
 import { Animated } from 'react-native';
 import React from 'react';
 import get from 'lodash/get';
+import unset from 'lodash/unset';
 
 export default ARComponent => {
   // there is a strange issue: animatedvalues can't be child objects,
@@ -9,19 +10,22 @@ export default ARComponent => {
   const ANIMATEABLE3D = ['position', 'eulerAngles'];
 
   const ARComponentAnimatedInner = Animated.createAnimatedComponent(
-    class extends React.Component {
+    class extends React.PureComponent {
       render() {
         // unflatten
         const unflattened = {};
-
+        const props = { ...this.props };
         ANIMATEABLE3D.forEach(key => {
           unflattened[key] = {
-            x: get(this.props, `${key}_x`),
-            y: get(this.props, `${key}_y`),
-            z: get(this.props, `${key}_z`),
+            x: get(props, `_flattened_${key}_x`),
+            y: get(props, `_flattened_${key}_y`),
+            z: get(props, `_flattened_${key}_z`),
           };
+          unset(props, `_flattened_${key}_x`);
+          unset(props, `_flattened_${key}_y`);
+          unset(props, `_flattened_${key}_z`);
         });
-        return <ARComponent {...this.props} {...unflattened} />;
+        return <ARComponent {...props} {...unflattened} />;
       }
     },
   );
@@ -30,10 +34,11 @@ export default ARComponent => {
     const flattenedProps = {};
 
     ANIMATEABLE3D.forEach(key => {
-      flattenedProps[`${key}_x`] = get(props, [key, 'x']);
-      flattenedProps[`${key}_y`] = get(props, [key, 'y']);
-      flattenedProps[`${key}_z`] = get(props, [key, 'z']);
+      flattenedProps[`_flattened_${key}_x`] = get(props, [key, 'x']);
+      flattenedProps[`_flattened_${key}_y`] = get(props, [key, 'y']);
+      flattenedProps[`_flattened_${key}_z`] = get(props, [key, 'z']);
     });
+
     return <ARComponentAnimatedInner {...props} {...flattenedProps} />;
   };
 };

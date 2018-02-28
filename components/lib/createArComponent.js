@@ -1,6 +1,6 @@
 import { NativeModules, processColor } from 'react-native';
 import PropTypes from 'prop-types';
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
 import isEmpty from 'lodash/isEmpty';
@@ -111,7 +111,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     return ARGeosManager.unmount(id);
   };
 
-  const ARComponent = class extends Component {
+  const ARComponent = class extends PureComponent {
     constructor(props) {
       super(props);
       this.identifier = props.id || generateId();
@@ -146,7 +146,6 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         keys(this.props),
         key => key !== 'children' && !isDeepEqual(props[key], this.props[key]),
       );
-      console.log('changedKeys', this.identifier, changedKeys);
       if (isEmpty(changedKeys)) {
         return;
       }
@@ -187,6 +186,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         update(this.identifier, propsToupdate).catch(() => {
           // sometimes calls are out of order, so this node has been unmounted
           // we therefore mount again
+
           this.mountWithProps({ ...this.props, ...props });
         });
       }
