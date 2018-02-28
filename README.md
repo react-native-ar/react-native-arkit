@@ -76,7 +76,7 @@ export default class ReactNativeARKit extends Component {
           style={{ flex: 1 }}
           debug
           // enable plane detection (defaults to Horizontal)
-          planeDetection={ARKit.planeDetection.Horizontal}
+          planeDetection={ARKit.ARPlaneDetection.Horizontal}
 
           // enable light estimation (defaults to true)
           lightEstimationEnabled
