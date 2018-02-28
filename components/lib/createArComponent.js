@@ -1,6 +1,6 @@
-import { Component } from 'react';
 import { NativeModules, processColor } from 'react-native';
 import PropTypes from 'prop-types';
+import React, { Component, Fragment } from 'react';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
 import isEmpty from 'lodash/isEmpty';
@@ -81,17 +81,14 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...(props.material ? { material: processMaterial(props.material) } : {}),
   });
 
-  const getNonNodeProps = props => ({
-    ...pick(props, nonNodePropKeys),
-    ...parseMaterials(props),
-  });
+  const getNonNodeProps = props => parseMaterials(pick(props, nonNodePropKeys));
 
   const mountFunc =
     typeof mountConfig === 'string'
       ? ARGeosManager[mountConfig]
       : mountConfig.mount;
 
-  const mount = (id, props) => {
+  const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
     mountFunc(
       getNonNodeProps(props),
@@ -100,6 +97,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         ...pick(props, NODE_PROPS),
       },
       props.frame,
+      parentId,
     );
   };
 
@@ -114,9 +112,12 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
   };
 
   const ARComponent = class extends Component {
+    constructor(props) {
+      super(props);
+      this.identifier = props.id || generateId();
+    }
     identifier = null;
     componentDidMount() {
-      this.identifier = this.props.id || generateId();
       const { propsOnMount, ...props } = this.props;
       if (propsOnMount) {
         const fullPropsOnMount = { ...props, ...propsOnMount };
@@ -125,23 +126,27 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         } = fullPropsOnMount;
 
         this.doPendingTimers();
-        mount(this.identifier, fullPropsOnMount);
+        this.mountWithProps(fullPropsOnMount);
 
         this.delayed(() => {
           this.props = propsOnMount;
           this.componentWillUpdate({ ...props, transition: transitionOnMount });
         }, transitionOnMount.duration * 1000);
       } else {
-        mount(this.identifier, props);
+        this.mountWithProps(props);
       }
+    }
+
+    mountWithProps(props) {
+      mount(this.identifier, props, this.context.arkitParentId);
     }
 
     componentWillUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
-        key => !isDeepEqual(props[key], this.props[key]),
+        key => key !== 'children' && !isDeepEqual(props[key], this.props[key]),
       );
-
+      console.log('changedKeys', this.identifier, changedKeys);
       if (isEmpty(changedKeys)) {
         return;
       }
@@ -166,7 +171,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
             `[${this.identifier}] need to remount node because of `,
             changedKeys,
           );
-        mount(this.identifier, { ...this.props, ...props });
+        this.mountWithProps({ ...this.props, ...props });
       } else {
         // every property is updateable
         // send only these changed property to the native part
@@ -179,11 +184,10 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           },
           ...parseMaterials(pick(props, changedKeys)),
         };
-
         update(this.identifier, propsToupdate).catch(() => {
           // sometimes calls are out of order, so this node has been unmounted
           // we therefore mount again
-          mount(this.identifier, { ...this.props, ...props });
+          this.mountWithProps({ ...this.props, ...props });
         });
       }
     }
@@ -226,11 +230,25 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         delete TIMERS[this.identifier];
       }
     }
+    getChildContext() {
+      return {
+        arkitParentId: this.identifier,
+      };
+    }
 
     render() {
-      return null;
+      return this.props.children ? (
+        <Fragment>{this.props.children}</Fragment>
+      ) : null;
     }
   };
+  ARComponent.childContextTypes = {
+    arkitParentId: PropTypes.string,
+  };
+  ARComponent.contextTypes = {
+    arkitParentId: PropTypes.string,
+  };
+
   const ARComponentAnimated = addAnimatedSupport(ARComponent);
   ARComponentAnimated.propTypes = allPropTypes;
 

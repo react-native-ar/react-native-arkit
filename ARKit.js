@@ -96,8 +96,11 @@ class ARKit extends Component {
           {...this.getCallbackProps()}
           // fallback to old prop type (Was boolean, now is enum)
           planeDetection={
+            /* eslint no-nested-ternary: 0 */
             isBoolean(this.props.planeDetection)
-              ? ARKit.ARPlaneDetection.Horizontal
+              ? this.props.planeDetection
+                ? ARKitManager.ARPlaneDetection.Horizontal
+                : ARKitManager.ARPlaneDetection.None
               : this.props.planeDetection
           }
           onEvent={this._onEvent}

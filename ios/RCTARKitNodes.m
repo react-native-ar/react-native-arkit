@@ -24,6 +24,7 @@ CGFloat focDistance = 0.2f;
 @property (nonatomic, strong) SCNNode* rootNode;
 
 @property NSMutableDictionary *nodes;
+@property NSMutableDictionary *orphans;
 
 @end
 
@@ -59,6 +60,7 @@ CGFloat focDistance = 0.2f;
         
         // init caches
         self.nodes = [NSMutableDictionary new];
+        self.orphans = [NSMutableDictionary new];
     }
     return self;
 }
@@ -77,12 +79,26 @@ CGFloat focDistance = 0.2f;
 
 #pragma mark
 
+
+
+
+/**
+ add a node to scene on a frame (defaults to Local) or to a parentNode (if parentId is given)
+ */
+- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame withParentId:(NSString *)parentId  {
+    //NSLog(@"addNodeToScene node: %@ ", node.name);
+    if(parentId) {
+        [self addNodeToParent:node parentId:parentId];
+    } else {
+        [self addNodeToFrame:node referenceFrame:referenceFrame];
+    }
+    
+}
 /**
  add a node to scene in a reference frame
  */
-- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame {
-    //NSLog(@"addNodeToScene node: %@ ", node.name);
-    [self registerNode:node forKey:node.name];
+- (void)addNodeToFrame:(SCNNode *)node referenceFrame:(NSString *)referenceFrame {
+    [self registerNode:node withId:node.name];
     if (!referenceFrame) {
         referenceFrame = @"Local"; // default to Local frame
     }
@@ -94,6 +110,29 @@ CGFloat focDistance = 0.2f;
         void (*func)(id, SEL, SCNNode*) = (void *)imp;
         func(self, selector, node);
     }
+}
+
+
+- (void)addNodeToParent:(SCNNode *)node parentId:(NSString *)parentId  {
+    SCNNode * parentNode = [self getNodeWithId:parentId];
+   
+    if(!parentNode) {
+        NSMutableSet * orphansLookingForParent = [self.orphans objectForKey:parentId];
+        if(!orphansLookingForParent) {
+            orphansLookingForParent = [NSMutableSet setWithObject:node];
+        } else {
+            [orphansLookingForParent addObject:node];
+        }
+        [self.orphans setObject:orphansLookingForParent forKey:parentId];
+       
+    } else {
+        [parentNode addChildNode:node];
+        
+    }
+     [self registerNode:node withId:node.name];
+    
+   
+   
 }
 
 - (void)clear {
@@ -250,10 +289,21 @@ static id ObjectOrNull(id object)
 }
 
 #pragma mark - node register
-- (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
-    [self removeNodeForKey:key];
+- (void)registerNode:(SCNNode *)node withId:(NSString *)nodeId {
+    [self removeNode:nodeId];
     if (node) {
-        [self.nodes setObject:node forKey:key];
+        NSLog(@"registering node %@", nodeId);
+        [self.nodes setObject:node forKey:nodeId];
+        
+        // are there any orphans?
+        NSSet * orphans = [self.orphans objectForKey:nodeId];
+        if(orphans) {
+            for (SCNNode * child in [orphans allObjects]) {
+                
+                [node addChildNode:child];
+            }
+            [self.orphans removeObjectForKey:nodeId];
+        }
     }
 }
 
@@ -272,16 +322,16 @@ static id ObjectOrNull(id object)
 }
 
 
-- (SCNNode *)nodeForKey:(NSString *)key {
-    return [self.nodes objectForKey:key];
+- (SCNNode *)getNodeWithId:(NSString *)nodeId {
+    return [self.nodes objectForKey:nodeId];
 }
 
-- (void)removeNodeForKey:(NSString *)key {
+- (void)removeNode:(NSString *)nodeId {
     
-    SCNNode *node = [self.nodes objectForKey:key];
+    SCNNode *node = [self getNodeWithId:nodeId];
     if (node) {
         //NSLog(@"removing node: %@ ", key);
-        [self.nodes removeObjectForKey:key];
+        [self.nodes removeObjectForKey:nodeId];
         if(node.light) {
             // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
             node.hidden = YES;
@@ -295,7 +345,7 @@ static id ObjectOrNull(id object)
 - (bool)updateNode:(NSString *)nodeId
         properties:(NSDictionary *) properties {
     
-    SCNNode *node = [self.nodes objectForKey:nodeId];
+    SCNNode *node = [self getNodeWithId:nodeId];
     //NSLog(@"updating node %@ :%@", nodeId, properties);
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
