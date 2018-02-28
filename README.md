@@ -317,6 +317,40 @@ All methods return a *promise* with the result.
 
 ### 3D-Components
 
+This project allows you to work with 3d elements like with usual react-components.
+We provide some primitive shapes like cubes, spheres, etc. as well as
+a component to load model-files.
+
+You can also nest components to create new Components. Child-elements will
+be relative to the parent:
+
+```
+const BigExclamationMark = ({ position, eulerAngles, color = '#ff0000' }) => (
+  <ARKit.Group opacity={0.5} position={position} eulerAngles={eulerAngles}>
+    <ARKit.Sphere
+      position={{ x: 0, y: 0, z: 0 }}
+      shape={{ radius: 0.06 }}
+      material={{ diffuse: color }}
+    />
+    <ARKit.Cone
+      position={{ x: 0, y: 0.4, z: 0 }}
+      shape={{ topR: 0.1, bottomR: 0.05, height: 0.5 }}
+      material={{ diffuse: color }}
+    />
+  </ARKit.Group>
+)
+
+// somewhere else
+
+<BigExclamationMark
+  eulerAngles={{ x: 0.2 }}
+  position={{ x: 0.2, y: 0.3, z: -0.2 }}
+  color="#00ff00"
+/>
+
+```
+
+
 #### General props
 
 Most 3d object have these common properties
@@ -326,11 +360,17 @@ Most 3d object have these common properties
 | `position` | `{ x, y, z }` | The object's position (y is up) |
 | `scale` | Number | The scale of the object. Defaults to 1 |
 | `eulerAngles` | `{ x, y, z }` | The rotation in eulerAngles |
-| `rotation` | TODO | see scenkit documentation |
-| `orientation` | TODO | see scenkit documentation |
+| `id` | String | a unique identifier. Only provide one, if you need to find the node later in hit-testing. |
 | `shape` | depends on object | the shape of the object (will probably renamed to geometry in future versions)
 | `material` | `{ diffuse, metalness, roughness, lightingModel, shaders }` | the material of the object |
 | `transition` | `{duration: 1}` | Some property changes can be animated like in css transitions. Currently you can specify the duration (in seconds). |
+
+Advanced properties:
+
+| Prop | Type | Description |
+|---|---|---|
+| `rotation` | TODO | see scenkit documentation |
+| `orientation` | TODO | see scenkit documentation |
 | `renderingOrder` | Number | Order in which object is rendered. Usefull to place elements "behind" others, although they are nearer. |
 | `categoryBitMask` | Number / bitmask | control which lights affect this object |
 | `castsShadow` | `boolean` | whether this object casts shadows |
@@ -384,6 +424,13 @@ Map Properties:
 | `translation` | `{ x, y, z }` | Translate the UVs, equivalent to applying a translation matrix to SceneKit's `transformContents`  |
 | `rotation` | `{ angle, x, y, z }` | Rotate the UVs, equivalent to applying a rotation matrix to SceneKit's `transformContents` |
 | `scale` | `{ x, y, z }` | Scale the UVs, equivalent to applying a scale matrix to SceneKit's `transformContents`  |
+
+
+#### `<ARKit.Group />`
+
+This Object has no geometry, but is simply a wrapper for other components.
+It receives all common properties like position, eulerAngles, scale, opacity, etc.
+but no shape or material.
 
 
 
