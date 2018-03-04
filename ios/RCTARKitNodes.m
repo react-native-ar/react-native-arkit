@@ -331,14 +331,17 @@ static id ObjectOrNull(id object)
     SCNNode *node = [self getNodeWithId:nodeId];
     if (node) {
         //NSLog(@"removing node: %@ ", key);
-        [self.nodes removeObjectForKey:nodeId];
-        if(node.light) {
-            // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
-            node.hidden = YES;
-            [node removeFromParentNode];
-        } else {
-            [node removeFromParentNode];
+     
+        if(node.parentNode) {
+            if(node.light) {
+                // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
+                node.hidden = YES;
+                [node removeFromParentNode];
+            } else {
+                [node removeFromParentNode];
+            }
         }
+        [self.nodes removeObjectForKey:nodeId];
     }
 }
 
