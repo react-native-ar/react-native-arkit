@@ -1,51 +1,71 @@
+import {
+  requireNativeComponent,
+  NativeModules,
+  findNodeHandle,
+} from 'react-native';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import withAnimationFrame from '@panter/react-animation-frame';
 
-import { NativeModules, Animated } from 'react-native';
+import { position, transition } from './lib/propTypes';
 
-import { position } from './lib/propTypes';
+const { ARKitSpriteViewManager } = NativeModules;
 
-const ARKitManager = NativeModules.ARKitManager;
-
-const ARSprite = withAnimationFrame(
-  class extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        zIndex: new Animated.Value(),
-        pos2D: new Animated.ValueXY() // inits to zero
-      };
-    }
-    onAnimationFrame() {
-      ARKitManager.projectPoint(this.props.position).then(
-        Animated.event([
-          {
-            x: this.state.pos2D.x,
-            y: this.state.pos2D.y,
-            z: this.state.zIndex
-          }
-        ])
-      );
-    }
-
-    render() {
-      return (
-        <Animated.View
-          style={{
-            position: 'absolute',
-            transform: this.state.pos2D.getTranslateTransform(),
-            ...this.props.style
-          }}
-        >
-          {this.props.children}
-        </Animated.View>
-      );
+const DEFAULT_TRANSITION_DURATION = 0.05;
+const ARSprite = class extends Component {
+  startAnimation() {
+    if (findNodeHandle(this.nativeRef)) {
+      ARKitSpriteViewManager.startAnimation(findNodeHandle(this.nativeRef));
     }
   }
-);
+  stopAnimation() {
+    if (findNodeHandle(this.nativeRef)) {
+      ARKitSpriteViewManager.stopAnimation(findNodeHandle(this.nativeRef));
+    }
+  }
+  componentDidUpdate(oldProps) {
+    if (oldProps.disablePositionUpdate !== this.props.disablePositionUpdate)
+      this.handleAnimation();
+  }
+  componentWillUnmount() {
+    this.stopAnimation();
+  }
+  handleAnimation() {
+    if (this.props.disablePositionUpdate) {
+      this.stopAnimation();
+    } else {
+      this.startAnimation();
+    }
+  }
+  render() {
+    const { position, transition, ...props } = this.props;
+    return (
+      <RCTARKitARSprite
+        ref={ref => {
+          if (ref && !this.nativeRef) {
+            this.nativeRef = ref;
+            this.handleAnimation();
+          }
+        }}
+        {...this.props}
+        position3D={position}
+        transitionDuration={
+          transition ? transition.duration : DEFAULT_TRANSITION_DURATION
+        }
+        style={{ position: 'absolute' }}
+      />
+    );
+  }
+};
 
+const RCTARKitARSprite = requireNativeComponent('RCTARKitSpriteView', null);
+RCTARKitARSprite.propTypes = {
+  position3D: position,
+  transitionDuration: PropTypes.number,
+};
 ARSprite.propTypes = {
-  position
+  position,
+  transition,
+  disablePositionUpdate: PropTypes.bool,
 };
 
 export default ARSprite;

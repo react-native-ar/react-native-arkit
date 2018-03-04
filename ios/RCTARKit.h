@@ -82,6 +82,8 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (NSDictionary* )getCurrentLightEstimation;
 - (NSArray * )getCurrentDetectedFeaturePoints;
 - (bool)isMounted;
+- (void)addRendererDelegates:(id)delegate;
+- (void)removeRendererDelegates:(id)delegate;
 
 #pragma mark - Delegates
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time;
