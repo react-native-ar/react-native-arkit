@@ -292,14 +292,14 @@ static id ObjectOrNull(id object)
 - (void)registerNode:(SCNNode *)node withId:(NSString *)nodeId {
     [self removeNode:nodeId];
     if (node) {
-        NSLog(@"registering node %@", nodeId);
+        //NSLog(@"registering node %@", nodeId);
         [self.nodes setObject:node forKey:nodeId];
         
-        // are there any orphans?
+        // are there any orphans? (3d objects that have a parent, but parent has not yet been mounted
+        // this seems to be the default case as react mounts first the children
         NSSet * orphans = [self.orphans objectForKey:nodeId];
         if(orphans) {
             for (SCNNode * child in [orphans allObjects]) {
-                
                 [node addChildNode:child];
             }
             [self.orphans removeObjectForKey:nodeId];

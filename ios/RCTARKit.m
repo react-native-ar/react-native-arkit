@@ -104,6 +104,7 @@ static RCTARKit *instance = nil;
 
 
 
+
 - (void)layoutSubviews {
     [super layoutSubviews];
     //NSLog(@"setting view bounds %@", NSStringFromCGRect(self.bounds));
@@ -560,6 +561,16 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     
 }
   #endif
+
+- (void)addRendererDelegates:(id) delegate {
+     [self.rendererDelegates addObject:delegate];
+    NSLog(@"added, number of renderer delegates %d", [self.rendererDelegates count]);
+}
+
+- (void)removeRendererDelegates:(id) delegate {
+    [self.rendererDelegates removeObject:delegate];
+     NSLog(@"removed, number of renderer delegates %d", [self.rendererDelegates count]);
+}
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
 }
 
