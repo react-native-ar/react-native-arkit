@@ -1,7 +1,6 @@
+import { View, NativeModules } from 'react-native';
 import React, { Component } from 'react';
 import withAnimationFrame from '@panter/react-animation-frame';
-
-import { NativeModules, Animated } from 'react-native';
 
 import { position } from './lib/propTypes';
 
@@ -11,41 +10,39 @@ const ARSprite = withAnimationFrame(
   class extends Component {
     constructor(props) {
       super(props);
-      this.state = {
-        zIndex: new Animated.Value(),
-        pos2D: new Animated.ValueXY() // inits to zero
-      };
+
+      this._pos2D = { x: 0, y: 0 };
     }
+    setNativeProps = nativeProps => {
+      this._root.setNativeProps(nativeProps);
+    };
     onAnimationFrame() {
-      ARKitManager.projectPoint(this.props.position).then(
-        Animated.event([
-          {
-            x: this.state.pos2D.x,
-            y: this.state.pos2D.y,
-            z: this.state.zIndex
-          }
-        ])
-      );
+      if (this.pos)
+        this.setNativeProps({
+          style: {
+            position: 'absolute',
+            transform: [{ translateX: this.pos.x }, { translateY: this.pos.y }],
+            ...this.props.style,
+          },
+        });
+      ARKitManager.projectPoint(this.props.position).then(pos => {
+        this.pos = pos;
+      });
     }
 
     render() {
       return (
-        <Animated.View
-          style={{
-            position: 'absolute',
-            transform: this.state.pos2D.getTranslateTransform(),
-            ...this.props.style
-          }}
-        >
+        /* eslint no-return-assign: 0 */
+        <View ref={component => (this._root = component)}>
           {this.props.children}
-        </Animated.View>
+        </View>
       );
     }
-  }
+  },
 );
 
 ARSprite.propTypes = {
-  position
+  position,
 };
 
 export default ARSprite;
