@@ -46,7 +46,7 @@ const ARSprite = class extends Component {
             this.handleAnimation();
           }
         }}
-        {...this.props}
+        {...props}
         position3D={position}
         transitionDuration={
           transition ? transition.duration : DEFAULT_TRANSITION_DURATION
