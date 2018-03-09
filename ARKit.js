@@ -84,7 +84,6 @@ class ARKit extends Component {
           />
           <Text style={styles.stateText}>
             {TRACKING_REASONS[this.state.reason] || this.state.reason}
-            {this.state.floor && ` (${this.state.floor})`}
           </Text>
         </View>
       );
@@ -113,13 +112,11 @@ class ARKit extends Component {
   _onTrackingState = ({
     state = this.state.state,
     reason = this.state.reason,
-    floor,
   }) => {
     if (this.props.onTrackingState) {
       this.props.onTrackingState({
         state: TRACKING_STATES[state] || state,
         reason: TRACKING_REASONS[reason] || reason,
-        floor,
       });
     }
     // TODO: check if we can remove this
@@ -127,7 +124,6 @@ class ARKit extends Component {
       this.setState({
         state,
         reason,
-        floor: floor ? floor.toFixed(2) : this.state.floor,
       });
     }
   };
