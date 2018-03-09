@@ -324,12 +324,12 @@
             material.wrapS = (SCNWrapMode) [property[@"wrapS"] integerValue];
         }
         
-        if (property[@"translation"]) {
-            float x = [property[@"translation"][@"x"] floatValue];
-            float y = [property[@"translation"][@"y"] floatValue];
-            float z = [property[@"translation"][@"z"] floatValue];
+        if (property[@"scale"]) {
+            float x = [property[@"scale"][@"x"] floatValue];
+            float y = [property[@"scale"][@"y"] floatValue];
+            float z = [property[@"scale"][@"z"] floatValue];
             
-            m = SCNMatrix4Mult(m, SCNMatrix4MakeTranslation(x, y, z));
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeScale(x, y, z));
         }
         
         if (property[@"rotation"]) {
@@ -341,12 +341,12 @@
             m = SCNMatrix4Mult(m, SCNMatrix4MakeRotation(a, x, y, z));
         }
         
-        if (property[@"scale"]) {
-            float x = [property[@"scale"][@"x"] floatValue];
-            float y = [property[@"scale"][@"y"] floatValue];
-            float z = [property[@"scale"][@"z"] floatValue];
+        if (property[@"translation"]) {
+            float x = [property[@"translation"][@"x"] floatValue];
+            float y = [property[@"translation"][@"y"] floatValue];
+            float z = [property[@"translation"][@"z"] floatValue];
             
-            m = SCNMatrix4Mult(m, SCNMatrix4MakeScale(x, y, z));
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeTranslation(x, y, z));
         }
         
         material.contentsTransform = m;
