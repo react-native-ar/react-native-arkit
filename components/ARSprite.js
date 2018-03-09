@@ -38,6 +38,7 @@ const ARSprite = class extends Component {
   }
   render() {
     const { position, transition, ...props } = this.props;
+
     return (
       <RCTARKitARSprite
         ref={ref => {
@@ -51,7 +52,7 @@ const ARSprite = class extends Component {
         transitionDuration={
           transition ? transition.duration : DEFAULT_TRANSITION_DURATION
         }
-        style={{ position: 'absolute' }}
+        style={{ position: 'absolute', ...this.props.style }}
       />
     );
   }
