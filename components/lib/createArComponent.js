@@ -92,7 +92,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
   const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
-    mountFunc(
+    return mountFunc(
       getNonNodeProps(props),
       {
         id,
@@ -128,19 +128,17 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         } = fullPropsOnMount;
 
         this.doPendingTimers();
-        this.mountWithProps(fullPropsOnMount);
-
-        this.delayed(() => {
+        this.mountWithProps(fullPropsOnMount).then(() => {
           this.props = propsOnMount;
           this.componentWillUpdate({ ...props, transition: transitionOnMount });
-        }, transitionOnMount.duration * 1000);
+        });
       } else {
         this.mountWithProps(props);
       }
     }
 
-    mountWithProps(props) {
-      mount(this.identifier, props, this.context.arkitParentId);
+    async mountWithProps(props) {
+      return mount(this.identifier, props, this.context.arkitParentId);
     }
 
     componentWillUpdate(props) {

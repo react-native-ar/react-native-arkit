@@ -13,65 +13,76 @@
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(addBox:(SCNBox *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+
+RCT_EXPORT_METHOD(addBox:(SCNBox *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject ) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addGroup:(id)bla node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
-    
+RCT_EXPORT_METHOD(addGroup:(id)bla node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-
-RCT_EXPORT_METHOD(addSphere:(SCNSphere *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addSphere:(SCNSphere *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addCylinder:(SCNCylinder *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addCylinder:(SCNCylinder *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addCone:(SCNCone *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addCone:(SCNCone *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addPyramid:(SCNPyramid *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addPyramid:(SCNPyramid *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addTube:(SCNTube *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addTube:(SCNTube *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addTorus:(SCNTorus *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addTorus:(SCNTorus *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addCapsule:(SCNCapsule *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addCapsule:(SCNCapsule *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addPlane:(SCNPlane *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addPlane:(SCNPlane *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addShape:(SCNShape *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addShape:(SCNShape *)geometry node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.geometry = geometry;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
-RCT_EXPORT_METHOD(addLight:(SCNLight *)light node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId) {
+RCT_EXPORT_METHOD(addLight:(SCNLight *)light node:(SCNNode *)node frame:(NSString *)frame parentId:(NSString *)parentId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     node.light = light;
     [[RCTARKitNodes sharedInstance] addNodeToScene:node inReferenceFrame:frame withParentId:parentId];
+    resolve(nil);
 }
 
 
