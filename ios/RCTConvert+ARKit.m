@@ -312,17 +312,17 @@
         
         // scenekit has an issue with indexed-colour png's on some devices, so we redraw the image. See for more details: https://stackoverflow.com/questions/40058359/scenekit-some-textures-have-a-red-hue/45824190#45824190
         
-        UIImage *img;
-        UIImage *texture = [UIImage imageNamed:property[@"path"]];
-        CGFloat width  = texture.size.width;
-        CGFloat height = texture.size.height;
+        UIImage *correctedImage;
+        UIImage *inputImage = [UIImage imageNamed:property[@"path"]];
+        CGFloat width  = inputImage.size.width;
+        CGFloat height = inputImage.size.height;
         
-        UIGraphicsBeginImageContext(texture.size);
-        [texture drawInRect:(CGRectMake(0, 0, width, height))];
-        img = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsBeginImageContext(inputImage.size);
+        [inputImage drawInRect:(CGRectMake(0, 0, width, height))];
+        correctedImage = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         
-        material.contents = img;
+        material.contents = correctedImage;
 
         
         if (property[@"wrapS"]) {
