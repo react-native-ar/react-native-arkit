@@ -329,8 +329,9 @@ static id ObjectOrNull(id object)
 - (void)removeNode:(NSString *)nodeId {
     
     SCNNode *node = [self getNodeWithId:nodeId];
+
     if (node) {
-        //NSLog(@"removing node: %@ ", key);
+//        NSLog(@"removing node: %@ ", node);
      
         if(node.parentNode) {
             if(node.light) {
@@ -343,7 +344,12 @@ static id ObjectOrNull(id object)
                 return;
             }
         }
-        [self.nodes removeObjectForKey:nodeId];
+        @try {
+            [self.nodes removeObjectForKey:nodeId];
+        }
+        @catch (NSException *err) {
+            NSLog(@"Error... %@", [err callStackSymbols]);
+        }
     }
 }
 
