@@ -337,8 +337,10 @@ static id ObjectOrNull(id object)
                 // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
                 node.hidden = YES;
                 [node removeFromParentNode];
+                return;
             } else {
                 [node removeFromParentNode];
+                return;
             }
         }
         [self.nodes removeObjectForKey:nodeId];
