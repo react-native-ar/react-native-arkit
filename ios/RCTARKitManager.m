@@ -119,7 +119,12 @@ RCT_EXPORT_MODULE()
                      @"Multiply": [@(SCNBlendModeMultiply) stringValue],
                      @"Screen": [@(SCNBlendModeScreen) stringValue],
                      @"Replace": [@(SCNBlendModeReplace) stringValue],
-                     
+                     },
+             @"TransparencyMode": @{
+                     @"Default": [@(SCNTransparencyModeAOne) stringValue],
+                     @"RGBZero": [@(SCNTransparencyModeRGBZero) stringValue],
+                     @"SingleLayer": [@(SCNTransparencyModeSingleLayer) stringValue],
+                     @"DualLayer": [@(SCNTransparencyModeDualLayer) stringValue],
                      },
              @"ChamferMode": @{
                      @"Both": [@(SCNChamferModeBoth) stringValue],
