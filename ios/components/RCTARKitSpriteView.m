@@ -22,7 +22,11 @@
 
 - (CGAffineTransform)getTransform {
     SCNVector3 point = [[ARKit sharedInstance] projectPoint:self.position3D];
-    CGAffineTransform t = CGAffineTransformMakeTranslation(point.x, point.y);
+    
+    // the sprite is behind the camera so push it off screen
+    float yTransform = point.z < 1 ? point.y : 10000;
+    
+    CGAffineTransform t = CGAffineTransformMakeTranslation(point.x, yTransform);
     return t;
 }
 
@@ -40,7 +44,6 @@
 - (void)setTransformByProject {
     CGAffineTransform t = [self getTransform];
     [UIView beginAnimations:nil context:NULL];
-    
     [UIView setAnimationDuration:self.transitionDuration];
     [self setTransform:t];
     [UIView commitAnimations];
