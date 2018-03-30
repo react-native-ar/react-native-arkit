@@ -385,6 +385,10 @@
         material.blendMode = (SCNBlendMode) [json[@"blendMode"] integerValue];
     }
     
+    if (json[@"transparencyMode"]) {
+        material.transparencyMode = (SCNTransparencyMode) [json[@"transparencyMode"] integerValue];
+    }
+
     if (json[@"lightingModel"]) {
         material.lightingModelName = json[@"lightingModel"];
     }
