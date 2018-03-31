@@ -8,6 +8,7 @@
 
 #import "RCTConvert+ARKit.h"
 #import "SVGBezierPath.h"
+#import "Switcher.h"
 
 @implementation RCTConvert (ARKit)
 
@@ -53,6 +54,76 @@
     for (int i = 0; i < sides; i++)
         [materials addObject: material];
     geometry.materials = materials;
+}
+
++ (SCNGeometry *)SCNGeometry:(id)json {
+    
+    if(!json[@"shape"]) {
+        return nil;
+    }
+    NSDictionary *shape = json[@"shape"];
+    if(!shape[@"type"]) {
+        return nil;
+    }
+   
+    __block SCNGeometry* geometry;
+    
+    
+    NSString *type = shape[@"type"];
+    
+    
+    [Switcher switchOnString:type using:@{
+                                          @"sphere":
+                                              ^{
+        geometry =  [self SCNSphere:json];
+    },
+                                          @"box":
+                                              ^{
+        geometry =  [self SCNBox:json];
+    },
+                                          @"cylinder":
+                                              ^{
+        geometry =  [self SCNCylinder:json];
+    },
+                                          @"capuse":
+                                              ^{
+        geometry =  [self SCNCapsule:json];
+    },
+                                          @"cone":
+                                              ^{
+        geometry =  [self SCNCone:json];
+    },
+                                          @"shape":
+                                              ^{
+        geometry =  [self SCNShape:json];
+    },
+                                          @"plane":
+                                              ^{
+        geometry =  [self SCNPlane:json];
+    },
+                                          @"pyramid":
+                                              ^{
+        geometry =  [self SCNPyramid:json];
+    },
+                                          @"torus":
+                                              ^{
+        geometry =  [self SCNTorus:json];
+    },
+                                          @"tube":
+                                              ^{
+        geometry =  [self SCNTube:json];
+    }
+                                          } withDefault:
+     ^{
+         
+     }
+     ];
+    return geometry;
+    
+    
+    
+    
+    
 }
 
 + (SCNBox *)SCNBox:(id)json {
@@ -174,10 +245,18 @@
 
 + (SCNPhysicsBody *)SCNPhysicsBody:(id)json {
     SCNPhysicsBodyType type = [json[@"type"] integerValue];
-    SCNPhysicsBody* body = [SCNPhysicsBody bodyWithType:type shape:nil];
+    SCNPhysicsShape * shape = nil;
+    if(json[@"shape"]) {
+        SCNGeometry * geometry = [self SCNGeometry:json];
+        shape = [SCNPhysicsShape shapeWithGeometry:geometry options:nil];
+    }
+    
+    SCNPhysicsBody* body = [SCNPhysicsBody bodyWithType:type shape:shape];
     if(json[@"mass"]) {
         body.mass = [json[@"mass"] floatValue];
     }
+    
+    
     return body;
 }
 
@@ -443,7 +522,6 @@
     if(json[@"physicsBody"]) {
         node.physicsBody = [self SCNPhysicsBody:json[@"physicsBody"]];
         
-        
     }
     if (json[@"categoryBitMask"]) {
         node.categoryBitMask = [json[@"categoryBitMask"] integerValue];
@@ -475,7 +553,7 @@
     }
     
     if (json[@"scale"]) {
-       
+        
         CGFloat scale = [json[@"scale"] floatValue];
         node.scale = SCNVector3Make(scale, scale, scale);
         

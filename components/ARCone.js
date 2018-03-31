@@ -10,13 +10,16 @@ import PropTypes from 'prop-types';
 import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
-const ARCone = createArComponent('addCone', {
-  shape: PropTypes.shape({
-    topR: PropTypes.number,
-    bottomR: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  material,
-});
+const ARCone = createArComponent(
+  { props: { shape: { type: 'cone' } } },
+  {
+    shape: PropTypes.shape({
+      topR: PropTypes.number,
+      bottomR: PropTypes.number,
+      height: PropTypes.number
+    }),
+    material
+  }
+);
 
 export default ARCone;

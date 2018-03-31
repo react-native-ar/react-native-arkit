@@ -7,6 +7,6 @@
 
 import createArComponent from './lib/createArComponent';
 
-const ARBox = createArComponent('addGroup', {});
+const ARBox = createArComponent({}, {});
 
 export default ARBox;

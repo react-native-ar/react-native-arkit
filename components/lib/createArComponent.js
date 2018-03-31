@@ -7,6 +7,7 @@ import isEmpty from 'lodash/isEmpty';
 import keys from 'lodash/keys';
 import pick from 'lodash/pick';
 import some from 'lodash/some';
+import merge from 'lodash/merge';
 
 import {
   castsShadow,
@@ -66,7 +67,19 @@ the property will be updated on scenekit, instead of beeing remounted.
 
 this excludes at the moment: model, font, text, (???)
 * */
-export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
+export default (
+  customMountConfig,
+  propTypes = {},
+  nonUpdateablePropKeys = []
+) => {
+  const defaultMontConfig = {
+    mount: ARGeosManager.mount
+  };
+  const mountConfig = {
+    ...defaultMontConfig,
+    ...customMountConfig
+  };
+
   const allPropTypes = {
     ...MOUNT_UNMOUNT_ANIMATION_PROPS,
     ...PROP_TYPES_IMMUTABLE,
@@ -74,7 +87,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...propTypes
   };
   // any custom props (material, shape, ...)
-  const nonNodePropKeys = keys(propTypes);
+  const nonNodePropKeys = [...keys(propTypes), ...keys(mountConfig.props)];
 
   const parseMaterials = props => ({
     ...props,
@@ -87,14 +100,12 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
   const getNonNodeProps = props => parseMaterials(pick(props, nonNodePropKeys));
 
-  const mountFunc =
-    typeof mountConfig === 'string'
-      ? ARGeosManager[mountConfig]
-      : mountConfig.mount;
+  const mount = (id, passedProps, parentId) => {
+    const props = merge({}, mountConfig.props, passedProps);
 
-  const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
-    return mountFunc(
+
+    return mountConfig.mount(
       getNonNodeProps(props),
       {
         id,

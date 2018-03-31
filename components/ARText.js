@@ -13,7 +13,7 @@ import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARText = createArComponent(
-  { mount: NativeModules.ARTextManager.mount, pick: ['id', 'text', 'font'] },
+  { mount: NativeModules.ARTextManager.mount },
   {
     text: PropTypes.string,
     font: PropTypes.shape({

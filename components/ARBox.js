@@ -10,14 +10,17 @@ import PropTypes from 'prop-types';
 import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
-const ARBox = createArComponent('addBox', {
-  shape: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-    length: PropTypes.number,
-    chamfer: PropTypes.number,
-  }),
-  material,
-});
+const ARBox = createArComponent(
+  { props: { shape: { type: 'box' } } },
+  {
+    shape: PropTypes.shape({
+      width: PropTypes.number,
+      height: PropTypes.number,
+      length: PropTypes.number,
+      chamfer: PropTypes.number
+    }),
+    material
+  }
+);
 
 export default ARBox;

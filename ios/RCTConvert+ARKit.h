@@ -23,6 +23,7 @@
 + (SCNVector4)SCNVector4:(id)json;
 + (SCNNode *)SCNNode:(id)json;
 
++ (SCNGeometry *)SCNGeometry:(id)json;
 + (SCNBox *)SCNBox:(id)json;
 + (SCNSphere *)SCNSphere:(id)json;
 + (SCNCylinder *)SCNCylinder:(id)json;

@@ -15,6 +15,7 @@
 		10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */ = {isa = PBXBuildFile; fileRef = 10ED47A61F38BC00004DF043 /* DeviceMotion.m */; };
 		10FEF6141F774C9000EC21AE /* RCTARKitIO.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6101F774C8F00EC21AE /* RCTARKitIO.m */; };
 		10FEF6151F774C9000EC21AE /* RCTARKitNodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */; };
+		B12E5F312070241D00D423F4 /* Switcher.m in Sources */ = {isa = PBXBuildFile; fileRef = B12E5F302070241D00D423F4 /* Switcher.m */; };
 		B1990B221FCEEBD60001AE2F /* color-grabber.m in Sources */ = {isa = PBXBuildFile; fileRef = B1990B211FCEEBD60001AE2F /* color-grabber.m */; };
 		B1CEA29F204C14090025C1B8 /* RCTARKitSpriteView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1CEA29E204C14090025C1B8 /* RCTARKitSpriteView.m */; };
 		B1CEA2A3204C160D0025C1B8 /* RCTARKitSpriteViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B1CEA2A2204C160D0025C1B8 /* RCTARKitSpriteViewManager.m */; };
@@ -61,6 +62,8 @@
 		10FEF6121F774C9000EC21AE /* RCTARKitNodes.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RCTARKitNodes.m; sourceTree = "<group>"; };
 		10FEF6131F774C9000EC21AE /* RCTARKitDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RCTARKitDelegate.h; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libRCTARKit.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRCTARKit.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B12E5F302070241D00D423F4 /* Switcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Switcher.m; path = "../../../../../../panter/archilogic/react-native-arkit/ios/Switcher.m"; sourceTree = "<group>"; };
+		B12E5F322070245700D423F4 /* Switcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Switcher.h; sourceTree = "<group>"; };
 		B14C36631F960C500047CB67 /* PocketSVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PocketSVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B14C36651F960C6E0047CB67 /* PocketSVG.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = PocketSVG.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1990B201FCEEBD60001AE2F /* color-grabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "color-grabber.h"; sourceTree = "<group>"; };
@@ -112,6 +115,8 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				B12E5F322070245700D423F4 /* Switcher.h */,
+				B12E5F302070241D00D423F4 /* Switcher.m */,
 				B1990B1F1FCEEBD60001AE2F /* color-grabber */,
 				106999E21F3EC2FB00032829 /* components */,
 				10ED47A51F38BC00004DF043 /* DeviceMotion.h */,
@@ -218,6 +223,7 @@
 				10062C831F127572009AE974 /* RCTARKitManager.m in Sources */,
 				B1CEA29F204C14090025C1B8 /* RCTARKitSpriteView.m in Sources */,
 				B1CEA2A3204C160D0025C1B8 /* RCTARKitSpriteViewManager.m in Sources */,
+				B12E5F312070241D00D423F4 /* Switcher.m in Sources */,
 				10ED47A71F38BC01004DF043 /* DeviceMotion.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

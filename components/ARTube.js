@@ -10,13 +10,16 @@ import PropTypes from 'prop-types';
 import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
-const ARTube = createArComponent('addTube', {
-  shape: PropTypes.shape({
-    innerR: PropTypes.number,
-    outerR: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  material,
-});
+const ARTube = createArComponent(
+  { props: { shape: { type: 'tube' } } },
+  {
+    shape: PropTypes.shape({
+      innerR: PropTypes.number,
+      outerR: PropTypes.number,
+      height: PropTypes.number
+    }),
+    material
+  }
+);
 
 export default ARTube;
