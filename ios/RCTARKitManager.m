@@ -132,6 +132,11 @@ RCT_EXPORT_MODULE()
                      @"GravityAndHeading": @(ARWorldAlignmentGravityAndHeading),
                      @"Camera": @(ARWorldAlignmentCamera),
                      },
+             @"PhysicsBodyType": @{
+                     @"Static": @(SCNPhysicsBodyTypeStatic),
+                     @"Dynamic": @(SCNPhysicsBodyTypeDynamic),
+                     @"Kinematic": @(SCNPhysicsBodyTypeKinematic),
+                     },
              @"FillMode": @{
                      @"Fill": [@(SCNFillModeFill) stringValue],
                      @"Lines": [@(SCNFillModeLines) stringValue],

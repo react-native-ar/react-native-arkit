@@ -172,6 +172,15 @@
     return geometry;
 }
 
++ (SCNPhysicsBody *)SCNPhysicsBody:(id)json {
+    SCNPhysicsBodyType type = [json[@"type"] integerValue];
+    SCNPhysicsBody* body = [SCNPhysicsBody bodyWithType:type shape:nil];
+    if(json[@"mass"]) {
+        body.mass = [json[@"mass"] floatValue];
+    }
+    return body;
+}
+
 + (SVGBezierPath *)svgStringToBezier:(NSString *)pathString {
     NSArray * paths = [SVGBezierPath pathsFromSVGString:pathString];
     SVGBezierPath * fullPath;
@@ -431,7 +440,11 @@
 }
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json {
-    
+    if(json[@"physicsBody"]) {
+        node.physicsBody = [self SCNPhysicsBody:json[@"physicsBody"]];
+        
+        
+    }
     if (json[@"categoryBitMask"]) {
         node.categoryBitMask = [json[@"categoryBitMask"] integerValue];
     }
