@@ -35,12 +35,12 @@ typedef NS_OPTIONS(NSUInteger, RFReferenceFrame) {
 
 + (instancetype)sharedInstance;
 
-- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame;
-- (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties;
+- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame withParentId:(NSString *)parentId;
+- (bool)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties;
 - (float)getCameraDistanceToPoint:(SCNVector3)point;
-- (void)registerNode:(SCNNode *)node forKey:(NSString *)key;
-- (SCNNode *)nodeForKey:(NSString *)key;
-- (void)removeNodeForKey:(NSString *)key;
+- (void)registerNode:(SCNNode *)node withId:(NSString *)key;
+- (SCNNode *)getNodeWithId:(NSString *)key;
+- (void)removeNode:(NSString *)key;
 - (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint;
 - (void)clear;
 - (NSMutableArray *) mapHitResults:(NSArray<ARHitTestResult *> *)results;

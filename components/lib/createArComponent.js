@@ -1,6 +1,6 @@
-import { Component } from 'react';
 import { NativeModules, processColor } from 'react-native';
 import PropTypes from 'prop-types';
+import React, { PureComponent, Fragment } from 'react';
 import filter from 'lodash/filter';
 import isDeepEqual from 'fast-deep-equal';
 import isEmpty from 'lodash/isEmpty';
@@ -18,10 +18,14 @@ import {
   renderingOrder,
   rotation,
   scale,
+  constraint,
   transition,
 } from './propTypes';
-import processMaterial from './processMaterial';
+import addAnimatedSupport from './addAnimatedSupport';
 import generateId from './generateId';
+import processMaterial from './processMaterial';
+
+const DEBUG = false;
 
 const { ARGeosManager } = NativeModules;
 
@@ -44,11 +48,12 @@ const PROP_TYPES_NODE = {
   castsShadow,
   renderingOrder,
   opacity,
+  constraint,
 };
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
 const IMMUTABLE_PROPS = keys(PROP_TYPES_IMMUTABLE);
-const DEBUG = false;
+
 const TIMERS = {};
 
 /**
@@ -74,45 +79,47 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     ...(props.shadowColor
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
+    ...(props.color ? { color: processColor(props.color) } : {}),
     ...(props.material ? { material: processMaterial(props.material) } : {}),
   });
 
-  const getNonNodeProps = props => ({
-    ...pick(props, nonNodePropKeys),
-    ...parseMaterials(props),
-  });
+  const getNonNodeProps = props => parseMaterials(pick(props, nonNodePropKeys));
 
   const mountFunc =
     typeof mountConfig === 'string'
       ? ARGeosManager[mountConfig]
       : mountConfig.mount;
 
-  const mount = (id, props) => {
+  const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
-    mountFunc(
+    return mountFunc(
       getNonNodeProps(props),
       {
         id,
         ...pick(props, NODE_PROPS),
       },
       props.frame,
+      parentId,
     );
   };
 
   const update = (id, props) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] update`, props);
-    ARGeosManager.updateNode(id, props);
+    return ARGeosManager.updateNode(id, props);
   };
 
   const unmount = id => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] unmount`);
-    ARGeosManager.unmount(id);
+    return ARGeosManager.unmount(id);
   };
 
-  const ARComponent = class extends Component {
+  const ARComponent = class extends PureComponent {
+    constructor(props) {
+      super(props);
+      this.identifier = props.id || generateId();
+    }
     identifier = null;
     componentDidMount() {
-      this.identifier = this.props.id || generateId();
       const { propsOnMount, ...props } = this.props;
       if (propsOnMount) {
         const fullPropsOnMount = { ...props, ...propsOnMount };
@@ -121,23 +128,24 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         } = fullPropsOnMount;
 
         this.doPendingTimers();
-        mount(this.identifier, fullPropsOnMount);
-
-        this.delayed(() => {
+        this.mountWithProps(fullPropsOnMount).then(() => {
           this.props = propsOnMount;
           this.componentWillUpdate({ ...props, transition: transitionOnMount });
-        }, transitionOnMount.duration * 1000);
+        });
       } else {
-        mount(this.identifier, props);
+        this.mountWithProps(props);
       }
+    }
+
+    async mountWithProps(props) {
+      return mount(this.identifier, props, this.context.arkitParentId);
     }
 
     componentWillUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
-        key => !isDeepEqual(props[key], this.props[key]),
+        key => key !== 'children' && !isDeepEqual(props[key], this.props[key]),
       );
-
       if (isEmpty(changedKeys)) {
         return;
       }
@@ -162,7 +170,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
             `[${this.identifier}] need to remount node because of `,
             changedKeys,
           );
-        mount(this.identifier, { ...this.props, ...props });
+        this.mountWithProps({ ...this.props, ...props });
       } else {
         // every property is updateable
         // send only these changed property to the native part
@@ -175,8 +183,12 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           },
           ...parseMaterials(pick(props, changedKeys)),
         };
+        update(this.identifier, propsToupdate).catch(() => {
+          // sometimes calls are out of order, so this node has been unmounted
+          // we therefore mount again
 
-        update(this.identifier, propsToupdate);
+          this.mountWithProps({ ...this.props, ...props });
+        });
       }
     }
 
@@ -218,13 +230,27 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         delete TIMERS[this.identifier];
       }
     }
+    getChildContext() {
+      return {
+        arkitParentId: this.identifier,
+      };
+    }
 
     render() {
-      return null;
+      return this.props.children ? (
+        <Fragment>{this.props.children}</Fragment>
+      ) : null;
     }
   };
+  ARComponent.childContextTypes = {
+    arkitParentId: PropTypes.string,
+  };
+  ARComponent.contextTypes = {
+    arkitParentId: PropTypes.string,
+  };
 
-  ARComponent.propTypes = allPropTypes;
+  const ARComponentAnimated = addAnimatedSupport(ARComponent);
+  ARComponentAnimated.propTypes = allPropTypes;
 
-  return ARComponent;
+  return ARComponentAnimated;
 };

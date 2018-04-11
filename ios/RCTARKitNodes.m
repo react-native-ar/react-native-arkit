@@ -6,8 +6,10 @@
 //  Copyright © 2017 HippoAR. All rights reserved.
 //
 
+#import "RCTARKit.h"
 #import "RCTARKitNodes.h"
 #import "RCTConvert+ARKit.h"
+
 
 @implementation SCNNode (ReferenceFrame)
 @dynamic referenceFrame;
@@ -18,9 +20,11 @@ CGFloat focDistance = 0.2f;
 
 @interface RCTARKitNodes () <RCTARKitSessionDelegate>
 
+
 @property (nonatomic, strong) SCNNode* rootNode;
 
 @property NSMutableDictionary *nodes;
+@property NSMutableDictionary *orphans;
 
 @end
 
@@ -54,8 +58,9 @@ CGFloat focDistance = 0.2f;
         self.frontOfCamera = [[SCNNode alloc] init];
         self.frontOfCamera.name = @"frontOfCamera";
         
-        // init cahces
+        // init caches
         self.nodes = [NSMutableDictionary new];
+        self.orphans = [NSMutableDictionary new];
     }
     return self;
 }
@@ -64,7 +69,7 @@ CGFloat focDistance = 0.2f;
     //NSLog(@"setArView");
     _arView = arView;
     self.rootNode = arView.scene.rootNode;
-  
+    
     self.rootNode.name = @"root";
     
     [self.rootNode addChildNode:self.localOrigin];
@@ -74,11 +79,26 @@ CGFloat focDistance = 0.2f;
 
 #pragma mark
 
+
+
+
+/**
+ add a node to scene on a frame (defaults to Local) or to a parentNode (if parentId is given)
+ */
+- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame withParentId:(NSString *)parentId  {
+    //NSLog(@"addNodeToScene node: %@ ", node.name);
+    if(parentId) {
+        [self addNodeToParent:node parentId:parentId];
+    } else {
+        [self addNodeToFrame:node referenceFrame:referenceFrame];
+    }
+    
+}
 /**
  add a node to scene in a reference frame
  */
-- (void)addNodeToScene:(SCNNode *)node inReferenceFrame:(NSString *)referenceFrame {
-    [self registerNode:node forKey:node.name];
+- (void)addNodeToFrame:(SCNNode *)node referenceFrame:(NSString *)referenceFrame {
+    [self registerNode:node withId:node.name];
     if (!referenceFrame) {
         referenceFrame = @"Local"; // default to Local frame
     }
@@ -90,6 +110,29 @@ CGFloat focDistance = 0.2f;
         void (*func)(id, SEL, SCNNode*) = (void *)imp;
         func(self, selector, node);
     }
+}
+
+
+- (void)addNodeToParent:(SCNNode *)node parentId:(NSString *)parentId  {
+    SCNNode * parentNode = [self getNodeWithId:parentId];
+   
+    if(!parentNode) {
+        NSMutableSet * orphansLookingForParent = [self.orphans objectForKey:parentId];
+        if(!orphansLookingForParent) {
+            orphansLookingForParent = [NSMutableSet setWithObject:node];
+        } else {
+            [orphansLookingForParent addObject:node];
+        }
+        [self.orphans setObject:orphansLookingForParent forKey:parentId];
+       
+    } else {
+        [parentNode addChildNode:node];
+        
+    }
+     [self registerNode:node withId:node.name];
+    
+   
+   
 }
 
 - (void)clear {
@@ -117,7 +160,7 @@ CGFloat focDistance = 0.2f;
 - (void)addNodeToCameraFrame:(SCNNode *)node {
     node.referenceFrame = RFReferenceFrameCamera;
     //NSLog(@"[RCTARKitNodes] Add node %@ to Camera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-
+    
     [self.cameraOrigin addChildNode:node];
 }
 
@@ -125,7 +168,7 @@ CGFloat focDistance = 0.2f;
     node.referenceFrame = RFReferenceFrameFrontOfCamera;
     
     //NSLog(@"[RCTARKitNodes] Add node %@ to FrontOfCamera frame at (%.2f, %.2f, %.2f)", node.name, node.position.x, node.position.y, node.position.z);
-
+    
     [self.frontOfCamera addChildNode:node];
 }
 
@@ -133,7 +176,8 @@ CGFloat focDistance = 0.2f;
 - (NSDictionary *)getSceneObjectsHitResult:(const CGPoint)tapPoint  {
     NSDictionary *options = @{
                               SCNHitTestRootNodeKey: self.localOrigin,
-                              SCNHitTestSortResultsKey: @(YES)
+                              SCNHitTestSortResultsKey: @(YES),
+                              SCNHitTestOptionSearchMode: @(SCNHitTestSearchModeAll)
                               };
     NSArray<SCNHitTestResult *> *results = [_arView hitTest:tapPoint options:options];
     NSMutableArray * resultsMapped = [self mapHitResultsWithSceneResults:results];
@@ -144,11 +188,7 @@ CGFloat focDistance = 0.2f;
 
 static NSDictionary * getSceneObjectHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
     return @{
-             @"results": resultsMapped,
-             @"tapPoint": @{
-                     @"x": @(tapPoint.x),
-                     @"y": @(tapPoint.y)
-                     }
+             @"results": resultsMapped
              };
 }
 
@@ -182,40 +222,33 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         
         NSString * nodeId = [self findNodeId:node];
         if(nodeId) {
-        
+            
             SCNVector3 positionAbsolute = result.worldCoordinates;
             SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
             SCNVector3 normal = result.worldNormal;
             float distance = [self getCameraDistanceToPoint:positionAbsolute];
-         
-            [resultsMapped addObject:(@{
-                                        @"id": nodeId,
-                                        @"distance": @(distance),
-                                        @"positionAbsolute": @{
-                                                @"x": @(positionAbsolute.x),
-                                                @"y": @(positionAbsolute.y),
-                                                @"z": @(positionAbsolute.z)
-                                                },
-                                        @"position": @{
-                                                @"x": @(position.x),
-                                                @"y": @(position.y),
-                                                @"z": @(position.z)
-                                                },
-                                        // point is deprecated
-                                        @"point": @{
-                                                @"x": @(position.x),
-                                                @"y": @(position.y),
-                                                @"z": @(position.z)
-                                                },
-                                        @"normal": @{
-                                                @"x": @(normal.x),
-                                                @"y": @(normal.y),
-                                                @"z": @(normal.z)
-                                                
-                                                }
-                                        } )];
+            NSDictionary *result = @{
+                                     @"id": nodeId,
+                                     @"distance": @(distance),
+                                     @"positionAbsolute": @{
+                                             @"x": @(positionAbsolute.x),
+                                             @"y": @(positionAbsolute.y),
+                                             @"z": @(positionAbsolute.z)
+                                             },
+                                     @"position": @{
+                                             @"x": @(position.x),
+                                             @"y": @(position.y),
+                                             @"z": @(position.z)
+                                             },
+                                     @"normal": @{
+                                             @"x": @(normal.x),
+                                             @"y": @(normal.y),
+                                             @"z": @(normal.z)
+                                             }
+                                     };
+            [resultsMapped addObject:(result )];
         }
-            
+        
     }];
     
     return resultsMapped;
@@ -224,7 +257,10 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 
 
 
-
+static id ObjectOrNull(id object)
+{
+    return object ?: [NSNull null];
+}
 
 - (NSMutableArray *) mapHitResults:(NSArray<ARHitTestResult *> *)results {
     NSMutableArray *resultsMapped = [NSMutableArray arrayWithCapacity:[results count]];
@@ -236,7 +272,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         SCNVector3 position = [self getRelativePositionToOrigin:positionAbsolute];
         [resultsMapped addObject:(@{
                                     @"distance": @(result.distance),
-                                    @"id": result.anchor.identifier.UUIDString,
+                                    @"id": ObjectOrNull(result.anchor.identifier.UUIDString),
                                     @"positionAbsolute": @{
                                             @"x": @(positionAbsolute.x),
                                             @"y": @(positionAbsolute.y),
@@ -246,30 +282,34 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
                                             @"x": @(position.x),
                                             @"y": @(position.y),
                                             @"z": @(position.z)
-                                            },
-                                    // deprecated
-                                    @"point": @{
-                                            @"x": @(position.x),
-                                            @"y": @(position.y),
-                                            @"z": @(position.z)
                                             }
-                                    
                                     } )];
     }];
     return resultsMapped;
 }
 
 #pragma mark - node register
-- (void)registerNode:(SCNNode *)node forKey:(NSString *)key {
-    [self removeNodeForKey:key];
+- (void)registerNode:(SCNNode *)node withId:(NSString *)nodeId {
+    [self removeNode:nodeId];
     if (node) {
-        [self.nodes setObject:node forKey:key];
+        //NSLog(@"registering node %@", nodeId);
+        [self.nodes setObject:node forKey:nodeId];
+        
+        // are there any orphans? (3d objects that have a parent, but parent has not yet been mounted
+        // this seems to be the default case as react mounts first the children
+        NSSet * orphans = [self.orphans objectForKey:nodeId];
+        if(orphans) {
+            for (SCNNode * child in [orphans allObjects]) {
+                [node addChildNode:child];
+            }
+            [self.orphans removeObjectForKey:nodeId];
+        }
     }
 }
 
 
 - (NSString *) findNodeId:(SCNNode *)nodeWithParents {
-
+    
     SCNNode* _node = nodeWithParents;
     while(_node) {
         if(_node.name && [self.nodes objectForKey:_node.name]) {
@@ -278,36 +318,42 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         _node = _node.parentNode;
     }
     return nil;
-
+    
 }
 
 
-- (SCNNode *)nodeForKey:(NSString *)key {
-    return [self.nodes objectForKey:key];
+- (SCNNode *)getNodeWithId:(NSString *)nodeId {
+    return [self.nodes objectForKey:nodeId];
 }
 
-- (void)removeNodeForKey:(NSString *)key {
-    //NSLog(@"removing node: %@ ", key);
-    SCNNode *node = [self.nodes objectForKey:key];
+- (void)removeNode:(NSString *)nodeId {
+    
+    SCNNode *node = [self getNodeWithId:nodeId];
     if (node) {
-        [self.nodes removeObjectForKey:key];
-        if(node.light) {
-            // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
-            node.hidden = YES;
-            [node removeFromParentNode];
-        } else {
-            [node removeFromParentNode];
+        //NSLog(@"removing node: %@ ", key);
+     
+        if(node.parentNode) {
+            if(node.light) {
+                // see https://stackoverflow.com/questions/47270056/how-to-remove-a-light-with-shadowmode-deferred-in-scenekit-arkit?noredirect=1#comment81491270_47270056
+                node.hidden = YES;
+                [node removeFromParentNode];
+            } else {
+                [node removeFromParentNode];
+            }
         }
+        [self.nodes removeObjectForKey:nodeId];
     }
 }
 
-- (void)updateNode:(NSString *)nodeId properties:(NSDictionary *) properties {
-    SCNNode *node = [self.nodes objectForKey:nodeId];
+- (bool)updateNode:(NSString *)nodeId
+        properties:(NSDictionary *) properties {
+    
+    SCNNode *node = [self getNodeWithId:nodeId];
     //NSLog(@"updating node %@ :%@", nodeId, properties);
     if(node) {
         [RCTConvert setNodeProperties:node properties:properties];
         if(node.geometry && properties[@"shape"]) {
-              [RCTConvert setShapeProperties:node.geometry properties:properties[@"shape"]];
+            [RCTConvert setShapeProperties:node.geometry properties:properties[@"shape"]];
         }
         if(properties[@"material"]) {
             for (id material in node.geometry.materials) {
@@ -317,10 +363,11 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
         if(node.light) {
             [RCTConvert setLightProperties:node.light properties:properties];
         }
-        
-        
+        return true;
     } else {
         NSLog(@"WARNING: node does not exists: %@. This means that the node has not been mounted yet, so native calls got out of order", nodeId);
+        
+        return false;
     }
     
 }

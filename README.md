@@ -1,4 +1,8 @@
-# react-native-arkit
+# react-native-arkit 
+
+⚠️  **This is the readme from the current development. If you want to see the readme from the latest release, see https://github.com/HippoAR/react-native-arkit/releases**
+
+
 
 [![npm version](https://img.shields.io/npm/v/react-native-arkit.svg?style=flat)](https://www.npmjs.com/package/react-native-arkit)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-arkit.svg?style=flat)](https://www.npmjs.com/package/react-native-arkit)
@@ -36,10 +40,25 @@ make sure to use the latest version of yarn (>=1.x.x)
 #### iOS
 
 1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ add `react-native-arkit/RCTARKit.xcodeproj` and `_PocketSVG/_PocketSVG.xcodeproj`
+2. Go to `node_modules` ➜ add `react-native-arkit/ios/RCTARKit.xcodeproj` and `react-native-arkit/ios/PocketSVG/PocketSVG.xcodeproj`
 3. In XCode, in the project navigator, select your project. Add `libRCTARKit.a` `and PocketSVG.framework` to your project's `Build Phases` ➜ `Link Binary With Libraries`
 4. In Tab `General` ➜ `Embedded Binaries` ➜ `+` ➜ Add `PocketSVG.framework ios`
 5. Run your project (`Cmd+R`)<
+
+
+##### iOS Project configuration
+
+These steps are mandatory regardless of doing a manual or automatic installation:
+
+1. Give permissions for camera usage. In `Info.plist` add the following:
+
+```
+<key>NSCameraUsageDescription</key>
+<string>Your message to user when the camera is accessed for the first time</string>
+```
+2. ARKit only runs on arm64-ready devices so the default build architecture should be set to arm64: go to `Build settings` ➜ `Build Active Architecture Only` and change the value to `Yes`.
+
+
 
 
 ## Usage
@@ -60,16 +79,35 @@ export default class ReactNativeARKit extends Component {
         <ARKit
           style={{ flex: 1 }}
           debug
-          planeDetection
+          // enable plane detection (defaults to Horizontal)
+          planeDetection={ARKit.ARPlaneDetection.Horizontal}
+
           // enable light estimation (defaults to true)
           lightEstimationEnabled
           // get the current lightEstimation (if enabled)
           // it fires rapidly, so better poll it from outside with
           // ARKit.getCurrentLightEstimation()
           onLightEstimation={e => console.log(e.nativeEvent)}
-          onPlaneDetected={console.log} // event listener for plane detection
-          onPlaneUpdate={console.log} // event listener for plane update
-          onPlaneRemoved={console.log} // arkit sometimes removes detected planes
+
+          // event listener for (horizontal) plane detection
+          onPlaneDetected={anchor => console.log(anchor)}
+
+          // event listener for plane update
+          onPlaneUpdated={anchor => console.log(anchor)}
+
+          // arkit sometimes removes detected planes
+          onPlaneRemoved={anchor => console.log(anchor)}
+
+          // event listeners for all anchors, see [Planes and Anchors](#planes-and-anchors)
+          onAnchorDetected={anchor => console.log(anchor)}
+          onAnchorUpdated={anchor => console.log(anchor)}
+          onAnchorRemoved={anchor => console.log(anchor)}
+
+          // you can detect images and will get an anchor for these images
+          detectionImages={[{ resourceGroupName: 'DetectionImages' }]}
+
+
+          onARKitError={console.log} // if arkit could not be initialized (e.g. missing permissions), you will get notified here
         >
           <ARKit.Box
             position={{ x: 0, y: 0, z: 0 }}
@@ -129,6 +167,7 @@ export default class ReactNativeARKit extends Component {
             position={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
             scale={0.01}
             model={{
+              scale: 1, // this is deprecated, use the scale property that is available on all 3d objects
               file: 'art.scnassets/ship.scn', // make sure you have the model file in the ios project
             }}
           />
@@ -165,47 +204,106 @@ AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);
 
 <img src="screenshots/geometries.jpg" width="250">
 
-### Components
 
-#### `<ARKit />`
 
-##### Props
+### `<ARKit />`-Component
 
-| Prop | Type | Default | Note |
-|---|---|---|---|
-| `debug` | `Boolean` | `false` | Debug mode will show the 3D axis and feature points detected.
-| `planeDetection` | `Boolean` | `false` | ARKit plane detection.
-| `lightEstimationEnabled` | `Boolean` | `false` | ARKit light estimation.
-| `worldAlignment` | `Enumeration` <br /> One of: `ARKit.ARWorldAlignment.Gravity`, `ARKit.ARWorldAlignment.GravityAndHeading`, `ARKit.ARWorldAlignment.Camera` (documentation [here](https://developer.apple.com/documentation/arkit/arworldalignment)) | `ARKit.ARWorldAlignment.Gravity` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera.|
+#### Props
+
+| Prop | Type | Note |
+|---|---|---|
+| `debug` | `Boolean` | Debug mode will show the 3D axis and feature points detected.
+| `planeDetection` | `ARKit.ARPlaneDetection.{ Horizontal \| Vertical \| HorizontalVertical \| None }` | ARKit plane detection. Defaults to `Horizontal`. `Vertical` is available with IOS 11.3
+| `lightEstimationEnabled` | `Boolean` | ARKit light estimation (defaults to false).
+| `worldAlignment` | `ARKit.ARWorldAlignment.{ Gravity \| GravityAndHeading \| Camera }` | **ARWorldAlignmentGravity** <br /> The coordinate system's y-axis is parallel to gravity, and its origin is the initial position of the device. **ARWorldAlignmentGravityAndHeading** <br /> The coordinate system's y-axis is parallel to gravity, its x- and z-axes are oriented to compass heading, and its origin is the initial position of the device. **ARWorldAlignmentCamera** <br /> The scene coordinate system is locked to match the orientation of the camera. Defaults to `ARKit.ARWorldAlignment.Gravity`.  [See](https://developer.apple.com/documentation/arkit/arworldalignment)|
 | `origin` | `{position, transition}` | Usually `{0,0,0}` is where you launched the app. If you want to have a different origin, you can set it here. E.g. if you set `origin={{position: {0,-1, 0}, transition: {duration: 1}}}` the new origin will be one meter below. If you have any objects already placed, they will get moved down using the given transition. All hit-test functions or similar will report coordinates relative to that new origin as `position`. You can get the original coordinates with `positionAbsolute` in these functions |  
+| `detectionImages` | `Array<DetectionImage>` | An Array of `DetectionImage` (see below), only available on IOS 11.3 |  
 
-##### Events
+##### `DetectionImage`
+
+An `DetectionImage` is an image or image resource group that should be detected by ARKit.
+
+See https://developer.apple.com/documentation/arkit/arreferenceimage?language=objc how to add these images.
+
+You will then receive theses images in `onAnchorDetected/onAnchorUpdated`. See also [Planes and Anchors](#planes-and-anchors) for more details.
+
+`DetectionImage` has these properties
+
+| Prop | Type | Notes
+|---|---|---|
+| `resourceGroupName` | `String` | The name of the resource group |
+
+We probably will add the option to load images from other sources as well (PRs encouraged).
+
+#### Events
 
 | Event Name | Returns | Notes
 |---|---|---|
 | `onARKitError` | `ARKiterror` | will report whether an error occured while initializing ARKit. A common error is when the user has not allowed camera access. Another error is, if you use `worldAlignment=GravityAndHeading` and location service is turned off |
 | `onLightEstimation` | `{ ambientColorTemperature, ambientIntensity }` | Light estimation on every frame. Called rapidly, better use polling. See `ARKit.getCurrentLightEstimation()`
 | `onFeaturesDetected` | `{ featurePoints}` | Detected Features on every frame (currently also not throttled). Usefull to display custom dots for detected features. You can also poll this information with `ARKit.getCurrentDetectedFeaturePoints()`
-| `onPlaneDetected` | `Plane` | When a plane is first detected.
-| `onPlaneUpdate` | `Plane` | When a detected plane is updated
-| `onPlaneRemoved` | `Plane` | When a detected plane is updated
+| `onAnchorDetected` | `Anchor` | When an anchor (plane or image) is first detected.
+| `onAnchorUpdated` | `Anchor` | When an anchor is updated
+| `onAnchorRemoved` | `Anchor` | When an anchor is removed
+| `onPlaneDetected` | `Anchor` | When a plane anchor is first detected.
+| `onPlaneUpdated` | `Anchor` | When a detected plane is updated
+| `onPlaneRemoved` | `Anchor` | When a detected plane is removed
 
-The `Plane` object has the following properties:
+See [Planes and Anchors](#planes-and-anchors) for Details about anchors
+
+
+
+#### Planes and Anchors
+
+ARKit can detect different anchors in the real world:
+
+- `plane` horizontal and vertical planes
+- `image`, image-anchors [See DetectionImage](#DetectionImage)
+- face with iphone X or similar (not implemented yet)
+
+You then will receive anchor objects in the `onAnchorDetected`, `onAnchorUpdated`, `onAnchorRemoved` callbacks on your `<ARKit />`-component.
+
+You can use `onPlaneDetected`, `onPlaneUpdated`, `onPlaneRemoved` to only receive plane-anchors (may be deprecated later).
+
+The `Anchor` object has the following properties:
+
+| Property | Type | Description
+|---|---|---|
+| `id` | `String` | a unique id identifying the anchor |
+| `type` | `String` | The type of the anchor (plane, image) |
+| `position` | `{ x, y, z }` | the position of the anchor (relative to the origin) |
+| `positionAbsolute` | `{ x, y, z }` | the absolute position of the anchor |
+| `eulerAngles` | `{ x, y, z }` | the rotation of the plane |
+
+If its a `plane`-anchor, it will have these additional properties:
 
 | Property | Description
 |---|---|
-| `id` | a unique id identifying the plane |
-| `position` | the position of the plane (relative to the origin) |
-| `positionAbsolute` | the absolute position of the plane |
-| `extent` | the extent of the plane | 
-| `eulerAngles` | the rotation of the plane |
+| `alignment` | `ARKit.ARPlaneAnchorAlignment.Horizontal` or `ARKit.ARPlaneAnchorAlignment.Vertical` <br /> so you can check whether it was a horizontal or vertical plane |
+| `extent` | see https://developer.apple.com/documentation/arkit/arplaneanchor?language=objc |
+| `center` | see https://developer.apple.com/documentation/arkit/arplaneanchor?language=objc |
+
+`image`-Anchor:
+
+| Property | type | Description
+|---|---|---|
+| `image` | `{name}` | an object with the name of the image.
 
 
 
+### Static methods
 
-##### Static methods
+Static Methods can directly be used on the `ARKit`-export:
 
-All methods return a promise with the result.
+```
+import { ARKit } from 'react-native-arkit'
+
+//...
+const result = await ARKit.hitTestSceneObjects(point);
+
+```
+
+All methods return a *promise* with the result.
 
 | Method Name | Arguments |  Notes
 |---|---|---|
@@ -218,11 +316,46 @@ All methods return a promise with the result.
 | `focusScene` |  | Sets the scene's position/rotation to where it was when first rendered (but now relative to your device's current position/rotation) |
 | `hitTestPlanes` | point, type  |  check if a plane has ben hit by point (`{x,y}`) with detection type (any of `ARKit.ARHitTestResultType`). See https://developer.apple.com/documentation/arkit/arhittestresulttype?language=objc for further information |
 | `hitTestSceneObjects` | point |  check if a scene object has ben hit by point (`{x,y}`) |
+| `isInitialized` | boolean | check whether arkit has been initialized (e.g. by mounting). See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
+| `isMounted` | boolean | check whether arkit has been mounted. See https://github.com/HippoAR/react-native-arkit/pull/152 for details |
+
+### 3D-Components
+
+This project allows you to work with 3d elements like with usual react-components.
+We provide some primitive shapes like cubes, spheres, etc. as well as
+a component to load model-files.
+
+You can also nest components to create new Components. Child-elements will
+be relative to the parent:
+
+```
+const BigExclamationMark = ({ position, eulerAngles, color = '#ff0000' }) => (
+  <ARKit.Group opacity={0.5} position={position} eulerAngles={eulerAngles}>
+    <ARKit.Sphere
+      position={{ x: 0, y: 0, z: 0 }}
+      shape={{ radius: 0.06 }}
+      material={{ diffuse: color }}
+    />
+    <ARKit.Cone
+      position={{ x: 0, y: 0.4, z: 0 }}
+      shape={{ topR: 0.1, bottomR: 0.05, height: 0.5 }}
+      material={{ diffuse: color }}
+    />
+  </ARKit.Group>
+)
+
+// somewhere else
+
+<BigExclamationMark
+  eulerAngles={{ x: 0.2 }}
+  position={{ x: 0.2, y: 0.3, z: -0.2 }}
+  color="#00ff00"
+/>
+
+```
 
 
-#### 3D objects
-
-##### General props
+#### General props
 
 Most 3d object have these common properties
 
@@ -231,14 +364,21 @@ Most 3d object have these common properties
 | `position` | `{ x, y, z }` | The object's position (y is up) |
 | `scale` | Number | The scale of the object. Defaults to 1 |
 | `eulerAngles` | `{ x, y, z }` | The rotation in eulerAngles |
-| `rotation` | TODO | see scenkit documentation |
-| `orientation` | TODO | see scenkit documentation |
+| `id` | String | a unique identifier. Only provide one, if you need to find the node later in hit-testing. |
 | `shape` | depends on object | the shape of the object (will probably renamed to geometry in future versions)
 | `material` | `{ diffuse, metalness, roughness, lightingModel, shaders }` | the material of the object |
 | `transition` | `{duration: 1}` | Some property changes can be animated like in css transitions. Currently you can specify the duration (in seconds). |
+
+Advanced properties:
+
+| Prop | Type | Description |
+|---|---|---|
+| `rotation` | TODO | see scenkit documentation |
+| `orientation` | TODO | see scenkit documentation |
 | `renderingOrder` | Number | Order in which object is rendered. Usefull to place elements "behind" others, although they are nearer. |
 | `categoryBitMask` | Number / bitmask | control which lights affect this object |
-| `castsShadow` | `boolean` | whether this object casts hadows |
+| `castsShadow` | `boolean` | whether this object casts shadows |
+| `constraint` | `ARKit.Constraint.{ BillboardAxisAll \| BillboardAxisX \| BillboardAxisY \| BillboardAxisZ \| None }` | Constrains the node to always point to the camera |
 
 *New experimental feature:*
 
@@ -256,27 +396,46 @@ E.g. you can scale an object on unmount:
 />
 ```
 
-#### Material properties
+#### Material
 
 Most objects take a material property with these sub-props:
 
 | Prop | Type | Description |
 |---|---|---|
-| `diffuse` | { `path`, `color`, `intensity` } | [diffuse](https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse?language=objc)
-| `specular` | { `path`, `color`, `intensity` } | [specular](https://developer.apple.com/documentation/scenekit/scnmaterial/1462516-specular?language=objc)
-| `displacement` | { `path`, `color`, `intensity` } | [displacement](https://developer.apple.com/documentation/scenekit/scnmaterial/2867516-displacement?language=objc)
-| `normal` | { `path`, `color`, `intensity` } |  [normal](https://developer.apple.com/documentation/scenekit/scnmaterial/1462542-normal)
+| `diffuse` | `{ ...mapProperties }` (see below) | [diffuse](https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse?language=objc)
+| `specular` | `{ ...mapProperties }` (see below) | [specular](https://developer.apple.com/documentation/scenekit/scnmaterial/1462516-specular?language=objc)
+| `displacement` | `{ ...mapProperties }` (see below) | [displacement](https://developer.apple.com/documentation/scenekit/scnmaterial/2867516-displacement?language=objc)
+| `normal` | `{ ...mapProperties }` (see below) |  [normal](https://developer.apple.com/documentation/scenekit/scnmaterial/1462542-normal)
 | `metalness` | number | metalness of the object |
 | `roughness` | number | roughness of the object |
 | `doubleSided` | boolean | render both sides, default is `true` |
 | `litPerPixel` | boolean | calculate lighting per-pixel or vertex [litPerPixel](https://developer.apple.com/documentation/scenekit/scnmaterial/1462580-litperpixel) |
 | `lightingModel` | `ARKit.LightingModel.*` | [LightingModel](https://developer.apple.com/documentation/scenekit/scnmaterial.lightingmodel) |
 | `blendMode` | `ARKit.BlendMode.*` | [BlendMode](https://developer.apple.com/documentation/scenekit/scnmaterial/1462585-blendmode) |
+| `transparencyMode` | `ARKit.TransparencyMode.*` | [TransparencyMode](https://developer.apple.com/documentation/scenekit/scnmaterial/1462549-transparencymode?language=objc) |
 | `fillMode` | `ARKit.FillMode.*` | [FillMode](https://developer.apple.com/documentation/scenekit/scnmaterial/2867442-fillmode)
 | `shaders` | Object with keys from `ARKit.ShaderModifierEntryPoint.*` and shader strings as values | [Shader modifiers](https://developer.apple.com/documentation/scenekit/scnshadable) |
 | `colorBufferWriteMask` | `ARKit.ColorMask.*` | [color mask](https://developer.apple.com/documentation/scenekit/scncolormask). Set to ARKit.ColorMask.None so that an object is transparent, but receives deferred shadows. |
 
+Map Properties:
 
+| Prop | Type | Description |
+|---|---|---|
+| `path` | string | Currently `require` is not supported, so this is an absolute link to a local resource placed for example in .xcassets |
+| `color` | string | Color string, only used if path is not provided |
+| `wrapS` | `ARKit.WrapMode.{ Clamp \| Repeat \| Mirror }` | [wrapS](https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395384-wraps?language=objc) |
+| `wrapT` | `ARKit.WrapMode.{ Clamp \| Repeat \| Mirror }` |  [wrapT](https://developer.apple.com/documentation/scenekit/scnmaterialproperty/1395382-wrapt?language=objc) |
+| `wrap` | `ARKit.WrapMode.{ Clamp \| Repeat \| Mirror }` |  Shorthand for setting both wrapS & wrapT |
+| `translation` | `{ x, y, z }` | Translate the UVs, equivalent to applying a translation matrix to SceneKit's `transformContents`  |
+| `rotation` | `{ angle, x, y, z }` | Rotate the UVs, equivalent to applying a rotation matrix to SceneKit's `transformContents` |
+| `scale` | `{ x, y, z }` | Scale the UVs, equivalent to applying a scale matrix to SceneKit's `transformContents`  |
+
+
+#### `<ARKit.Group />`
+
+This Object has no geometry, but is simply a wrapper for other components.
+It receives all common properties like position, eulerAngles, scale, opacity, etc.
+but no shape or material.
 
 
 
@@ -523,6 +682,21 @@ E.gl you have several "walls" with ids "wall_1", "wall_2", etc.
 
 It uses https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522929-hittest with some default options. Please file an issue or send a PR if you need more control over the options here!
 
+
+## FAQ:
+
+#### Which permissions does this use?
+
+- **camera access** (see section iOS Project configuration above). The user is asked for permission, as soon as you mount an `<ARKit />` component or use any of its API. If user denies access, you will get an error in `onARKitError`
+- **location service**: only needed if you use `ARKit.ARWorldAlignment.GravityAndHeading`.
+
+#### Is there an Android / ARCore version?
+
+Not yet, but there has been a proof-of-concept: https://github.com/HippoAR/react-native-arkit/issues/14. We are looking for contributors to help backporting this proof-of-conept to react-native-arkit.
+
+#### I have another question...
+
+[**Join Slack!**](https://join.slack.com/t/react-native-ar/shared_invite/enQtMjUzMzg3MjM0MTQ5LWU3Nzg2YjI4MGRjMTM1ZDBlNmIwYTE4YmM0M2U0NmY2YjBiYzQ4YzlkODExMTA0NDkwMzFhYWY4ZDE2M2Q4NGY)
 
 
 ## Contributing

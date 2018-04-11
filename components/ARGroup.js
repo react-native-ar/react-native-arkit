@@ -1,10 +1,12 @@
-import { View } from 'react-native';
-import React, { Component } from 'react';
+//
+//  ARBox.js
+//
+//  Created by HippoAR on 8/12/17.
+//  Copyright © 2017 HippoAR. All rights reserved.
+//
 
-const ARGroup = class extends Component {
-  render() {
-    return <View>{this.props.children}</View>;
-  }
-};
+import createArComponent from './lib/createArComponent';
 
-export default ARGroup;
+const ARBox = createArComponent('addGroup', {});
+
+export default ARBox;

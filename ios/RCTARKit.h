@@ -21,6 +21,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @interface RCTARKit : UIView
 
 + (instancetype)sharedInstance;
++ (bool)isInitialized;
 - (instancetype)initWithARView:(ARSCNView *)arView;
 
 
@@ -34,17 +35,25 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, strong) RCTARKitNodes *nodeManager;
 
 @property (nonatomic, assign) BOOL debug;
-@property (nonatomic, assign) BOOL planeDetection;
+@property (nonatomic, assign) ARPlaneDetection planeDetection;
 @property (nonatomic, assign) BOOL lightEstimationEnabled;
 @property (nonatomic, assign) BOOL autoenablesDefaultLighting;
 @property (nonatomic, assign) NSDictionary* origin;
 @property (nonatomic, assign) ARWorldAlignment worldAlignment;
+@property (nonatomic, assign) NSArray* detectionImages;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onPlaneRemoved;
+@property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdated;
+
+@property (nonatomic, copy) RCTBubblingEventBlock onAnchorDetected;
+@property (nonatomic, copy) RCTBubblingEventBlock onAnchorRemoved;
+@property (nonatomic, copy) RCTBubblingEventBlock onAnchorUpdated;
+
+
 @property (nonatomic, copy) RCTBubblingEventBlock onFeaturesDetected;
 @property (nonatomic, copy) RCTBubblingEventBlock onLightEstimation;
-@property (nonatomic, copy) RCTBubblingEventBlock onPlaneUpdate;
+
 @property (nonatomic, copy) RCTBubblingEventBlock onTrackingState;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneUsingExtent;
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
@@ -72,8 +81,9 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (NSDictionary *)readCamera;
 - (NSDictionary* )getCurrentLightEstimation;
 - (NSArray * )getCurrentDetectedFeaturePoints;
-
-
+- (bool)isMounted;
+- (void)addRendererDelegates:(id)delegate;
+- (void)removeRendererDelegates:(id)delegate;
 
 #pragma mark - Delegates
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time;

@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <SceneKit/SceneKit.h>
+#import <ARKit/ARKit.h>
 
 @protocol RCTARKitTouchDelegate <NSObject>
 @optional

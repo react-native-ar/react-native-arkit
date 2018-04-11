@@ -36,9 +36,14 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 
 
 @implementation RCTARKit
+static RCTARKit *instance = nil;
+
++ (bool)isInitialized {
+    return instance !=nil;
+}
 
 + (instancetype)sharedInstance {
-    static RCTARKit *instance = nil;
+    
     static dispatch_once_t onceToken;
     
     dispatch_once_on_main_thread(&onceToken, ^{
@@ -47,7 +52,13 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
             instance = [[self alloc] initWithARView:arView];
         }
     });
+    
     return instance;
+}
+
+- (bool)isMounted {
+    
+    return self.superview != nil;
 }
 
 - (instancetype)initWithARView:(ARSCNView *)arView {
@@ -73,17 +84,26 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
         
         // configuration(s)
         arView.autoenablesDefaultLighting = YES;
-        
         arView.scene.rootNode.name = @"root";
         
-    
+        #if TARGET_IPHONE_SIMULATOR
+        // allow for basic orbit gestures if we're running in the simulator
+        arView.allowsCameraControl = YES;
+        arView.defaultCameraController.interactionMode = SCNInteractionModeOrbitTurntable;
+        arView.defaultCameraController.maximumVerticalAngle = 45;
+        arView.defaultCameraController.inertiaEnabled = YES;
+        [arView.defaultCameraController translateInCameraSpaceByX:(float) 0.0 Y:(float) 0.0 Z:(float) 3.0];
         
+        #endif
         // start ARKit
         [self addSubview:arView];
         [self resume];
     }
     return self;
 }
+
+
+
 
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -106,7 +126,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
         NSLog(@"Initializing ARKIT failed with Error: %@ %@", error, [error userInfo]);
         
     }
-   
+    
 }
 - (void)reset {
     if (ARWorldTrackingConfiguration.isSupported) {
@@ -144,18 +164,15 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     }
 }
 
-- (BOOL)planeDetection {
+- (ARPlaneDetection)planeDetection {
     ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.configuration;
-    return configuration.planeDetection == ARPlaneDetectionHorizontal;
+    return configuration.planeDetection;
 }
 
-- (void)setPlaneDetection:(BOOL)planeDetection {
+- (void)setPlaneDetection:(ARPlaneDetection)planeDetection {
     ARWorldTrackingConfiguration *configuration = (ARWorldTrackingConfiguration *) self.configuration;
-    if (planeDetection) {
-        configuration.planeDetection = ARPlaneDetectionHorizontal;
-    } else {
-        configuration.planeDetection = ARPlaneDetectionNone;
-    }
+   
+    configuration.planeDetection = planeDetection;
     [self resume];
 }
 
@@ -166,7 +183,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
 }
 
 -(void)setOrigin:(NSDictionary*)json {
-   
+    
     if(json[@"transition"]) {
         NSDictionary * transition =json[@"transition"];
         if(transition[@"duration"]) {
@@ -178,7 +195,7 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     } else {
         [SCNTransaction setAnimationDuration:0.0];
     }
-     SCNVector3 position = [RCTConvert SCNVector3:json[@"position"]];
+    SCNVector3 position = [RCTConvert SCNVector3:json[@"position"]];
     [self.nodeManager.localOrigin setPosition:position];
 }
 
@@ -218,6 +235,23 @@ void dispatch_once_on_main_thread(dispatch_once_t *predicate,
     [self resume];
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
+- (void)setDetectionImages:(NSArray*) detectionImages {
+    
+    if (@available(iOS 11.3, *)) {
+        ARWorldTrackingConfiguration *configuration = self.configuration;
+        NSSet *detectionImagesSet = [[NSSet alloc] init];
+        for (id config in detectionImages) {
+            if(config[@"resourceGroupName"]) {
+                // TODO: allow bundle to be defined
+                detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
+            }
+        }
+        configuration.detectionImages = detectionImagesSet;
+        [self resume];;
+    }
+}
+#endif
 - (NSDictionary *)readCameraPosition {
     // deprecated
     SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
@@ -422,11 +456,7 @@ UIImage* rotate(UIImage* src, UIImageOrientation orientation)
 
 static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGPoint tapPoint) {
     return @{
-             @"results": resultsMapped,
-             @"tapPoint": @{
-                     @"x": @(tapPoint.x),
-                     @"y": @(tapPoint.y)
-                     }
+             @"results": resultsMapped
              };
 }
 
@@ -449,7 +479,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
     
     if(self.onTapOnPlaneNoExtent) {
-        // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
+        // Take the screen space tap coordinates    and pass them to the hitTest method on the ARSCNView instance
         NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlane];
         self.onTapOnPlaneNoExtent(planeHitResult);
     }
@@ -467,6 +497,8 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
 }
 
+
+
 - (void)renderer:(id <SCNSceneRenderer>)renderer didRenderScene:(SCNScene *)scene atTime:(NSTimeInterval)time {
     for (id<RCTARKitRendererDelegate> rendererDelegate in self.rendererDelegates) {
         if ([rendererDelegate respondsToSelector:@selector(renderer:didRenderScene:atTime:)]) {
@@ -476,50 +508,103 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
-- (NSDictionary *)makePlaneDetectionResult:(SCNNode *)node planeAnchor:(ARPlaneAnchor *)planeAnchor {
+
+
+- (NSDictionary *)makeAnchorDetectionResult:(SCNNode *)node anchor:(ARAnchor *)anchor {
+    NSDictionary* baseProps = @{
+                                @"id": anchor.identifier.UUIDString,
+                                @"type": @"unkown",
+                                @"eulerAngles":vectorToJson(node.eulerAngles),
+                                @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
+                                @"positionAbsolute": vectorToJson(node.position)
+                                };
+    NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:baseProps];
     
-    return @{
-             @"id": planeAnchor.identifier.UUIDString,
-             @"alignment": @(planeAnchor.alignment),
-             @"eulerAngles":vectorToJson(node.eulerAngles),
-             @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
-             @"positionAbsolute": vectorToJson(node.position),
-             @"center": vector_float3ToJson(planeAnchor.center),
-             @"extent": vector_float3ToJson(planeAnchor.extent),
-             // node is deprecated
-             @"node": vectorToJson(node.position)
-             };
+    if([anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+        NSDictionary * planeProperties = [self makePlaneAnchorProperties:planeAnchor];
+        [dict addEntriesFromDictionary:planeProperties];
+    } else if (@available(iOS 11.3, *)) {
+        #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
+        if([anchor isKindOfClass:[ARImageAnchor class]]) {
+            ARImageAnchor *imageAnchor = (ARImageAnchor *)anchor;
+            NSDictionary * imageProperties = [self makeImageAnchorProperties:imageAnchor];
+            [dict addEntriesFromDictionary:imageProperties];
+        }
+        #endif
+    } else {
+        // Fallback on earlier versions
+    }
+    return dict;
 }
 
+
+- (NSDictionary *)makePlaneAnchorProperties:(ARPlaneAnchor *)planeAnchor {
+    return @{
+             @"type": @"plane",
+             @"alignment": @(planeAnchor.alignment),
+             @"center": vector_float3ToJson(planeAnchor.center),
+             @"extent": vector_float3ToJson(planeAnchor.extent)
+             };
+    
+}
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
+- (NSDictionary *)makeImageAnchorProperties:(ARImageAnchor *)imageAnchor  API_AVAILABLE(ios(11.3)){
+    return @{
+             @"type": @"image",
+             @"image": @{
+                     @"name": imageAnchor.referenceImage.name
+                     }
+             
+             };
+    
+}
+  #endif
+
+- (void)addRendererDelegates:(id) delegate {
+     [self.rendererDelegates addObject:delegate];
+    NSLog(@"added, number of renderer delegates %d", [self.rendererDelegates count]);
+}
+
+- (void)removeRendererDelegates:(id) delegate {
+    [self.rendererDelegates removeObject:delegate];
+     NSLog(@"removed, number of renderer delegates %d", [self.rendererDelegates count]);
+}
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
 }
 
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didAddNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    if (![anchor isKindOfClass:[ARPlaneAnchor class]]) {
-        return;
-    }
- 
-    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    if (self.onPlaneDetected) {
-        self.onPlaneDetected([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    
+    NSDictionary *anchorDict = [self makeAnchorDetectionResult:node anchor:anchor];
+    
+    if (self.onPlaneDetected && [anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        self.onPlaneDetected(anchorDict);
+    } else if (self.onAnchorDetected) {
+        self.onAnchorDetected(anchorDict);
     }
     
 }
 
 - (void)renderer:(id <SCNSceneRenderer>)renderer didUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-    ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
+    NSDictionary *anchorDict = [self makeAnchorDetectionResult:node anchor:anchor];
     
-    if (self.onPlaneUpdate) {
-        self.onPlaneUpdate([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    if (self.onPlaneUpdated && [anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        self.onPlaneUpdated(anchorDict);
+    }else if (self.onAnchorUpdated) {
+        self.onAnchorUpdated(anchorDict);
     }
     
 }
 
 - (void)renderer:(id<SCNSceneRenderer>)renderer didRemoveNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
-     ARPlaneAnchor *planeAnchor = (ARPlaneAnchor *)anchor;
-    if (self.onPlaneRemoved) {
-        self.onPlaneRemoved([self makePlaneDetectionResult:node planeAnchor:planeAnchor]);
+    NSDictionary *anchorDict = [self makeAnchorDetectionResult:node anchor:anchor];
+    
+    if (self.onPlaneRemoved && [anchor isKindOfClass:[ARPlaneAnchor class]]) {
+        self.onPlaneRemoved(anchorDict);
+    } else if (self.onAnchorRemoved) {
+        self.onAnchorRemoved(anchorDict);
     }
 }
 

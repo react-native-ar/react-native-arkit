@@ -306,8 +306,66 @@
 
 
 + (void)setMaterialPropertyContents:(id)property material:(SCNMaterialProperty *)material {
+    
     if (property[@"path"]) {
-        material.contents = property[@"path"];
+        SCNMatrix4 m = SCNMatrix4Identity;
+        
+        // scenekit has an issue with indexed-colour png's on some devices, so we redraw the image. See for more details: https://stackoverflow.com/questions/40058359/scenekit-some-textures-have-a-red-hue/45824190#45824190
+        
+        UIImage *correctedImage;
+        UIImage *inputImage = [UIImage imageNamed:property[@"path"]];
+        CGFloat width  = inputImage.size.width;
+        CGFloat height = inputImage.size.height;
+        
+        UIGraphicsBeginImageContext(inputImage.size);
+        [inputImage drawInRect:(CGRectMake(0, 0, width, height))];
+        correctedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        
+        material.contents = correctedImage;
+
+        
+        if (property[@"wrapS"]) {
+            material.wrapS = (SCNWrapMode) [property[@"wrapS"] integerValue];
+        }
+        
+        if (property[@"wrapT"]) {
+            material.wrapT = (SCNWrapMode) [property[@"wrapT"] integerValue];
+        }
+        
+        if (property[@"wrap"]) {
+            material.wrapT = (SCNWrapMode) [property[@"wrapT"] integerValue];
+            material.wrapS = (SCNWrapMode) [property[@"wrapS"] integerValue];
+        }
+        
+        if (property[@"scale"]) {
+            float x = [property[@"scale"][@"x"] floatValue];
+            float y = [property[@"scale"][@"y"] floatValue];
+            float z = [property[@"scale"][@"z"] floatValue];
+            
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeScale(x, y, z));
+        }
+        
+        if (property[@"rotation"]) {
+            float a = [property[@"rotation"][@"angle"] floatValue];
+            float x = [property[@"rotation"][@"x"] floatValue];
+            float y = [property[@"rotation"][@"y"] floatValue];
+            float z = [property[@"rotation"][@"z"] floatValue];
+            
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeRotation(a, x, y, z));
+        }
+        
+        if (property[@"translation"]) {
+            float x = [property[@"translation"][@"x"] floatValue];
+            float y = [property[@"translation"][@"y"] floatValue];
+            float z = [property[@"translation"][@"z"] floatValue];
+            
+            m = SCNMatrix4Mult(m, SCNMatrix4MakeTranslation(x, y, z));
+        }
+        
+        material.contentsTransform = m;
+        
+        
     } else if (property[@"color"]) {
         material.contents = [self UIColor:property[@"color"]];
     }
@@ -327,6 +385,10 @@
         material.blendMode = (SCNBlendMode) [json[@"blendMode"] integerValue];
     }
     
+    if (json[@"transparencyMode"]) {
+        material.transparencyMode = (SCNTransparencyMode) [json[@"transparencyMode"] integerValue];
+    }
+
     if (json[@"lightingModel"]) {
         material.lightingModelName = json[@"lightingModel"];
     }
@@ -396,6 +458,11 @@
     }
     if (json[@"castsShadow"]) {
         node.castsShadow = [json[@"castsShadow"] boolValue];
+    }
+    if (json[@"constraint"]) {
+        SCNBillboardConstraint *constraint = [SCNBillboardConstraint billboardConstraint];
+        constraint.freeAxes = [json[@"constraint"] integerValue];
+        node.constraints = @[constraint];
     }
     if(json[@"transition"]) {
         NSDictionary * transition =json[@"transition"];
@@ -542,6 +609,11 @@
         light.zNear = [json[@"zNear"] floatValue];
     }
 }
+
++ (ARPlaneDetection)ARPlaneDetection:(id)number {
+    return (ARPlaneDetection)  [number integerValue];
+}
+
 
 
 @end
