@@ -9,6 +9,10 @@
 
 React Native binding for iOS ARKit.
 
+**Made with React Native Arkit**:
+
+- Homestory: An AI powered interior design assistant ([App store](https://itunes.apple.com/us/app/homestory-augmented-reality/id1292552232?ls=1&mt=8))
+
 **Tutorial**: [How to make an ARKit app in 5 minutes using React Native](https://medium.com/@HippoAR/how-to-make-your-own-arkit-app-in-5-minutes-using-react-native-9d7ce109a4c2)
 
 **Sample Project**: https://github.com/HippoAR/ReactNativeARKit
