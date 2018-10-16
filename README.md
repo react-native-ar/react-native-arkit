@@ -34,9 +34,9 @@ make sure to use the latest version of yarn (>=1.x.x)
 
 ### Mostly automatic installation
 
-`$ react-native link react-native-arkit`
+⚠️ **Currently automatic installation does not work as PocketSVG is missing. Follow the manual installation.**
 
-! Currently automatic installation does not work as PocketSVG is missing. Follow the manual installation
+`$ react-native link react-native-arkit`
 
 ### Manual installation
 
