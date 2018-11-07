@@ -71,7 +71,7 @@ export default ({ throttleMs = 33, overwritePosition = {} } = {}) => C =>
         if (plane) {
           ARKitManager.hitTestPlanes(
             { x, y },
-            ARKitManager.ARHitTestResultType.ExistingPlane,
+            this.props.hitTestType || ARKitManager.ARHitTestResultType.ExistingPlane,
           ).then(({ results }) => {
             const result = isFunction(plane)
               ? plane(results)
