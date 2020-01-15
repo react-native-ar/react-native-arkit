@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license        = "MIT"
   s.author         = { "macrozone" => "https://github.com/macrozone" }
   s.platforms      = { :ios => "9.0", :tvos => "9.0" }
-  s.source         = { :git => "https://github.com/react-native-ar/react-native-arkit"", :tag => "v#{s.version}" }
+  s.source         = { :git => "https://github.com/react-native-ar/react-native-arkit"", :tag => #{s.version}" }
   s.source_files   = 'RCTARKitManager/**/*.{h,m}'
   s.preserve_paths = "**/*.js"
   s.dependency 'React'
