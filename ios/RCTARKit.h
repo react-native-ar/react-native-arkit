@@ -30,6 +30,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, strong) NSMutableArray<id<RCTARKitTouchDelegate>> *touchDelegates;
 @property (nonatomic, strong) NSMutableArray<id<RCTARKitRendererDelegate>> *rendererDelegates;
 @property (nonatomic, strong) NSMutableArray<id<RCTARKitSessionDelegate>> *sessionDelegates;
+@property (nonatomic, strong) NSMutableArray<id<MultipeerConnectivityDelegate>> *multipeerDelegate;
 
 
 #pragma mark - Properties

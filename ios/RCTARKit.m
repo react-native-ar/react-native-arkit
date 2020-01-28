@@ -12,7 +12,7 @@
 
 @import CoreLocation;
 
-@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, MultipeerConnectivityDelegate> {
     RCTARKitResolve _resolve;
 }
 
@@ -53,6 +53,7 @@ static RCTARKit *instance = nil;
             ARSCNView *arView = [[ARSCNView alloc] init];
             MultipeerConnectivity *multipeer = [[MultipeerConnectivity alloc] init];
             instance = [[self alloc] initWithARView:arView];
+            multipeer.delegate = instance;
             instance.multipeer = multipeer;
         }
     });
@@ -61,7 +62,6 @@ static RCTARKit *instance = nil;
 }
 
 - (bool)isMounted {
-    
     return self.superview != nil;
 }
 
@@ -106,7 +106,35 @@ static RCTARKit *instance = nil;
     return self;
 }
 
-
+- (void)receivedDataHandler:(NSData *)data PeerID:(MCPeerID *)peerID
+{
+    id unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARWorldMap classForKeyedUnarchiver] fromData:data error:nil];
+    
+    if ([unarchived isKindOfClass:[ARWorldMap class]]) {
+        NSLog(@"[unarchived class]====%@",[unarchived class]);
+        ARWorldMap *worldMap = unarchived;
+        self.configuration = [[ARWorldTrackingConfiguration alloc] init];
+        self.configuration.worldAlignment = ARWorldAlignmentGravity;
+        self.configuration.planeDetection = ARPlaneDetectionHorizontal|ARPlaneDetectionVertical;
+        self.configuration.initialWorldMap = worldMap;
+        [self.arView.session runWithConfiguration:self.configuration options:ARSessionRunOptionResetTracking|ARSessionRunOptionRemoveExistingAnchors];
+        
+        return;
+    }
+    
+    unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARAnchor classForKeyedUnarchiver] fromData:data error:nil];
+    
+    if ([unarchived isKindOfClass:[ARAnchor class]]) {
+        NSLog(@"[unarchived class]====%@",[unarchived class]);
+        ARAnchor *anchor = unarchived;
+        
+        [self.arView.session addAnchor:anchor];
+        
+        return;
+    }
+    
+    NSLog(@"unknown data recieved from \(%@)",peerID.displayName);
+}
 
 
 - (void)layoutSubviews {
