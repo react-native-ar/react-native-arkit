@@ -12,6 +12,7 @@
 
 #import "RCTARKitDelegate.h"
 #import "RCTARKitNodes.h"
+#import "RCTMultiPeer.h"
 
 typedef void (^RCTBubblingEventBlock)(NSDictionary *body);
 typedef void (^RCTARKitResolve)(id result);
@@ -22,6 +23,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 
 + (instancetype)sharedInstance;
 + (bool)isInitialized;
+- (instancetype)initWithARViewAndBrowser:(ARSCNView *)arView multipeer:(MultipeerConnectivity *)multipeer;
 - (instancetype)initWithARView:(ARSCNView *)arView;
 
 
@@ -32,6 +34,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 
 #pragma mark - Properties
 @property (nonatomic, strong) ARSCNView *arView;
+@property (nonatomic, strong) MultipeerConnectivity *multipeer;
 @property (nonatomic, strong) RCTARKitNodes *nodeManager;
 
 @property (nonatomic, assign) BOOL debug;
@@ -70,6 +73,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)resume;
 - (void)reset;
 - (void)hitTestPlane:(CGPoint)tapPoint types:(ARHitTestResultType)types resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
+- (void)getCurrentWorldMap:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject;
 - (void)hitTestSceneObjects:(CGPoint)tapPoint resolve:(RCTARKitResolve) resolve reject:(RCTARKitReject)reject;
 - (SCNVector3)projectPoint:(SCNVector3)point;
 - (float)getCameraDistanceToPoint:(SCNVector3)point;

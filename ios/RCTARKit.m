@@ -8,6 +8,7 @@
 
 #import "RCTARKit.h"
 #import "RCTConvert+ARKit.h"
+#import "RCTMultiPeer.h"
 
 @import CoreLocation;
 
@@ -17,6 +18,7 @@
 
 @property (nonatomic, strong) ARSession* session;
 @property (nonatomic, strong) ARWorldTrackingConfiguration *configuration;
+@property (nonatomic, strong) ARWorldMap *worldMap;
 
 @end
 
@@ -49,7 +51,9 @@ static RCTARKit *instance = nil;
     dispatch_once_on_main_thread(&onceToken, ^{
         if (instance == nil) {
             ARSCNView *arView = [[ARSCNView alloc] init];
+            MultipeerConnectivity *multipeer = [[MultipeerConnectivity alloc] init];
             instance = [[self alloc] initWithARView:arView];
+            instance.multipeer = multipeer;
         }
     });
     
@@ -128,6 +132,19 @@ static RCTARKit *instance = nil;
     }
     
 }
+
+- (void)getCurrentWorldMap:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
+    [self.arView.session getCurrentWorldMapWithCompletionHandler:^(ARWorldMap * _Nullable worldMap, NSError * _Nullable error) {
+        NSLog(@"got the current world map!!!");
+        if (error) {
+            NSLog(@"error====%@",error);
+        }
+
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:worldMap requiringSecureCoding:true error:nil];
+        [[ARKit sharedInstance].multipeer sendToAllPeers:data];
+    }];
+}
+
 - (void)reset {
     if (ARWorldTrackingConfiguration.isSupported) {
         [self.session runWithConfiguration:self.configuration options:ARSessionRunOptionRemoveExistingAnchors | ARSessionRunOptionResetTracking];
