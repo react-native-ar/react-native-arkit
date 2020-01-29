@@ -30,11 +30,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong)MCBrowserViewController *mpBrowser;
 
 @property(nonatomic, weak)id <MultipeerConnectivityDelegate> delegate;
-//@property(nonatomic, weak)id <MCBrowserViewControllerDelegate> delegate;
 
 - (void)sendToAllPeers:(NSData *)data;
 
-- (void)findMultiPeerSession;
+- (void)startBrowsingForPeers:(NSString *)serviceType;
+- (void)advertiseReadyToJoinSession:(NSString *)serviceType;
+- (void)openMultipeerBrowser:(NSString *)serviceType;
 
 - (NSArray<MCPeerID *> *)connectedPeers;
 

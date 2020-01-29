@@ -19,30 +19,46 @@
     self = [super init];
     
     if (self) {
-        NSString *serviceType = @"ar-multi-sample";
-        
         self.myPeerID = [[MCPeerID alloc] initWithDisplayName:[UIDevice currentDevice].name];
         
         self.session = [[MCSession alloc] initWithPeer:self.myPeerID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
         self.session.delegate = self;
-        
-        self.mpBrowser = [[MCBrowserViewController alloc] initWithServiceType:serviceType session:self.session];
-        self.mpBrowser.delegate = self;
-        
-        self.serviceAdvertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.myPeerID discoveryInfo:nil serviceType:serviceType];
-        self.serviceAdvertiser.delegate = self;
-        [self.serviceAdvertiser startAdvertisingPeer];
-
-        self.serviceBrowser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.myPeerID serviceType:serviceType];
-        self.serviceBrowser.delegate = self;
-        [self.serviceBrowser startBrowsingForPeers];
     }
     
     return self;
 }
 
-- (void)findMultiPeerSession {
-    NSLog(@"FIND MUltiPeer sessIonn?");
+- (void)startBrowsingForPeers:(NSString *)serviceType
+{
+    // browseForSessions
+    // this starts the multi peer service looking for peers that are looking for it's service type (string id)
+    
+    self.serviceBrowser = [[MCNearbyServiceBrowser alloc] initWithPeer:self.myPeerID serviceType:serviceType];
+    self.serviceBrowser.delegate = self;
+    [self.serviceBrowser startBrowsingForPeers];
+}
+
+- (void)advertiseReadyToJoinSession:(NSString *)serviceType
+{
+    self.serviceAdvertiser = [[MCNearbyServiceAdvertiser alloc] initWithPeer:self.myPeerID discoveryInfo:nil serviceType:serviceType];
+    self.serviceAdvertiser.delegate = self;
+    [self.serviceAdvertiser startAdvertisingPeer];
+}
+
+- (void)openMultipeerBrowser:(NSString *)serviceType
+{
+    if (!self.mpBrowser) {
+        self.mpBrowser = [[MCBrowserViewController alloc] initWithServiceType:serviceType session:self.session];
+        self.mpBrowser.delegate = self;
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.mpBrowser.delegate = self;
+        UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+
+        [rootViewController presentViewController:self.mpBrowser animated: YES completion:^{
+            // TODO: have a onPreviewVisible callback
+        }];
+    });
 }
 
 - (void)sendToAllPeers:(NSData *)data

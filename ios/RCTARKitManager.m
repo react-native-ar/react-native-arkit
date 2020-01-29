@@ -204,31 +204,20 @@ RCT_EXPORT_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve reject:(RCTPromi
     resolve(@([ARKit isInitialized]));
 }
 
-RCT_EXPORT_METHOD(findMultiPeerSession:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [ARKit sharedInstance].multipeer.mpBrowser.delegate = self;
-        UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+RCT_EXPORT_METHOD(findMultiPeerSession:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance].multipeer openMultipeerBrowser:serviceType];
+}
 
-        [rootViewController presentViewController:[ARKit sharedInstance].multipeer.mpBrowser animated: YES completion:^{
-            // TODO: have a onPreviewVisible callback
-        }];
-    });
+RCT_EXPORT_METHOD(startBrowsingForPeers:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance].multipeer startBrowsingForPeers:serviceType];
+}
+
+RCT_EXPORT_METHOD(advertiseReadyToJoinSession:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance].multipeer advertiseReadyToJoinSession:serviceType];
 }
 
 RCT_EXPORT_METHOD(sendWorldmapData:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] getCurrentWorldMap:resolve reject:reject];
-//    resolve([[ARKit sharedInstance] getCurrentWorldMap:resolve reject:reject]);
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        ARSession *session = [ARKit sharedInstance];
-//        [session getCurrentWorldMapWithCompletionHandler:^(ARWorldMap * _Nullable worldMap, NSError * _Nullable error) {
-//            if (error) {
-//                NSLog(@"error====%@",error);
-//            }
-//
-//            NSData *data = [NSKeyedArchiver archivedDataWithRootObject:worldMap requiringSecureCoding:true error:nil];
-//            [[ARKit sharedInstance].multipeer sendToAllPeers:data];
-//        }];
-//    });
 }
 
 RCT_EXPORT_METHOD(isMounted:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
