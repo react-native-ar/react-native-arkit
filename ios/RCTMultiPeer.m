@@ -19,7 +19,7 @@
     self = [super init];
     
     if (self) {
-        self.myPeerID = [[MCPeerID alloc] initWithDisplayName:[UIDevice currentDevice].name];
+        self.myPeerID = [[MCPeerID alloc] initWithDisplayName:[[NSUUID UUID] UUIDString]];
         
         self.session = [[MCSession alloc] initWithPeer:self.myPeerID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
         self.session.delegate = self;
@@ -52,7 +52,6 @@
         self.mpBrowser.delegate = self;
     }
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.mpBrowser.delegate = self;
         UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
 
         [rootViewController presentViewController:self.mpBrowser animated: YES completion:^{

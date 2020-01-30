@@ -176,6 +176,8 @@ RCT_EXPORT_VIEW_PROPERTY(onAnchorDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onAnchorUpdated, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onAnchorRemoved, RCTBubblingEventBlock)
 
+RCT_EXPORT_VIEW_PROPERTY(onMultipeerJsonDataReceived, RCTBubblingEventBlock)
+
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
@@ -204,7 +206,7 @@ RCT_EXPORT_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve reject:(RCTPromi
     resolve(@([ARKit isInitialized]));
 }
 
-RCT_EXPORT_METHOD(findMultiPeerSession:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(openMultipeerBrowser:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance].multipeer openMultipeerBrowser:serviceType];
 }
 
@@ -216,6 +218,11 @@ RCT_EXPORT_METHOD(advertiseReadyToJoinSession:(NSString *)serviceType resolve:(R
     [[ARKit sharedInstance].multipeer advertiseReadyToJoinSession:serviceType];
 }
 
+RCT_EXPORT_METHOD(sendDataToAllPeers:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [self sendData:[RCTARKit sharedInstance].multipeer.connectedPeers data:data callback:resolve];
+}
+
+// TODO: Should only be able to do if host ? Or thats a config option
 RCT_EXPORT_METHOD(sendWorldmapData:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] getCurrentWorldMap:resolve reject:reject];
 }
@@ -247,6 +254,23 @@ RCT_EXPORT_METHOD(
                   ) {
     CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
     [[ARKit sharedInstance] hitTestSceneObjects:point resolve:resolve reject:reject];
+}
+
+- (void)sendData:(NSArray *)recipients data:(NSDictionary *)data callback:(RCTResponseSenderBlock)callback {
+        NSError *error = nil;
+        NSMutableArray *peers = [NSMutableArray array];
+//        for (NSString *peerUUID in recipients) {
+//            [peers addObject:[[ARKit sharedInstance].multipeer.session.connectedPeers valueForKey:peerUUID]];
+//        }
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
+        [[ARKit sharedInstance].multipeer.session sendData:jsonData toPeers:recipients withMode:MCSessionSendDataReliable error:&error];
+    NSLog(@"Sending data...");
+        if (error == nil) {
+            callback(@[[NSNull null]]);
+        }
+        else {
+            callback(@[[error description]]);
+        }
 }
 
 

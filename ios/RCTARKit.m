@@ -108,32 +108,52 @@ static RCTARKit *instance = nil;
 
 - (void)receivedDataHandler:(NSData *)data PeerID:(MCPeerID *)peerID
 {
-    id unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARWorldMap classForKeyedUnarchiver] fromData:data error:nil];
-    
-    if ([unarchived isKindOfClass:[ARWorldMap class]]) {
-        NSLog(@"[unarchived class]====%@",[unarchived class]);
-        ARWorldMap *worldMap = unarchived;
-        self.configuration = [[ARWorldTrackingConfiguration alloc] init];
-        self.configuration.worldAlignment = ARWorldAlignmentGravity;
-        self.configuration.planeDetection = ARPlaneDetectionHorizontal|ARPlaneDetectionVertical;
-        self.configuration.initialWorldMap = worldMap;
-        [self.arView.session runWithConfiguration:self.configuration options:ARSessionRunOptionResetTracking|ARSessionRunOptionRemoveExistingAnchors];
+    id parsedJSON;
+    @try {
+        NSError *error = nil;
+        parsedJSON = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    } @catch (NSException *exception) {
+        // TODO: make a onMultipeerDataFailure callback
+    } @finally {
         
-        return;
     }
     
-    unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARAnchor classForKeyedUnarchiver] fromData:data error:nil];
-    
-    if ([unarchived isKindOfClass:[ARAnchor class]]) {
-        NSLog(@"[unarchived class]====%@",[unarchived class]);
-        ARAnchor *anchor = unarchived;
-        
-        [self.arView.session addAnchor:anchor];
-        
-        return;
+    if (parsedJSON) {
+        if (self.onMultipeerJsonDataReceived) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.onMultipeerJsonDataReceived(@{
+                                       @"data": parsedJSON,
+                                       });
+            });
+        }
+    } else {
+            id unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARWorldMap classForKeyedUnarchiver] fromData:data error:nil];
+            
+            if ([unarchived isKindOfClass:[ARWorldMap class]]) {
+                NSLog(@"[unarchived class]====%@",[unarchived class]);
+                ARWorldMap *worldMap = unarchived;
+                self.configuration = [[ARWorldTrackingConfiguration alloc] init];
+                self.configuration.worldAlignment = ARWorldAlignmentGravity;
+                self.configuration.planeDetection = ARPlaneDetectionHorizontal|ARPlaneDetectionVertical;
+                self.configuration.initialWorldMap = worldMap;
+                [self.arView.session runWithConfiguration:self.configuration options:ARSessionRunOptionResetTracking|ARSessionRunOptionRemoveExistingAnchors];
+                
+                return;
+            }
+            
+            unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARAnchor classForKeyedUnarchiver] fromData:data error:nil];
+            
+            if ([unarchived isKindOfClass:[ARAnchor class]]) {
+                NSLog(@"[unarchived class]====%@",[unarchived class]);
+                ARAnchor *anchor = unarchived;
+                
+                [self.arView.session addAnchor:anchor];
+                
+                return;
+            }
+
+            NSLog(@"unknown data recieved from \(%@)",peerID.displayName);
     }
-    
-    NSLog(@"unknown data recieved from \(%@)",peerID.displayName);
 }
 
 
