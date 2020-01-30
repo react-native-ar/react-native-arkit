@@ -218,11 +218,22 @@ RCT_EXPORT_METHOD(advertiseReadyToJoinSession:(NSString *)serviceType resolve:(R
     [[ARKit sharedInstance].multipeer advertiseReadyToJoinSession:serviceType];
 }
 
+// TODO: Should be optionally to only be available to host
 RCT_EXPORT_METHOD(sendDataToAllPeers:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [self sendData:[RCTARKit sharedInstance].multipeer.connectedPeers data:data callback:resolve];
 }
 
-// TODO: Should only be able to do if host ? Or thats a config option
+// TODO: Should be optional to lock it down so peers can only send to host
+RCT_EXPORT_METHOD(sendDataToPeers:(NSDictionary *)data recepientPeerIDs:(NSArray *)recepientPeerIDs resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    NSError *error = nil;
+    NSMutableArray *peers = [NSMutableArray array];
+    for (NSString *peerUUID in recepientPeerIDs) {
+      [peers addObject:[[RCTARKit sharedInstance].multipeer.connectedPeers valueForKey:peerUUID]];
+    }
+    [self sendData:[RCTARKit sharedInstance].multipeer.connectedPeers data:data callback:resolve];
+}
+
+// TODO: Should be optional to only be available to host
 RCT_EXPORT_METHOD(sendWorldmapData:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] getCurrentWorldMap:resolve reject:reject];
 }
