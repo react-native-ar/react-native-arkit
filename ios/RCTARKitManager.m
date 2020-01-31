@@ -178,6 +178,11 @@ RCT_EXPORT_VIEW_PROPERTY(onAnchorRemoved, RCTBubblingEventBlock)
 
 RCT_EXPORT_VIEW_PROPERTY(onMultipeerJsonDataReceived, RCTBubblingEventBlock)
 
+// TODO: Option to lock these three below down for host only
+RCT_EXPORT_VIEW_PROPERTY(onPeerConnected, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPeerConnecting, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPeerDisconnected, RCTBubblingEventBlock)
+
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
@@ -236,6 +241,11 @@ RCT_EXPORT_METHOD(sendDataToPeers:(NSDictionary *)data recepientPeerIDs:(NSArray
 // TODO: Should be optional to only be available to host
 RCT_EXPORT_METHOD(sendWorldmapData:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] getCurrentWorldMap:resolve reject:reject];
+}
+
+// TODO: Should be optional to only be available to host
+RCT_EXPORT_METHOD(getAllConnectedPeers:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    //TODO: get all peer ids
 }
 
 RCT_EXPORT_METHOD(isMounted:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {

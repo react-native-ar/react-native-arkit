@@ -7,8 +7,11 @@
 //
 
 #import "RCTMultiPeer.h"
+#import "RCTARKit.h"
 
-@interface MultipeerConnectivity ()<MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, MCBrowserViewControllerDelegate>
+@interface MultipeerConnectivity ()<MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, MCNearbyServiceBrowserDelegate, MCBrowserViewControllerDelegate> {
+    RCTARKitResolve _resolve;
+}
 
 @end
 
@@ -23,6 +26,7 @@
         
         self.session = [[MCSession alloc] initWithPeer:self.myPeerID securityIdentity:nil encryptionPreference:MCEncryptionRequired];
         self.session.delegate = self;
+        self.connectedPeersDictionary = [NSMutableDictionary dictionary];
     }
     
     return self;
@@ -78,10 +82,44 @@
 
 #pragma mark MCSessionDelegate
 
-// Remote peer changed state.
-- (void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state
-{
+- (void)session:(MCSession *)session peer:(MCPeerID *)peerID didChangeState:(MCSessionState)state {
+  // don't react to own state changes
+  if ([peerID.displayName isEqualToString:self.myPeerID.displayName]) return;
     
+  if (state == MCSessionStateConnected) {
+      [self.connectedPeersDictionary setValue:peerID forKey:peerID.displayName];
+      if ([ARKit sharedInstance].onPeerConnected) {
+          dispatch_async(dispatch_get_main_queue(), ^{
+              [ARKit sharedInstance].onPeerConnected(@{
+                                        @"peer": @{
+                                          @"id": peerID.displayName
+                                        }
+                                     });
+          });
+      }
+  }
+  else if (state == MCSessionStateConnecting) {
+    if ([ARKit sharedInstance].onPeerConnecting) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [ARKit sharedInstance].onPeerConnecting(@{
+                                      @"peer": @{
+                                        @"id": peerID.displayName
+                                      }
+                                   });
+        });
+    }
+  }
+  else if (state == MCSessionStateNotConnected) {
+    if ([ARKit sharedInstance].onPeerDisconnected) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [ARKit sharedInstance].onPeerDisconnected(@{
+                                      @"peer": @{
+                                        @"id": peerID.displayName
+                                      }
+                                   });
+        });
+    }
+  }
 }
 
 // Received data from remote peer.

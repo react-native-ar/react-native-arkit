@@ -64,6 +64,10 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, copy) RCTBubblingEventBlock onEvent;
 @property (nonatomic, copy) RCTBubblingEventBlock onARKitError;
 
+@property (nonatomic, copy) RCTBubblingEventBlock onPeerConnected;
+@property (nonatomic, copy) RCTBubblingEventBlock onPeerConnecting;
+@property (nonatomic, copy) RCTBubblingEventBlock onPeerDisconnected;
+
 @property (nonatomic, copy) RCTBubblingEventBlock onMultipeerJsonDataReceived;
 
 

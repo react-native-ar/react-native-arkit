@@ -11,6 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef void (^RCTBubblingEventBlock)(NSDictionary *body);
+typedef void (^RCTARKitResolve)(id result);
+typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error);
+
 @protocol MultipeerConnectivityDelegate <NSObject>
 @optional
 
@@ -18,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-@interface MultipeerConnectivity : NSObject
+@interface MultipeerConnectivity : UIView
 
 @property(nonatomic, strong)MCPeerID *myPeerID;
 
@@ -29,6 +33,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong)MCNearbyServiceBrowser *serviceBrowser;
 @property(nonatomic, strong)MCBrowserViewController *mpBrowser;
 
+@property(nonatomic, strong)NSMutableDictionary *connectedPeersDictionary;
+
 @property(nonatomic, weak)id <MultipeerConnectivityDelegate> delegate;
 
 - (void)sendToAllPeers:(NSData *)data;
@@ -36,6 +42,10 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startBrowsingForPeers:(NSString *)serviceType;
 - (void)advertiseReadyToJoinSession:(NSString *)serviceType;
 - (void)openMultipeerBrowser:(NSString *)serviceType;
+
+//@property (nonatomic, copy) RCTBubblingEventBlock onPeerConnected;
+//@property (nonatomic, copy) RCTBubblingEventBlock onPeerConnecting;
+//@property (nonatomic, copy) RCTBubblingEventBlock onPeerDisconnected;
 
 - (NSArray<MCPeerID *> *)connectedPeers;
 
