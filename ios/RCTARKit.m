@@ -8,15 +8,17 @@
 
 #import "RCTARKit.h"
 #import "RCTConvert+ARKit.h"
+#import "RCTMultiPeer.h"
 
 @import CoreLocation;
 
-@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, MultipeerConnectivityDelegate> {
     RCTARKitResolve _resolve;
 }
 
 @property (nonatomic, strong) ARSession* session;
 @property (nonatomic, strong) ARWorldTrackingConfiguration *configuration;
+@property (nonatomic, strong) ARWorldMap *worldMap;
 
 @end
 
@@ -49,7 +51,10 @@ static RCTARKit *instance = nil;
     dispatch_once_on_main_thread(&onceToken, ^{
         if (instance == nil) {
             ARSCNView *arView = [[ARSCNView alloc] init];
+            MultipeerConnectivity *multipeer = [[MultipeerConnectivity alloc] init];
             instance = [[self alloc] initWithARView:arView];
+            multipeer.delegate = instance;
+            instance.multipeer = multipeer;
         }
     });
     
@@ -57,7 +62,6 @@ static RCTARKit *instance = nil;
 }
 
 - (bool)isMounted {
-    
     return self.superview != nil;
 }
 
@@ -102,7 +106,55 @@ static RCTARKit *instance = nil;
     return self;
 }
 
-
+- (void)receivedDataHandler:(NSData *)data PeerID:(MCPeerID *)peerID
+{
+    id parsedJSON;
+    @try {
+        NSError *error = nil;
+        parsedJSON = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+    } @catch (NSException *exception) {
+        // TODO: make a onMultipeerDataFailure callback
+    } @finally {
+        
+    }
+    
+    if (parsedJSON) {
+        if (self.onMultipeerJsonDataReceived) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.onMultipeerJsonDataReceived(@{
+                                       @"data": parsedJSON,
+                                       });
+            });
+        }
+    } else {
+            id unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARWorldMap classForKeyedUnarchiver] fromData:data error:nil];
+            
+            if ([unarchived isKindOfClass:[ARWorldMap class]]) {
+                NSLog(@"[unarchived class]====%@",[unarchived class]);
+                ARWorldMap *worldMap = unarchived;
+                self.configuration = [[ARWorldTrackingConfiguration alloc] init];
+                self.configuration.worldAlignment = ARWorldAlignmentGravity;
+                self.configuration.planeDetection = ARPlaneDetectionHorizontal|ARPlaneDetectionVertical;
+                self.configuration.initialWorldMap = worldMap;
+                [self.arView.session runWithConfiguration:self.configuration options:ARSessionRunOptionResetTracking|ARSessionRunOptionRemoveExistingAnchors];
+                
+                return;
+            }
+            
+            unarchived = [NSKeyedUnarchiver unarchivedObjectOfClass:[ARAnchor classForKeyedUnarchiver] fromData:data error:nil];
+            
+            if ([unarchived isKindOfClass:[ARAnchor class]]) {
+                NSLog(@"[unarchived class]====%@",[unarchived class]);
+                ARAnchor *anchor = unarchived;
+                
+                [self.arView.session addAnchor:anchor];
+                
+                return;
+            }
+            
+            NSLog(@"unknown data recieved from \(%@)",peerID.displayName);
+    }
+}
 
 
 - (void)layoutSubviews {
@@ -128,6 +180,19 @@ static RCTARKit *instance = nil;
     }
     
 }
+
+- (void)getCurrentWorldMap:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
+    [self.arView.session getCurrentWorldMapWithCompletionHandler:^(ARWorldMap * _Nullable worldMap, NSError * _Nullable error) {
+        NSLog(@"got the current world map!!!");
+        if (error) {
+            NSLog(@"error====%@",error);
+        }
+
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:worldMap requiringSecureCoding:true error:nil];
+        [[ARKit sharedInstance].multipeer sendToAllPeers:data];
+    }];
+}
+
 - (void)reset {
     if (ARWorldTrackingConfiguration.isSupported) {
         [self.session runWithConfiguration:self.configuration options:ARSessionRunOptionRemoveExistingAnchors | ARSessionRunOptionResetTracking];

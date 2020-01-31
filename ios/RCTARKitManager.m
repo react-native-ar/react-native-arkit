@@ -12,7 +12,11 @@
 #import <UIKit/UIKit.h>
 #import <Photos/Photos.h>
 #import "color-grabber.h"
+#import "RCTMultiPeer.h"
 
+@interface RCTARKitManager () <MCBrowserViewControllerDelegate>
+
+@end
 @implementation RCTARKitManager
 
 RCT_EXPORT_MODULE()
@@ -172,6 +176,13 @@ RCT_EXPORT_VIEW_PROPERTY(onAnchorDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onAnchorUpdated, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onAnchorRemoved, RCTBubblingEventBlock)
 
+RCT_EXPORT_VIEW_PROPERTY(onMultipeerJsonDataReceived, RCTBubblingEventBlock)
+
+// TODO: Option to lock these three below down for host only
+RCT_EXPORT_VIEW_PROPERTY(onPeerConnected, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPeerConnecting, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPeerDisconnected, RCTBubblingEventBlock)
+
 RCT_EXPORT_VIEW_PROPERTY(onTrackingState, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFeaturesDetected, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
@@ -179,6 +190,7 @@ RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneUsingExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneNoExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onEvent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onARKitError, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(worldMap, NSObject);
 
 RCT_EXPORT_METHOD(pause:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] pause];
@@ -197,6 +209,43 @@ RCT_EXPORT_METHOD(reset:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseReject
 
 RCT_EXPORT_METHOD(isInitialized:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve(@([ARKit isInitialized]));
+}
+
+RCT_EXPORT_METHOD(openMultipeerBrowser:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance].multipeer openMultipeerBrowser:serviceType];
+}
+
+RCT_EXPORT_METHOD(startBrowsingForPeers:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance].multipeer startBrowsingForPeers:serviceType];
+}
+
+RCT_EXPORT_METHOD(advertiseReadyToJoinSession:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance].multipeer advertiseReadyToJoinSession:serviceType];
+}
+
+// TODO: Should be optionally to only be available to host
+RCT_EXPORT_METHOD(sendDataToAllPeers:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [self sendData:[RCTARKit sharedInstance].multipeer.connectedPeers data:data callback:resolve];
+}
+
+// TODO: Should be optional to lock it down so peers can only send to host
+RCT_EXPORT_METHOD(sendDataToPeers:(NSDictionary *)data recepientPeerIDs:(NSArray *)recepientPeerIDs resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    NSError *error = nil;
+    NSMutableArray *peers = [NSMutableArray array];
+    for (NSString *peerUUID in recepientPeerIDs) {
+      [peers addObject:[[RCTARKit sharedInstance].multipeer.connectedPeers valueForKey:peerUUID]];
+    }
+    [self sendData:[RCTARKit sharedInstance].multipeer.connectedPeers data:data callback:resolve];
+}
+
+// TODO: Should be optional to only be available to host
+RCT_EXPORT_METHOD(sendWorldmapData:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [[ARKit sharedInstance] getCurrentWorldMap:resolve reject:reject];
+}
+
+// TODO: Should be optional to only be available to host
+RCT_EXPORT_METHOD(getAllConnectedPeers:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    //TODO: get all peer ids
 }
 
 RCT_EXPORT_METHOD(isMounted:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
@@ -226,6 +275,23 @@ RCT_EXPORT_METHOD(
                   ) {
     CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
     [[ARKit sharedInstance] hitTestSceneObjects:point resolve:resolve reject:reject];
+}
+
+- (void)sendData:(NSArray *)recipients data:(NSDictionary *)data callback:(RCTResponseSenderBlock)callback {
+        NSError *error = nil;
+        NSMutableArray *peers = [NSMutableArray array];
+//        for (NSString *peerUUID in recipients) {
+//            [peers addObject:[[ARKit sharedInstance].multipeer.session.connectedPeers valueForKey:peerUUID]];
+//        }
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
+        [[ARKit sharedInstance].multipeer.session sendData:jsonData toPeers:recipients withMode:MCSessionSendDataReliable error:&error];
+    NSLog(@"Sending data...");
+        if (error == nil) {
+            callback(@[[NSNull null]]);
+        }
+        else {
+            callback(@[[error description]]);
+        }
 }
 
 
@@ -396,6 +462,26 @@ RCT_EXPORT_METHOD(focusScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseR
 RCT_EXPORT_METHOD(clearScene:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance] clearScene];
     resolve(@{});
+}
+
+- (void)browserViewControllerDidFinish:(nonnull MCBrowserViewController *)browserViewController {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+
+        [rootViewController dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    });
+}
+
+- (void)browserViewControllerWasCancelled:(nonnull MCBrowserViewController *)browserViewController {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+
+        [rootViewController dismissViewControllerAnimated:YES completion:^{
+            
+        }];
+    });
 }
 
 @end
