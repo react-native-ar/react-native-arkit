@@ -75,6 +75,17 @@
     }
 }
 
+- (void)sendToPeers:(NSArray *)recipients data:(NSData *)data
+{
+    @try {
+        [self.session sendData:data toPeers:recipients withMode:MCSessionSendDataReliable error:nil];
+    } @catch (NSException *exception) {
+        NSLog(@"error sending data to peers: \(error.localizedDescription)");
+    } @finally {
+        
+    }
+}
+
 - (NSArray<MCPeerID *> *)connectedPeers
 {
     return self.session.connectedPeers;

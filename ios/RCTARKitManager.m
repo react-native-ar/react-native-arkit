@@ -219,23 +219,22 @@ RCT_EXPORT_METHOD(startBrowsingForPeers:(NSString *)serviceType resolve:(RCTProm
     [[ARKit sharedInstance].multipeer startBrowsingForPeers:serviceType];
 }
 
+RCT_EXPORT_METHOD(getFrontOfCameraPosition:resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve(@{@"frontOfCamera": [ARKit sharedInstance].nodeManager.frontOfCamera});
+}
+
 RCT_EXPORT_METHOD(advertiseReadyToJoinSession:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance].multipeer advertiseReadyToJoinSession:serviceType];
 }
 
 // TODO: Should be optionally to only be available to host
 RCT_EXPORT_METHOD(sendDataToAllPeers:(NSDictionary *)data resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [self sendData:[RCTARKit sharedInstance].multipeer.connectedPeers data:data callback:resolve];
+    [self sendDataToAll:data callback:resolve];
 }
 
 // TODO: Should be optional to lock it down so peers can only send to host
-RCT_EXPORT_METHOD(sendDataToPeers:(NSDictionary *)data recepientPeerIDs:(NSArray *)recepientPeerIDs resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    NSError *error = nil;
-    NSMutableArray *peers = [NSMutableArray array];
-    for (NSString *peerUUID in recepientPeerIDs) {
-      [peers addObject:[[RCTARKit sharedInstance].multipeer.connectedPeers valueForKey:peerUUID]];
-    }
-    [self sendData:[RCTARKit sharedInstance].multipeer.connectedPeers data:data callback:resolve];
+RCT_EXPORT_METHOD(sendDataToPeer:(NSDictionary *)data recipientId:(NSString *)recipientId resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    [self sendData:recipientId data:data callback:resolve];
 }
 
 // TODO: Should be optional to only be available to host
@@ -277,12 +276,23 @@ RCT_EXPORT_METHOD(
     [[ARKit sharedInstance] hitTestSceneObjects:point resolve:resolve reject:reject];
 }
 
-- (void)sendData:(NSArray *)recipients data:(NSDictionary *)data callback:(RCTResponseSenderBlock)callback {
+- (void)sendDataToAll:(NSDictionary *)data callback:(RCTResponseSenderBlock)callback {
         NSError *error = nil;
-        NSMutableArray *peers = [NSMutableArray array];
-//        for (NSString *peerUUID in recipients) {
-//            [peers addObject:[[ARKit sharedInstance].multipeer.session.connectedPeers valueForKey:peerUUID]];
-//        }
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
+        [[ARKit sharedInstance].multipeer.session sendData:jsonData toPeers:[RCTARKit sharedInstance].multipeer.session.connectedPeers withMode:MCSessionSendDataReliable error:&error];
+    NSLog(@"Sending data...");
+        if (error == nil) {
+            callback(@[[NSNull null]]);
+        }
+        else {
+            callback(@[[error description]]);
+        }
+}
+
+- (void)sendData:(NSString *)recipient data:(NSDictionary *)data callback:(RCTResponseSenderBlock)callback {
+        NSError *error = nil;
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"peerUUID == %@", recipient];
+        NSArray *recipients = [[RCTARKit sharedInstance].multipeer.session.connectedPeers filteredArrayUsingPredicate:predicate];
         NSData *jsonData = [NSJSONSerialization dataWithJSONObject:data options:0 error:&error];
         [[ARKit sharedInstance].multipeer.session sendData:jsonData toPeers:recipients withMode:MCSessionSendDataReliable error:&error];
     NSLog(@"Sending data...");

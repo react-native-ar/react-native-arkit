@@ -22,7 +22,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 
 @end
 
-@interface MultipeerConnectivity : UIView
+@interface MultipeerConnectivity : NSObject
 
 @property(nonatomic, strong)MCPeerID *myPeerID;
 
