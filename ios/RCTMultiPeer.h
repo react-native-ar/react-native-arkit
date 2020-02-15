@@ -1,3 +1,9 @@
+
+//  Created by Matt Thompson on 01/25/20.
+//  MIT Licence.
+//  lwansbrough/react-native-multipeer
+// https://developer.apple.com/documentation/arkit/creating_a_multiuser_ar_experience?language=objc
+
 #import <Foundation/Foundation.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
