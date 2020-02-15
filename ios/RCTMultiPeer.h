@@ -1,11 +1,3 @@
-//
-//  MultipeerConnectivity.h
-//  ARKit
-//
-//  Created by Mac on 2018/6/5.
-//  Copyright © 2018年 AR. All rights reserved.
-//
-
 #import <Foundation/Foundation.h>
 #import <MultipeerConnectivity/MultipeerConnectivity.h>
 
@@ -42,10 +34,6 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)startBrowsingForPeers:(NSString *)serviceType;
 - (void)advertiseReadyToJoinSession:(NSString *)serviceType;
 - (void)openMultipeerBrowser:(NSString *)serviceType;
-
-//@property (nonatomic, copy) RCTBubblingEventBlock onPeerConnected;
-//@property (nonatomic, copy) RCTBubblingEventBlock onPeerConnecting;
-//@property (nonatomic, copy) RCTBubblingEventBlock onPeerDisconnected;
 
 - (NSArray<MCPeerID *> *)connectedPeers;
 

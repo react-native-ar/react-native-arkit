@@ -222,7 +222,7 @@ static RCTARKit *instance = nil;
 - (void)setDebug:(BOOL)debug {
     if (debug) {
         self.arView.showsStatistics = YES;
-        self.arView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints;
+        self.arView.debugOptions = ARSCNDebugOptionShowFeaturePoints;
     } else {
         self.arView.showsStatistics = NO;
         self.arView.debugOptions = SCNDebugOptionNone;

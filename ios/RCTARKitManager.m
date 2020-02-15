@@ -223,6 +223,14 @@ RCT_EXPORT_METHOD(getFrontOfCameraPosition:resolve:(RCTPromiseResolveBlock)resol
     resolve(@{@"frontOfCamera": [ARKit sharedInstance].nodeManager.frontOfCamera});
 }
 
+RCT_EXPORT_METHOD(getFrontOfCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    resolve(@{
+              @"x": @([ARKit sharedInstance].nodeManager.frontOfCamera.position.x),
+              @"y": @([ARKit sharedInstance].nodeManager.frontOfCamera.position.y),
+              @"z": @([ARKit sharedInstance].nodeManager.frontOfCamera.position.z)
+              });
+}
+
 RCT_EXPORT_METHOD(advertiseReadyToJoinSession:(NSString *)serviceType resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     [[ARKit sharedInstance].multipeer advertiseReadyToJoinSession:serviceType];
 }
