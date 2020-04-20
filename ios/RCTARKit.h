@@ -13,6 +13,7 @@
 #import "RCTARKitDelegate.h"
 #import "RCTARKitNodes.h"
 #import "RCTMultiPeer.h"
+@import CoreLocation;
 
 typedef void (^RCTBubblingEventBlock)(NSDictionary *body);
 typedef void (^RCTARKitResolve)(id result);
@@ -64,6 +65,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 @property (nonatomic, copy) RCTBubblingEventBlock onTapOnPlaneNoExtent;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onRotationGesture;
+@property (nonatomic, copy) RCTBubblingEventBlock onPinchGesture;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onEvent;
 @property (nonatomic, copy) RCTBubblingEventBlock onARKitError;
@@ -95,6 +97,8 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)focusScene;
 - (void)clearScene;
 - (NSDictionary *)readCameraPosition;
+// - (void)getArAnchorPosition:(CLLocation *)location landmark:(CLLocation *)landmark anchorName:(NSString *)anchorName;
+
 - (NSDictionary *)readCamera;
 - (NSDictionary* )getCurrentLightEstimation;
 - (NSArray * )getCurrentDetectedFeaturePoints;

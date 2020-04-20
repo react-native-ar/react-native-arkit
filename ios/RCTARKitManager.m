@@ -189,6 +189,7 @@ RCT_EXPORT_VIEW_PROPERTY(onLightEstimation, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneUsingExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onTapOnPlaneNoExtent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onRotationGesture, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onPinchGesture, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onEvent, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onARKitError, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(worldMap, NSObject);
@@ -448,6 +449,21 @@ RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
+
+// RCT_EXPORT_METHOD(addAnchorByLocation:(NSString *)anchorName  locationLat:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationAltitude landmarkAltitude:(float)landmarkAltitude resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+//     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
+//                                                 altitude:locationAltitude
+//                                                 horizontalAccuracy:locationHorizontalAccuracy
+//                                                 verticalAccuracy:locationVerticalAccuracy
+//                                                 timestamp:[NSDate date]];
+//     CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landmarkLat, landmarkLong)
+//                                                 altitude:landmarkAltitude
+//                                                 horizontalAccuracy:landmarkHorizontalAccuracy
+//                                                 verticalAccuracy:landmarkVerticalAccuracy
+//                                                 timestamp:[NSDate date]];
+                                                
+//     [[ARKit sharedInstance] getArAnchorPosition:location landmark:landmark anchorName:anchorName];
+// }
 
 RCT_EXPORT_METHOD(getCurrentLightEstimation:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] getCurrentLightEstimation]);

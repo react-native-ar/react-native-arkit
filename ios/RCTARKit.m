@@ -76,10 +76,13 @@ static RCTARKit *instance = nil;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
-
+        
         UIRotationGestureRecognizer *rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotationFrom:)];
         [self.arView addGestureRecognizer:rotationGestureRecognizer];
-        
+
+        UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
+        [self.arView addGestureRecognizer:pinchGestureRecognizer];
+
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
         self.sessionDelegates = [NSMutableArray array];
@@ -305,26 +308,133 @@ static RCTARKit *instance = nil;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
 - (void)setDetectionImages:(NSArray*) detectionImages {
-    
-    if (@available(iOS 11.3, *)) {
-        ARWorldTrackingConfiguration *configuration = self.configuration;
-        NSSet *detectionImagesSet = [[NSSet alloc] init];
-        for (id config in detectionImages) {
-            if(config[@"resourceGroupName"]) {
-                // TODO: allow bundle to be defined
-                detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
-            }
+        if (@available(iOS 11.3, *)) {
+            ARWorldTrackingConfiguration *configuration = self.configuration;
+            NSSet *detectionImagesSet = [[NSSet alloc] init];
+            for (id config in detectionImages) {
+
+                for (id url in config[@"arDetectionImages"]) {
+                    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: url]];
+
+                    UIImage* uiimage = [[UIImage alloc] initWithData:imageData];
+
+                    CGImageRef cgImage = [uiimage CGImage];
+
+                    ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:1];
+                    image.name=url;
+                    detectionImagesSet = [detectionImagesSet setByAddingObject:image];
+
+                }
+            
+
+                if(config[@"resourceGroupName"]) {
+                    detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
+                }
+            
+            configuration.detectionImages = detectionImagesSet;
+            [self resume];
         }
-        configuration.detectionImages = detectionImagesSet;
-        [self resume];;
     }
 }
+
 #endif
 - (NSDictionary *)readCameraPosition {
     // deprecated
     SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
     return vectorToJson(cameraPosition);
 }
+
+- (double)radiansFromDegrees:(float)degrees
+{
+    return degrees * (M_PI/180.0);    
+}
+
+- (double)degreesFromRadians:(float)radians
+{
+    return radians * (180.0/M_PI);
+}
+
+- (void)getArAnchorPosition:(CLLocation *)location landmark:(CLLocation *)landmark anchorName:(NSString  *)anchorName {
+
+    CLLocationDistance distance = [location distanceFromLocation:landmark];
+    matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -distance);
+
+    if(distance < 200){
+        matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -50);
+    }   
+
+    float rotation = angleBetweenPoints(location, landmark);
+
+    float tilt = angleOffHorizon(location, landmark);
+
+    simd_float4x4 tiltedTransformation = rotateVertically(distanceTransform, tilt);
+
+    simd_float4x4 completedTransformation = rotateHorizontally(tiltedTransformation, -rotation);
+
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithName:anchorName transform:completedTransformation];
+
+    [self.arView.session addAnchor:localAnchor];
+
+    return;
+}
+
+static SCNVector3 toSCNVector3(simd_float4 float4) {
+    SCNVector3 positionAbsolute = SCNVector3Make(float4.x, float4.y, float4.z);
+    return positionAbsolute;
+}
+
+
+static float angleBetweenPoints(const CLLocation *location, const CLLocation *landmark) {
+    float startLat = GLKMathDegreesToRadians(location.coordinate.latitude);
+    float startLon = GLKMathDegreesToRadians(location.coordinate.longitude);
+    float endLat = GLKMathDegreesToRadians(landmark.coordinate.latitude);
+    float endLon = GLKMathDegreesToRadians(landmark.coordinate.longitude);
+
+    float lonDiff = endLon - startLon;
+    float y = sin(lonDiff) * cos(endLat);
+    float x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
+    float angle = atan2(y, x);
+    if(angle < 0){
+        float finalAngle = angle + (M_PI * 2);
+        return finalAngle;
+    } else {
+        return angle;
+    }
+}
+
+static matrix_float4x4 translatingIdentity(const float x, const float y, const float z) {
+    matrix_float4x4 result = matrix_identity_float4x4;
+    result.columns[3].x = x;
+    result.columns[3].y = y;
+    result.columns[3].z = z;
+    return result;
+}
+
+static float angleOffHorizon(const CLLocation *start, const CLLocation *end) {
+    CLLocationDistance adjacent = [start distanceFromLocation:end];
+    float opposite = end.altitude - start.altitude;
+    return atan2(opposite, adjacent);
+}
+
+static matrix_float4x4 rotateVertically(const matrix_float4x4 distanceTrans, const float radians) {
+    GLKMatrix4 rotation = GLKMatrix4MakeXRotation(radians);
+    return simd_mul(convert(rotation), distanceTrans);
+}
+
+static matrix_float4x4 rotateHorizontally(const matrix_float4x4 titledTrans, const float radians) {
+    GLKMatrix4 rotation = GLKMatrix4MakeYRotation(radians);
+    return simd_mul(convert(rotation), titledTrans);
+}
+
+static simd_float4x4 convert(const GLKMatrix4 matrix) {
+    return simd_matrix(
+        simd_make_float4(matrix.m00, matrix.m01, matrix.m02, matrix.m03),
+        simd_make_float4(matrix.m10, matrix.m11, matrix.m12, matrix.m13),
+        simd_make_float4(matrix.m20, matrix.m21, matrix.m22, matrix.m23),
+        simd_make_float4(matrix.m30, matrix.m31, matrix.m32, matrix.m33)
+    );
+}
+
 
 static NSDictionary * vectorToJson(const SCNVector3 v) {
     return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z) };
@@ -385,7 +495,6 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 #pragma mark - snapshot methods
 
 - (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
-    
     resolve([self.nodeManager getSceneObjectsHitResult:tapPoint]);
 }
 
@@ -397,9 +506,6 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
     return [self cropImage:image toSelection:selection];
     
 }
-
-
-
 
 
 - (UIImage *)getSnapshotCamera:(NSDictionary *)selection {
@@ -542,8 +648,14 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     //
     if(self.onTapOnPlaneUsingExtent) {
         // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
-        NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
-        self.onTapOnPlaneUsingExtent(planeHitResult);
+        // NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
+        // CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
+                NSDictionary *tap = @{
+                    @"x": @(tapPoint.x),
+                    @"y": @(tapPoint.y)
+                };
+
+        self.onTapOnPlaneUsingExtent(tap);
     }
     
     if(self.onTapOnPlaneNoExtent) {
@@ -569,6 +681,26 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         }
     }
 }
+
+
+- (void)handlePinchFrom: (UIPinchGestureRecognizer *)recognizer {
+    
+    if( recognizer.state == UIGestureRecognizerStateBegan || 
+        recognizer.state == UIGestureRecognizerStateChanged || 
+        recognizer.state == UIGestureRecognizerStateEnded) {
+
+        if(self.onPinchGesture) {
+            NSDictionary *pinchGesture = @{
+                    @"scale": @(recognizer.scale),
+                    @"velocity": @(recognizer.velocity)
+                    };
+
+            self.onPinchGesture(pinchGesture);
+        }
+    }
+}
+
+
 
 #pragma mark - ARSCNViewDelegate
 
@@ -599,7 +731,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                                 @"type": @"unkown",
                                 @"eulerAngles":vectorToJson(node.eulerAngles),
                                 @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
-                                @"positionAbsolute": vectorToJson(node.position)
+                                @"positionAbsolute": vectorToJson(node.position),
                                 };
     NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:baseProps];
     
@@ -617,6 +749,16 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         #endif
     } else {
         // Fallback on earlier versions
+    }
+    NSLog(@"node.name:-%@", node.name);
+    NSLog(@"anchor.name:-%@", anchor.name);
+
+    if(anchor.name != nil){
+        NSDictionary* nameProps = @{
+            @"name": anchor.name
+        };
+
+        [dict addEntriesFromDictionary:nameProps];
     }
     return dict;
 }
