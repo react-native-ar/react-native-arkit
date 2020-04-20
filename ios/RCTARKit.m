@@ -79,7 +79,10 @@ static RCTARKit *instance = nil;
 
         UIRotationGestureRecognizer *rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotationFrom:)];
         [self.arView addGestureRecognizer:rotationGestureRecognizer];
-        
+
+        UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
+        [self.arView addGestureRecognizer:pinchGestureRecognizer];
+
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
         self.sessionDelegates = [NSMutableArray array];
@@ -566,6 +569,23 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                     };
 
             self.onRotationGesture(rotationGesture);
+        }
+    }
+}
+
+- (void)handlePinchFrom: (UIPinchGestureRecognizer *)recognizer {
+    
+    if( recognizer.state == UIGestureRecognizerStateBegan || 
+        recognizer.state == UIGestureRecognizerStateChanged || 
+        recognizer.state == UIGestureRecognizerStateEnded) {
+
+        if(self.onPinchGesture) {
+            NSDictionary *pinchGesture = @{
+                    @"scale": @(recognizer.scale),
+                    @"velocity": @(recognizer.velocity)
+                    };
+
+            self.onPinchGesture(pinchGesture);
         }
     }
 }
