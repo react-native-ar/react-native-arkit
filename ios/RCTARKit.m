@@ -76,6 +76,9 @@ static RCTARKit *instance = nil;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
+
+        UIRotationGestureRecognizer *rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotationFrom:)];
+        [self.arView addGestureRecognizer:rotationGestureRecognizer];
         
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
@@ -550,7 +553,22 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
 }
 
+- (void)handleRotationFrom: (UIRotationGestureRecognizer *)recognizer {
+    
+    if( recognizer.state == UIGestureRecognizerStateBegan || 
+        recognizer.state == UIGestureRecognizerStateChanged || 
+        recognizer.state == UIGestureRecognizerStateEnded) {
 
+        if(self.onRotationGesture) {
+            NSDictionary *rotationGesture = @{
+                    @"rotation": @(recognizer.rotation),
+                    @"velocity": @(recognizer.velocity)
+                    };
+
+            self.onRotationGesture(rotationGesture);
+        }
+    }
+}
 
 #pragma mark - ARSCNViewDelegate
 
