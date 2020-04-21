@@ -606,7 +606,9 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         if(self.onPanGesture) {
             NSDictionary *panGesture = @{
                         @"x": @(translation.x),
-                        @"y": @(translation.y )
+                        @"y": @(translation.y),
+                        @"z": @(translation.z), 
+ 
                     };
 
             self.onPanGesture(panGesture);
