@@ -76,13 +76,7 @@ static RCTARKit *instance = nil;
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
         [self.arView addGestureRecognizer:tapGestureRecognizer];
-
-        UIPanGestureRecognizer *panGestureReconizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanFrom:)];
-        panGestureReconizer.maximumNumberOfTouches = 1;
-        panGestureReconizer.minimumNumberOfTouches = 1;
-        [self.arView addGestureRecognizer:panGestureReconizer];
         
-
         UIRotationGestureRecognizer *rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotationFrom:)];
         [self.arView addGestureRecognizer:rotationGestureRecognizer];
 
@@ -597,22 +591,6 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
 }
 
-- (void)handlePanFrom:(UIPanGestureRecognizer *)recognizer {
-    CGPoint translation = [recognizer translationInView:recognizer.view];
-    // recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
-    //                                      recognizer.view.center.y + translation.y);
-
-
-        if(self.onPanGesture) {
-            NSDictionary *panGesture = @{
-                        @"x": @(recognizer.view.center.x),
-                        @"y": @(recognizer.view.center.y), 
-                    };
-
-            self.onPanGesture(panGesture);
-        }
-    // [recognizer setTranslation:CGPointZero inView:self.view];
-}
 
 #pragma mark - ARSCNViewDelegate
 
