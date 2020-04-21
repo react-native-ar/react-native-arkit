@@ -598,7 +598,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 - (void)handlePanFrom:(UIPanGestureRecognizer *)recognizer {
-    CGPoint translation = [recognizer translationInView:self.view];
+    CGPoint translation = [recognizer translationInView:recognizer.view];
     // recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
     //                                      recognizer.view.center.y + translation.y);
 
