@@ -80,6 +80,10 @@ static RCTARKit *instance = nil;
         UIRotationGestureRecognizer *rotationGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self action:@selector(handleRotationFrom:)];
         [self.arView addGestureRecognizer:rotationGestureRecognizer];
 
+        UIPress *pressGestureRecognizer = [[UIPress alloc] initWithTarget:self action:@selector(handlePressFrom:)];
+        [self.arView addGestureRecognizer:pressGestureRecognizer];
+
+
         UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
         [self.arView addGestureRecognizer:pinchGestureRecognizer];
 
@@ -572,6 +576,25 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         }
     }
 }
+
+
+- (void)handlePressFrom: (UIPress *)recognizer {
+    if(self.onPressGesture) {
+        NSDictionary *press = @{
+                @"press": @(recognizer.press),
+                @"responder": @(recognizer.responder),
+                @"window": @(recognizer.widnow),
+                @"key": @(recognizer.key),
+                @"type": @(recognizer.type),
+                @"phase": @(recognizer.phase),
+                @"timestamp": @(recognizer.timestamp),
+
+                };
+
+        self.onPressGesture(press);
+    }    
+}
+
 
 - (void)handlePinchFrom: (UIPinchGestureRecognizer *)recognizer {
     
