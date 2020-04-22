@@ -583,7 +583,8 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         if(self.onPinchGesture) {
             NSDictionary *pinchGesture = @{
                     @"scale": @(recognizer.scale),
-                    @"velocity": @(recognizer.velocity)
+                    @"velocity": @(recognizer.velocity),
+                    @"recongizer": vectorToJson(recognizer)
                     };
 
             self.onPinchGesture(pinchGesture);
