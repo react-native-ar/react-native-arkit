@@ -313,10 +313,30 @@ static RCTARKit *instance = nil;
         ARWorldTrackingConfiguration *configuration = self.configuration;
         NSSet *detectionImagesSet = [[NSSet alloc] init];
         for (id config in detectionImages) {
-            if(config[@"resourceGroupName"]) {
-                // TODO: allow bundle to be defined
-                detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
+            // pass in image links
+            // create ui image https://medium.com/ar-tips-and-tricks/how-to-add-arkit-ar-reference-images-from-the-internet-on-the-fly-eae3bc55fe0c
+            if(config[@"arDetectionImages"]) {
+                for (id url in config[@"arDetectionImages"]) {
+
+                    self.loadImageFrom(url: URL(string: url)!) { (result) in
+                        //SET YOUR IMAGE REAL WORLD WIDTH
+                        arImage = ARReferenceImage(result.cgImage!, orientation: CGImagePropertyOrientation.up, physicalWidth: "0.1")
+                        // SET YOUR IMAGE NAME
+                        arImage.name = url;
+                        // APPEND TO REFERENCE IMAGES
+                        detectionImagesSet.insert(arImage);
+                        // RESET TRACKING
+                        self.resetTracking();
+                    }
+
+                    // configuration.detectionImages = newReferenceImages;
+
+                }
             }
+
+            // if(config[@"resourceGroupName"]) {
+            //     detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
+            // }
         }
         configuration.detectionImages = detectionImagesSet;
         [self resume];;
