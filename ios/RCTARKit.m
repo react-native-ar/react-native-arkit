@@ -323,7 +323,9 @@ static RCTARKit *instance = nil;
                    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"http://myurl/mypic.jpg"]];
                     //  configuration.detectionImages = newReferenceImages;
                     NSData * newImage = [UIImage imageWithData: imageData];
-                    NSData * arImage = ARReferenceImage(newImage, orientation: up, physicalWidth: 0.1);
+                    NSData * arImage = [ARReferenceImage init: newImage physicalWidth: 0.1];
+
+                    // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
                 }
             }
 
