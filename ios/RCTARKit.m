@@ -306,7 +306,7 @@ static RCTARKit *instance = nil;
     [self resume];
 }
 
-func loadImageFrom(url: URL, completionHandler:@escaping(UIImage)->()) {
+- (void) loadImageFrom(url: URL, completionHandler:@escaping(UIImage)->()) {
     DispatchQueue.global().async { [weak self] in
         if let data = try? Data(contentsOf: url) {
             if let image = UIImage(data: data) {
