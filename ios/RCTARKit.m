@@ -306,18 +306,7 @@ static RCTARKit *instance = nil;
     [self resume];
 }
 
-- (void) loadImageFrom(url: URL, completionHandler:@escaping(UIImage)->()) {
-    DispatchQueue.global().async { [weak self] in
-        if let data = try? Data(contentsOf: url) {
-            if let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    print("LOADED ASSET");
-                    completionHandler(image);
-                }
-            }
-        }
-    }
-}
+
 
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
@@ -332,18 +321,12 @@ static RCTARKit *instance = nil;
             if(config[@"arDetectionImages"]) {
                 for (id url in config[@"arDetectionImages"]) {
 
-                    self.loadImageFrom(url: URL(string: url)!) { (result) in
-                        //SET YOUR IMAGE REAL WORLD WIDTH
-                        arImage = ARReferenceImage(result.cgImage!, orientation: CGImagePropertyOrientation.up, physicalWidth: "0.1")
-                        // SET YOUR IMAGE NAME
-                        arImage.name = url;
-                        // APPEND TO REFERENCE IMAGES
-                        detectionImagesSet.insert(arImage);
-                        // RESET TRACKING
-                        self.resetTracking();
-                    }
+                   NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"http://myurl/mypic.jpg"]];
+                   nextArImage = [UIImage imageWithData: imageData];
+                   customARReferenceImage = ARReferenceImage(nextArImage, orientation: CGImagePropertyOrientation.up, physicalWidth: 0.1)
 
-                    // configuration.detectionImages = newReferenceImages;
+                    //  configuration.detectionImages = newReferenceImages;
+                    detectionImagesSet.insert(arImage);
 
                 }
             }
