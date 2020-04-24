@@ -320,12 +320,9 @@ static RCTARKit *instance = nil;
             // create ui image https://medium.com/ar-tips-and-tricks/how-to-add-arkit-ar-reference-images-from-the-internet-on-the-fly-eae3bc55fe0c
             if(config[@"arDetectionImages"]) {
                 for (id url in config[@"arDetectionImages"]) {
-
                    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"http://myurl/mypic.jpg"]];
-                   cell.image = [UIImage imageWithData: imageData];
                     //  configuration.detectionImages = newReferenceImages;
-                    detectionImagesSet.insert(ARReferenceImage(cell.image, orientation: CGImagePropertyOrientation.up, physicalWidth: 0.1));
-
+                    detectionImagesSet.insert(ARReferenceImage([UIImage imageWithData: imageData], orientation: up, physicalWidth: 0.1));
                 }
             }
 
