@@ -306,37 +306,23 @@ static RCTARKit *instance = nil;
     [self resume];
 }
 
-
-
-
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 110300
 - (void)setDetectionImages:(NSArray*) detectionImages {
-    
-    if (@available(iOS 11.3, *)) {
-        ARWorldTrackingConfiguration *configuration = self.configuration;
-        NSSet *detectionImagesSet = [[NSSet alloc] init];
-        for (id config in detectionImages) {
-            // pass in image links
-            // create ui image https://medium.com/ar-tips-and-tricks/how-to-add-arkit-ar-reference-images-from-the-internet-on-the-fly-eae3bc55fe0c
-            if(config[@"arDetectionImages"]) {
-                for (id url in config[@"arDetectionImages"]) {
-                   NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"http://myurl/mypic.jpg"]];
-                    //  configuration.detectionImages = newReferenceImages;
-                    NSData * newImage = [UIImage imageWithData: imageData];
-                    NSData * arImage = [ARReferenceImage init: newImage physicalWidth: 0.1];
+        if (@available(iOS 11.3, *)) {
+            ARWorldTrackingConfiguration *configuration = self.configuration;
+            NSSet *detectionImagesSet = [[NSSet alloc] init];
+            for (id config in detectionImages) {
 
-                    // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
+                if(config[@"resourceGroupName"]) {
+                    detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
                 }
-            }
-
-            // if(config[@"resourceGroupName"]) {
-            //     detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage referenceImagesInGroupNamed:config[@"resourceGroupName"] bundle:nil]];
-            // }
+            
+            configuration.detectionImages = detectionImagesSet;
+            [self resume];
         }
-        configuration.detectionImages = detectionImagesSet;
-        [self resume];;
     }
 }
+
 #endif
 - (NSDictionary *)readCameraPosition {
     // deprecated
