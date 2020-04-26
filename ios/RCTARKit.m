@@ -317,7 +317,7 @@ static RCTARKit *instance = nil;
                     NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"https://storage.googleapis.com/beswick-images/cc_catalogs/Beswick/lines/PRODUCTS/images/icons_medium/QDC-I.jpg"]];
                     //  configuration.detectionImages = newReferenceImages;
                     // NSData * newImage = [UIImage imageWithData: imageData];
-                    detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage init:[UIImage imageWithData: imageData]]];
+                    detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage([UIImage imageWithData: imageData])]];
 
                     // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
                 }
