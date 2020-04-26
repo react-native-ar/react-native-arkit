@@ -316,11 +316,13 @@ static RCTARKit *instance = nil;
                 for (id url in config[@"arDetectionImages"]) {
                     NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"https://storage.googleapis.com/beswick-images/cc_catalogs/Beswick/lines/PRODUCTS/images/icons_medium/QDC-I.jpg"]];
                     //  configuration.detectionImages = newReferenceImages;
-                    NSData * newImage = [UIImage imageWithData: imageData];
+                    // NSData * newImage = [UIImage imageWithData: imageData];
                     // detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage([UIImage imageWithData: imageData])]];
 
                     // CGImageRef cgImage = [temporaryContext createCGImage:newImage];
-                    CGImageRef imageRef = [newImage CGImage];
+                    UIImage* uiimage = [[UIImage alloc] initWithData:imageData];
+
+                    CGImageRef imageRef = [newImage uiimage];
 
                     // ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
                     // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
