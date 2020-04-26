@@ -319,8 +319,10 @@ static RCTARKit *instance = nil;
                     NSData * newImage = [UIImage imageWithData: imageData];
                     // detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage([UIImage imageWithData: imageData])]];
 
-                    CGImageRef cgImage = [createCGImage:newImage];
-                    ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
+                    // CGImageRef cgImage = [temporaryContext createCGImage:newImage];
+                    CGImageRef imageRef = [newImage CGImage];
+
+                    // ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
                     // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
                 }
             
