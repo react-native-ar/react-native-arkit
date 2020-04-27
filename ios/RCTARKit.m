@@ -327,7 +327,8 @@ static RCTARKit *instance = nil;
                     // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
                     // detectionImagesSet = [detectionImagesSet addObject:image];
 
-                     detectionImagesSet = [detectionImagesSet adding:image]; 
+                    //  detectionImagesSet = [detectionImagesSet adding:image]; 
+                    detectionImagesSet = [detectionImagesSet setByAddingObject:ARReferenceImage];
 
                 }
             
