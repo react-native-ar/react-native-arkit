@@ -325,7 +325,10 @@ static RCTARKit *instance = nil;
                     CGImageRef cgImage = [uiimage CGImage];
                     ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
                     // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
-                    detectionImagesSet = [detectionImagesSet addObject:image];
+                    // detectionImagesSet = [detectionImagesSet addObject:image];
+
+                    [detectionImagesSet addObject:image]; // Works with NSMutableArray
+
 
                 }
             
