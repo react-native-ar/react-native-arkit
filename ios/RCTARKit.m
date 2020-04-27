@@ -325,7 +325,7 @@ static RCTARKit *instance = nil;
                     NSLog(@"%@hello world test man",image);
                     NSLog(@"%@hello world test woman",detectionImagesSet);
 
-                    // detectionImagesSet = [detectionImagesSet setByAddingObject:image];
+                    detectionImagesSet = [detectionImagesSet setByAddingObject:image];
 
                 }
             
