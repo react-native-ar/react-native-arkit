@@ -328,7 +328,7 @@ static RCTARKit *instance = nil;
                     // detectionImagesSet = [detectionImagesSet addObject:image];
 
                     //  detectionImagesSet = [detectionImagesSet adding:image]; 
-                    detectionImagesSet = [detectionImagesSet setByAddingObject:ARReferenceImage];
+                    detectionImagesSet = [detectionImagesSet setByAddingObject:image];
 
                 }
             
