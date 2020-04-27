@@ -316,11 +316,11 @@ static RCTARKit *instance = nil;
                 for (id url in config[@"arDetectionImages"]) {
                     NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: url]];
                     //  configuration.detectionImages = newReferenceImages;
-                    // NSData * newImage = [UIImage imageWithData: imageData];
+                    NSData * newImage = [UIImage imageWithData: imageData];
                     // detectionImagesSet = [detectionImagesSet setByAddingObjectsFromSet:[ARReferenceImage([UIImage imageWithData: imageData])]];
 
                     // CGImageRef cgImage = [temporaryContext createCGImage:newImage];
-                    UIImage* uiimage = [[UIImage alloc] initWithData:imageData];
+                    UIImage* uiimage = [[UIImage alloc] initWithData:newImage];
 
                     CGImageRef cgImage = [uiimage CGImage];
                     ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
