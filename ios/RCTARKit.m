@@ -321,8 +321,8 @@ static RCTARKit *instance = nil;
                     CGImageRef cgImage = [uiimage CGImage];
 
                     ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
-                    image.name=url
-                    NSLog(@"%@hello world man",image);
+                    image.name=url;
+                    NSLog(@"%@hello world test man",image);
                     // detectionImagesSet = [detectionImagesSet setByAddingObject:image];
 
                 }
