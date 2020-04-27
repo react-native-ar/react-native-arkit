@@ -310,9 +310,7 @@ static RCTARKit *instance = nil;
 - (void)setDetectionImages:(NSArray*) detectionImages {
         if (@available(iOS 11.3, *)) {
             ARWorldTrackingConfiguration *configuration = self.configuration;
-            // NSSet *detectionImagesSet = [[NSSet alloc] init];
-            NSSet *detectionImagesSet = [NSSet detectionImagesSet];
-
+            NSSet *detectionImagesSet = [[NSSet alloc] init];
             for (id config in detectionImages) {
 
                 for (id url in config[@"arDetectionImages"]) {
@@ -323,11 +321,8 @@ static RCTARKit *instance = nil;
                     CGImageRef cgImage = [uiimage CGImage];
 
                     ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
-                    // NSData * arImage = ARReferenceImage.init(newImage, orientation: up, physicalWidth: 0.1);
-                    // detectionImagesSet = [detectionImagesSet addObject:image];
-
-                    //  detectionImagesSet = [detectionImagesSet adding:image]; 
-                    detectionImagesSet = [detectionImagesSet setByAddingObject:image];
+                   
+                    // detectionImagesSet = [detectionImagesSet setByAddingObject:image];
 
                 }
             
