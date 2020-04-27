@@ -323,7 +323,7 @@ static RCTARKit *instance = nil;
 
                     ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:0.1];
                    
-                    detectionImagesSet = [detectionImagesSet setByAddingObject:image];
+                    // detectionImagesSet = [detectionImagesSet setByAddingObject:image];
 
                 }
             
