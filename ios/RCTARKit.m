@@ -589,26 +589,25 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
-- (void)handlePinchFrom: (UIPinchGestureRecognizer *)gestureRecognizer {
+- (void)handlePinchFrom: (UIPinchGestureRecognizer *)recognizer {
     
-    // if( recognizer.state == UIGestureRecognizerStateBegan || 
-    //     recognizer.state == UIGestureRecognizerStateChanged || 
-    //     recognizer.state == UIGestureRecognizerStateEnded) {
+    if( recognizer.state == UIGestureRecognizerStateBegan || 
+        recognizer.state == UIGestureRecognizerStateChanged || 
+        recognizer.state == UIGestureRecognizerStateEnded) {
 
-    //     if(self.onPinchGesture) {
-    //         NSDictionary *pinchGesture = @{
-    //                 @"scale": @(recognizer.scale),
-    //                 @"velocity": @(recognizer.velocity)
-    //                 };
+        recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
+        recognizer.scale = 1;
 
-    //         self.onPinchGesture(pinchGesture);
-    //     }
-    // }
-   if (gestureRecognizer.state == UIGestureRecognizerStateBegan || gestureRecognizer.state == UIGestureRecognizerStateChanged) {
-      gestureRecognizer.view.transform = (gestureRecognizer.view.transform.
-                    scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale))!
-      gestureRecognizer.scale = 1.0
-   }
+        // if(self.onPinchGesture) {
+        //     NSDictionary *pinchGesture = @{
+        //             @"scale": @(recognizer.scale),
+        //             @"velocity": @(recognizer.velocity)
+        //             };
+
+        //     self.onPinchGesture(pinchGesture);
+        // }
+    }
+
 }
 
 
