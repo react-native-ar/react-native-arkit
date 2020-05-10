@@ -608,8 +608,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
       gestureRecognizer.view?.transform = (gestureRecognizer.view?.transform.
                     scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale))!
       gestureRecognizer.scale = 1.0
-   }}
-
+   }
 }
 
 
