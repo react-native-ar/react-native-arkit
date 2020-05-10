@@ -604,8 +604,8 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     //         self.onPinchGesture(pinchGesture);
     //     }
     // }
-   if (gestureRecognizer.state == .began || gestureRecognizer.state == .changed) {
-      gestureRecognizer.view?.transform = (gestureRecognizer.view?.transform.
+   if (gestureRecognizer.state == UIGestureRecognizerStateBegan || gestureRecognizer.state == UIGestureRecognizerStateChanged) {
+      gestureRecognizer.view.transform = (gestureRecognizer.view.transform.
                     scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale))!
       gestureRecognizer.scale = 1.0
    }
