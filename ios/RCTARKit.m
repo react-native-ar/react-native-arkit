@@ -591,19 +591,36 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 - (void)handlePinchFrom: (UIPinchGestureRecognizer *)recognizer {
     
-    if( recognizer.state == UIGestureRecognizerStateBegan || 
-        recognizer.state == UIGestureRecognizerStateChanged || 
-        recognizer.state == UIGestureRecognizerStateEnded) {
+    // if( recognizer.state == UIGestureRecognizerStateBegan || 
+    //     recognizer.state == UIGestureRecognizerStateChanged || 
+    //     recognizer.state == UIGestureRecognizerStateEnded) {
 
-        if(self.onPinchGesture) {
+    //     if(self.onPinchGesture) {
+    //         NSDictionary *pinchGesture = @{
+    //                 @"scale": @(recognizer.scale),
+    //                 @"velocity": @(recognizer.velocity)
+    //                 };
+
+    //         self.onPinchGesture(pinchGesture);
+    //     }
+    // }
+
+
+    if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
+      recognizer.state.view?.transform = (recognizer.state.view?.transform.
+                    scaledBy(x: recognizer.state.scale, y: recognizer.state.scale))!
+      recognizer.state.scale = 1.0
+
+         if(self.onPinchGesture) {
             NSDictionary *pinchGesture = @{
-                    @"scale": @(recognizer.scale),
+                    @"scale": @(recognizer.state.scale),
                     @"velocity": @(recognizer.velocity)
                     };
 
             self.onPinchGesture(pinchGesture);
         }
-    }
+   }
+
 }
 
 
