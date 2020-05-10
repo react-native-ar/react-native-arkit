@@ -589,7 +589,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
-- (void)handlePinchFrom: (UIPinchGestureRecognizer *)recognizer {
+- (void)handlePinchFrom: (UIPinchGestureRecognizer *)gestureRecognizer {
     
     // if( recognizer.state == UIGestureRecognizerStateBegan || 
     //     recognizer.state == UIGestureRecognizerStateChanged || 
@@ -604,7 +604,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     //         self.onPinchGesture(pinchGesture);
     //     }
     // }
-   if gestureRecognizer.state == .began || gestureRecognizer.state == .changed {
+   if (gestureRecognizer.state == .began || gestureRecognizer.state == .changed) {
       gestureRecognizer.view?.transform = (gestureRecognizer.view?.transform.
                     scaledBy(x: gestureRecognizer.scale, y: gestureRecognizer.scale))!
       gestureRecognizer.scale = 1.0
