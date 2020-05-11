@@ -610,7 +610,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     // }
 
 
-   if recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged {
+   if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
       recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
       if(self.onPinchGesture) {
             NSDictionary *pinchGesture = @{
