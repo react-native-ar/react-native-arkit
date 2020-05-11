@@ -591,37 +591,36 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 - (void)handlePinchFrom: (UIPinchGestureRecognizer *)recognizer {
     
-    // if( recognizer.state == UIGestureRecognizerStateBegan || 
-    //     recognizer.state == UIGestureRecognizerStateChanged || 
-    //     recognizer.state == UIGestureRecognizerStateEnded) {
+    if( recognizer.state == UIGestureRecognizerStateBegan || 
+        recognizer.state == UIGestureRecognizerStateChanged || 
+        recognizer.state == UIGestureRecognizerStateEnded) {
 
-    //     // recognizer.scale = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
-    //     // // recognizer.scale = 1;
+        // recognizer.scale = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
+        // // recognizer.scale = 1;
 
-    //     if(self.onPinchGesture) {
-    //         NSDictionary *pinchGesture = @{
-    //                 @"scale": @(recognizer.scale),
-    //                 @"velocity": @(recognizer.velocity),
-    //                 @"transform": @(recognizer.view.transform)
-    //                 };
-
-    //         self.onPinchGesture(pinchGesture);
-    //     }
-    // }
-
-
-   if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
-      recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
-      if(self.onPinchGesture) {
+        if(self.onPinchGesture) {
             NSDictionary *pinchGesture = @{
                     @"scale": @(recognizer.scale),
-                    @"velocity": @(recognizer.velocity)
+                    @"velocity": @(recognizer.velocity),
                     };
 
             self.onPinchGesture(pinchGesture);
         }
-      recognizer.scale = 1.0;
-   }
+    }
+
+
+//    if (recognizer.state == UIGestureRecognizerStateBegan || recognizer.state == UIGestureRecognizerStateChanged) {
+//       recognizer.view.transform = CGAffineTransformScale(recognizer.view.transform, recognizer.scale, recognizer.scale);
+//       if(self.onPinchGesture) {
+//             NSDictionary *pinchGesture = @{
+//                     @"scale": @(recognizer.scale),
+//                     @"velocity": @(recognizer.velocity)
+//                     };
+
+//             self.onPinchGesture(pinchGesture);
+//         }
+//       recognizer.scale = 1.0;
+//    }
 
 }
 
