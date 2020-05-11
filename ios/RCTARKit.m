@@ -620,8 +620,8 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
             self.onPinchGesture(pinchGesture);
         }
-      recognizer.scale = 1.0
-   }}
+      recognizer.scale = 1.0;
+   }
 
 }
 
