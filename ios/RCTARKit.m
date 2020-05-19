@@ -83,6 +83,11 @@ static RCTARKit *instance = nil;
         UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
         [self.arView addGestureRecognizer:pinchGestureRecognizer];
 
+        UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        [self.arView addGestureRecognizer:panGestureRecognizer];
+
+        
+
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
         self.sessionDelegates = [NSMutableArray array];
@@ -417,9 +422,6 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 }
 
 
-
-
-
 - (UIImage *)getSnapshotCamera:(NSDictionary *)selection {
     CVPixelBufferRef pixelBuffer = self.arView.session.currentFrame.capturedImage;
     CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
@@ -606,6 +608,23 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
 }
 
+
+- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
+        
+    if( recognizer.state == UIGestureRecognizerStateBegan || 
+        recognizer.state == UIGestureRecognizerStateChanged || 
+        recognizer.state == UIGestureRecognizerStateEnded) {
+
+        if(self.onPanGesture) {
+            CGPoint translation = [recognizer translationInView:self.view];
+            NSDictionary *panGesture = @{
+                    @"x": @(translation.x),
+                    @"y": @(translation.y)
+                };
+           self.onPanGesture(panGesture);
+        }
+    }
+}
 
 #pragma mark - ARSCNViewDelegate
 
