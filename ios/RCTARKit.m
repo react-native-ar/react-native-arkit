@@ -84,9 +84,9 @@ static RCTARKit *instance = nil;
         [self.arView addGestureRecognizer:pinchGestureRecognizer];
 
         UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
+        [panGestureRecognizer setMinimumNumberOfTouches:1];
+        [panGestureRecognizer setMaximumNumberOfTouches:1];
         [self.arView addGestureRecognizer:panGestureRecognizer];
-
-        
 
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
