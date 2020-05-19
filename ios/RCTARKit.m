@@ -610,45 +610,20 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender {
-    [self.arView bringSubviewToFront:sender.view];
-    CGPoint translatedPoint = [sender translationInView:sender.view.superview];
 
-    // if (sender.state == UIGestureRecognizerStateBegan) {
-    //     firstX = sender.view.center.x;
-    //     firstY = sender.view.center.y;
-    // }
-
-    translatedPoint = CGPointMake(sender.view.center.x+translatedPoint.x, sender.view.center.y+translatedPoint.y);
-
-    // [sender.view setCenter:translatedPoint];
-    [sender setTranslation:CGPointZero inView:sender.view];
         
     if( sender.state == UIGestureRecognizerStateBegan || 
         sender.state == UIGestureRecognizerStateChanged || 
         sender.state == UIGestureRecognizerStateEnded) {
-        CGFloat velocityX = (0.2*[sender velocityInView:self.arView].x);
-        CGFloat velocityY = (0.2*[sender velocityInView:self.arView].y);
-
-        CGFloat finalX = translatedPoint.x + velocityX;
-        CGFloat finalY = translatedPoint.y + velocityY;// translatedPoint.y + (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.arView].y);
-
-        // if (finalX < 0) {
-        //     finalX = 0;
-        // } else if (finalX > self.arView.frame.size.width) {
-        //     finalX = self.arView.frame.size.width;
-        // }
-
-        // if (finalY < 50) { // to avoid status bar
-        //     finalY = 50;
-        // } else if (finalY > self.arView.frame.size.height) {
-        //     finalY = self.arView.frame.size.height;
-        // }
+        CGPoint translation = [recognizer translationInView:self.view];
+        recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
+                                         recognizer.view.center.y + translation.y);
 
         if(self.onPanGesture) {
 
             NSDictionary *panGesture = @{
-                    @"x": @(translatedPoint.x),
-                    @"y": @(translatedPoint.y)
+                    @"x": @(finalX),
+                    @"y": @(finalY)
                 };
            self.onPanGesture(panGesture);
         }
