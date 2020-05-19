@@ -632,17 +632,17 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         CGFloat finalX = translatedPoint.x + velocityX;
         CGFloat finalY = translatedPoint.y + velocityY;// translatedPoint.y + (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.arView].y);
 
-        if (finalX < 0) {
-            finalX = 0;
-        } else if (finalX > self.arView.frame.size.width) {
-            finalX = self.arView.frame.size.width;
-        }
+        // if (finalX < 0) {
+        //     finalX = 0;
+        // } else if (finalX > self.arView.frame.size.width) {
+        //     finalX = self.arView.frame.size.width;
+        // }
 
-        if (finalY < 50) { // to avoid status bar
-            finalY = 50;
-        } else if (finalY > self.arView.frame.size.height) {
-            finalY = self.arView.frame.size.height;
-        }
+        // if (finalY < 50) { // to avoid status bar
+        //     finalY = 50;
+        // } else if (finalY > self.arView.frame.size.height) {
+        //     finalY = self.arView.frame.size.height;
+        // }
 
         if(self.onPanGesture) {
 
