@@ -610,7 +610,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
 
 - (void)handlePan:(UIPanGestureRecognizer *)sender {
-    [self.view bringSubviewToFront:sender.view];
+    [self.arView bringSubviewToFront:sender.view];
     CGPoint translatedPoint = [sender translationInView:sender.view.superview];
 
     if (sender.state == UIGestureRecognizerStateBegan) {
@@ -627,22 +627,22 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     if( sender.state == UIGestureRecognizerStateBegan || 
         sender.state == UIGestureRecognizerStateChanged || 
         sender.state == UIGestureRecognizerStateEnded) {
-        CGFloat velocityX = (0.2*[sender velocityInView:self.view].x);
-        CGFloat velocityY = (0.2*[sender velocityInView:self.view].y);
+        CGFloat velocityX = (0.2*[sender velocityInView:self.arView].x);
+        CGFloat velocityY = (0.2*[sender velocityInView:self.arView].y);
 
         CGFloat finalX = translatedPoint.x + velocityX;
-        CGFloat finalY = translatedPoint.y + velocityY;// translatedPoint.y + (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.view].y);
+        CGFloat finalY = translatedPoint.y + velocityY;// translatedPoint.y + (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.arView].y);
 
         if (finalX < 0) {
             finalX = 0;
-        } else if (finalX > self.view.frame.size.width) {
-            finalX = self.view.frame.size.width;
+        } else if (finalX > self.arView.frame.size.width) {
+            finalX = self.arView.frame.size.width;
         }
 
         if (finalY < 50) { // to avoid status bar
             finalY = 50;
-        } else if (finalY > self.view.frame.size.height) {
-            finalY = self.view.frame.size.height;
+        } else if (finalY > self.arView.frame.size.height) {
+            finalY = self.arView.frame.size.height;
         }
 
         CGFloat animationDuration = (ABS(velocityX)*.0002)+.2;
