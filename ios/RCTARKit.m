@@ -613,10 +613,10 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     [self.arView bringSubviewToFront:sender.view];
     CGPoint translatedPoint = [sender translationInView:sender.view.superview];
 
-    if (sender.state == UIGestureRecognizerStateBegan) {
-        firstX = sender.view.center.x;
-        firstY = sender.view.center.y;
-    }
+    // if (sender.state == UIGestureRecognizerStateBegan) {
+    //     firstX = sender.view.center.x;
+    //     firstY = sender.view.center.y;
+    // }
 
     translatedPoint = CGPointMake(sender.view.center.x+translatedPoint.x, sender.view.center.y+translatedPoint.y);
 
