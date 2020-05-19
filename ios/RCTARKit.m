@@ -618,7 +618,6 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         firstY = sender.view.center.y;
     }
 
-
     translatedPoint = CGPointMake(sender.view.center.x+translatedPoint.x, sender.view.center.y+translatedPoint.y);
 
     [sender.view setCenter:translatedPoint];
@@ -645,9 +644,6 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
             finalY = self.arView.frame.size.height;
         }
 
-        CGFloat animationDuration = (ABS(velocityX)*.0002)+.2;
-
-        NSLog(@"the duration is: %f", animationDuration);
         if(self.onPanGesture) {
 
             NSDictionary *panGesture = @{
