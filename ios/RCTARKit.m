@@ -617,16 +617,16 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
         if(self.onPanGesture) {
             CGPoint translation = [recognizer translationInView:self.arView];
-            CGPoint velocity = [recognizer velocityInView:self.view];
+            CGPoint velocity = [recognizer velocityInView:self.arView];
             CGFloat magnitude = sqrtf((velocity.x * velocity.x) + (velocity.y * velocity.y));
             CGFloat slideMult = magnitude / 200;
             NSLog(@"magnitude: %f, slideMult: %f", magnitude, slideMult);
 
             float slideFactor = 0.1 * slideMult; // Increase for more of a slide
-            CGPoint finalPoint = CGPointMake(recognizer.view.center.x + (velocity.x * slideFactor), 
-                                        recognizer.view.center.y + (velocity.y * slideFactor));
-            finalPoint.x = MIN(MAX(finalPoint.x, 0), self.view.bounds.size.width);
-            finalPoint.y = MIN(MAX(finalPoint.y, 0), self.view.bounds.size.height);
+            CGPoint finalPoint = CGPointMake(recognizer.arView.center.x + (velocity.x * slideFactor), 
+                                        recognizer.arView.center.y + (velocity.y * slideFactor));
+            finalPoint.x = MIN(MAX(finalPoint.x, 0), self.arView.bounds.size.width);
+            finalPoint.y = MIN(MAX(finalPoint.y, 0), self.arView.bounds.size.height);
             NSDictionary *panGesture = @{
                     @"x": @(finalPoint.x),
                     @"y": @(finalPoint.y)
