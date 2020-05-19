@@ -609,27 +609,50 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
-- (void)handlePan:(UIPanGestureRecognizer *)recognizer {
+- (void)handlePan:(UIPanGestureRecognizer *)sender {
+    [self.view bringSubviewToFront:sender.view];
+    CGPoint translatedPoint = [sender translationInView:sender.view.superview];
+
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        firstX = sender.view.center.x;
+        firstY = sender.view.center.y;
+    }
+
+
+    translatedPoint = CGPointMake(sender.view.center.x+translatedPoint.x, sender.view.center.y+translatedPoint.y);
+
+    [sender.view setCenter:translatedPoint];
+    [sender setTranslation:CGPointZero inView:sender.view];
         
-    if( recognizer.state == UIGestureRecognizerStateBegan || 
-        recognizer.state == UIGestureRecognizerStateChanged || 
-        recognizer.state == UIGestureRecognizerStateEnded) {
+    if( sender.state == UIGestureRecognizerStateBegan || 
+        sender.state == UIGestureRecognizerStateChanged || 
+        sender.state == UIGestureRecognizerStateEnded) {
+        CGFloat velocityX = (0.2*[sender velocityInView:self.view].x);
+        CGFloat velocityY = (0.2*[sender velocityInView:self.view].y);
 
+        CGFloat finalX = translatedPoint.x + velocityX;
+        CGFloat finalY = translatedPoint.y + velocityY;// translatedPoint.y + (.35*[(UIPanGestureRecognizer*)sender velocityInView:self.view].y);
+
+        if (finalX < 0) {
+            finalX = 0;
+        } else if (finalX > self.view.frame.size.width) {
+            finalX = self.view.frame.size.width;
+        }
+
+        if (finalY < 50) { // to avoid status bar
+            finalY = 50;
+        } else if (finalY > self.view.frame.size.height) {
+            finalY = self.view.frame.size.height;
+        }
+
+        CGFloat animationDuration = (ABS(velocityX)*.0002)+.2;
+
+        NSLog(@"the duration is: %f", animationDuration);
         if(self.onPanGesture) {
-            CGPoint translation = [recognizer translationInView:self.arView];
-            CGPoint velocity = [recognizer velocityInView:self.arView];
-            CGFloat magnitude = sqrtf((velocity.x * velocity.x) + (velocity.y * velocity.y));
-            CGFloat slideMult = magnitude / 200;
-            NSLog(@"magnitude: %f, slideMult: %f", magnitude, slideMult);
 
-            float slideFactor = 0.1 * slideMult; // Increase for more of a slide
-            CGPoint finalPoint = CGPointMake(recognizer.view.center.x + (velocity.x * slideFactor), 
-                                        recognizer.view.center.y + (velocity.y * slideFactor));
-            // finalPoint.x = MIN(MAX(finalPoint.x, 0), self.arView.bounds.size.width);
-            // finalPoint.y = MIN(MAX(finalPoint.y, 0), self.arView.bounds.size.height);
             NSDictionary *panGesture = @{
-                    @"x": @(finalPoint.x),
-                    @"y": @(finalPoint.y)
+                    @"x": @(finalX),
+                    @"y": @(finalY)
                 };
            self.onPanGesture(panGesture);
         }
