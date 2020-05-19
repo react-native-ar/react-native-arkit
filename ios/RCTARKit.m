@@ -620,7 +620,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 
     translatedPoint = CGPointMake(sender.view.center.x+translatedPoint.x, sender.view.center.y+translatedPoint.y);
 
-    [sender.view setCenter:translatedPoint];
+    // [sender.view setCenter:translatedPoint];
     [sender setTranslation:CGPointZero inView:sender.view];
         
     if( sender.state == UIGestureRecognizerStateBegan || 
@@ -647,8 +647,8 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         if(self.onPanGesture) {
 
             NSDictionary *panGesture = @{
-                    @"x": @(finalX),
-                    @"y": @(finalY)
+                    @"x": @(translatedPoint.x),
+                    @"y": @(translatedPoint.y)
                 };
            self.onPanGesture(panGesture);
         }
