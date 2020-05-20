@@ -564,8 +564,12 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         // Take the screen space tap coordinates and pass them to the hitTest method on the ARSCNView instance
         // NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
         // CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
-    
-        self.onTapOnPlaneUsingExtent([ARKit sharedInstance] hitTestSceneObjects:tapPoint resolve:resolve reject:reject];);
+                NSDictionary *tap = @{
+                    @"rotation": @(tapPoint.x),
+                    @"velocity": @(tapPoint.y)
+                };
+
+        self.onTapOnPlaneUsingExtent(tap);
     }
     
     if(self.onTapOnPlaneNoExtent) {
