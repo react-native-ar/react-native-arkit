@@ -621,7 +621,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     if( sender.state == UIGestureRecognizerStateBegan || 
         sender.state == UIGestureRecognizerStateChanged || 
         sender.state == UIGestureRecognizerStateEnded) {
-        CGPoint translation = [recognizer translationInView:self.arView];
+        CGPoint translation = [sender translationInView:self.arView];
         // recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
         //                                  recognizer.view.center.y + translation.y);
 
