@@ -565,8 +565,8 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         // NSDictionary * planeHitResult = [self getPlaneHitResult:tapPoint types:ARHitTestResultTypeExistingPlaneUsingExtent];
         // CGPoint point = CGPointMake(  [pointDict[@"x"] floatValue], [pointDict[@"y"] floatValue] );
                 NSDictionary *tap = @{
-                    @"rotation": @(tapPoint.x),
-                    @"velocity": @(tapPoint.y)
+                    @"x": @(tapPoint.x),
+                    @"y": @(tapPoint.y)
                 };
 
         self.onTapOnPlaneUsingExtent(tap);
