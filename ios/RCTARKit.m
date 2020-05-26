@@ -83,11 +83,6 @@ static RCTARKit *instance = nil;
         UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(handlePinchFrom:)];
         [self.arView addGestureRecognizer:pinchGestureRecognizer];
 
-        UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePan:)];
-        [panGestureRecognizer setMinimumNumberOfTouches:1];
-        [panGestureRecognizer setMaximumNumberOfTouches:1];
-        [self.arView addGestureRecognizer:panGestureRecognizer];
-
         self.touchDelegates = [NSMutableArray array];
         self.rendererDelegates = [NSMutableArray array];
         self.sessionDelegates = [NSMutableArray array];
@@ -615,26 +610,6 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
 }
 
 
-- (void)handlePan:(UIPanGestureRecognizer *)sender {
-
-        
-    if( sender.state == UIGestureRecognizerStateBegan || 
-        sender.state == UIGestureRecognizerStateChanged || 
-        sender.state == UIGestureRecognizerStateEnded) {
-        CGPoint translation = [sender translationInView:self.arView];
-        // recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,
-        //                                  recognizer.view.center.y + translation.y);
-
-        if(self.onPanGesture) {
-
-            NSDictionary *panGesture = @{
-                    @"x": @(sender.view.center.x + translation.x),
-                    @"y": @(sender.view.center.y + translation.y)
-                };
-           self.onPanGesture(panGesture);
-        }
-    }
-}
 
 #pragma mark - ARSCNViewDelegate
 
