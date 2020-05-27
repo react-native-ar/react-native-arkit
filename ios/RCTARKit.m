@@ -345,7 +345,7 @@ static RCTARKit *instance = nil;
 }
 
 
-- (NSDictionary *)getArAnchorPosition {
+- (NSDictionary *)getArAnchorPosition: (NSDictionary*) options {
 
     CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.08051617820102, -70.94884654513649)
                                                    altitude:0
