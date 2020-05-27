@@ -344,6 +344,19 @@ static RCTARKit *instance = nil;
     return vectorToJson(cameraPosition);
 }
 
+
+- (NSDictionary *)getArAnchorPosition {
+    // deprecated
+
+    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(-43.242534,-54.93662) altitude:1]
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(-43.242534,-54.93662) altitude:1]
+    CLLocationDistance distance = [location distanceFromLocation:landmark];
+    NSLog(@"distance to helloworld ===> %@", distance);
+
+    SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
+    return vectorToJson(cameraPosition);
+}
+
 static NSDictionary * vectorToJson(const SCNVector3 v) {
     return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z) };
 }
@@ -403,7 +416,6 @@ static NSDictionary * vector4ToJson(const SCNVector4 v) {
 #pragma mark - snapshot methods
 
 - (void)hitTestSceneObjects:(const CGPoint)tapPoint resolve:(RCTARKitResolve)resolve reject:(RCTARKitReject)reject {
-    
     resolve([self.nodeManager getSceneObjectsHitResult:tapPoint]);
 }
 
