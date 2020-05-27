@@ -96,7 +96,7 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)focusScene;
 - (void)clearScene;
 - (NSDictionary *)readCameraPosition;
-- (NSDictionary *)getArAnchorPosition;
+- (NSDictionary *)getArAnchorPosition:(NSDictionary*)options;
 - (NSDictionary *)readCamera;
 - (NSDictionary* )getCurrentLightEstimation;
 - (NSArray * )getCurrentDetectedFeaturePoints;
