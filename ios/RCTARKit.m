@@ -348,10 +348,18 @@ static RCTARKit *instance = nil;
 - (NSDictionary *)getArAnchorPosition {
     // deprecated
 
-    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(-43.242534,-54.93662)]
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(-43.242534,-54.93662)]
+    CLLocation *landmark = [[[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(41.44994138650804, -1.1874988592864875)
+                                                   altitude:0
+                                         horizontalAccuracy:0
+                                           verticalAccuracy:0
+                                                  timestamp:[NSDate date]] autorelease];
+    CLLocation *location = [[[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(41.44994138650804, -1.1874988592864875)
+                                                   altitude:0
+                                         horizontalAccuracy:0
+                                           verticalAccuracy:0
+                                                  timestamp:[NSDate date]] autorelease];
     CLLocationDistance *distance = [location distanceFromLocation:landmark];
-    NSLog(@"distance to helloworld ===> %@", distance);
+    NSLog(@"distance to helloworld ===> %@", location);
 
     SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
     return vectorToJson(cameraPosition);
