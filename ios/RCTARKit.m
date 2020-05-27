@@ -361,8 +361,9 @@ static RCTARKit *instance = nil;
     CLLocationDistance *distance = [location distanceFromLocation:landmark];
     NSLog(@"distance to helloworld ===> %@", location);
 
-    SCNVector3 cameraPosition = self.nodeManager.cameraOrigin.position;
-    return vectorToJson(cameraPosition);
+    return  @{
+                "hello": "world"
+            };
 }
 
 static NSDictionary * vectorToJson(const SCNVector3 v) {
