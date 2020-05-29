@@ -347,22 +347,29 @@ static RCTARKit *instance = nil;
 
 - (NSDictionary *)getArAnchorPosition:(NSDictionary*)options {
 
-    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"@landmarkLat"], options[@"@landmarkLong"])
-                                                   altitude:0
-                                         horizontalAccuracy:0
-                                           verticalAccuracy:0
-                                                  timestamp:[NSDate date]];
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"@locationLat"], options[@"@locationLong"])
-                                                   altitude:0
-                                         horizontalAccuracy:0
-                                           verticalAccuracy:0
-                                                  timestamp:[NSDate date]];
-    CLLocationDistance distance = [location distanceFromLocation:landmark];
+    if(options[@"landmarkLat"]){
+        if(options[@"landmarkLong"]){
 
-    NSLog(@"distance:-%f",distance);
-    return  @{
-                @"hello": @"world"
-            };
+            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"landmarkLat"], options[@"landmarkLong"])
+                                                            altitude:0
+                                                            horizontalAccuracy:0
+                                                            verticalAccuracy:0
+                                                            timestamp:[NSDate date]];
+                                                            
+            CLLocationDistance distance = [landmark distanceFromLocation:landmark];
+
+            NSLog(@"distance:-%f",distance);
+            return  @{
+                        @"hello": @"world"
+                    };
+        }
+    }
+    // CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"locationLat"], options[@"locationLong"])
+    //                                                altitude:0
+    //                                      horizontalAccuracy:0
+    //                                        verticalAccuracy:0
+    //                                               timestamp:[NSDate date]];
+ 
 }
 
 static NSDictionary * vectorToJson(const SCNVector3 v) {
