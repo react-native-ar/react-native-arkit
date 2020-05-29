@@ -347,12 +347,12 @@ static RCTARKit *instance = nil;
 
 - (NSDictionary *)getArAnchorPosition:(NSDictionary*)options {
 
-    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options["@landmarkLat"], options["@landmarkLong"])
+    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"@landmarkLat"], options[@"@landmarkLong"])
                                                    altitude:0
                                          horizontalAccuracy:0
                                            verticalAccuracy:0
                                                   timestamp:[NSDate date]];
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options["@locationLat"], options["@locationLong"])
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"@locationLat"], options[@"@locationLong"])
                                                    altitude:0
                                          horizontalAccuracy:0
                                            verticalAccuracy:0
