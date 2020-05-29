@@ -349,11 +349,12 @@ static RCTARKit *instance = nil;
 
     if(options[@"landmarkLat"]){
         if(options[@"landmarkLong"]){
-            float landMarkLat = options[@"landmarkLat"]
-            float landMarkLong = options[@"landmarkLong"]
+
+            NSNumber * landMarkLat = options[@"landmarkLat"];
+            NSNumber * landMarkLong = options[@"landmarkLong"];
 
 
-            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landMarkLat, landMarkLong)
+            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(1.0, 0.1)
                                                             altitude:0
                                                             horizontalAccuracy:0
                                                             verticalAccuracy:0
