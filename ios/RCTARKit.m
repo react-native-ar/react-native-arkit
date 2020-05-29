@@ -352,6 +352,7 @@ static RCTARKit *instance = nil;
 
             NSNumber * landMarkLat = options[@"landmarkLat"];
             NSNumber * landMarkLong = options[@"landmarkLong"];
+            float nextFloat = [landMarkLat floatValue];
 
 
             CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(1.0, 0.1)
