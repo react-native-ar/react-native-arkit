@@ -368,6 +368,12 @@ static RCTARKit *instance = nil;
                     };
         }
     }
+
+    return @{
+                @"results": @"no results"
+            };
+
+
     // CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"locationLat"], options[@"locationLong"])
     //                                                altitude:0
     //                                      horizontalAccuracy:0
