@@ -350,18 +350,31 @@ static RCTARKit *instance = nil;
     if(options[@"landmarkLat"]){
         if(options[@"landmarkLong"]){
 
-            NSNumber * landMarkLat = options[@"landmarkLat"];
-            NSNumber * landMarkLong = options[@"landmarkLong"];
-            float nextFloat = [landMarkLat floatValue];
+            NSNumber * nsLandMarkLat = options[@"landmarkLat"];
+            NSNumber * nsLandMarkLong = options[@"landmarkLong"];
+            NSNumber * nsLocationLat = options[@"locationLat"];
+            NSNumber * nsLocationLong = options[@"locationLong"];
 
+            float landMarkLat = [nsLandMarkLat floatValue];
+            float landMarklong = [nsLandMarkLong floatValue];
+            float locationLat = [nsLocationLat floatValue];
+            float locationLong = [nsLocationLong floatValue];
 
-            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(1.0, 0.1)
+            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landMarkLat, landMarkLat)
                                                             altitude:0
                                                             horizontalAccuracy:0
                                                             verticalAccuracy:0
                                                             timestamp:[NSDate date]];
 
-            CLLocationDistance distance = [landmark distanceFromLocation:landmark];
+
+            CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
+                                                        altitude:0
+                                                horizontalAccuracy:0
+                                                verticalAccuracy:0
+                                                        timestamp:[NSDate date]];
+
+            CLLocationDistance distance = [location distanceFromLocation:landmark];
+
 
             NSLog(@"distance:-%f",distance);
             return  @{
@@ -375,11 +388,6 @@ static RCTARKit *instance = nil;
             };
 
 
-    // CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(options[@"locationLat"], options[@"locationLong"])
-    //                                                altitude:0
-    //                                      horizontalAccuracy:0
-    //                                        verticalAccuracy:0
-    //                                               timestamp:[NSDate date]];
  
 }
 
