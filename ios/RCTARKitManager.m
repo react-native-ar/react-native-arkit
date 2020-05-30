@@ -450,7 +450,7 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
 
-RCT_EXPORT_METHOD(getAnchorPosition: options:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getAnchorPosition:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] getArAnchorPosition:options]);
 }
 

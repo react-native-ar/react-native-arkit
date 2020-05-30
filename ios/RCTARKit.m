@@ -373,7 +373,7 @@ static RCTARKit *instance = nil;
                                                 verticalAccuracy:0
                                                         timestamp:[NSDate date]];
 
-            CLLocationDistance distance = [location distanceFromLocation:landmark];
+            CLLocationDistance distance = [landmark distanceFromLocation:location];
 
 
             NSLog(@"distance:-%f",distance);
