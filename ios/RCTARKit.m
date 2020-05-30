@@ -384,6 +384,10 @@ static RCTARKit *instance = nil;
 
             NSLog(@"matrix_result:-%f", newAnchor);
             NSLog(@"distance:-%f", distance);
+            NSLog(@"nsLandMarkLat:-%f", nsLandMarkLat);
+            NSLog(@"options:-%f", options[@"landmarkLat"]);
+            NSLog(@"landMarkLat:-%f", nsLandMarkLat);
+
 
             return  @{
                         @"hello": @"world"
