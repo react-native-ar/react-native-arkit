@@ -379,10 +379,10 @@ static RCTARKit *instance = nil;
             distanceTransform.columns[3][1] = 0;
             distanceTransform.columns[3][2] = distance;
 
-            newTransForm = [[ARAnchor alloc] initWithTransform:distanceTransform];
-            NSLog(@"newAnchor:-%f", newTransForm);
+            ARAnchor *newAnchor  = [[ARAnchor alloc] initWithTransform:distanceTransform];
+            NSLog(@"newAnchor:-%f", newAnchor);
 
-            NSLog(@"matrix_result:-%f", result.columns[3][2]);
+            NSLog(@"matrix_result:-%f", newAnchor);
             NSLog(@"distance:-%f", distance);
 
             return  @{
