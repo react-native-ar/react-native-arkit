@@ -374,6 +374,8 @@ static RCTARKit *instance = nil;
                                                         timestamp:[NSDate date]];
 
             CLLocationDistance distance = [landmark distanceFromLocation:location];
+            result = matrix_identity_float4x4
+
 
 
             NSLog(@"distance:-%f",distance);
