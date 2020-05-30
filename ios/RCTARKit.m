@@ -375,11 +375,14 @@ static RCTARKit *instance = nil;
 
             CLLocationDistance distance = [landmark distanceFromLocation:location];
             matrix_float4x4 result = matrix_identity_float4x4;
+            result.columns[3][0] = 0;
+            result.columns[3][1] = 0;
+            result.columns[3][2] = -0.1;
 
 
             NSLog(@"matrix_result:-%f", result);
             NSLog(@"distance:-%f", distance);
-            
+
             return  @{
                         @"hello": @"world"
                     };
