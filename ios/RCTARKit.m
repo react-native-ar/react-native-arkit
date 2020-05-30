@@ -380,7 +380,7 @@ static RCTARKit *instance = nil;
             result.columns[3][2] = -0.1;
 
 
-            NSLog(@"matrix_result:-%f", result);
+            NSLog(@"matrix_result:-%f", result.columns[3][2]);
             NSLog(@"distance:-%f", distance);
 
             return  @{
