@@ -374,11 +374,13 @@ static RCTARKit *instance = nil;
                                                         timestamp:[NSDate date]];
 
             CLLocationDistance distance = [landmark distanceFromLocation:location];
-            matrix_float4x4 result = matrix_identity_float4x4;
-            result.columns[3][0] = 0;
-            result.columns[3][1] = 0;
-            result.columns[3][2] = -0.1;
+            matrix_float4x4 distanceTransform = matrix_identity_float4x4;
+            distanceTransform.columns[3][0] = 0;
+            distanceTransform.columns[3][1] = 0;
+            distanceTransform.columns[3][2] = distance;
 
+            newTransForm = [[ARAnchor alloc] initWithTransform:distanceTransform];
+            NSLog(@"newAnchor:-%f", newTransForm);
 
             NSLog(@"matrix_result:-%f", result.columns[3][2]);
             NSLog(@"distance:-%f", distance);
