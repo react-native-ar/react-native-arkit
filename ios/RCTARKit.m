@@ -377,8 +377,9 @@ static RCTARKit *instance = nil;
             matrix_float4x4 result = matrix_identity_float4x4;
 
 
-
-            NSLog(@"distance:-%f",distance);
+            NSLog(@"matrix_result:-%f", result);
+            NSLog(@"distance:-%f", distance);
+            
             return  @{
                         @"hello": @"world"
                     };
