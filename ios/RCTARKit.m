@@ -376,7 +376,7 @@ static RCTARKit *instance = nil;
                                                 verticalAccuracy:0
                                                         timestamp:[NSDate date]];
 
-            CLLocationDistance distance = [landmark distanceFromLocation:location];
+            CLLocationDistance distance = [location distanceFromLocation:landmark];
             matrix_float4x4 distanceTransform = matrix_identity_float4x4;
             distanceTransform.columns[3][0] = 0;
             distanceTransform.columns[3][1] = 0;
@@ -391,7 +391,9 @@ static RCTARKit *instance = nil;
             double lonDiff = endLon - startLon;
             double y = sin(lonDiff) * cos(endLat);
             double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
-            double angle = atan2(y, x);
+            double rotation = atan2(y, x);
+            double opposite = landmark.altitude - location.altitude
+            double tilt = atan2(opposite, distance)
 
             return  @{
                         @"hello": @"world"
