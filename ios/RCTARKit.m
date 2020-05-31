@@ -381,7 +381,6 @@ static RCTARKit *instance = nil;
 
             ARAnchor *newAnchor  = [[ARAnchor alloc] initWithTransform:distanceTransform];
             NSLog(@"newAnchor:-%f", newAnchor);
-
             NSLog(@"matrix_result:-%f", newAnchor);
             NSLog(@"distance:-%f", distance);
             NSLog(@"nsLandMarkLat:-%f", nsLandMarkLat);
