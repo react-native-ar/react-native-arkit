@@ -382,23 +382,22 @@ static RCTARKit *instance = nil;
             distanceTransform.columns[3][1] = 0;
             distanceTransform.columns[3][2] = distance;
 
-            ARAnchor *newAnchor  = [[ARAnchor alloc] initWithTransform:distanceTransform];
 
-            double startLat = GLKMathDegreesToRadians(locationLat);
-            double startLon = GLKMathDegreesToRadians(landMarklong);
-            double endLat = GLKMathDegreesToRadians(landMarkLat);
-            double endLon = GLKMathDegreesToRadians(locationLong);
-            double lonDiff = endLon - startLon;
-            double y = sin(lonDiff) * cos(endLat);
-            double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
-            double rotation = atan2(y, x);
-            double opposite = landmark.altitude - location.altitude;
-            double tilt = atan2(opposite, distance);
-            GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
+            // double startLat = GLKMathDegreesToRadians(locationLat);
+            // double startLon = GLKMathDegreesToRadians(landMarklong);
+            // double endLat = GLKMathDegreesToRadians(landMarkLat);
+            // double endLon = GLKMathDegreesToRadians(locationLong);
+            // double lonDiff = endLon - startLon;
+            // double y = sin(lonDiff) * cos(endLat);
+            // double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
+            // double rotation = atan2(y, x);
+            // double opposite = landmark.altitude - location.altitude;
+            // double tilt = atan2(opposite, distance);
+            // GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
 
 
             return  @{
-                        @"hello": @"world"
+                        @"results": distanceTransform
                     };
         }
     }
