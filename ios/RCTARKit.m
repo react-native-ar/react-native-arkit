@@ -394,7 +394,7 @@ static RCTARKit *instance = nil;
             double rotation = atan2(y, x);
             double opposite = landmark.altitude - location.altitude;
             double tilt = atan2(opposite, distance);
-            matrix_float4x4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
+            glkMatrix tiltRotation = GLKMatrix4MakeXRotation(tilt);
 
 
             return  @{
