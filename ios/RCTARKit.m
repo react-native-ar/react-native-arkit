@@ -383,15 +383,13 @@ static RCTARKit *instance = nil;
             distanceTransform.columns[3][2] = distance;
 
             ARAnchor *newAnchor  = [[ARAnchor alloc] initWithTransform:distanceTransform];
-            NSLog(@"newAnchor:-%f", newAnchor);
-            NSLog(@"matrix_result:-%f", newAnchor);
-            NSLog(@"distance:-%f", distance);
-            NSLog(@"nsLandMarkLat:-%f", nsLandMarkLat);
-            NSLog(@"options:-%f", options[@"landmarkLat"]);
-            NSLog(@"landMarkLat:-%f", landMarkLat);
-            NSLog(@"landmark:-%f", landmark);
-            NSLog(@"testDouble:-%f", testDouble);
 
+            double startLat = GLKMathDegreesToRadians(locationLat);
+            double startLon = GLKMathDegreesToRadians(landMarklong);
+            double endLat = GLKMathDegreesToRadians(landMarkLat)
+            double endLon = GLKMathDegreesToRadians(locationLong)
+            double lonDiff = endLon - startLon
+        
             return  @{
                         @"hello": @"world"
                     };
