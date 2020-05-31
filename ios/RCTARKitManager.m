@@ -451,7 +451,7 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
 }
 
 RCT_EXPORT_METHOD(getAnchorPosition:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    NSLog(@"latlongOptions:-%f", options);
+    NSLog(@"latlongOptions:-%f", options[@"landmarkLat"]);
 
     resolve([[ARKit sharedInstance] getArAnchorPosition:options]);
 }
