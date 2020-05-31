@@ -386,9 +386,9 @@ static RCTARKit *instance = nil;
 
             double startLat = GLKMathDegreesToRadians(locationLat);
             double startLon = GLKMathDegreesToRadians(landMarklong);
-            double endLat = GLKMathDegreesToRadians(landMarkLat)
-            double endLon = GLKMathDegreesToRadians(locationLong)
-            double lonDiff = endLon - startLon
+            double endLat = GLKMathDegreesToRadians(landMarkLat);
+            double endLon = GLKMathDegreesToRadians(locationLong);
+            double lonDiff = endLon - startLon;
         
             return  @{
                         @"hello": @"world"
