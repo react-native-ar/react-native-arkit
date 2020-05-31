@@ -392,8 +392,8 @@ static RCTARKit *instance = nil;
             double y = sin(lonDiff) * cos(endLat);
             double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
             double rotation = atan2(y, x);
-            double opposite = landmark.altitude - location.altitude
-            double tilt = atan2(opposite, distance)
+            double opposite = landmark.altitude - location.altitude;
+            double tilt = atan2(opposite, distance);
 
             return  @{
                         @"hello": @"world"
