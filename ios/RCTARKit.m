@@ -398,7 +398,7 @@ static RCTARKit *instance = nil;
 
 
             return  @{
-                        @"results": @"test"
+                        @"results": @(distance)
                     };
         }
     }
