@@ -381,6 +381,7 @@ static RCTARKit *instance = nil;
             distanceTransform.columns[3][0] = 0;
             distanceTransform.columns[3][1] = 0;
             distanceTransform.columns[3][2] = distance;
+            NSLog("distance:", distance)
 
 
             // double startLat = GLKMathDegreesToRadians(locationLat);
@@ -397,7 +398,7 @@ static RCTARKit *instance = nil;
 
 
             return  @{
-                        @"results": distance
+                        @"results": @"test"
                     };
         }
     }
