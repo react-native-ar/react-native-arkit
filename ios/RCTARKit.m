@@ -356,6 +356,8 @@ static RCTARKit *instance = nil;
             NSNumber * nsLocationLat = options[@"locationLat"];
             NSNumber * nsLocationLong = options[@"locationLong"];
 
+            double testDouble = [options[@"landmarkLat"] doubleValue];
+
             float landMarkLat = [nsLandMarkLat floatValue];
             float landMarklong = [nsLandMarkLong floatValue];
             float locationLat = [nsLocationLat floatValue];
@@ -388,6 +390,7 @@ static RCTARKit *instance = nil;
             NSLog(@"options:-%f", options[@"landmarkLat"]);
             NSLog(@"landMarkLat:-%f", landMarkLat);
             NSLog(@"landmark:-%f", landmark);
+            NSLog(@"testDouble:-%f", testDouble);
 
             return  @{
                         @"hello": @"world"
