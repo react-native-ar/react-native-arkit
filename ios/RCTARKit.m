@@ -351,7 +351,7 @@ static RCTARKit *instance = nil;
         if(options[@"landmarkLong"]){
 
             // NSNumber * nsLandMarkLat = options[@"landmarkLat"];
-            NSNumber * nsLandMarkLat = [[NSNumber alloc] initWithFloat:[[options objectForKey:@"landmarkLat"] doubleValue]];
+            NSNumber * nsLandMarkLat = [[NSNumber alloc] initWithDouble:[[options objectForKey:@"landmarkLat"] doubleValue]];
             NSNumber * nsLandMarkLong = options[@"landmarkLong"];
             NSNumber * nsLocationLat = options[@"locationLat"];
             NSNumber * nsLocationLong = options[@"locationLong"];
