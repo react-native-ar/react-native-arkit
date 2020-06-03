@@ -450,8 +450,7 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
 
-RCT_EXPORT_METHOD(getAnchorPosition:(NSDictionary *)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    NSLog(@"latlongOptions:-%f", options[@"landmarkLat"]);
+RCT_EXPORT_METHOD(getAnchorPosition:(NSDictionary *)options  lat:(double *)lat resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
 
     resolve([[ARKit sharedInstance] getArAnchorPosition:options]);
 }
