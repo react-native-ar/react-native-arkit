@@ -345,7 +345,9 @@ static RCTARKit *instance = nil;
 }
 
 
-- (NSDictionary *)getArAnchorPosition:(NSDictionary*)options {
+- (NSDictionary *)getArAnchorPosition:(double *)locationLat locationLong:(double *)locationLong landmarkLat:(double *)landmarkLat landmarkLong:(double *)landmarkLong {
+            NSLog(@"locationLat:-%f", locationLat);
+            NSLog(@"locationLong:-%f", locationLong);
 
     if(options[@"landmarkLat"]){
         if(options[@"landmarkLong"]){
