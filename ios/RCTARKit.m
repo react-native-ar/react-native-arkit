@@ -363,18 +363,16 @@ static RCTARKit *instance = nil;
             float locationLat = [nsLocationLat floatValue];
             float locationLong = [nsLocationLong floatValue];
 
-            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.08029866752368, -70.94861127912127)
-                                                            altitude:0
-                                                            horizontalAccuracy:0
-                                                            verticalAccuracy:0
-                                                            timestamp:[NSDate date]];
-
-
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.080337992970904, -70.94862029914505)
                                                         altitude:0
                                                 horizontalAccuracy:0
                                                 verticalAccuracy:0
                                                         timestamp:[NSDate date]];
+            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.08029866752368, -70.94861127912127)
+                                                    altitude:0
+                                                    horizontalAccuracy:0
+                                                    verticalAccuracy:0
+                                                    timestamp:[NSDate date]];
 
             CLLocationDistance distance = [location distanceFromLocation:landmark];
             matrix_float4x4 distanceTransform = matrix_identity_float4x4;
@@ -384,10 +382,10 @@ static RCTARKit *instance = nil;
             NSLog(@"distance:-%f", distance);
 
 
-            double startLat = GLKMathDegreesToRadians(locationLat);
-            double startLon = GLKMathDegreesToRadians(landMarklong);
-            double endLat = GLKMathDegreesToRadians(landMarkLat);
-            double endLon = GLKMathDegreesToRadians(locationLong);
+            double startLat = GLKMathDegreesToRadians(43.080337992970904);
+            double startLon = GLKMathDegreesToRadians(-70.94862029914505);
+            double endLat = GLKMathDegreesToRadians(43.08029866752368);
+            double endLon = GLKMathDegreesToRadians(-70.94861127912127);
             double lonDiff = endLon - startLon;
             double y = sin(lonDiff) * cos(endLat);
             NSLog(@"yvalue:-%f", y);
@@ -400,13 +398,13 @@ static RCTARKit *instance = nil;
 
 
             return  @{
-                        @"results": @(distance)
+                        @"results": @{ @"x": @(distance), @"y": @(y) }
                     };
         }
     }
 
     return @{
-                @"results": @"no results"
+                @"results": @{}
             };
 
 
