@@ -349,22 +349,6 @@ static RCTARKit *instance = nil;
             NSLog(@"locationLat:-%f", locationLat);
             NSLog(@"locationLong:-%f", locationLong);
 
-    if(options[@"landmarkLat"]){
-        if(options[@"landmarkLong"]){
-
-            // NSNumber * nsLandMarkLat = options[@"landmarkLat"];
-            NSNumber * nsLandMarkLat = [[NSNumber alloc] initWithDouble:[[options objectForKey:@"landmarkLat"] doubleValue]];
-            NSNumber * nsLandMarkLong = options[@"landmarkLong"];
-            NSNumber * nsLocationLat = options[@"locationLat"];
-            NSNumber * nsLocationLong = options[@"locationLong"];
-
-            double testDouble = [options[@"landmarkLat"] doubleValue];
-
-            float landMarkLat = [nsLandMarkLat floatValue];
-            float landMarklong = [nsLandMarkLong floatValue];
-            float locationLat = [nsLocationLat floatValue];
-            float locationLong = [nsLocationLong floatValue];
-
             CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.080337992970904, -70.94862029914505)
                                                         altitude:0
                                                 horizontalAccuracy:0
