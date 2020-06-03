@@ -384,12 +384,14 @@ static RCTARKit *instance = nil;
             NSLog(@"distance:-%f", distance);
 
 
-            // double startLat = GLKMathDegreesToRadians(locationLat);
-            // double startLon = GLKMathDegreesToRadians(landMarklong);
-            // double endLat = GLKMathDegreesToRadians(landMarkLat);
-            // double endLon = GLKMathDegreesToRadians(locationLong);
-            // double lonDiff = endLon - startLon;
-            // double y = sin(lonDiff) * cos(endLat);
+            double startLat = GLKMathDegreesToRadians(locationLat);
+            double startLon = GLKMathDegreesToRadians(landMarklong);
+            double endLat = GLKMathDegreesToRadians(landMarkLat);
+            double endLon = GLKMathDegreesToRadians(locationLong);
+            double lonDiff = endLon - startLon;
+            double y = sin(lonDiff) * cos(endLat);
+            NSLog(@"yvalue:-%f", y);
+
             // double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
             // double rotation = atan2(y, x);
             // double opposite = landmark.altitude - location.altitude;
