@@ -350,14 +350,14 @@ static RCTARKit *instance = nil;
 
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
                                                 altitude:0
-                                        horizontalAccuracy:0
-                                        verticalAccuracy:0
+                                                horizontalAccuracy:5
+                                                verticalAccuracy:0
                                                 timestamp:[NSDate date]];
     CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landmarkLat, landmarkLong)
-                                            altitude:0
-                                            horizontalAccuracy:0
-                                            verticalAccuracy:0
-                                            timestamp:[NSDate date]];
+                                                altitude:0
+                                                horizontalAccuracy:5
+                                                verticalAccuracy:0
+                                                timestamp:[NSDate date]];
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
     matrix_float4x4 distanceTransform = matrix_identity_float4x4;
