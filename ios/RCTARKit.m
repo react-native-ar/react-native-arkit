@@ -346,55 +346,46 @@ static RCTARKit *instance = nil;
 
 
 - (NSDictionary *)getArAnchorPosition:(double *)locationLat locationLong:(double *)locationLong landmarkLat:(double *)landmarkLat landmarkLong:(double *)landmarkLong {
-            NSLog(@"locationLat:-%f", locationLat);
-            NSLog(@"locationLong:-%f", locationLong);
+    NSLog(@"locationLat:-%f", locationLat);
+    NSLog(@"locationLong:-%f", locationLong);
 
-            CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.080337992970904, -70.94862029914505)
-                                                        altitude:0
-                                                horizontalAccuracy:0
-                                                verticalAccuracy:0
-                                                        timestamp:[NSDate date]];
-            CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.08029866752368, -70.94861127912127)
-                                                    altitude:0
-                                                    horizontalAccuracy:0
-                                                    verticalAccuracy:0
-                                                    timestamp:[NSDate date]];
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.080337992970904, -70.94862029914505)
+                                                altitude:0
+                                        horizontalAccuracy:0
+                                        verticalAccuracy:0
+                                                timestamp:[NSDate date]];
+    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.08029866752368, -70.94861127912127)
+                                            altitude:0
+                                            horizontalAccuracy:0
+                                            verticalAccuracy:0
+                                            timestamp:[NSDate date]];
 
-            CLLocationDistance distance = [location distanceFromLocation:landmark];
-            matrix_float4x4 distanceTransform = matrix_identity_float4x4;
-            distanceTransform.columns[3][0] = 0;
-            distanceTransform.columns[3][1] = 0;
-            distanceTransform.columns[3][2] = distance;
-            NSLog(@"distance:-%f", distance);
-
-
-            double startLat = GLKMathDegreesToRadians(43.080337992970904);
-            double startLon = GLKMathDegreesToRadians(-70.94862029914505);
-            double endLat = GLKMathDegreesToRadians(43.08029866752368);
-            double endLon = GLKMathDegreesToRadians(-70.94861127912127);
-            double lonDiff = endLon - startLon;
-            double y = sin(lonDiff) * cos(endLat);
-            NSLog(@"yvalue:-%f", y);
-
-            // double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
-            // double rotation = atan2(y, x);
-            // double opposite = landmark.altitude - location.altitude;
-            // double tilt = atan2(opposite, distance);
-            // GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
+    CLLocationDistance distance = [location distanceFromLocation:landmark];
+    matrix_float4x4 distanceTransform = matrix_identity_float4x4;
+    distanceTransform.columns[3][0] = 0;
+    distanceTransform.columns[3][1] = 0;
+    distanceTransform.columns[3][2] = distance;
+    NSLog(@"distance:-%f", distance);
 
 
-            return  @{
-                        @"results": @{ @"y": @(y), @"z": @(distance) }
-                    };
-        }
-    }
+    double startLat = GLKMathDegreesToRadians(43.080337992970904);
+    double startLon = GLKMathDegreesToRadians(-70.94862029914505);
+    double endLat = GLKMathDegreesToRadians(43.08029866752368);
+    double endLon = GLKMathDegreesToRadians(-70.94861127912127);
+    double lonDiff = endLon - startLon;
+    double y = sin(lonDiff) * cos(endLat);
+    NSLog(@"yvalue:-%f", y);
 
-    return @{
-                @"results": @{}
+    // double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
+    // double rotation = atan2(y, x);
+    // double opposite = landmark.altitude - location.altitude;
+    // double tilt = atan2(opposite, distance);
+    // GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
+
+
+    return  @{
+                @"results": @{ @"y": @(y), @"z": @(distance) }
             };
-
-
- 
 }
 
 static NSDictionary * vectorToJson(const SCNVector3 v) {
