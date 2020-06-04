@@ -346,15 +346,14 @@ static RCTARKit *instance = nil;
 
 
 - (NSDictionary *)getArAnchorPosition:(double *)locationLat locationLong:(double *)locationLong landmarkLat:(double *)landmarkLat landmarkLong:(double *)landmarkLong {
-    NSLog(@"locationLat:-%f", locationLat);
-    NSLog(@"locationLong:-%f", locationLong);
 
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.080337992970904, -70.94862029914505)
+
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
                                                 altitude:0
                                         horizontalAccuracy:0
                                         verticalAccuracy:0
                                                 timestamp:[NSDate date]];
-    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(43.08029866752368, -70.94861127912127)
+    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landmarkLat, landmarkLong)
                                             altitude:0
                                             horizontalAccuracy:0
                                             verticalAccuracy:0
@@ -368,10 +367,10 @@ static RCTARKit *instance = nil;
     NSLog(@"distance:-%f", distance);
 
 
-    double startLat = GLKMathDegreesToRadians(43.080337992970904);
-    double startLon = GLKMathDegreesToRadians(-70.94862029914505);
-    double endLat = GLKMathDegreesToRadians(43.08029866752368);
-    double endLon = GLKMathDegreesToRadians(-70.94861127912127);
+    double startLat = GLKMathDegreesToRadians(locationLat);
+    double startLon = GLKMathDegreesToRadians(locationLong);
+    double endLat = GLKMathDegreesToRadians(landmarkLat);
+    double endLon = GLKMathDegreesToRadians(landmarkLong);
     double lonDiff = endLon - startLon;
     double y = sin(lonDiff) * cos(endLat);
     NSLog(@"yvalue:-%f", y);
