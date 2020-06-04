@@ -349,14 +349,14 @@ static RCTARKit *instance = nil;
 
 
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
-                                                altitude:0
+                                                altitude:13.655269622802734
                                                 horizontalAccuracy:5
-                                                verticalAccuracy:0
+                                                verticalAccuracy:8
                                                 timestamp:[NSDate date]];
     CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landmarkLat, landmarkLong)
-                                                altitude:0
+                                                altitude:13.655269622802734
                                                 horizontalAccuracy:5
-                                                verticalAccuracy:0
+                                                verticalAccuracy:8
                                                 timestamp:[NSDate date]];
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
