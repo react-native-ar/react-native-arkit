@@ -450,7 +450,7 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
 
-RCT_EXPORT_METHOD(getAnchorPosition:(float *)locationLat locationLong:(float *)locationLong landmarkLat:(float *)landmarkLat landmarkLong:(float *)landmarkLong resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(getAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] getArAnchorPosition:locationLat locationLong:locationLong landmarkLat:landmarkLat landmarkLong:landmarkLong]);
 }
 
