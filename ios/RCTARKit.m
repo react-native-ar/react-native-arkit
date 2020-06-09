@@ -344,6 +344,42 @@ static RCTARKit *instance = nil;
     return vectorToJson(cameraPosition);
 }
 
+- (double)radiansFromDegrees:(double)degrees
+{
+    return degrees * (M_PI/180.0);    
+}
+
+- (double)degreesFromRadians:(double)radians
+{
+    return radians * (180.0/M_PI);
+}
+
+- (CLLocationCoordinate2D)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(double)distanceKm atBearingDegrees:(double)bearingDegrees
+{
+
+
+    double distanceRadians = distanceKm / 6371.0;
+      //6,371 = Earth's radius in km
+    double bearingRadians = [self radiansFromDegrees:bearingDegrees];
+    double fromLatRadians = [self radiansFromDegrees:locationLong];
+    double fromLonRadians = [self radiansFromDegrees:locationLat];
+
+    double toLatRadians = asin( sin(fromLatRadians) * cos(distanceRadians) 
+        + cos(fromLatRadians) * sin(distanceRadians) * cos(bearingRadians) );
+
+    double toLonRadians = fromLonRadians + atan2(sin(bearingRadians) 
+        * sin(distanceRadians) * cos(fromLatRadians), cos(distanceRadians) 
+        - sin(fromLatRadians) * sin(toLatRadians));
+
+    // adjust toLonRadians to be in the range -180 to +180...
+    toLonRadians = fmod((toLonRadians + 3*M_PI), (2*M_PI)) - M_PI;
+
+    CLLocationCoordinate2D result;
+    result.latitude = [self degreesFromRadians:toLatRadians];
+    result.longitude = [self degreesFromRadians:toLonRadians];
+    return result;
+}
+
 
 - (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong {
 
