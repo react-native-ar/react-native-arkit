@@ -344,17 +344,17 @@ static RCTARKit *instance = nil;
     return vectorToJson(cameraPosition);
 }
 
-- (double)radiansFromDegrees:(double)degrees
+- (double)radiansFromDegrees:(float)degrees
 {
     return degrees * (M_PI/180.0);    
 }
 
-- (double)degreesFromRadians:(double)radians
+- (double)degreesFromRadians:(float)radians
 {
     return radians * (180.0/M_PI);
 }
 
-- (CLLocationCoordinate2D)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(double)distanceKm atBearingDegrees:(double)bearingDegrees
+- (CLLocationCoordinate2D)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees
 {
 
 
