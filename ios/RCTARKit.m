@@ -381,7 +381,6 @@ static RCTARKit *instance = nil;
             @"results": @{ @"latitude": @(result.latitude), @"longitude": @(result.longitude) }
         };
 }
-}
 
 
 - (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong {
