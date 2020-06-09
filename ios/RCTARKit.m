@@ -354,7 +354,7 @@ static RCTARKit *instance = nil;
     return radians * (180.0/M_PI);
 }
 
-- (CLLocationCoordinate2D)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees
+- (CLLocationCoordinate2D *)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees
 {
 
 
