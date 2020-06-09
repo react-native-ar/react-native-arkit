@@ -359,8 +359,8 @@ static RCTARKit *instance = nil;
     double distanceRadians = distanceKm / 6371.0;
       //6,371 = Earth's radius in km
     double bearingRadians = [self radiansFromDegrees:bearingDegrees];
-    double fromLatRadians = [self radiansFromDegrees:locationLong];
-    double fromLonRadians = [self radiansFromDegrees:locationLat];
+    double fromLatRadians = [self radiansFromDegrees:locationLat];
+    double fromLonRadians = [self radiansFromDegrees:locationLong];
 
     double toLatRadians = asin( sin(fromLatRadians) * cos(distanceRadians) 
         + cos(fromLatRadians) * sin(distanceRadians) * cos(bearingRadians) );
