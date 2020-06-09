@@ -354,9 +354,7 @@ static RCTARKit *instance = nil;
     return radians * (180.0/M_PI);
 }
 
-- (NSDictionary *)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees
-{
-
+- (NSDictionary *)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees {
 
     double distanceRadians = distanceKm / 6371.0;
       //6,371 = Earth's radius in km
