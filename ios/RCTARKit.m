@@ -354,7 +354,7 @@ static RCTARKit *instance = nil;
     return radians * (180.0/M_PI);
 }
 
-- (CLLocationCoordinate2D *)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees
+- (NSDictionary *)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees
 {
 
 
@@ -377,7 +377,10 @@ static RCTARKit *instance = nil;
     CLLocationCoordinate2D result;
     result.latitude = [self degreesFromRadians:toLatRadians];
     result.longitude = [self degreesFromRadians:toLonRadians];
-    return result;
+    return  @{
+            @"results": @{ @"latitude": @(result.latitude), @"longitude": @(result.longitude) }
+        };
+}
 }
 
 
