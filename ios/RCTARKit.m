@@ -410,10 +410,10 @@ static RCTARKit *instance = nil;
 
     float lonDiff = endLon - startLon;
     float y = sin(lonDiff) * cos(endLat);
-    float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon)
+    float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon);
     float rotation = atan2(y, x);
     float bearing = [self degreesFromRadians:rotation];
-    simd_float4  position = simd_make_float4(0, 0, -distance, 0)
+    simd_float4  position = simd_make_float4(0, 0, -distance, 0);
 
 
     // float opposite = landmark.altitude - location.altitude;
