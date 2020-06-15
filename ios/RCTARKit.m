@@ -396,10 +396,9 @@ static RCTARKit *instance = nil;
                                                 timestamp:[NSDate date]];
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
-    matrix_float4x4 distanceTransform = matrix_identity_float4x4;
     distanceTransform.columns[3][0] = 0;
     distanceTransform.columns[3][1] = 0;
-    distanceTransform.columns[3][2] = distance;
+    distanceTransform.columns[3][2] = -distance;
     NSLog(@"distance:-%f", distance);
 
 
@@ -413,13 +412,22 @@ static RCTARKit *instance = nil;
     float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon);
     float rotation = atan2(y, x);
     float bearing = [self degreesFromRadians:rotation];
-    simd_float4  position = simd_make_float4(0, 0, -distance, 0);
+    simd_float4 position = simd_make_float4(0.0, 0.0, -distance, 0.0);
+    matrix_float4x4 translationMatrix = matrix_identity_float4x4;
+    translationMatrix.columns[3] = position;
+    matrix_float4x4 rotationMatrix = matrix_identity_float4x4;        
+    rotationMatrix.columns.[0].x = cos(bearing)
+    rotationMatrix.columns.[0].z = -sin(bearing)
+    rotationMatrix.columns.[2].x = sin(bearing)
+    rotationMatrix.columns.[2].z = cos(bearing)
 
+
+    simd_float3 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
+    NSLog(@"transformMatrix:-%f", transformMatrix);
 
     // float opposite = landmark.altitude - location.altitude;
     // float tilt = atan2(opposite, distance);
     // GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
-    // simd_float3 simd_mul(simd_float3 __x, simd_float3x3 __y);
 
     return  @{
                 @"results": @{ @"y": @(y), @"z": @(distance) }
