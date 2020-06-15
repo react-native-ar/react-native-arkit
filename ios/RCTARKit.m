@@ -396,9 +396,6 @@ static RCTARKit *instance = nil;
                                                 timestamp:[NSDate date]];
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
-    distanceTransform.columns[3][0] = 0;
-    distanceTransform.columns[3][1] = 0;
-    distanceTransform.columns[3][2] = -distance;
     NSLog(@"distance:-%f", distance);
 
 
@@ -422,7 +419,7 @@ static RCTARKit *instance = nil;
     rotationMatrix.columns.[2].z = cos(bearing);
 
 
-    simd_float3 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
+    simd_float4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     NSLog(@"transformMatrix:-%f", transformMatrix);
 
     // float opposite = landmark.altitude - location.altitude;
