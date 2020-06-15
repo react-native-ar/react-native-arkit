@@ -407,16 +407,19 @@ static RCTARKit *instance = nil;
     float startLon = GLKMathDegreesToRadians(locationLong);
     float endLat = GLKMathDegreesToRadians(landmarkLat);
     float endLon = GLKMathDegreesToRadians(landmarkLong);
+
     float lonDiff = endLon - startLon;
     float y = sin(lonDiff) * cos(endLat);
-    NSLog(@"yvalue:-%f", y);
+    float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon)
+    float rotation = atan2(y, x);
+    float bearing = [self degreesFromRadians:rotation];
+    simd_float4  position = simd_make_float4(0, 0, -distance, 0)
 
-    // double x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
-    // double rotation = atan2(y, x);
-    // double opposite = landmark.altitude - location.altitude;
-    // double tilt = atan2(opposite, distance);
+
+    // float opposite = landmark.altitude - location.altitude;
+    // float tilt = atan2(opposite, distance);
     // GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
-
+    // simd_float3 simd_mul(simd_float3 __x, simd_float3x3 __y);
 
     return  @{
                 @"results": @{ @"y": @(y), @"z": @(distance) }
