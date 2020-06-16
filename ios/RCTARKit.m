@@ -421,8 +421,6 @@ static RCTARKit *instance = nil;
 
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
-    NSLog(, transformMatrix);
-
     NSLog(@"transformMatrix %@", transformMatrix);
 
 
