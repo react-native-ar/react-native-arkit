@@ -413,10 +413,10 @@ static RCTARKit *instance = nil;
     matrix_float4x4 translationMatrix = matrix_identity_float4x4;
     translationMatrix.columns[3] = position;
     matrix_float4x4 rotationMatrix = matrix_identity_float4x4;        
-    rotationMatrix.columns.0.x = cos(bearing);
-    rotationMatrix.columns.0.z = -sin(bearing);
-    rotationMatrix.columns.2.x = sin(bearing);
-    rotationMatrix.columns.2.z = cos(bearing);
+    float rotationMatrix.columns.[0].x = cos(bearing);
+    float rotationMatrix.columns.[0].z = -sin(bearing);
+    float rotationMatrix.columns.[2].x = sin(bearing);
+    float rotationMatrix.columns.[2].z = cos(bearing);
 
 
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
