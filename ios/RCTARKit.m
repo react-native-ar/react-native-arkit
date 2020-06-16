@@ -423,12 +423,19 @@ static RCTARKit *instance = nil;
     NSLog(@"transformMatrix.columns[0][0]:-%f", transformMatrix.columns[0][0]);
     NSLog(@"transformMatrix.columns[0][1]:-%f", transformMatrix.columns[0][1]);
     NSLog(@"transformMatrix.columns[0][2]:-%f", transformMatrix.columns[0][2]);
+    NSLog(@"transformMatrix.columns[0][3]:-%f", transformMatrix.columns[0][3]);
     NSLog(@"transformMatrix.columns[1][0]:-%f", transformMatrix.columns[1][0]);
     NSLog(@"transformMatrix.columns[1][1]:-%f", transformMatrix.columns[1][1]);
     NSLog(@"transformMatrix.columns[1][2]:-%f", transformMatrix.columns[1][2]);
+    NSLog(@"transformMatrix.columns[1][3]:-%f", transformMatrix.columns[1][3]);
     NSLog(@"transformMatrix.columns[2][0]:-%f", transformMatrix.columns[2][0]);
     NSLog(@"transformMatrix.columns[2][1]:-%f", transformMatrix.columns[2][1]);
     NSLog(@"transformMatrix.columns[2][2]:-%f", transformMatrix.columns[2][2]);
+    NSLog(@"transformMatrix.columns[2][3]:-%f", transformMatrix.columns[2][3]);
+    NSLog(@"transformMatrix.columns[3][0]:-%f", transformMatrix.columns[3][0]);
+    NSLog(@"transformMatrix.columns[3][1]:-%f", transformMatrix.columns[3][1]);
+    NSLog(@"transformMatrix.columns[3][2]:-%f", transformMatrix.columns[3][2]);
+    NSLog(@"transformMatrix.columns[3][3]:-%f", transformMatrix.columns[3][3]);
 
 
     // float opposite = landmark.altitude - location.altitude;
