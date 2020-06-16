@@ -420,7 +420,16 @@ static RCTARKit *instance = nil;
 
 
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
-    NSLog(@"transformMatrix:-%f", transformMatrix.columns[0][2]);
+    NSLog(@"transformMatrix.columns[0][0]:-%f", transformMatrix.columns[0][0]);
+    NSLog(@"transformMatrix.columns[0][1]:-%f", transformMatrix.columns[0][1]);
+    NSLog(@"transformMatrix.columns[0][2]:-%f", transformMatrix.columns[0][2]);
+    NSLog(@"transformMatrix.columns[1][0]:-%f", transformMatrix.columns[1][0]);
+    NSLog(@"transformMatrix.columns[1][1]:-%f", transformMatrix.columns[1][1]);
+    NSLog(@"transformMatrix.columns[1][2]:-%f", transformMatrix.columns[1][2]);
+    NSLog(@"transformMatrix.columns[2][0]:-%f", transformMatrix.columns[2][0]);
+    NSLog(@"transformMatrix.columns[2][1]:-%f", transformMatrix.columns[2][1]);
+    NSLog(@"transformMatrix.columns[2][2]:-%f", transformMatrix.columns[2][2]);
+
 
     // float opposite = landmark.altitude - location.altitude;
     // float tilt = atan2(opposite, distance);
