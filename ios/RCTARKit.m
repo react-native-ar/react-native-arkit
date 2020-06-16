@@ -421,8 +421,9 @@ static RCTARKit *instance = nil;
 
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
+    NSLog(, transformMatrix);
 
-    NSLog(@"%@artestanchor", transformMatrix);
+    NSLog(@"transformMatrix %@", transformMatrix);
 
 
     // float opposite = landmark.altitude - location.altitude;
