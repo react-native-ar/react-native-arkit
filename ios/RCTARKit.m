@@ -426,7 +426,7 @@ static RCTARKit *instance = nil;
     SCNVector3 pos = toSCNVector3(transformMatrix.columns[2]);
     NSDictionary *jsonpos = vectorToJson(positionAbsolute);
     NSDictionary *jsonpos1 = vectorToJson(pos1);
-    NSDictionary *pjos = vectorToJson(position);
+    NSDictionary *pjos = vectorToJson(pos);
 
     NSLog(@"hello world!");
     NSLog(@"%@", jsonpos);
