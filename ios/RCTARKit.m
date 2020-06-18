@@ -421,17 +421,12 @@ static RCTARKit *instance = nil;
 
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
-    SCNVector3 positionAbsolute = toSCNVector3(transformMatrix.columns[0]);
-    SCNVector3 pos1 = toSCNVector3(transformMatrix.columns[1]);
-    SCNVector3 pos = toSCNVector3(transformMatrix.columns[2]);
+    SCNVector3 positionAbsolute = toSCNVector3(localAnchor.transform.columns[3]);
     NSDictionary *jsonpos = vectorToJson(positionAbsolute);
-    NSDictionary *jsonpos1 = vectorToJson(pos1);
-    NSDictionary *pjos = vectorToJson(pos);
 
     NSLog(@"hello world!");
     NSLog(@"%@", jsonpos);
-    NSLog(@"%@", jsonpos1);
-    NSLog(@"%@", pjos);
+
 
     // float opposite = landmark.altitude - location.altitude;
     // float tilt = atan2(opposite, distance);
