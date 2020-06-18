@@ -422,11 +422,11 @@ static RCTARKit *instance = nil;
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
     SCNVector3 positionAbsolute = toSCNVector3(transformMatrix.columns[0]);
-    SCNVector3 position = toSCNVector3(transformMatrix.columns[1]);
+    SCNVector3 pos1 = toSCNVector3(transformMatrix.columns[1]);
     SCNVector3 pos = toSCNVector3(transformMatrix.columns[2]);
-    NSDictionary jsonpos = vectorToJson(positionAbsolute)
-    NSDictionary jsonpos1 = vectorToJson(position)
-    NSDictionary pjos = vectorToJson(position)
+    NSDictionary jsonpos = vectorToJson(positionAbsolute);
+    NSDictionary jsonpos1 = vectorToJson(pos1);
+    NSDictionary pjos = vectorToJson(position);
 
     NSLog(@"hello world!");
     NSLog(@"%@", jsonpos);
