@@ -421,7 +421,7 @@ static RCTARKit *instance = nil;
 
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
-    SCNVector3 positionAbsolute = toSCNVector3(transformMatrix.columns[3]);
+    SCNVector3 positionAbsolute = toSCNVector3(transformMatrix.columns[1]);
 
     NSLog(@"hello world!");
     NSLog(@"%@", positionAbsolute);
