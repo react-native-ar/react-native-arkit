@@ -438,7 +438,7 @@ static RCTARKit *instance = nil;
     // GLKVector4 result = vector4ToJson(vec);
 
     NSLog(@"hello world!");
-    NSLog(@"%@", rotation);
+    // NSLog(@"%@", rotation);
 
 
     // float opposite = landmark.altitude - location.altitude;
@@ -446,7 +446,7 @@ static RCTARKit *instance = nil;
     // GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
 
     return  @{
-                @"results": @{ @"y": @(y), @"z": @(distance) }
+                @"results": @{ @"y": @(rotation), @"z": @(distance) }
             };
 }
 
