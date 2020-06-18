@@ -441,7 +441,7 @@ static RCTARKit *instance = nil;
     SCNAction *action = [SCNAction rotateToX:rotation y:0 z:0 duration:0.5];
 
     NSLog(@"hello world!");
-    NSLog(@"%@", vec);
+    NSLog(@"%@", newRotation.m00);
     NSLog(@"%@", vec1);
 
 
