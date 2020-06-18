@@ -438,16 +438,14 @@ static RCTARKit *instance = nil;
     GLKVector4 vec2 = GLKMatrix4GetColumn(newRotation, 2);
     GLKVector4 vec3 = GLKMatrix4GetColumn(newRotation, 3);
 
-    NSDictionary *result = vector4ToJson(vec);
-    NSDictionary *result1 = vector4ToJson(vec1);
-    NSDictionary *result2 = vector4ToJson(vec2);
-    NSDictionary *result3 = vector4ToJson(vec3);
+    // NSDictionary *result = vector4ToJson(vec);
+    // NSDictionary *result1 = vector4ToJson(vec1);
+    // NSDictionary *result2 = vector4ToJson(vec2);
+    // NSDictionary *result3 = vector4ToJson(vec3);
 
     NSLog(@"hello world!");
-    NSLog(@"%@", result);
-    NSLog(@"%@", result1);
-    NSLog(@"%@", result2);
-    NSLog(@"%@", result3);
+    NSLog(@"%@", vec[0]);
+  
 
 
     // float opposite = landmark.altitude - location.altitude;
