@@ -438,14 +438,10 @@ static RCTARKit *instance = nil;
     GLKVector4 vec2 = GLKMatrix4GetColumn(newRotation, 2);
     GLKVector4 vec3 = GLKMatrix4GetColumn(newRotation, 3);
 
-    // NSDictionary *result = vector4ToJson(vec);
-    // NSDictionary *result1 = vector4ToJson(vec1);
-    // NSDictionary *result2 = vector4ToJson(vec2);
-    // NSDictionary *result3 = vector4ToJson(vec3);
+    SCNAction *action = [SCNAction rotateToX:rotation y:0 z:0 duration:0.5];
 
     NSLog(@"hello world!");
-    NSLog(@"%@", vec);
-      NSLog(@"%@", vec1);
+    NSLog(@"%@", action);
 
 
 
