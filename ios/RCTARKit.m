@@ -425,7 +425,7 @@ static RCTARKit *instance = nil;
     SCNVector3 xpos = toSCNVector3(localAnchor.transform.columns[2]);
     SCNVector3 ypos = toSCNVector3(localAnchor.transform.columns[1]);
     SCNVector3 apos = toSCNVector3(localAnchor.transform.columns[0]);
-    GLKMatrix4 newRotation = GLKMatrix4MakeYRotation(rotation);
+    // GLKMatrix4 newRotation = GLKMatrix4MakeYRotation(rotation);
 
     
 
@@ -433,24 +433,13 @@ static RCTARKit *instance = nil;
     NSDictionary *xjson = vectorToJson(xpos);
     NSDictionary *yjson = vectorToJson(ypos);
     NSDictionary *ajson = vectorToJson(apos);
+    // GLKVector4 vec = GLKMatrix4GetColumn(newRotation, 0);
+
+    // GLKVector4 result = vector4ToJson(vec);
 
     NSLog(@"hello world!");
-    NSLog(@"%@", newRotation[0,0]);
-    NSLog(@"%@", newRotation[0,1]);
-    NSLog(@"%@", newRotation[0,2]);
-    NSLog(@"%@", newRotation[0,3]);
-    NSLog(@"%@", newRotation[1,0]);
-    NSLog(@"%@", newRotation[1,1]);
-    NSLog(@"%@", newRotation[1,2]);
-    NSLog(@"%@", newRotation[1,3]);
-    NSLog(@"%@", newRotation[2,0]);
-    NSLog(@"%@", newRotation[2,1]);
-    NSLog(@"%@", newRotation[2,2]);
-    NSLog(@"%@", newRotation[2,3]);
-    NSLog(@"%@", newRotation[3,0]);
-    NSLog(@"%@", newRotation[3,1]);
-    NSLog(@"%@", newRotation[3,2]);
-    NSLog(@"%@", newRotation[3,3]);
+    NSLog(@"%@", rotation);
+
 
     // float opposite = landmark.altitude - location.altitude;
     // float tilt = atan2(opposite, distance);
