@@ -421,11 +421,10 @@ static RCTARKit *instance = nil;
 
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
+    SCNVector3 positionAbsolute = toSCNVector3(transformMatrix.columns[3]);
 
     NSLog(@"hello world!");
-    NSLog(@"%@", transformMatrix.columns[0]);
-    NSLog(@"%@", transformMatrix.columns[1]);
-    NSLog(@"%@", transformMatrix.columns[2]);
+    NSLog(@"%@", positionAbsolute);
 
     // float opposite = landmark.altitude - location.altitude;
     // float tilt = atan2(opposite, distance);
@@ -436,6 +435,10 @@ static RCTARKit *instance = nil;
             };
 }
 
+static SCNVector3 toSCNVector3(simd_float4 float4) {
+    SCNVector3 positionAbsolute = SCNVector3Make(float4.x, float4.y, float4.z);
+    return positionAbsolute;
+}
 static NSDictionary * vectorToJson(const SCNVector3 v) {
     return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z) };
 }
