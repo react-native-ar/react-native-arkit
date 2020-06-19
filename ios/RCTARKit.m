@@ -406,9 +406,13 @@ static RCTARKit *instance = nil;
     float distanceKm = distance / 1000;
 
     NSDictionary * bearingResult = [self coordinateFromCoord:locationLat locationLong:locationLong atDistanceKm:distanceKm atBearingDegrees:bearingDegrees];
+    float bearingLat = 0.0
+    float bearingLong = 0.0
+    if(bearingResult[@"results"][@"latitude"] && bearingResult[@"results"][@"longitude"] ){
+        bearingLat = [bearingResult valueForKeyPath:@"results.latitude"];
+        bearingLong = [bearingResult valueForKeyPath:@"results.longitude"];
+    }
 
-    float bearingLat = [bearingResult valueForKeyPath:@"results.latitude"];
-    float bearingLong = [bearingResult valueForKeyPath:@"results.longitude"];
 
 
     float dynamicDegrees = angleBetweenPoints(endLat, endLon, bearingLat, bearingLong);
