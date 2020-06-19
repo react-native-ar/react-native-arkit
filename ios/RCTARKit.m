@@ -381,7 +381,7 @@ static RCTARKit *instance = nil;
 }
 
 
-- (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong {
+- (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong bearingDegrees:(float)bearingDegrees {
 
 
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
@@ -403,12 +403,20 @@ static RCTARKit *instance = nil;
     float startLon = GLKMathDegreesToRadians(locationLong);
     float endLat = GLKMathDegreesToRadians(landmarkLat);
     float endLon = GLKMathDegreesToRadians(landmarkLong);
+    float distanceKm = distance / 1000
 
-    float lonDiff = endLon - startLon;
-    float y = sin(lonDiff) * cos(endLat);
-    float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon);
-    float rotation = atan2(y, x);
-    float bearing = [self degreesFromRadians:rotation];
+    NSDictionary * bearingResult = [self coordinateFromCoord:locationLat locationLong:locationLong atDistanceKm:distanceKm atBearingDegrees:bearingDegrees];
+
+    float bearingLat = bearingResult.results.latitude;
+    float bearingLong = bearingResult.results.longitude;
+
+
+    float dynamicDegrees = angleBetweenPoints(endLat, endLon, bearingLat, bearingLong);
+
+    float finalX =  (distance * sin(bearing)) / sin(dynamicDegrees);
+
+    float bearing = angleBetweenPoints(startLat, startLon, endLat, endLon);
+
     simd_float4 position = simd_make_float4(0.0, 0.0, -distance, 0.0);
     matrix_float4x4 translationMatrix = matrix_identity_float4x4;
     translationMatrix.columns[3] = position;
@@ -419,39 +427,13 @@ static RCTARKit *instance = nil;
     rotationMatrix.columns[2][2] = cos(bearing);
 
 
+
     simd_float4x4 transformMatrix = simd_mul(rotationMatrix, translationMatrix);
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
-    SCNVector3 zpos = toSCNVector3(localAnchor.transform.columns[3]);
-    SCNVector3 xpos = toSCNVector3(localAnchor.transform.columns[2]);
-    SCNVector3 ypos = toSCNVector3(localAnchor.transform.columns[1]);
-    SCNVector3 apos = toSCNVector3(localAnchor.transform.columns[0]);
-    GLKMatrix4 newRotation = GLKMatrix4MakeYRotation(rotation);
 
-    
-
-    NSDictionary *zjson = vectorToJson(zpos);
-    NSDictionary *xjson = vectorToJson(xpos);
-    NSDictionary *yjson = vectorToJson(ypos);
-    NSDictionary *ajson = vectorToJson(apos);
-    GLKVector4 vec = GLKMatrix4GetRow(newRotation, 0);
-    GLKVector4 vec1 = GLKMatrix4GetColumn(newRotation, 0);
-    GLKVector4 vec2 = GLKMatrix4GetColumn(newRotation, 2);
-    GLKVector4 vec3 = GLKMatrix4GetColumn(newRotation, 3);
-
-    SCNAction *action = [SCNAction rotateToX:rotation y:0 z:0 duration:0.5];
-
-    NSLog(@"hello world!");
-    NSLog(@"%@", newRotation.m00);
-    NSLog(@"%@", vec1);
-
-
-
-    // float opposite = landmark.altitude - location.altitude;
-    // float tilt = atan2(opposite, distance);
-    // GLKMatrix4 tiltRotation = GLKMatrix4MakeXRotation(tilt);
 
     return  @{
-                @"results": @{ @"y": @(rotation), @"z": @(distance) }
+                @"results": @{ @"y": @(finalX), @"z": @(distance) }
             };
 }
 
@@ -459,6 +441,18 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
     SCNVector3 positionAbsolute = SCNVector3Make(float4.x, float4.y, float4.z);
     return positionAbsolute;
 }
+
+
+static float angleBetweenPoints(const float startLat, const float startLon,  const float endLat, const float endLon) {
+    float lonDiff = endLon - startLon;
+    float y = sin(lonDiff) * cos(endLat);
+    float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon);
+    float rotation = atan2(y, x);
+    float bearing = [self degreesFromRadians:rotation];
+    return positionAbsolute;
+}
+
+
 static NSDictionary * vectorToJson(const SCNVector3 v) {
     return @{ @"x": @(v.x), @"y": @(v.y), @"z": @(v.z) };
 }
