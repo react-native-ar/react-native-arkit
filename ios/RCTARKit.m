@@ -403,19 +403,17 @@ static RCTARKit *instance = nil;
     float startLon = GLKMathDegreesToRadians(locationLong);
     float endLat = GLKMathDegreesToRadians(landmarkLat);
     float endLon = GLKMathDegreesToRadians(landmarkLong);
-    float distanceKm = distance / 1000
+    float distanceKm = distance / 1000;
 
     NSDictionary * bearingResult = [self coordinateFromCoord:locationLat locationLong:locationLong atDistanceKm:distanceKm atBearingDegrees:bearingDegrees];
 
-    float bearingLat = bearingResult.results.latitude;
-    float bearingLong = bearingResult.results.longitude;
+    float bearingLat = bearingResult[@"results"][@"latitude"];
+    float bearingLong = bearingResult[@"results"][@"longitude"];;
 
 
     float dynamicDegrees = angleBetweenPoints(endLat, endLon, bearingLat, bearingLong);
-
-    float finalX =  (distance * sin(bearing)) / sin(dynamicDegrees);
-
     float bearing = angleBetweenPoints(startLat, startLon, endLat, endLon);
+    float finalX =  (distance * sin(bearing)) / sin(dynamicDegrees);
 
     simd_float4 position = simd_make_float4(0.0, 0.0, -distance, 0.0);
     matrix_float4x4 translationMatrix = matrix_identity_float4x4;
@@ -448,8 +446,8 @@ static float angleBetweenPoints(const float startLat, const float startLon,  con
     float y = sin(lonDiff) * cos(endLat);
     float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon);
     float rotation = atan2(y, x);
-    float bearing = [self degreesFromRadians:rotation];
-    return positionAbsolute;
+    float bearing = rotation * (180.0/M_PI);
+    return bearing;
 }
 
 
