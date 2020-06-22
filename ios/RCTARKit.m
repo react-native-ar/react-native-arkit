@@ -422,14 +422,15 @@ static RCTARKit *instance = nil;
     matrix_float4x4 distanceTransform = matrix_identity_float4x4;
     distanceTransform.columns[3] = position;
 
-    float opposite = 13.655269622802734 - 13.655269622802734
-    float  tilt = atan2(opposite, distance)
+    float opposite = 13.655269622802734 - 13.655269622802734;
+    float  tilt = atan2(opposite, distance);
 
     GLKMatrix4 rotation = GLKMatrix4MakeXRotation(tilt);
-    float firstRotation = rotation[0][0];
+    GLKVector4 vec = GLKMatrix4GetRow(rotation, 0);
 
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
+
+    // ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
 
 
     return  @{
