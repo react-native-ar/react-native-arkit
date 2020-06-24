@@ -428,10 +428,28 @@ static RCTARKit *instance = nil;
     GLKMatrix4 rotation = GLKMatrix4MakeXRotation(tilt);
     float vec = GLKMatrix4GetRow(rotation, 0).w;
 
+    matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
+    rotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(rotation, 0).x, GLKMatrix4GetRow(rotation, 0).y, GLKMatrix4GetRow(rotation, 0).z, GLKMatrix4GetRow(rotation, 0).w);
+    rotationMatrix.columns[1] = simd_make_float4(GLKMatrix4GetRow(rotation, 1).x, GLKMatrix4GetRow(rotation, 1).y, GLKMatrix4GetRow(rotation, 1).z, GLKMatrix4GetRow(rotation, 1).w);
+    rotationMatrix.columns[2] = simd_make_float4(GLKMatrix4GetRow(rotation, 2).x, GLKMatrix4GetRow(rotation, 2).y, GLKMatrix4GetRow(rotation, 2).z, GLKMatrix4GetRow(rotation, 2).w);
+    rotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(rotation, 3).x, GLKMatrix4GetRow(rotation, 3).y, GLKMatrix4GetRow(rotation, 3).z, GLKMatrix4GetRow(rotation, 3).w);
+
+    matrix_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform)
+    GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-bearing);
+
+    matrix_float4x4 yRotationMatrix = matrix_identity_float4x4;
+    yRotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(yRotation, 0).x, GLKMatrix4GetRow(yRotation, 0).y, GLKMatrix4GetRow(yRotation, 0).z, GLKMatrix4GetRow(yRotation, 0).w);
+    yRotationMatrix.columns[1] = simd_make_float4(GLKMatrix4GetRow(yRotation, 1).x, GLKMatrix4GetRow(yRotation, 1).y, GLKMatrix4GetRow(yRotation, 1).z, GLKMatrix4GetRow(yRotation, 1).w);
+    yRotationMatrix.columns[2] = simd_make_float4(GLKMatrix4GetRow(yRotation, 2).x, GLKMatrix4GetRow(yRotation, 2).y, GLKMatrix4GetRow(yRotation, 2).z, GLKMatrix4GetRow(yRotation, 2).w);
+    yRotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(yRotation, 3).x, GLKMatrix4GetRow(yRotation, 3).y, GLKMatrix4GetRow(yRotation, 3).z, GLKMatrix4GetRow(yRotation, 3).w);
+
+    matrix_float4x4 finalTransform = simd_mul(yRotationMatrix, tiltedTransformation)
 
 
-    // ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:transformMatrix];
 
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:finalTransform];
+
+    [self.arView.session addAnchor:localAnchor];
 
     return  @{
                 @"results": @{ @"y": @(finalX), @"z": @(distance) }
