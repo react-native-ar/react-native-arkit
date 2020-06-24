@@ -419,10 +419,10 @@ static RCTARKit *instance = nil;
     GLKMatrix4 rad = GLKMatrix4MakeXRotation(tilt);
 
     matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
-    rotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(rotation, 0).x, GLKMatrix4GetRow(rotation, 0).y, GLKMatrix4GetRow(rotation, 0).z, GLKMatrix4GetRow(rotation, 0).w);
-    rotationMatrix.columns[1] = simd_make_float4(GLKMatrix4GetRow(rotation, 1).x, GLKMatrix4GetRow(rotation, 1).y, GLKMatrix4GetRow(rotation, 1).z, GLKMatrix4GetRow(rotation, 1).w);
-    rotationMatrix.columns[2] = simd_make_float4(GLKMatrix4GetRow(rotation, 2).x, GLKMatrix4GetRow(rotation, 2).y, GLKMatrix4GetRow(rotation, 2).z, GLKMatrix4GetRow(rotation, 2).w);
-    rotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(rotation, 3).x, GLKMatrix4GetRow(rotation, 3).y, GLKMatrix4GetRow(rotation, 3).z, GLKMatrix4GetRow(rotation, 3).w);
+    rotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(rad, 0).x, GLKMatrix4GetRow(rad, 0).y, GLKMatrix4GetRow(rad, 0).z, GLKMatrix4GetRow(rad, 0).w);
+    rotationMatrix.columns[1] = simd_make_float4(GLKMatrix4GetRow(rad, 1).x, GLKMatrix4GetRow(rad, 1).y, GLKMatrix4GetRow(rad, 1).z, GLKMatrix4GetRow(rad, 1).w);
+    rotationMatrix.columns[2] = simd_make_float4(GLKMatrix4GetRow(rad, 2).x, GLKMatrix4GetRow(rad, 2).y, GLKMatrix4GetRow(rad, 2).z, GLKMatrix4GetRow(rad, 2).w);
+    rotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(rad, 3).x, GLKMatrix4GetRow(rad, 3).y, GLKMatrix4GetRow(rad, 3).z, GLKMatrix4GetRow(rad, 3).w);
 
     matrix_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
 
@@ -443,7 +443,7 @@ static RCTARKit *instance = nil;
     [self.arView.session addAnchor:localAnchor];
 
     return  @{
-                @"results": @{ @"y": @(finalX), @"z": @(distance) }
+                @"results": @{ @"y": @(0.0), @"z": @(distance) }
             };
 }
 
@@ -456,7 +456,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 static float angleBetweenPoints(const float startLat, const float startLon,  const float endLat, const float endLon) {
     float lonDiff = endLon - startLon;
     float y = sin(lonDiff) * cos(endLat);
-    float x == (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff))
+    float x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
     float rotation = atan2(y, x);
     // float bearing = rotation * (180.0/M_PI);
     return rotation;
