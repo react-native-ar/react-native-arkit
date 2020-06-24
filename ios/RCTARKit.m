@@ -403,30 +403,20 @@ static RCTARKit *instance = nil;
     float startLon = GLKMathDegreesToRadians(locationLong);
     float endLat = GLKMathDegreesToRadians(landmarkLat);
     float endLon = GLKMathDegreesToRadians(landmarkLong);
-    float distanceKm = distance / 1000;
-
-    NSDictionary * bearingResult = [self coordinateFromCoord:locationLat locationLong:locationLong atDistanceKm:distanceKm atBearingDegrees:bearingDegrees];
-
-    float bearingLat = [[bearingResult valueForKeyPath:@"results.latitude"] floatValue];
-    float bearingLong = [[bearingResult valueForKeyPath:@"results.longitude"] floatValue];
-
-    NSLog(@"bearingLat:-%f", bearingLat);
-    NSLog(@"bearingLong:-%f", bearingLong);
 
 
-    float dynamicDegrees = angleBetweenPoints(endLat, endLon, bearingLat, bearingLong);
-    float bearing = angleBetweenPoints(startLat, startLon, endLat, endLon);
-    float finalX =  (distance * sin(bearing)) / sin(dynamicDegrees);
-
-    simd_float4 position = simd_make_float4(0.0, 0.0, -distance, 0.0);
     matrix_float4x4 distanceTransform = matrix_identity_float4x4;
-    distanceTransform.columns[3] = position;
+    distanceTransform.columns[3].x = 0;
+    distanceTransform.columns[3].y = 0;
+    distanceTransform.columns[3].z = distance;
+
+    float rotation = angleBetweenPoints(startLat, startLon, endLat, endLon);
+
 
     float opposite = 13.655269622802734 - 13.655269622802734;
     float  tilt = atan2(opposite, distance);
 
-    GLKMatrix4 rotation = GLKMatrix4MakeXRotation(tilt);
-    float vec = GLKMatrix4GetRow(rotation, 0).w;
+    GLKMatrix4 rad = GLKMatrix4MakeXRotation(tilt);
 
     matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
     rotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(rotation, 0).x, GLKMatrix4GetRow(rotation, 0).y, GLKMatrix4GetRow(rotation, 0).z, GLKMatrix4GetRow(rotation, 0).w);
@@ -435,7 +425,8 @@ static RCTARKit *instance = nil;
     rotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(rotation, 3).x, GLKMatrix4GetRow(rotation, 3).y, GLKMatrix4GetRow(rotation, 3).z, GLKMatrix4GetRow(rotation, 3).w);
 
     matrix_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
-    GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-bearing);
+
+    GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-rotation);
 
     matrix_float4x4 yRotationMatrix = matrix_identity_float4x4;
     yRotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(yRotation, 0).x, GLKMatrix4GetRow(yRotation, 0).y, GLKMatrix4GetRow(yRotation, 0).z, GLKMatrix4GetRow(yRotation, 0).w);
@@ -443,11 +434,11 @@ static RCTARKit *instance = nil;
     yRotationMatrix.columns[2] = simd_make_float4(GLKMatrix4GetRow(yRotation, 2).x, GLKMatrix4GetRow(yRotation, 2).y, GLKMatrix4GetRow(yRotation, 2).z, GLKMatrix4GetRow(yRotation, 2).w);
     yRotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(yRotation, 3).x, GLKMatrix4GetRow(yRotation, 3).y, GLKMatrix4GetRow(yRotation, 3).z, GLKMatrix4GetRow(yRotation, 3).w);
 
-    matrix_float4x4 finalTransform = simd_mul(yRotationMatrix, tiltedTransformation);
+    matrix_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
 
 
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:finalTransform];
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
 
     [self.arView.session addAnchor:localAnchor];
 
@@ -465,10 +456,10 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 static float angleBetweenPoints(const float startLat, const float startLon,  const float endLat, const float endLon) {
     float lonDiff = endLon - startLon;
     float y = sin(lonDiff) * cos(endLat);
-    float x = cos(startLat) * sin(endLat) - sin(startLat) * cos(endLat) * cos(endLon - startLon);
+    float x == (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff))
     float rotation = atan2(y, x);
-    float bearing = rotation * (180.0/M_PI);
-    return bearing;
+    // float bearing = rotation * (180.0/M_PI);
+    return rotation;
 }
 
 
