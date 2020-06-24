@@ -437,7 +437,7 @@ static RCTARKit *instance = nil;
     yRotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(yRotation, 3).x, GLKMatrix4GetRow(yRotation, 3).y, GLKMatrix4GetRow(yRotation, 3).z, GLKMatrix4GetRow(yRotation, 3).w);
 
     matrix_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
-    
+
     NSLog(@"completedTransformation0x:-%f", completedTransformation.columns[0].x);
     NSLog(@"completedTransformation0y:-%f", completedTransformation.columns[0].y);
     NSLog(@"completedTransformation0z:-%f", completedTransformation.columns[0].z);
@@ -455,7 +455,8 @@ static RCTARKit *instance = nil;
     NSLog(@"completedTransformation3z:-%f", completedTransformation.columns[3].z);
     NSLog(@"completedTransformation3w:-%f", completedTransformation.columns[3].w);
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:distanceTransform];
+    NSLog(@"localAnchor:-%f", localAnchor);
 
     [self.arView.session addAnchor:localAnchor];
 
