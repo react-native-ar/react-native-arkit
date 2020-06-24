@@ -411,10 +411,12 @@ static RCTARKit *instance = nil;
     distanceTransform.columns[3].z = distance;
 
     float rotation = angleBetweenPoints(startLat, startLon, endLat, endLon);
+    NSLog(@"rotation:-%f", rotation);
 
 
     float opposite = 13.655269622802734 - 13.655269622802734;
     float  tilt = atan2(opposite, distance);
+    NSLog(@"tilt:-%f", tilt);
 
     GLKMatrix4 rad = GLKMatrix4MakeXRotation(tilt);
 
@@ -435,8 +437,23 @@ static RCTARKit *instance = nil;
     yRotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(yRotation, 3).x, GLKMatrix4GetRow(yRotation, 3).y, GLKMatrix4GetRow(yRotation, 3).z, GLKMatrix4GetRow(yRotation, 3).w);
 
     matrix_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
-
-
+    
+    NSLog(@"completedTransformation0x:-%f", completedTransformation.columns[0].x);
+    NSLog(@"completedTransformation0y:-%f", completedTransformation.columns[0].y);
+    NSLog(@"completedTransformation0z:-%f", completedTransformation.columns[0].z);
+    NSLog(@"completedTransformation0w:-%f", completedTransformation.columns[0].w);
+    NSLog(@"completedTransformation1x:-%f", completedTransformation.columns[1].x);
+    NSLog(@"completedTransformation1y:-%f", completedTransformation.columns[1].y);
+    NSLog(@"completedTransformation1z:-%f", completedTransformation.columns[1].z);
+    NSLog(@"completedTransformation1w:-%f", completedTransformation.columns[1].w);
+    NSLog(@"completedTransformation2x:-%f", completedTransformation.columns[2].x);
+    NSLog(@"completedTransformation2y:-%f", completedTransformation.columns[2].y);
+    NSLog(@"completedTransformation2z:-%f", completedTransformation.columns[2].z);
+    NSLog(@"completedTransformation2w:-%f", completedTransformation.columns[2].w);
+    NSLog(@"completedTransformation3x:-%f", completedTransformation.columns[3].x);
+    NSLog(@"completedTransformation3y:-%f", completedTransformation.columns[3].y);
+    NSLog(@"completedTransformation3z:-%f", completedTransformation.columns[3].z);
+    NSLog(@"completedTransformation3w:-%f", completedTransformation.columns[3].w);
 
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
 
