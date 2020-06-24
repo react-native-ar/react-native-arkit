@@ -426,7 +426,7 @@ static RCTARKit *instance = nil;
     float  tilt = atan2(opposite, distance);
 
     GLKMatrix4 rotation = GLKMatrix4MakeXRotation(tilt);
-    float vec = GLKMatrix4GetRow(rotation, 0).x;
+    float vec = GLKMatrix4GetRow(rotation, 0).w;
 
 
 
