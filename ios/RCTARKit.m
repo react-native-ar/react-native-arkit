@@ -424,10 +424,10 @@ static RCTARKit *instance = nil;
     float newRad = rad.m01;
 
     matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
-    rotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(rad, 0).x, GLKMatrix4GetRow(rad, 0).y, GLKMatrix4GetRow(rad, 0).z, GLKMatrix4GetRow(rad, 0).w);
-    rotationMatrix.columns[1] = simd_make_float4(GLKMatrix4GetRow(rad, 1).x, GLKMatrix4GetRow(rad, 1).y, GLKMatrix4GetRow(rad, 1).z, GLKMatrix4GetRow(rad, 1).w);
-    rotationMatrix.columns[2] = simd_make_float4(GLKMatrix4GetRow(rad, 2).x, GLKMatrix4GetRow(rad, 2).y, GLKMatrix4GetRow(rad, 2).z, GLKMatrix4GetRow(rad, 2).w);
-    rotationMatrix.columns[3] = simd_make_float4(GLKMatrix4GetRow(rad, 3).x, GLKMatrix4GetRow(rad, 3).y, GLKMatrix4GetRow(rad, 3).z, GLKMatrix4GetRow(rad, 3).w);
+    rotationMatrix.columns[0] = simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03);
+    rotationMatrix.columns[1] = simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13);
+    rotationMatrix.columns[2] = simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23);
+    rotationMatrix.columns[3] = simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33);
 
     matrix_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
 
