@@ -418,7 +418,10 @@ static RCTARKit *instance = nil;
     float  tilt = atan2(opposite, distance);
     NSLog(@"tilt:-%f", tilt);
 
+
     GLKMatrix4 rad = GLKMatrix4MakeXRotation(tilt);
+
+    float newRad = rad.m01
 
     matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
     rotationMatrix.columns[0] = simd_make_float4(GLKMatrix4GetRow(rad, 0).x, GLKMatrix4GetRow(rad, 0).y, GLKMatrix4GetRow(rad, 0).z, GLKMatrix4GetRow(rad, 0).w);
