@@ -414,7 +414,7 @@ static RCTARKit *instance = nil;
     NSLog(@"rotation:-%f", rotation);
 
 
-    float opposite = 13.655269622802734 - 13.655269622802734;
+    float opposite = 13.655269622802734 - 13.0;
     float  tilt = atan2(opposite, distance);
     NSLog(@"tilt:-%f", tilt);
 
@@ -476,8 +476,13 @@ static float angleBetweenPoints(const float startLat, const float startLon,  con
     float y = sin(lonDiff) * cos(endLat);
     float x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
     float rotation = atan2(y, x);
-    // float bearing = rotation * (180.0/M_PI);
-    return rotation;
+    float bearing = rotation * (180.0/M_PI);
+    if(bearing < 0){
+        return rotation + 360;
+    } else {
+        return rotation + 360;
+
+    }
 }
 
 
