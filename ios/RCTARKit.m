@@ -425,7 +425,7 @@ static RCTARKit *instance = nil;
 
     matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
 
-    simd_float4x4 res = simd_make_float4(simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03),
+    simd_float4x4 res = simd_make_float4x4(simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03),
     simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13),
     simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23),
     simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33));
