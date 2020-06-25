@@ -476,11 +476,10 @@ static float angleBetweenPoints(const float startLat, const float startLon,  con
     float y = sin(lonDiff) * cos(endLat);
     float x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
     float rotation = atan2(y, x);
-    float bearing = rotation * (180.0/M_PI);
-    if(bearing < 0){
-        return rotation + 360;
+    if(rotation < 0){
+        return rotation +  M_PI * 2 ;
     } else {
-        return rotation + 360;
+        return rotation;
 
     }
 }
