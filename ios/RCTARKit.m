@@ -421,47 +421,39 @@ static RCTARKit *instance = nil;
 
     GLKMatrix4 rad = GLKMatrix4MakeXRotation(tilt);
 
-    float newRad = rad.m01;
+    // matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
+    simd_float4x4 rotationMatrix = simd_matrix4x4(simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03),
+                                                simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13),
+                                                simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23),
+                                                simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33)
+    );
 
-    matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
 
-    // simd_float4x4 res = simd_make_float4x4(simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03),
-    // simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13),
-    // simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23),
-    // simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33));
-    rotationMatrix.columns[0] = simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03);
-    rotationMatrix.columns[1] = simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13);
-    rotationMatrix.columns[2] = simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23);
-    rotationMatrix.columns[3] = simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33);
+    // rotationMatrix.columns[0] = simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03);
+    // rotationMatrix.columns[1] = simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13);
+    // rotationMatrix.columns[2] = simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23);
+    // rotationMatrix.columns[3] = simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33);
 
     matrix_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
 
     GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-rotation);
 
-    matrix_float4x4 yRotationMatrix = matrix_identity_float4x4;
-    yRotationMatrix.columns[0] = simd_make_float4(yRotation.m00, yRotation.m01, yRotation.m02, yRotation.m03);
-    yRotationMatrix.columns[1] = simd_make_float4(yRotation.m10, yRotation.m11, yRotation.m12, yRotation.m13);
-    yRotationMatrix.columns[2] = simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23);
-    yRotationMatrix.columns[3] = simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33);
+    simd_float4x4 rotationMatrix = simd_matrix4x4(simd_make_float4(yRotation.m00, yRotation.m01, yRotation.m02, yRotation.m03),
+                                                    simd_make_float4(yRotation.m10, yRotation.m11, yRotation.m12, yRotation.m13),
+                                                    simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23),
+                                                    simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33)
+    );
+                                                    
+
+
+    // matrix_float4x4 yRotationMatrix = matrix_identity_float4x4;
+    // yRotationMatrix.columns[0] = simd_make_float4(yRotation.m00, yRotation.m01, yRotation.m02, yRotation.m03);
+    // yRotationMatrix.columns[1] = simd_make_float4(yRotation.m10, yRotation.m11, yRotation.m12, yRotation.m13);
+    // yRotationMatrix.columns[2] = simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23);
+    // yRotationMatrix.columns[3] = simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33);
 
     matrix_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
 
-    NSLog(@"completedTransformation0x:-%f", completedTransformation.columns[0].x);
-    NSLog(@"completedTransformation0y:-%f", completedTransformation.columns[0].y);
-    NSLog(@"completedTransformation0z:-%f", completedTransformation.columns[0].z);
-    NSLog(@"completedTransformation0w:-%f", completedTransformation.columns[0].w);
-    NSLog(@"completedTransformation1x:-%f", completedTransformation.columns[1].x);
-    NSLog(@"completedTransformation1y:-%f", completedTransformation.columns[1].y);
-    NSLog(@"completedTransformation1z:-%f", completedTransformation.columns[1].z);
-    NSLog(@"completedTransformation1w:-%f", completedTransformation.columns[1].w);
-    NSLog(@"completedTransformation2x:-%f", completedTransformation.columns[2].x);
-    NSLog(@"completedTransformation2y:-%f", completedTransformation.columns[2].y);
-    NSLog(@"completedTransformation2z:-%f", completedTransformation.columns[2].z);
-    NSLog(@"completedTransformation2w:-%f", completedTransformation.columns[2].w);
-    NSLog(@"completedTransformation3x:-%f", completedTransformation.columns[3].x);
-    NSLog(@"completedTransformation3y:-%f", completedTransformation.columns[3].y);
-    NSLog(@"completedTransformation3z:-%f", completedTransformation.columns[3].z);
-    NSLog(@"completedTransformation3w:-%f", completedTransformation.columns[3].w);
 
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:distanceTransform];
     NSLog(@"localAnchor:-%f", localAnchor);
@@ -488,7 +480,6 @@ static float angleBetweenPoints(const float startLat, const float startLon,  con
         return rotation +  M_PI * 2 ;
     } else {
         return rotation;
-
     }
 }
 
