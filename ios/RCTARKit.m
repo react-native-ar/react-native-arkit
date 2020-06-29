@@ -438,7 +438,7 @@ static RCTARKit *instance = nil;
 
     GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-rotation);
 
-    simd_float4x4 rotationMatrix = simd_matrix(simd_make_float4(yRotation.m00, yRotation.m01, yRotation.m02, yRotation.m03),
+    simd_float4x4 yRotationMatrix = simd_matrix(simd_make_float4(yRotation.m00, yRotation.m01, yRotation.m02, yRotation.m03),
                                                     simd_make_float4(yRotation.m10, yRotation.m11, yRotation.m12, yRotation.m13),
                                                     simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23),
                                                     simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33)
