@@ -434,7 +434,7 @@ static RCTARKit *instance = nil;
     // rotationMatrix.columns[2] = simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23);
     // rotationMatrix.columns[3] = simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33);
 
-    matrix_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
+    simd_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
 
     GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-rotation);
 
@@ -452,7 +452,7 @@ static RCTARKit *instance = nil;
     // yRotationMatrix.columns[2] = simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23);
     // yRotationMatrix.columns[3] = simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33);
 
-    matrix_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
+    simd_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
 
 
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:distanceTransform];
