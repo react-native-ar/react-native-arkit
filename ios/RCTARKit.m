@@ -422,10 +422,10 @@ static RCTARKit *instance = nil;
     GLKMatrix4 rad = GLKMatrix4MakeXRotation(tilt);
 
     // matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
-    simd_float4x4 rotationMatrix = simd_matrix(simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03),
-                                                simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13),
-                                                simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23),
-                                                simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33)
+    simd_float4x4 rotationMatrix = simd_matrix(simd_make_float4(6, 6, 3, 1),
+                                            simd_make_float4(6, 5, 3, 1),
+                                                simd_make_float4(4, 2, 4, 2),
+                                                simd_make_float4(6, 1, 3, 5)
     );
 
 
@@ -455,7 +455,7 @@ static RCTARKit *instance = nil;
     simd_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
 
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:distanceTransform];
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:tiltedTransformation];
     NSLog(@"localAnchor:-%f", localAnchor);
 
     [self.arView.session addAnchor:localAnchor];
