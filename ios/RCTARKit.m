@@ -456,7 +456,7 @@ static RCTARKit *instance = nil;
     simd_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
 
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:distanceTransform];
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
     NSLog(@"localAnchor:-%f", localAnchor);
 
     [self.arView.session addAnchor:localAnchor];
