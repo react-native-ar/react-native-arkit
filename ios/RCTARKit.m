@@ -381,18 +381,18 @@ static RCTARKit *instance = nil;
 }
 
 
-- (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong  {
+- (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationAltitude landmarkAltitude:(float)landmarkAltitude {
 
 
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
-                                                altitude:13.655269622802734
-                                                horizontalAccuracy:5
-                                                verticalAccuracy:8
+                                                altitude:locationAltitude
+                                                horizontalAccuracy:locationHorizontalAccuracy
+                                                verticalAccuracy:locationVerticalAccuracy
                                                 timestamp:[NSDate date]];
     CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landmarkLat, landmarkLong)
-                                                altitude:13.655269622802734
-                                                horizontalAccuracy:5
-                                                verticalAccuracy:8
+                                                altitude:landmarkAltitude
+                                                horizontalAccuracy:landmarkHorizontalAccuracy
+                                                verticalAccuracy:landmarkVerticalAccuracy
                                                 timestamp:[NSDate date]];
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
@@ -414,7 +414,7 @@ static RCTARKit *instance = nil;
     NSLog(@"rotation:-%f", rotation);
 
 
-    float opposite = 13.655269622802734 - 13.0;
+    float opposite = locationaAltitude - landmarkAltitude;
     float  tilt = atan2(opposite, distance);
     NSLog(@"tilt:-%f", tilt);
 
@@ -430,11 +430,6 @@ static RCTARKit *instance = nil;
     );
 
 
-    // rotationMatrix.columns[0] = simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03);
-    // rotationMatrix.columns[1] = simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13);
-    // rotationMatrix.columns[2] = simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23);
-    // rotationMatrix.columns[3] = simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33);
-
     simd_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
 
     GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-rotation);
@@ -444,17 +439,8 @@ static RCTARKit *instance = nil;
                                                     simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23),
                                                     simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33)
     );
-                                                    
-
-
-    // matrix_float4x4 yRotationMatrix = matrix_identity_float4x4;
-    // yRotationMatrix.columns[0] = simd_make_float4(yRotation.m00, yRotation.m01, yRotation.m02, yRotation.m03);
-    // yRotationMatrix.columns[1] = simd_make_float4(yRotation.m10, yRotation.m11, yRotation.m12, yRotation.m13);
-    // yRotationMatrix.columns[2] = simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23);
-    // yRotationMatrix.columns[3] = simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33);
 
     simd_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
-
 
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
     NSLog(@"localAnchor:-%f", localAnchor);
