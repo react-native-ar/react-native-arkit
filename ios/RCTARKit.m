@@ -414,7 +414,7 @@ static RCTARKit *instance = nil;
     NSLog(@"rotation:-%f", rotation);
 
 
-    float opposite = locationaAltitude - landmarkAltitude;
+    float opposite = locationAltitude - landmarkAltitude;
     float  tilt = atan2(opposite, distance);
     NSLog(@"tilt:-%f", tilt);
 
