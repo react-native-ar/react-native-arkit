@@ -381,7 +381,7 @@ static RCTARKit *instance = nil;
 }
 
 
-- (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong bearingDegrees:(float)bearingDegrees {
+- (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong  {
 
 
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
@@ -456,7 +456,7 @@ static RCTARKit *instance = nil;
     simd_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
 
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] init:completedTransformation];
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
     NSLog(@"localAnchor:-%f", localAnchor);
 
     [self.arView.session addAnchor:localAnchor];
