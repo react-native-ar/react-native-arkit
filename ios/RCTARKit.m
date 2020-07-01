@@ -381,7 +381,7 @@ static RCTARKit *instance = nil;
 }
 
 
-- (NSDictionary *)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationAltitude landmarkAltitude:(float)landmarkAltitude {
+- (void)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationAltitude landmarkAltitude:(float)landmarkAltitude {
 
 
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
@@ -446,10 +446,10 @@ static RCTARKit *instance = nil;
     NSLog(@"localAnchor:-%f", localAnchor);
 
     [self.arView.session addAnchor:localAnchor];
+        NSLog(@"we made it this fat:-%f");
 
-    return  @{
-                @"results": @{ @"y": @(0.0), @"z": @(distance) }
-            };
+    return;
+
 }
 
 static SCNVector3 toSCNVector3(simd_float4 float4) {
