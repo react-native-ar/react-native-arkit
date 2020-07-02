@@ -451,8 +451,18 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
 }
 
 RCT_EXPORT_METHOD(getAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationaAltitude landmarkAltitude:(float)landmarkAltitude resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    [[ARKit sharedInstance] getArAnchorPosition:locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationaAltitude landmarkAltitude:(float)landmarkAltitude];
-}
+    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
+                                                altitude:locationAltitude
+                                                horizontalAccuracy:locationHorizontalAccuracy
+                                                verticalAccuracy:locationVerticalAccuracy
+                                                timestamp:[NSDate date]];
+    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landmarkLat, landmarkLong)
+                                                altitude:landmarkAltitude
+                                                horizontalAccuracy:landmarkHorizontalAccuracy
+                                                verticalAccuracy:landmarkVerticalAccuracy
+                                                timestamp:[NSDate date]];
+
+    [[ARKit sharedInstance] getArAnchorPosition:location locationLong:(CLLocation)landmark];
 
 RCT_EXPORT_METHOD(getNewCoords:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] coordinateFromCoord:locationLat locationLong:locationLong atDistanceKm:distanceKm atBearingDegrees:bearingDegrees]);

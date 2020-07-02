@@ -380,75 +380,26 @@ static RCTARKit *instance = nil;
         };
 }
 
-
-- (void)getArAnchorPosition:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationAltitude landmarkAltitude:(float)landmarkAltitude {
-
-
-    CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
-                                                altitude:locationAltitude
-                                                horizontalAccuracy:locationHorizontalAccuracy
-                                                verticalAccuracy:locationVerticalAccuracy
-                                                timestamp:[NSDate date]];
-    CLLocation *landmark = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(landmarkLat, landmarkLong)
-                                                altitude:landmarkAltitude
-                                                horizontalAccuracy:landmarkHorizontalAccuracy
-                                                verticalAccuracy:landmarkVerticalAccuracy
-                                                timestamp:[NSDate date]];
+- (void)getArAnchorPosition:(CLLocation)location locationLong:(CLLocation)landmark {
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
-    NSLog(@"distance:-%f", distance);
 
+    matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -distance);
 
-    float startLat = GLKMathDegreesToRadians(locationLat);
-    float startLon = GLKMathDegreesToRadians(locationLong);
-    float endLat = GLKMathDegreesToRadians(landmarkLat);
-    float endLon = GLKMathDegreesToRadians(landmarkLong);
-
-
-    matrix_float4x4 distanceTransform = matrix_identity_float4x4;
-    distanceTransform.columns[3].x = 0;
-    distanceTransform.columns[3].y = 0;
-    distanceTransform.columns[3].z = -distance;
-
-    float rotation = angleBetweenPoints(startLat, startLon, endLat, endLon);
+    float rotation = angleBetweenPoints(location, landmark);
     NSLog(@"rotation:-%f", rotation);
 
+    float  tilt = angleOffHorizon(location, landmark)
 
-    float opposite = locationAltitude - landmarkAltitude;
-    float  tilt = atan2(opposite, distance);
-    NSLog(@"tilt:-%f", tilt);
+    simd_float4x4 tiltedTransformation = rotateVertically(distanceTransform, tilt)
 
-
-    GLKMatrix4 rad = GLKMatrix4MakeXRotation(tilt);
-    NSLog(@"rad.m33:-%f", rad.m33);
-
-    // matrix_float4x4 rotationMatrix = matrix_identity_float4x4;
-    simd_float4x4 rotationMatrix = simd_matrix(simd_make_float4(rad.m00, rad.m01, rad.m02, rad.m03),
-                                            simd_make_float4(rad.m10, rad.m11, rad.m12, rad.m13),
-                                                simd_make_float4(rad.m20, rad.m21, rad.m22, rad.m23),
-                                                simd_make_float4(rad.m30, rad.m31, rad.m32, rad.m33)
-    );
-
-
-    simd_float4x4 tiltedTransformation = simd_mul(rotationMatrix, distanceTransform);
-
-    GLKMatrix4 yRotation = GLKMatrix4MakeYRotation(-rotation);
-
-    simd_float4x4 yRotationMatrix = simd_matrix(simd_make_float4(yRotation.m00, yRotation.m01, yRotation.m02, yRotation.m03),
-                                                    simd_make_float4(yRotation.m10, yRotation.m11, yRotation.m12, yRotation.m13),
-                                                    simd_make_float4(yRotation.m20, yRotation.m21, yRotation.m22, yRotation.m23),
-                                                    simd_make_float4(yRotation.m30, yRotation.m31, yRotation.m32, yRotation.m33)
-    );
-
-    simd_float4x4 completedTransformation = simd_mul(yRotationMatrix, tiltedTransformation);   
+    simd_float4x4 completedTransformation = rotateHorizontally(tiltedTransformation, -rotation)
 
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
-    NSLog(@"localAnchor:-%f", localAnchor);
 
     [self.arView.session addAnchor:localAnchor];
 
     return;
-
 }
 
 static SCNVector3 toSCNVector3(simd_float4 float4) {
@@ -457,16 +408,55 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 }
 
 
-static float angleBetweenPoints(const float startLat, const float startLon,  const float endLat, const float endLon) {
+static float angleBetweenPoints(const CLLocation location, const CLLocation landmark) {
+    float startLat = GLKMathDegreesToRadians(location.coordinate.latitude);
+    float startLon = GLKMathDegreesToRadians(location.coordinate.longitude);
+    float endLat = GLKMathDegreesToRadians(landmark.coordinate.latitude);
+    float endLon = GLKMathDegreesToRadians(landmark.coordinate.longitude);
+
     float lonDiff = endLon - startLon;
     float y = sin(lonDiff) * cos(endLat);
     float x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
-    float rotation = atan2(y, x);
-    if(rotation < 0){
-        return rotation +  M_PI * 2 ;
+    float angle = atan2(y, x);
+    if(angle < 0){
+        float finalAngle = angle + (M_PI * 2)
+        return finalAngle
     } else {
-        return rotation;
+        return angle;
     }
+}
+
+static matrix_float4x4 translatingIdentity(const float x, const float y, const float z) {
+    matrix_float4x4 result = matrix_identity_float4x4;
+    result.columns[3].x = x;
+    result.columns[3].y = y;
+    result.columns[3].z = z;
+    return result;
+}
+
+static float angleOffHorizon(const CLLocation start, const CLLocation end) {
+    CLLocationDistance adjacent = [location distanceFromLocation:landmark];
+    float opposite = end.altitude - start.altitude
+    return atan2(opposite, adjacent);
+}
+
+static matrix_float4x4 rotateVertically(const matrix_float4x4 distanceTrans, const float radians) {
+    GLKMatrix4 rotation = GLKMatrix4MakeXRotation(tilt);
+    return simd_mul(convert(rotation), distanceTrans);
+}
+
+static matrix_float4x4 rotateHorizontally(const matrix_float4x4 titledTrans, const float rotation) {
+    GLKMatrix4 rotation = GLKMatrix4MakeYRotation(rotation);
+    return simd_mul(convert(rotation), distanceTrans);
+}
+
+static simd_float4x4 convert(const GLKMatrix4 matrix) {
+    return simd_matrix(
+        simd_make_float4(matrix.m00, matrix.m01, matrix.m02, matrix.m03),
+        simd_make_float4(matrix.m10, matrix.m11, matrix.m12, matrix.m13),
+        simd_make_float4(matrix.m20, matrix.m21, matrix.m22, matrix.m23),
+        simd_make_float4(matrix.m30, matrix.m31, matrix.m32, matrix.m33)
+    );
 }
 
 
