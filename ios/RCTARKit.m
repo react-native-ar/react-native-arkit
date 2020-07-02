@@ -408,7 +408,7 @@ static RCTARKit *instance = nil;
     matrix_float4x4 distanceTransform = matrix_identity_float4x4;
     distanceTransform.columns[3].x = 0;
     distanceTransform.columns[3].y = 0;
-    distanceTransform.columns[3].z = distance;
+    distanceTransform.columns[3].z = -distance;
 
     float rotation = angleBetweenPoints(startLat, startLon, endLat, endLon);
     NSLog(@"rotation:-%f", rotation);
@@ -446,7 +446,6 @@ static RCTARKit *instance = nil;
     NSLog(@"localAnchor:-%f", localAnchor);
 
     [self.arView.session addAnchor:localAnchor];
-        NSLog(@"we made it this fat:-%f");
 
     return;
 
