@@ -462,7 +462,7 @@ RCT_EXPORT_METHOD(getAnchorPosition:(float)locationLat locationLong:(float)locat
                                                 verticalAccuracy:landmarkVerticalAccuracy
                                                 timestamp:[NSDate date]];
 
-    [[ARKit sharedInstance] getArAnchorPosition:location locationLong:(CLLocation)landmark];
+    [[ARKit sharedInstance] getArAnchorPosition:location landmark:landmark];
 
 RCT_EXPORT_METHOD(getNewCoords:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] coordinateFromCoord:locationLat locationLong:locationLong atDistanceKm:distanceKm atBearingDegrees:bearingDegrees]);

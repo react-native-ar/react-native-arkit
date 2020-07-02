@@ -380,7 +380,7 @@ static RCTARKit *instance = nil;
         };
 }
 
-- (void)getArAnchorPosition:(CLLocation)location locationLong:(CLLocation)landmark {
+- (void)getArAnchorPosition:(CLLocation *)location locationLong:(CLLocation *)landmark {
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
 
