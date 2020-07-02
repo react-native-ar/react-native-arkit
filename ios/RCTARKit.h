@@ -13,6 +13,7 @@
 #import "RCTARKitDelegate.h"
 #import "RCTARKitNodes.h"
 #import "RCTMultiPeer.h"
+@import CoreLocation;
 
 typedef void (^RCTBubblingEventBlock)(NSDictionary *body);
 typedef void (^RCTARKitResolve)(id result);
