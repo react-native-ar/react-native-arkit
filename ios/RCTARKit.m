@@ -408,7 +408,7 @@ static SCNVector3 toSCNVector3(simd_float4 float4) {
 }
 
 
-static float angleBetweenPoints(const CLLocation location, const CLLocation landmark) {
+static float angleBetweenPoints(const CLLocation *location, const CLLocation *landmark) {
     float startLat = GLKMathDegreesToRadians(location.coordinate.latitude);
     float startLon = GLKMathDegreesToRadians(location.coordinate.longitude);
     float endLat = GLKMathDegreesToRadians(landmark.coordinate.latitude);
@@ -420,7 +420,7 @@ static float angleBetweenPoints(const CLLocation location, const CLLocation land
     float angle = atan2(y, x);
     if(angle < 0){
         float finalAngle = angle + (M_PI * 2);
-        return finalAngle
+        return finalAngle;
     } else {
         return angle;
     }
@@ -434,7 +434,7 @@ static matrix_float4x4 translatingIdentity(const float x, const float y, const f
     return result;
 }
 
-static float angleOffHorizon(const CLLocation start, const CLLocation end) {
+static float angleOffHorizon(const CLLocation *start, const CLLocation *end) {
     CLLocationDistance adjacent = [start distanceFromLocation:end];
     float opposite = end.altitude - start.altitude;
     return atan2(opposite, adjacent);
