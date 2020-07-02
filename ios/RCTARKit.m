@@ -389,11 +389,11 @@ static RCTARKit *instance = nil;
     float rotation = angleBetweenPoints(location, landmark);
     NSLog(@"rotation:-%f", rotation);
 
-    float  tilt = angleOffHorizon(location, landmark)
+    float  tilt = angleOffHorizon(location, landmark);
 
-    simd_float4x4 tiltedTransformation = rotateVertically(distanceTransform, tilt)
+    simd_float4x4 tiltedTransformation = rotateVertically(distanceTransform, tilt);
 
-    simd_float4x4 completedTransformation = rotateHorizontally(tiltedTransformation, -rotation)
+    simd_float4x4 completedTransformation = rotateHorizontally(tiltedTransformation, -rotation);
 
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
 
@@ -419,7 +419,7 @@ static float angleBetweenPoints(const CLLocation location, const CLLocation land
     float x = (cos(startLat) * sin(endLat)) - (sin(startLat) * cos(endLat) * cos(lonDiff));
     float angle = atan2(y, x);
     if(angle < 0){
-        float finalAngle = angle + (M_PI * 2)
+        float finalAngle = angle + (M_PI * 2);
         return finalAngle
     } else {
         return angle;
@@ -435,19 +435,19 @@ static matrix_float4x4 translatingIdentity(const float x, const float y, const f
 }
 
 static float angleOffHorizon(const CLLocation start, const CLLocation end) {
-    CLLocationDistance adjacent = [location distanceFromLocation:landmark];
-    float opposite = end.altitude - start.altitude
+    CLLocationDistance adjacent = [start distanceFromLocation:end];
+    float opposite = end.altitude - start.altitude;
     return atan2(opposite, adjacent);
 }
 
 static matrix_float4x4 rotateVertically(const matrix_float4x4 distanceTrans, const float radians) {
-    GLKMatrix4 rotation = GLKMatrix4MakeXRotation(tilt);
+    GLKMatrix4 rotation = GLKMatrix4MakeXRotation(radians);
     return simd_mul(convert(rotation), distanceTrans);
 }
 
-static matrix_float4x4 rotateHorizontally(const matrix_float4x4 titledTrans, const float rotation) {
-    GLKMatrix4 rotation = GLKMatrix4MakeYRotation(rotation);
-    return simd_mul(convert(rotation), distanceTrans);
+static matrix_float4x4 rotateHorizontally(const matrix_float4x4 titledTrans, const float radians) {
+    GLKMatrix4 rotation = GLKMatrix4MakeYRotation(radians);
+    return simd_mul(convert(rotation), titledTrans);
 }
 
 static simd_float4x4 convert(const GLKMatrix4 matrix) {
