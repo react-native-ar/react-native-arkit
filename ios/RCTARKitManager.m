@@ -461,6 +461,7 @@ RCT_EXPORT_METHOD(addAnchorByLocation:(float)locationLat locationLong:(float)loc
                                                 horizontalAccuracy:landmarkHorizontalAccuracy
                                                 verticalAccuracy:landmarkVerticalAccuracy
                                                 timestamp:[NSDate date]];
+    NSLog(@"anchorName:-%@", anchorName);
 
     [[ARKit sharedInstance] getArAnchorPosition:location landmark:landmark anchorName:anchorName];
 }
