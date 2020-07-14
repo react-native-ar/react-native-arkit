@@ -450,7 +450,7 @@ RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTP
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
 
-RCT_EXPORT_METHOD(addAnchorByLocation:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationAltitude landmarkAltitude:(float)landmarkAltitude anchorName:(NSString *)anchorName resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(addAnchorByLocation:(NSString *)anchorName  locationLat:(float)locationLat locationLong:(float)locationLong landmarkLat:(float)landmarkLat landmarkLong:(float)landmarkLong locationHorizontalAccuracy:(float)locationHorizontalAccuracy landmarkHorizontalAccuracy:(float)landmarkHorizontalAccuracy locationVerticalAccuracy:(float)locationVerticalAccuracy landmarkVerticalAccuracy:(float)landmarkVerticalAccuracy locationAltitude:(float)locationAltitude landmarkAltitude:(float)landmarkAltitude resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     CLLocation *location = [[CLLocation alloc] initWithCoordinate:CLLocationCoordinate2DMake(locationLat, locationLong)
                                                 altitude:locationAltitude
                                                 horizontalAccuracy:locationHorizontalAccuracy
@@ -461,7 +461,7 @@ RCT_EXPORT_METHOD(addAnchorByLocation:(float)locationLat locationLong:(float)loc
                                                 horizontalAccuracy:landmarkHorizontalAccuracy
                                                 verticalAccuracy:landmarkVerticalAccuracy
                                                 timestamp:[NSDate date]];
-    NSLog(@"anchorName:-%@", anchorName);
+    NSLog(@"FIRSTANchorName:-%@", anchorName);
 
     [[ARKit sharedInstance] getArAnchorPosition:location landmark:landmark anchorName:anchorName];
 }
