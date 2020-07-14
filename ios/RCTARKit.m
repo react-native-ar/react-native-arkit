@@ -755,7 +755,9 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
                                 @"type": @"unkown",
                                 @"eulerAngles":vectorToJson(node.eulerAngles),
                                 @"position": vectorToJson([self.nodeManager getRelativePositionToOrigin:node.position]),
-                                @"positionAbsolute": vectorToJson(node.position)
+                                @"positionAbsolute": vectorToJson(node.position),
+                                @"name": anchor.name
+
                                 };
     NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithDictionary:baseProps];
     
