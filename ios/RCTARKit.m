@@ -394,7 +394,7 @@ static RCTARKit *instance = nil;
 
     simd_float4x4 completedTransformation = rotateHorizontally(tiltedTransformation, -rotation);
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] initWithName:anchorName transform:completedTransformation];
+    ARAnchor *localAnchor = [[ARAnchor alloc] initWithName:@"testName1" transform:completedTransformation];
     NSLog(@"anchorName:-%@", anchorName);
     NSLog(@"localAnchor.name:-%@", localAnchor.name);
 
