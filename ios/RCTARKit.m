@@ -380,7 +380,7 @@ static RCTARKit *instance = nil;
         };
 }
 
-- (void)getArAnchorPosition:(CLLocation *)location landmark:(CLLocation *)landmark {
+- (void)getArAnchorPosition:(CLLocation *)location landmark:(CLLocation *)landmark anchorName:(NSString  *)anchorName {
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
 
@@ -395,7 +395,7 @@ static RCTARKit *instance = nil;
 
     simd_float4x4 completedTransformation = rotateHorizontally(tiltedTransformation, -rotation);
 
-    ARAnchor *localAnchor = [[ARAnchor alloc] initWithTransform:completedTransformation];
+    ARAnchor *localAnchor = [[ARAnchor alloc] name:anchorName initWithTransform:completedTransformation];
 
     [self.arView.session addAnchor:localAnchor];
 
