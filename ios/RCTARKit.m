@@ -387,7 +387,6 @@ static RCTARKit *instance = nil;
     matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -distance);
 
     float rotation = angleBetweenPoints(location, landmark);
-    NSLog(@"rotation:-%f", rotation);
 
     float  tilt = angleOffHorizon(location, landmark);
 
@@ -396,6 +395,8 @@ static RCTARKit *instance = nil;
     simd_float4x4 completedTransformation = rotateHorizontally(tiltedTransformation, -rotation);
 
     ARAnchor *localAnchor = [[ARAnchor alloc] initWithName:anchorName transform:completedTransformation];
+    NSLog(@"anchorName:-%f", anchorName);
+    NSLog(@"localAnchor.name:-%f", localAnchor.name);
 
     [self.arView.session addAnchor:localAnchor];
 
@@ -774,6 +775,9 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     } else {
         // Fallback on earlier versions
     }
+    NSLog(@"node.name:-%f", node.name);
+    NSLog(@"anchor.name:-%f", anchor.name);
+
     if(node.name != nil){
         NSDictionary* nameProps = @{
             @"name": node.name
