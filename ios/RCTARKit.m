@@ -778,9 +778,9 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     NSLog(@"node.name:-%@", node.name);
     NSLog(@"anchor.name:-%@", anchor.name);
 
-    if(node.name != nil){
+    if(anchor.name != nil){
         NSDictionary* nameProps = @{
-            @"name": node.name
+            @"name": anchor.name
         };
 
         [dict addEntriesFromDictionary:nameProps];
