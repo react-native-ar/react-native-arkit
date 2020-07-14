@@ -776,7 +776,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
     }
     if(anchor.name != nil){
         NSDictionary* nameProps = @{
-            @"name": anchor.name
+            @"name": anchor.name;
         }
 
         [dict addEntriesFromDictionary:nameProps];
