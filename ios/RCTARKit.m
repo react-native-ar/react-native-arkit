@@ -354,32 +354,6 @@ static RCTARKit *instance = nil;
     return radians * (180.0/M_PI);
 }
 
-- (NSDictionary *)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees {
-
-    double distanceRadians = distanceKm / 6371.0;
-      //6,371 = Earth's radius in km
-    double bearingRadians = [self radiansFromDegrees:bearingDegrees];
-    double fromLatRadians = [self radiansFromDegrees:locationLat];
-    double fromLonRadians = [self radiansFromDegrees:locationLong];
-
-    double toLatRadians = asin( sin(fromLatRadians) * cos(distanceRadians) 
-        + cos(fromLatRadians) * sin(distanceRadians) * cos(bearingRadians) );
-
-    double toLonRadians = fromLonRadians + atan2(sin(bearingRadians) 
-        * sin(distanceRadians) * cos(fromLatRadians), cos(distanceRadians) 
-        - sin(fromLatRadians) * sin(toLatRadians));
-
-    // adjust toLonRadians to be in the range -180 to +180...
-    toLonRadians = fmod((toLonRadians + 3*M_PI), (2*M_PI)) - M_PI;
-
-    CLLocationCoordinate2D result;
-    result.latitude = [self degreesFromRadians:toLatRadians];
-    result.longitude = [self degreesFromRadians:toLonRadians];
-    return  @{
-            @"results": @{ @"latitude": @(result.latitude), @"longitude": @(result.longitude) }
-        };
-}
-
 - (void)getArAnchorPosition:(CLLocation *)location landmark:(CLLocation *)landmark anchorName:(NSString  *)anchorName {
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];

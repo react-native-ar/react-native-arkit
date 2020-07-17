@@ -98,8 +98,6 @@ typedef void (^RCTARKitReject)(NSString *code, NSString *message, NSError *error
 - (void)clearScene;
 - (NSDictionary *)readCameraPosition;
 - (void)getArAnchorPosition:(CLLocation *)location landmark:(CLLocation *)landmark anchorName:(NSString *)anchorName;
-- (NSDictionary *)coordinateFromCoord:(float)locationLat locationLong:(float)locationLong atDistanceKm:(float)distanceKm atBearingDegrees:(float)bearingDegrees;
-
 
 - (NSDictionary *)readCamera;
 - (NSDictionary* )getCurrentLightEstimation;
