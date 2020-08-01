@@ -357,8 +357,12 @@ static RCTARKit *instance = nil;
 - (void)getArAnchorPosition:(CLLocation *)location landmark:(CLLocation *)landmark anchorName:(NSString  *)anchorName {
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
+    if(distance < 50){
+        matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -50);
+    }   else {
+        matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -distance);
+    }
 
-    matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -distance));
 
     float rotation = angleBetweenPoints(location, landmark);
 
