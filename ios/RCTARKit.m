@@ -358,7 +358,7 @@ static RCTARKit *instance = nil;
 
     CLLocationDistance distance = [location distanceFromLocation:landmark];
 
-    matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -distance);
+    matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -min(distance));
 
     float rotation = angleBetweenPoints(location, landmark);
 
