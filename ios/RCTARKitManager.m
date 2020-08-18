@@ -446,6 +446,14 @@ RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
     resolve([[ARKit sharedInstance] readCamera]);
 }
 
+
+RCT_EXPORT_METHOD(createImageObject:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
+    UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjECEaCXVzLWVhc3QtMSJHMEUCICG51UhaGXhNpVxoWYRZZHodagHysuHaIrt5qwazNvsXAiEAoP4ue3XOfEqp4W75ibB418i6CYNnPJ8oXJlUR9B4jkQqzQII%2Bv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgwxNTExMDQwMzM0MjMiDDzAsWatG%2F8ur776CCqhAtFe1%2FsQmB0hCXVW5kjcoeB2pLjZcaZ18bad%2FkrEQxUeK%2F0i3b0fyg8p8iOEo2NKvgQxbTNRGRUeoyUfiltUXrpy1tmgs4CPnY2yTA9UR1mvu99SIOz3RerCBvbFfal1jn5%2Bs7Qh%2BWfItg2dsY%2FPdM47jBYXZ0Gs1c%2BvRkzBcjWgSdpChASAqwOFS49idkcqn6JcNubKR%2F9Pkl1x0ruqWwFidXRXHLflIEBlSQH0oKbl1ByFfwXrsz9af%2BhlRjBYlm2GLhRTbAhAFvpi22Ex0MgA7rz%2BsPmV15KkAKOhuPzb7Tjy8l3d00ZMUrXU2c5C1%2Fhnajr8LrtbYh96EumPO%2FCp8dhX7sB0eRTqPRNgN2YfbxmWoGhCPIZoCSQyOZ0pXi0w3c%2Fs%2BQU6sAJHCc40L6%2FB3iyRntUUa1%2BzjOAJDUY3esaOt5bSTuhF0ALsw3Sl8Y%2FyN23qna76BVyiDk9KDqjJXpwc3%2FpGNjn5bRJCwkjnfDwyL%2Bdw4dKovKVHnTEvtzuQTUIyzeDCBdguzUWOt5RPNHIEdO%2BXPIM8MEdLIW9vWjITN7CxOEfvxaiD3qmiOcnjYeGFRY3iBW3mdGyxv8TEDp7vNF0KDdqw7UO0a0RYusOa0Y7%2FswqunIpVqRP1mn6rfK7AWGsGFxkMlueBH0WfJE7TBI989S0O9%2BIXykSZyGT4jbX8TTBfVf99BVcZiqX%2BawFEfarhTMH0%2B7V7m5%2F6kUeE4Fy%2Bch%2Bg0%2BNUGMmmLyJr51%2Bt48QuZHXX8MiDmF%2FZC10JOU8r5zb9wLuu8IPaAI724u98yWjc&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200818T005945Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIASGLUASKH52KQ22X3%2F20200818%2Fus-east-2%2Fs3%2Faws4_request&X-Amz-Signature=7a4f73ec0d002cfe76a950985b753dcf548652a629bb509329ff55bf7cd663ed"];
+
+    NSLog("TestImage %@", image);
+}
+
+
 RCT_EXPORT_METHOD(getCameraPosition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     resolve([[ARKit sharedInstance] readCameraPosition]);
 }
