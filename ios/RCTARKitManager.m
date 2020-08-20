@@ -448,9 +448,24 @@ RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
 
 
 RCT_EXPORT_METHOD(createImageObject:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
-    UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"];
+    SCNPlane *plane = [SCNPlane planeWithWidth:0.5 height:0.5];
+    SCNMaterial *material = [SCNMaterial material];
 
-    NSLog(@"TestImage %@", image);
+    UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"];
+    material.diffuse.contents = image;
+    planeGeometry.materials = [material];
+
+    SCNNode *paintingNode= [SCNNode nodeWithGeometry:planeGeometry];
+    SCNMatrix4 transform = SCNMatrix4Identity;
+    SCNVector3 angles = SCNVector3Make(0, 0, 0);
+    SCNVector3 position = SCNVector3Make(0, 0, -3);
+
+
+    paintingNode.transform = transform
+    paintingNode.eulerAngles = angles
+    paintingNode.position = position
+    
+    [arView.scene.rootNode addChildNode:paintingNode];
 }
 
 
