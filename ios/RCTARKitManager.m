@@ -465,7 +465,7 @@ RCT_EXPORT_METHOD(createImageObject:(RCTPromiseResolveBlock)resolve reject:(RCTP
     paintingNode.eulerAngles = angles;
     paintingNode.position = position;
     
-    [arView.scene.rootNode addChildNode:paintingNode];
+    [self.rootNode addChildNode:paintingNode];
 }
 
 
