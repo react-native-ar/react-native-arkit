@@ -461,11 +461,14 @@ RCT_EXPORT_METHOD(createImageObject:(RCTPromiseResolveBlock)resolve reject:(RCTP
     SCNVector3 position = SCNVector3Make(0, 0, -3);
 
 
-    paintingNode.transform = transform
-    paintingNode.eulerAngles = angles
-    paintingNode.position = position
+    paintingNode.transform = transform;
+    paintingNode.eulerAngles = angles;
+    paintingNode.position = position;
     
-    [arView.scene.rootNode addChildNode:paintingNode];
+    arView.scene.rootNode.addChildNode(paintingNode)
+
+    // [arView.scene.rootNode addChildNode:paintingNode]; // Place camera in the scene
+
 }
 
 
