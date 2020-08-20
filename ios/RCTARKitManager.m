@@ -450,7 +450,7 @@ RCT_EXPORT_METHOD(getCamera:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRe
 RCT_EXPORT_METHOD(createImageObject:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject) {
     UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"];
 
-    NSLog("TestImage %@", image);
+    NSLog(@"TestImage %@", image);
 }
 
 
