@@ -65,6 +65,8 @@ the property will be updated on scenekit, instead of beeing remounted.
 this excludes at the moment: model, font, text, (???)
 * */
 export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
+  console.log("made it to ar componnet manager")
+
   const allPropTypes = {
     ...MOUNT_UNMOUNT_ANIMATION_PROPS,
     ...PROP_TYPES_IMMUTABLE,
@@ -84,7 +86,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
   });
 
   const getNonNodeProps = props => parseMaterials(pick(props, nonNodePropKeys));
-
+  console.log("gotNodeProbs")
   const mountFunc =
     typeof mountConfig === 'string'
       ? ARGeosManager[mountConfig]
@@ -92,6 +94,8 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
   const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
+    console.log("parentId", parentId)
+    console.log("props.frame", props.frame)
     return mountFunc(
       getNonNodeProps(props),
       {
