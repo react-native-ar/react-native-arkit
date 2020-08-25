@@ -315,7 +315,7 @@
     paintingNode.eulerAngles = angles;
     paintingNode.position = position;
 
-    return paintingNode
+    return paintingNode;
 }
 
 
