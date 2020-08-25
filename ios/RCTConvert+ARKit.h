@@ -12,8 +12,9 @@
 #import <ARKit/ARKit.h>
 
 @interface SCNTextNode : SCNNode
-@interface SCNImageNode : SCNNode
+@end
 
+@interface SCNImageNode : SCNNode
 @end
 
 
