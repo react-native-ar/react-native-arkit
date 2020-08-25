@@ -12,6 +12,8 @@
 #import <ARKit/ARKit.h>
 
 @interface SCNTextNode : SCNNode
+@interface SCNImageNode : SCNNode
+
 @end
 
 
@@ -36,6 +38,7 @@
 + (SCNLight *)SCNLight:(id)json;
 
 + (SCNTextNode *)SCNTextNode:(id)json;
++ (SCNImageNode *)SCNImageNode:(id)json;
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json;
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json;
