@@ -91,8 +91,6 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
   const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
-    console.log("parentId", this.context.arkitParentId)
-    console.log("props", props)
 
     return mountFunc(
       getNonNodeProps(props),
@@ -140,6 +138,8 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     }
 
     async mountWithProps(props) {
+      console.log("parentId", this.context.arkitParentId)
+      console.log("props", props)
       return mount(this.identifier, props, this.context.arkitParentId);
     }
 
