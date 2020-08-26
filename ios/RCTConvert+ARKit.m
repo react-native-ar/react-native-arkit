@@ -150,6 +150,32 @@
     return geometry;
 }
 
++ (SCNImageNode *)SCNImageNode:(id)json {
+    SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
+    NSDictionary* shape = json[@"shape"];
+
+    UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"];
+    material.diffuse.contents = image;
+
+    NSMutableArray *materials = [NSMutableArray array];
+    [materials addObject:@(material)];
+
+
+    planeGeometry.materials = materials;
+
+    SCNImageNode *paintingNode= [SCNNode nodeWithGeometry:planeGeometry];
+    SCNMatrix4 transform = SCNMatrix4Identity;
+    SCNVector3 angles = SCNVector3Make(0, 0, 0);
+    SCNVector3 position = SCNVector3Make(0, 0, -3);
+
+
+    paintingNode.transform = transform;
+    paintingNode.eulerAngles = angles;
+    paintingNode.position = position;
+
+    return paintingNode;
+}
+
 + (SCNPlane *)SCNPlane:(id)json {
     NSDictionary* shape = json[@"shape"];
     CGFloat width = [shape[@"width"] floatValue];
@@ -297,27 +323,6 @@
     return textNode;
 }
 
-+ (SCNImageNode *)SCNImageNode:(id)json {
-    SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
-    SCNMaterial *material = [SCNMaterial material];
-
-    UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"];
-    material.diffuse.contents = image;
-    // planeGeometry.materials = material;
-
-    SCNImageNode *paintingNode= [SCNNode nodeWithGeometry:planeGeometry];
-    SCNMatrix4 transform = SCNMatrix4Identity;
-    SCNVector3 angles = SCNVector3Make(0, 0, 0);
-    SCNVector3 position = SCNVector3Make(0, 0, -3);
-
-
-    paintingNode.transform = transform;
-    paintingNode.eulerAngles = angles;
-    paintingNode.position = position;
-    [self addMaterials:paintingNode json:material sides:1];
-
-    return paintingNode;
-}
 
 
 + (SCNLight *)SCNLight:(id)json {
