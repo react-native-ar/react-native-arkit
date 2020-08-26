@@ -303,7 +303,7 @@
 
     UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"];
     material.diffuse.contents = image;
-    planeGeometry.materials = material;
+    // planeGeometry.materials = material;
 
     SCNImageNode *paintingNode= [SCNNode nodeWithGeometry:planeGeometry];
     SCNMatrix4 transform = SCNMatrix4Identity;
@@ -314,6 +314,7 @@
     paintingNode.transform = transform;
     paintingNode.eulerAngles = angles;
     paintingNode.position = position;
+    [self addMaterials:paintingNode json:material sides:1];
 
     return paintingNode;
 }

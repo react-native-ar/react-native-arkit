@@ -13,12 +13,12 @@ import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
 const ARImage = createArComponent(
-  { mount: NativeModules.ARImageManager.mount, pick: ['id', 'imageUrl'] },
+  { mount: NativeModules.ARImageManager.mount, pick: ['id'] },
   {
     imageUrl: PropTypes.string,
     material
   },
-  ['imageUrl']
+  []
 );
 
 export default ARImage;

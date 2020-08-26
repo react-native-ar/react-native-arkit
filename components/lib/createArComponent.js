@@ -126,13 +126,15 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         const {
           transition: transitionOnMount = { duration: 0 },
         } = fullPropsOnMount;
-
+        console.log("fullpropsmount", fullPropsOnMount)
         this.doPendingTimers();
         this.mountWithProps(fullPropsOnMount).then(() => {
           this.props = propsOnMount;
           this.componentWillUpdate({ ...props, transition: transitionOnMount });
         });
       } else {
+        console.log("halfpropsmount", props)
+
         this.mountWithProps(props);
       }
     }
