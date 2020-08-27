@@ -153,8 +153,9 @@
 + (SCNImageNode *)SCNImageNode:(id)json {
     SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
     SCNMaterial *material = [SCNMaterial material];
+    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: @"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"]];
 
-    UIImage *image = [UIImage imageWithContentsOfFile:@"https://arworldimages.s3.us-east-2.amazonaws.com/%2F00c3e640-9232-11ea-8c4f-59f384dfd412.png"];
+    UIImage *image = [[UIImage alloc] initWithData:imageData];
     material.diffuse.contents = image;
     NSMutableArray *materials = [NSMutableArray array];
     [materials addObject:material];

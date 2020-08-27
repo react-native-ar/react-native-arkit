@@ -316,9 +316,9 @@ static RCTARKit *instance = nil;
                 for (id url in config[@"arDetectionImages"]) {
                     NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: url]];
 
-                    UIImage* uiimage = [[UIImage alloc] initWithData:imageData];
+                    UIImage* uiImage = [[UIImage alloc] initWithData:imageData];
 
-                    CGImageRef cgImage = [uiimage CGImage];
+                    CGImageRef cgImage = [uiImage CGImage];
 
                     ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:1];
                     image.name=url;
