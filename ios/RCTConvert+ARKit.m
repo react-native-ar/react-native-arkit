@@ -151,9 +151,12 @@
 }
 
 + (SCNImageNode *)SCNImageNode:(id)json {
+    NSLog(@"setDeviceMotionUpdateInterval: %f", json[@"imageUrl"]]);
+
     SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
     SCNMaterial *material = [SCNMaterial material];
-    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: json[@"ImageUrl"]]];
+    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: json[@"imageUrl"]]];
+
 
     UIImage *image = [[UIImage alloc] initWithData:imageData];
     material.diffuse.contents = image;
