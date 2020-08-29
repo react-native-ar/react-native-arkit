@@ -153,7 +153,7 @@
 + (SCNImageNode *)SCNImageNode:(id)json {
     SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
     SCNMaterial *material = [SCNMaterial material];
-    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: json["@url"]]];
+    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: json[@"ImageUrl"]]];
 
     UIImage *image = [[UIImage alloc] initWithData:imageData];
     material.diffuse.contents = image;
