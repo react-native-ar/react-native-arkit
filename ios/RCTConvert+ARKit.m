@@ -151,7 +151,7 @@
 }
 
 + (SCNImageNode *)SCNImageNode:(id)json {
-    NSLog(@"setDeviceMotionUpdateInterval: %f", json[@"imageUrl"]]);
+    NSLog(@"setDeviceMotionUpdateInterval: %f", json[@"imageUrl"]);
 
     SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
     SCNMaterial *material = [SCNMaterial material];
