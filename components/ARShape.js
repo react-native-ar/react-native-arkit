@@ -5,6 +5,8 @@ import createArComponent from './lib/createArComponent';
 
 const ARShape = createArComponent('addShape', {
   shape: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
     extrusion: PropTypes.number,
     pathSvg: PropTypes.string,
     pathFlatness: PropTypes.number,
