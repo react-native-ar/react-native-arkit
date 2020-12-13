@@ -263,12 +263,7 @@ See [Planes and Anchors](#planes-and-anchors) for Details about anchors
 
 | Callback Name | Callbacks | Examples | Notes
 |---|---|---|---|
-| `addAnchorByLocation` | `onAnchorUpdated, onAnchorDetected` | `ARKit.addAnchorByLocation(name, locationLatidude, locationLongitude, landmarkLatitude, landmarkLongitude, locationHorizontalAccruacy, locationHorizontalAccruacy, locationVerticalAccuracy, landmarkVerticalAccuracy, locationAltitude, landmarkAltitude);`| ⚠️ (This function needs work and provides very inconsistent results, if you have ways to improve it please open a PR. Arkit/CoreLocation solves this problem much better if you would like to find a way to import their functions into this library. https://github.com/ProjectDent/ARKit-CoreLocation. Pass in location information for the location of the user and the location information of the landmark where you want the AR anchor to appear. worldAlignment Must be set as GravityAndHeading. Returns position of anchor in onAnchorUpdated callback.
-
-
-See [Planes and Anchors](#planes-and-anchors) for Details about anchors
-
-
+| `addAnchorByLocation` | `onAnchorUpdated, onAnchorDetected` | `ARKit.addAnchorByLocation(name, locationLatidude, locationLongitude, landmarkLatitude, landmarkLongitude, locationHorizontalAccruacy, locationHorizontalAccruacy, locationVerticalAccuracy, landmarkVerticalAccuracy, locationAltitude, landmarkAltitude);`| ⚠️ (This function needs work and provides very inconsistent results, if you have ways to improve it please open a PR. Arkit/CoreLocation solves this problem much better if you would like to find a way to import their functions into this library. https://github.com/ProjectDent/ARKit-CoreLocation ⚠️. Pass in location information of the user and the location information of the landmark where you want the AR anchor to appear. worldAlignment Must be set as GravityAndHeading. Returns position of anchor in onAnchorUpdated callback.
 #### Planes and Anchors
 
 ARKit can detect different anchors in the real world:
