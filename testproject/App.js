@@ -1,114 +1,112 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
+// index.ios.js
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import React, { Component } from 'react';
+import { AppRegistry, View } from 'react-native';
+import { ARKit } from 'react-native-arkit';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+export default class ReactNativeARKit extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1 }}>
+        <ARKit
+          style={{ flex: 1 }}
+          debug
+          // enable plane detection (defaults to Horizontal)
+          planeDetection={ARKit.ARPlaneDetection.Horizontal}
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+          // enable light estimation (defaults to true)
+          lightEstimationEnabled
+          // get the current lightEstimation (if enabled)
+          // it fires rapidly, so better poll it from outside with
+          // ARKit.getCurrentLightEstimation()
+          onLightEstimation={e => console.log(e.nativeEvent)}
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+          // event listener for (horizontal) plane detection
+          onPlaneDetected={anchor => console.log(anchor)}
 
-export default App;
+          // event listener for plane update
+          onPlaneUpdated={anchor => console.log(anchor)}
+
+          // arkit sometimes removes detected planes
+          onPlaneRemoved={anchor => console.log(anchor)}
+
+          // event listeners for all anchors, see [Planes and Anchors](#planes-and-anchors)
+          onAnchorDetected={anchor => console.log(anchor)}
+          onAnchorUpdated={anchor => console.log(anchor)}
+          onAnchorRemoved={anchor => console.log(anchor)}
+
+          // you can detect images and will get an anchor for these images
+          detectionImages={[{ resourceGroupName: 'DetectionImages' }]}
+
+
+          onARKitError={console.log} // if arkit could not be initialized (e.g. missing permissions), you will get notified here
+        >
+          <ARKit.Box
+            position={{ x: 0, y: 0, z: 0 }}
+            shape={{ width: 0.1, height: 0.1, length: 0.1, chamfer: 0.01 }}
+          />
+          <ARKit.Sphere
+            position={{ x: 0.2, y: 0, z: 0 }}
+            shape={{ radius: 0.05 }}
+          />
+          <ARKit.Cylinder
+            position={{ x: 0.4, y: 0, z: 0 }}
+            shape={{ radius: 0.05, height: 0.1 }}
+          />
+          <ARKit.Cone
+            position={{ x: 0, y: 0.2, z: 0 }}
+            shape={{ topR: 0, bottomR: 0.05, height: 0.1 }}
+          />
+          <ARKit.Pyramid
+            position={{ x: 0.2, y: 0.15, z: 0 }}
+            shape={{ width: 0.1, height: 0.1, length: 0.1 }}
+          />
+          <ARKit.Tube
+            position={{ x: 0.4, y: 0.2, z: 0 }}
+            shape={{ innerR: 0.03, outerR: 0.05, height: 0.1 }}
+          />
+          <ARKit.Torus
+            position={{ x: 0, y: 0.4, z: 0 }}
+            shape={{ ringR: 0.06, pipeR: 0.02 }}
+          />
+          <ARKit.Capsule
+            position={{ x: 0.2, y: 0.4, z: 0 }}
+            shape={{ capR: 0.02, height: 0.06 }}
+          />
+          <ARKit.Plane
+            position={{ x: 0.4, y: 0.4, z: 0 }}
+            shape={{ width: 0.1, height: 0.1 }}
+          />
+          <ARKit.Text
+            text="ARKit is Cool!"
+            position={{ x: 0.2, y: 0.6, z: 0 }}
+            font={{ size: 0.15, depth: 0.05 }}
+          />
+          <ARKit.Light
+            position={{ x: 1, y: 3, z: 2 }}
+            type={ARKit.LightType.Omni}
+            color="white"
+          />
+          <ARKit.Light
+            position={{ x: 0, y: 1, z: 0 }}
+            type={ARKit.LightType.Spot}
+            eulerAngles={{ x: -Math.PI / 2 }}
+            spotInnerAngle={45}
+            spotOuterAngle={45}
+            color="green"
+          />
+          <ARKit.Model
+            position={{ x: -0.2, y: 0, z: 0, frame: 'local' }}
+            scale={0.01}
+            model={{
+              scale: 1, // this is deprecated, use the scale property that is available on all 3d objects
+              file: 'art.scnassets/ship.scn', // make sure you have the model file in the ios project
+            }}
+          />
+        </ARKit>
+      </View>
+    );
+  }
+}
+
+AppRegistry.registerComponent('ReactNativeARKit', () => ReactNativeARKit);

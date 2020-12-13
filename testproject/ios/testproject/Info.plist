@@ -41,6 +41,8 @@
 	<string></string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Display AR content</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>
