@@ -14,5 +14,6 @@ Pod::Spec.new do |s|
   s.source_files   = '**/*.{h,m}'
   s.preserve_paths = "**/*.js"
   s.dependency 'React'
+  s.dependency 'PocketSVG', '~> 2.6'
 
 end
