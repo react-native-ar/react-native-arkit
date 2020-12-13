@@ -229,6 +229,8 @@ An `DetectionImage` is an image or image resource group that should be detected 
 
 See https://developer.apple.com/documentation/arkit/arreferenceimage?language=objc how to add these images.
 
+You can also pass in a list of URLS to detect images dynamicaly from the web `detectionImages={[{ arDetectionImages: myImages }]}`.
+
 You will then receive theses images in `onAnchorDetected/onAnchorUpdated`. See also [Planes and Anchors](#planes-and-anchors) for more details.
 
 `DetectionImage` has these properties
@@ -252,9 +254,20 @@ We probably will add the option to load images from other sources as well (PRs e
 | `onPlaneDetected` | `Anchor` | When a plane anchor is first detected.
 | `onPlaneUpdated` | `Anchor` | When a detected plane is updated
 | `onPlaneRemoved` | `Anchor` | When a detected plane is removed
+| `onRotationGesture` | `{"rotation": 1.4, "velocity": 1}` | Returns new value for Z axis of rotation when an anchor is rotated with.two fingers
+| `onPinchGesture` | `{"scale": 1.0, "velocity": 1.9}` | Returns new scale for anchor when an anchor is pinched with two fingers.
 
 See [Planes and Anchors](#planes-and-anchors) for Details about anchors
 
+#### Callbacks
+
+| Callback Name | Callbacks | Examples | Notes
+|---|---|---|---|
+| `addAnchorByLocation` | `onAnchorUpdated, onAnchorDetected` | `ARKit.addAnchorByLocation(name, locationLatidude, locationLongitude, landmarkLatitude, landmarkLongitude, locationHorizontalAccruacy, locationHorizontalAccruacy, locationVerticalAccuracy, landmarkVerticalAccuracy, locationAltitude, landmarkAltitude
+        );`| ⚠️ (This function needs work and provides very inconsistent results, if you have ways to improve it please open a PR. Arkit/CoreLocation solves this problem much better if you would like to find a way to import their functions into this library. https://github.com/ProjectDent/ARKit-CoreLocation. Pass in location information for the location of the user and the location information of the landmark where you want the AR anchor to appear. worldAlignment Must be set as GravityAndHeading. Returns position of anchor in onAnchorUpdated callback.
+
+
+See [Planes and Anchors](#planes-and-anchors) for Details about anchors
 
 
 #### Planes and Anchors
