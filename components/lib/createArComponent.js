@@ -84,7 +84,6 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
   });
 
   const getNonNodeProps = props => parseMaterials(pick(props, nonNodePropKeys));
-
   const mountFunc =
     typeof mountConfig === 'string'
       ? ARGeosManager[mountConfig]
@@ -92,6 +91,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
   const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
+
     return mountFunc(
       getNonNodeProps(props),
       {
@@ -99,7 +99,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         ...pick(props, NODE_PROPS),
       },
       props.frame,
-      parentId,
+      parentId, 
     );
   };
 
@@ -126,18 +126,22 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         const {
           transition: transitionOnMount = { duration: 0 },
         } = fullPropsOnMount;
-
+        console.log("fullpropsmount", fullPropsOnMount)
         this.doPendingTimers();
         this.mountWithProps(fullPropsOnMount).then(() => {
           this.props = propsOnMount;
           this.componentWillUpdate({ ...props, transition: transitionOnMount });
         });
       } else {
+        console.log("halfpropsmount", props)
+
         this.mountWithProps(props);
       }
     }
 
     async mountWithProps(props) {
+      console.log("parentId", this.context.arkitParentId)
+      console.log("props", props)
       return mount(this.identifier, props, this.context.arkitParentId);
     }
 

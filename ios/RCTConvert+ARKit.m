@@ -150,6 +150,35 @@
     return geometry;
 }
 
++ (SCNImageNode *)SCNImageNode:(id)json {
+    NSLog(@"setDeviceMotionUpdateInterval: %f", json[@"imageUrl"]);
+
+    SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
+    SCNMaterial *material = [SCNMaterial material];
+    NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: json[@"imageUrl"]]];
+
+
+    UIImage *image = [[UIImage alloc] initWithData:imageData];
+    material.diffuse.contents = image;
+    NSMutableArray *materials = [NSMutableArray array];
+    [materials addObject:material];
+
+
+    planeGeometry.materials = materials;
+
+    SCNImageNode *paintingNode= [SCNNode nodeWithGeometry:planeGeometry];
+    SCNMatrix4 transform = SCNMatrix4Identity;
+    SCNVector3 angles = SCNVector3Make(0, 0, 0);
+    SCNVector3 position = SCNVector3Make(0, 0, -3);
+
+
+    paintingNode.transform = transform;
+    paintingNode.eulerAngles = angles;
+    paintingNode.position = position;
+
+    return paintingNode;
+}
+
 + (SCNPlane *)SCNPlane:(id)json {
     NSDictionary* shape = json[@"shape"];
     CGFloat width = [shape[@"width"] floatValue];
@@ -296,6 +325,7 @@
     
     return textNode;
 }
+
 
 
 + (SCNLight *)SCNLight:(id)json {

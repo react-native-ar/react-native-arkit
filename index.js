@@ -19,6 +19,7 @@ import ARShape from './components/ARShape';
 import ARSphere from './components/ARSphere';
 import ARSprite from './components/ARSprite';
 import ARText from './components/ARText';
+import ARImage from './components/ARImage';
 import ARTorus from './components/ARTorus';
 import ARTube from './components/ARTube';
 import DeviceMotion from './DeviceMotion';
@@ -37,6 +38,7 @@ ARKit.Torus = ARTorus;
 ARKit.Capsule = ARCapsule;
 ARKit.Plane = ARPlane;
 ARKit.Text = ARText;
+ARKit.Image = ARImage;
 ARKit.Model = ARModel;
 ARKit.Sprite = ARSprite;
 ARKit.Group = ARGroup;
@@ -60,6 +62,7 @@ export {
   ARCapsule,
   ARPlane,
   ARText,
+  ARImage,
   ARModel,
   ARLight,
   ARGroup,

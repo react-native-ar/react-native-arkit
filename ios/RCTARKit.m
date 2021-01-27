@@ -316,9 +316,9 @@ static RCTARKit *instance = nil;
                 for (id url in config[@"arDetectionImages"]) {
                     NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: url]];
 
-                    UIImage* uiimage = [[UIImage alloc] initWithData:imageData];
+                    UIImage* uiImage = [[UIImage alloc] initWithData:imageData];
 
-                    CGImageRef cgImage = [uiimage CGImage];
+                    CGImageRef cgImage = [uiImage CGImage];
 
                     ARReferenceImage *image = [[ARReferenceImage alloc] initWithCGImage:cgImage orientation:kCGImagePropertyOrientationUp physicalWidth:1];
                     image.name=url;
@@ -359,13 +359,14 @@ static RCTARKit *instance = nil;
     CLLocationDistance distance = [location distanceFromLocation:landmark];
     matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -distance);
 
-    if(distance < 200){
+
+    if(distance < 50){
         matrix_float4x4 distanceTransform = translatingIdentity(0, 0, -50);
     }   
 
     float rotation = angleBetweenPoints(location, landmark);
-
-    float tilt = angleOffHorizon(location, landmark);
+    
+    float  tilt = angleOffHorizon(location, landmark);
 
     simd_float4x4 tiltedTransformation = rotateVertically(distanceTransform, tilt);
 

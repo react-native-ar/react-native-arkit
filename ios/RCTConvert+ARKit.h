@@ -14,6 +14,9 @@
 @interface SCNTextNode : SCNNode
 @end
 
+@interface SCNImageNode : SCNNode
+@end
+
 
 @interface RCTConvert (ARKit)
 
@@ -36,6 +39,7 @@
 + (SCNLight *)SCNLight:(id)json;
 
 + (SCNTextNode *)SCNTextNode:(id)json;
++ (SCNImageNode *)SCNImageNode:(id)json;
 
 + (void)setNodeProperties:(SCNNode *)node properties:(id)json;
 + (void)setMaterialProperties:(SCNMaterial *)material properties:(id)json;

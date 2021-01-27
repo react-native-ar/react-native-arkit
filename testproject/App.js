@@ -6,6 +6,8 @@ import { ARKit } from 'react-native-arkit';
 
 export default class ReactNativeARKit extends Component {
   render() {
+    console.log("hello world")
+
     return (
       <View style={{ flex: 1 }}>
         <ARKit
