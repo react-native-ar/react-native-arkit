@@ -153,7 +153,7 @@
 + (SCNImageNode *)SCNImageNode:(id)json {
     NSLog(@"imageNode: %f", json[@"imageUrl"]);
 
-    SCNPlane *planeGeometry = [SCNPlane planeWithWidth:0.5 height:0.5];
+    SCNPlane *planeGeometry = [SCNPlane planeWithWidth:1.5 height:1.5];
     SCNMaterial *material = [SCNMaterial material];
     NSData * imageData = [[NSData alloc] initWithContentsOfURL: [NSURL URLWithString: json[@"imageUrl"]]];
 
@@ -168,6 +168,7 @@
 
     SCNImageNode *paintingNode= [SCNNode nodeWithGeometry:planeGeometry];
     [self setNodeProperties:paintingNode properties:json];
+    NSLog(@"CURRENCT IMAGE NODE: %f", json[@"imageUrl"]);
 
     return paintingNode;
 }
