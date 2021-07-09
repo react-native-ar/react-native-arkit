@@ -1,8 +1,6 @@
-⚠️  **LOOKING FOR MAINTAINERS - This Repo is currently not maintained. Give https://github.com/viromedia/viro/ a try which has been open sourced and also supports android (ARCORE)** ⚠️ 
+⚠️  **LOOKING FOR MAINTAINERS - This Repo is currently not maintained. Give https://github.com/ViroCommunity/viro/ a try which has been open sourced and also supports android (ARCORE)** ⚠️ 
 
 # react-native-arkit 
-
-⚠️  **This is the readme from the current development. If you want to see the readme from the latest release, see https://github.com/HippoAR/react-native-arkit/releases**
 
 
 
