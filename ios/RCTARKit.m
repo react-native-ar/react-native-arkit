@@ -11,7 +11,7 @@
 
 @import CoreLocation;
 
-@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate> {
+@interface RCTARKit () <ARSCNViewDelegate, ARSessionDelegate, UIGestureRecognizerDelegate, SCNPhysicsContactDelegate> {
     RCTARKitResolve _resolve;
 }
 
@@ -48,7 +48,9 @@ static RCTARKit *instance = nil;
     
     dispatch_once_on_main_thread(&onceToken, ^{
         if (instance == nil) {
+            
             ARSCNView *arView = [[ARSCNView alloc] init];
+            
             instance = [[self alloc] initWithARView:arView];
         }
     });
@@ -64,10 +66,10 @@ static RCTARKit *instance = nil;
 - (instancetype)initWithARView:(ARSCNView *)arView {
     if ((self = [super init])) {
         self.arView = arView;
-        
         // delegates
         arView.delegate = self;
         arView.session.delegate = self;
+        arView.scene.physicsWorld.contactDelegate = self;
         
         UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTapFrom:)];
         tapGestureRecognizer.numberOfTapsRequired = 1;
@@ -157,7 +159,8 @@ static RCTARKit *instance = nil;
 - (void)setDebug:(BOOL)debug {
     if (debug) {
         self.arView.showsStatistics = YES;
-        self.arView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints;
+        
+        self.arView.debugOptions = ARSCNDebugOptionShowWorldOrigin | ARSCNDebugOptionShowFeaturePoints | SCNDebugOptionShowPhysicsShapes;
     } else {
         self.arView.showsStatistics = NO;
         self.arView.debugOptions = SCNDebugOptionNone;
@@ -572,6 +575,7 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
      NSLog(@"removed, number of renderer delegates %d", [self.rendererDelegates count]);
 }
 - (void)renderer:(id <SCNSceneRenderer>)renderer willUpdateNode:(SCNNode *)node forAnchor:(ARAnchor *)anchor {
+    
 }
 
 
@@ -736,7 +740,19 @@ static NSDictionary * getPlaneHitResult(NSMutableArray *resultsMapped, const CGP
         }
     }
 }
+#pragma mark - SCNPhysicsContactDelegate
 
+- (void)physicsWorld:(SCNPhysicsWorld *)world didBeginContact:(SCNPhysicsContact *)contact {
+    
+}
+
+- (void)physicsWorld:(SCNPhysicsWorld *)world didUpdateContact:(SCNPhysicsContact *)contact {
+    
+}
+
+- (void)physicsWorld:(SCNPhysicsWorld *)world didEndContact:(SCNPhysicsContact *)contact {
+    
+}
 
 
 #pragma mark - dealloc

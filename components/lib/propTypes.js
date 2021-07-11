@@ -6,90 +6,95 @@ const ARKitManager = NativeModules.ARKitManager;
 
 const animatableNumber = PropTypes.oneOfType([
   PropTypes.number,
-  PropTypes.object,
+  PropTypes.object
 ]);
 
 export const deprecated = (propType, hint = null) => (
   props,
   propName,
-  componentName,
+  componentName
 ) => {
   if (props[propName]) {
     console.warn(
       `Prop \`${propName}\` supplied to` +
-        ` \`${componentName}\` is deprecated. ${hint}`,
+        ` \`${componentName}\` is deprecated. ${hint}`
     );
   }
   return PropTypes.checkPropTypes(
     { [propName]: propType },
     props,
     propName,
-    componentName,
+    componentName
   );
 };
 export const position = PropTypes.shape({
   x: animatableNumber,
   y: animatableNumber,
-  z: animatableNumber,
+  z: animatableNumber
 });
 
 export const scale = animatableNumber;
 export const categoryBitMask = PropTypes.number;
 export const transition = PropTypes.shape({
-  duration: PropTypes.number,
+  duration: PropTypes.number
 });
 
 export const planeDetection = PropTypes.oneOf(
-  values(ARKitManager.ARPlaneDetection),
+  values(ARKitManager.ARPlaneDetection)
 );
 export const eulerAngles = PropTypes.shape({
   x: animatableNumber,
   y: animatableNumber,
-  z: animatableNumber,
+  z: animatableNumber
 });
 
 export const rotation = PropTypes.shape({
   x: animatableNumber,
   y: animatableNumber,
   z: animatableNumber,
-  w: animatableNumber,
+  w: animatableNumber
 });
 
 export const orientation = PropTypes.shape({
   x: animatableNumber,
   y: animatableNumber,
   z: animatableNumber,
-  w: animatableNumber,
+  w: animatableNumber
+});
+
+export const physicsBody = PropTypes.shape({
+  mass: PropTypes.number,
+  type: PropTypes.oneOf(values(ARKitManager.PhysicsBodyType))
 });
 
 export const textureTranslation = PropTypes.shape({
   x: PropTypes.number,
   y: PropTypes.number,
-  z: PropTypes.number,
+  z: PropTypes.number
 });
 
 export const textureRotation = PropTypes.shape({
   angle: PropTypes.number,
   x: PropTypes.number,
   y: PropTypes.number,
-  z: PropTypes.number,
+  z: PropTypes.number
 });
 
 export const textureScale = PropTypes.shape({
   x: PropTypes.number,
   y: PropTypes.number,
-  z: PropTypes.number,
+  z: PropTypes.number
 });
 
 export const shaders = PropTypes.shape({
   [ARKitManager.ShaderModifierEntryPoint.Geometry]: PropTypes.string,
   [ARKitManager.ShaderModifierEntryPoint.Surface]: PropTypes.string,
   [ARKitManager.ShaderModifierEntryPoint.LightingModel]: PropTypes.string,
-  [ARKitManager.ShaderModifierEntryPoint.Fragment]: PropTypes.string,
+  [ARKitManager.ShaderModifierEntryPoint.Fragment]: PropTypes.string
 });
 
 export const lightingModel = PropTypes.oneOf(
-  values(ARKitManager.LightingModel),
+  values(ARKitManager.LightingModel)
 );
 
 export const castsShadow = PropTypes.bool;
@@ -105,7 +110,7 @@ export const fillMode = PropTypes.oneOf(values(ARKitManager.FillMode));
 export const lightType = PropTypes.oneOf(values(ARKitManager.LightType));
 export const shadowMode = PropTypes.oneOf(values(ARKitManager.ShadowMode));
 export const colorBufferWriteMask = PropTypes.oneOf(
-  values(ARKitManager.ColorMask),
+  values(ARKitManager.ColorMask)
 );
 
 export const opacity = animatableNumber;
@@ -123,7 +128,7 @@ export const materialProperty = PropTypes.shape({
   wrap: wrapMode,
   translation: textureTranslation,
   scale: textureScale,
-  rotation: textureRotation,
+  rotation: textureRotation
 });
 
 export const material = PropTypes.shape({
@@ -143,10 +148,10 @@ export const material = PropTypes.shape({
   doubleSided: PropTypes.bool,
   litPerPixel: PropTypes.bool,
   transparency: PropTypes.number,
-  fillMode,
+  fillMode
 });
 
 const detectionImage = PropTypes.shape({
-  resourceGroupName: PropTypes.string,
+  resourceGroupName: PropTypes.string
 });
 export const detectionImages = PropTypes.arrayOf(detectionImage);

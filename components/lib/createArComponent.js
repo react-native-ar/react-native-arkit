@@ -7,19 +7,21 @@ import isEmpty from 'lodash/isEmpty';
 import keys from 'lodash/keys';
 import pick from 'lodash/pick';
 import some from 'lodash/some';
+import merge from 'lodash/merge';
 
 import {
   castsShadow,
   categoryBitMask,
+  constraint,
   eulerAngles,
   opacity,
   orientation,
+  physicsBody,
   position,
   renderingOrder,
   rotation,
   scale,
-  constraint,
-  transition,
+  transition
 } from './propTypes';
 import addAnimatedSupport from './addAnimatedSupport';
 import generateId from './generateId';
@@ -31,11 +33,11 @@ const { ARGeosManager } = NativeModules;
 
 const PROP_TYPES_IMMUTABLE = {
   id: PropTypes.string,
-  frame: PropTypes.string,
+  frame: PropTypes.string
 };
 const MOUNT_UNMOUNT_ANIMATION_PROPS = {
   propsOnMount: PropTypes.any,
-  propsOnUnMount: PropTypes.any,
+  propsOnUnMount: PropTypes.any
 };
 const PROP_TYPES_NODE = {
   position,
@@ -49,6 +51,7 @@ const PROP_TYPES_NODE = {
   renderingOrder,
   opacity,
   constraint,
+  physicsBody
 };
 
 const NODE_PROPS = keys(PROP_TYPES_NODE);
@@ -64,15 +67,27 @@ the property will be updated on scenekit, instead of beeing remounted.
 
 this excludes at the moment: model, font, text, (???)
 * */
-export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
+export default (
+  customMountConfig,
+  propTypes = {},
+  nonUpdateablePropKeys = []
+) => {
+  const defaultMontConfig = {
+    mount: ARGeosManager.mount
+  };
+  const mountConfig = {
+    ...defaultMontConfig,
+    ...customMountConfig
+  };
+
   const allPropTypes = {
     ...MOUNT_UNMOUNT_ANIMATION_PROPS,
     ...PROP_TYPES_IMMUTABLE,
     ...PROP_TYPES_NODE,
-    ...propTypes,
+    ...propTypes
   };
   // any custom props (material, shape, ...)
-  const nonNodePropKeys = keys(propTypes);
+  const nonNodePropKeys = [...keys(propTypes), ...keys(mountConfig.props)];
 
   const parseMaterials = props => ({
     ...props,
@@ -80,26 +95,24 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
       ? { shadowColor: processColor(props.shadowColor) }
       : {}),
     ...(props.color ? { color: processColor(props.color) } : {}),
-    ...(props.material ? { material: processMaterial(props.material) } : {}),
+    ...(props.material ? { material: processMaterial(props.material) } : {})
   });
 
   const getNonNodeProps = props => parseMaterials(pick(props, nonNodePropKeys));
 
-  const mountFunc =
-    typeof mountConfig === 'string'
-      ? ARGeosManager[mountConfig]
-      : mountConfig.mount;
+  const mount = (id, passedProps, parentId) => {
+    const props = merge({}, mountConfig.props, passedProps);
 
-  const mount = (id, props, parentId) => {
     if (DEBUG) console.log(`[${id}] [${new Date().getTime()}] mount`, props);
-    return mountFunc(
+
+    return mountConfig.mount(
       getNonNodeProps(props),
       {
         id,
-        ...pick(props, NODE_PROPS),
+        ...pick(props, NODE_PROPS)
       },
       props.frame,
-      parentId,
+      parentId
     );
   };
 
@@ -124,7 +137,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
       if (propsOnMount) {
         const fullPropsOnMount = { ...props, ...propsOnMount };
         const {
-          transition: transitionOnMount = { duration: 0 },
+          transition: transitionOnMount = { duration: 0 }
         } = fullPropsOnMount;
 
         this.doPendingTimers();
@@ -144,7 +157,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     componentWillUpdate(props) {
       const changedKeys = filter(
         keys(this.props),
-        key => key !== 'children' && !isDeepEqual(props[key], this.props[key]),
+        key => key !== 'children' && !isDeepEqual(props[key], this.props[key])
       );
       if (isEmpty(changedKeys)) {
         return;
@@ -152,14 +165,14 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
 
       if (__DEV__) {
         const nonAllowedUpdates = filter(changedKeys, k =>
-          IMMUTABLE_PROPS.includes(k),
+          IMMUTABLE_PROPS.includes(k)
         );
         if (nonAllowedUpdates.length > 0) {
           throw new Error(
             `[${this
               .identifier}] prop can't be updated: '${nonAllowedUpdates.join(
-              ', ',
-            )}'`,
+              ', '
+            )}'`
           );
         }
       }
@@ -168,7 +181,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
         if (DEBUG)
           console.log(
             `[${this.identifier}] need to remount node because of `,
-            changedKeys,
+            changedKeys
           );
         this.mountWithProps({ ...this.props, ...props });
       } else {
@@ -179,9 +192,9 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           // always inclue transition
           transition: {
             ...this.props.transition,
-            ...props.transition,
+            ...props.transition
           },
-          ...parseMaterials(pick(props, changedKeys)),
+          ...parseMaterials(pick(props, changedKeys))
         };
         update(this.identifier, propsToupdate).catch(() => {
           // sometimes calls are out of order, so this node has been unmounted
@@ -217,7 +230,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
           callback.call(this);
           delete TIMERS[this.identifier];
         }, duration),
-        callback,
+        callback
       };
     }
 
@@ -232,7 +245,7 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     }
     getChildContext() {
       return {
-        arkitParentId: this.identifier,
+        arkitParentId: this.identifier
       };
     }
 
@@ -243,10 +256,10 @@ export default (mountConfig, propTypes = {}, nonUpdateablePropKeys = []) => {
     }
   };
   ARComponent.childContextTypes = {
-    arkitParentId: PropTypes.string,
+    arkitParentId: PropTypes.string
   };
   ARComponent.contextTypes = {
-    arkitParentId: PropTypes.string,
+    arkitParentId: PropTypes.string
   };
 
   const ARComponentAnimated = addAnimatedSupport(ARComponent);

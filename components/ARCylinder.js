@@ -10,12 +10,15 @@ import PropTypes from 'prop-types';
 import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
-const ARCylinder = createArComponent('addCylinder', {
-  shape: PropTypes.shape({
-    radius: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  material,
-});
+const ARCylinder = createArComponent(
+  { props: { shape: { type: 'cylinder' } } },
+  {
+    shape: PropTypes.shape({
+      radius: PropTypes.number,
+      height: PropTypes.number
+    }),
+    material
+  }
+);
 
 export default ARCylinder;

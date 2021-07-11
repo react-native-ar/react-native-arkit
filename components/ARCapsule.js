@@ -10,12 +10,15 @@ import PropTypes from 'prop-types';
 import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
-const ARCapsule = createArComponent('addCapsule', {
-  shape: PropTypes.shape({
-    capR: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  material,
-});
+const ARCapsule = createArComponent(
+  { props: { shape: { type: 'capsule' } } },
+  {
+    shape: PropTypes.shape({
+      capR: PropTypes.number,
+      height: PropTypes.number
+    }),
+    material
+  }
+);
 
 export default ARCapsule;

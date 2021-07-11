@@ -10,11 +10,14 @@ import PropTypes from 'prop-types';
 import { material } from './lib/propTypes';
 import createArComponent from './lib/createArComponent';
 
-const ARSphere = createArComponent('addSphere', {
-  shape: PropTypes.shape({
-    radius: PropTypes.number,
-  }),
-  material,
-});
+const ARSphere = createArComponent(
+  { props: { shape: { type: 'sphere' } } },
+  {
+    shape: PropTypes.shape({
+      radius: PropTypes.number
+    }),
+    material
+  }
+);
 
 export default ARSphere;
