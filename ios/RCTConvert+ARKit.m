@@ -405,8 +405,16 @@
         [self setMaterialPropertyContents:json[@"displacement"] material:material.displacement];
     }
     
+    if (json[@"emission"]) {
+        [self setMaterialPropertyContents:json[@"emission"] material:material.emission];
+    }
+    
     if (json[@"specular"]) {
         [self setMaterialPropertyContents:json[@"specular"] material:material.specular];
+    }
+    
+    if (json[@"transparent"]) {
+        [self setMaterialPropertyContents:json[@"transparent"] material:material.transparent];
     }
     
     if (json[@"transparency"]) {
